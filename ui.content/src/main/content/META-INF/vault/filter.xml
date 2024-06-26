@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/cq/core/content/nav/tools/wizardry"/>
+    <filter root="/conf/content-wizard"/>
+    <filter root="/etc/wizardry/tools/content-wizard" />
+</workspaceFilter>

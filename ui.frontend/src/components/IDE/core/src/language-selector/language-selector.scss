@@ -1,0 +1,15 @@
+.wizard-language-selector-header {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wizard-language-selector-content .MuiFormControl-root {
+  background-color: hsla(var(--color-primary), var(--alpha-background-light));
+
+  &:focus {
+    outline: hsla(var(--color-neutral), var(--alpha-secondary)) auto 1px;
+  }
+}

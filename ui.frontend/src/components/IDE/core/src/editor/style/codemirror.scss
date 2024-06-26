@@ -1,0 +1,302 @@
+@import url('codemirror/lib/codemirror.css');
+
+/* Make the editors fill up their container and make them scrollable */
+.wizard-container .CodeMirror {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+/* Override font settings */
+.wizard-container .CodeMirror {
+  font-family: var(--font-family-mono);
+  font-weight: bolder;
+}
+
+.wizard-response .CodeMirror,
+.wizard-builder .CodeMirror,
+.wizard-statement .CodeMirror {
+  height: 100%;
+  border-radius: calc(var(--border-radius-8));
+}
+
+/* Set default background color */
+.wizard-container .CodeMirror,
+.wizard-container .CodeMirror-gutters,
+.wizard-response .CodeMirror,
+.wizard-response .CodeMirror-gutters,
+.wizard-builder .CodeMirror,
+.wizard-builder .CodeMirror-gutters,
+.wizard-statement .CodeMirror,
+.wizard-statement .CodeMirror-gutters {
+  background: none;
+  background-color: var(--editor-background, hsl(var(--color-base)));
+}
+
+/* No padding around line numbers */
+.wizard-container .CodeMirror-linenumber,
+.wizard-response .CodeMirror-linenumber,
+.wizard-builder .CodeMirror-linenumber,
+.wizard-statement .CodeMirror-linenumber {
+  padding: 0;
+}
+
+/* No border between gutter and editor */
+.wizard-container .CodeMirror-gutters,
+.wizard-response .CodeMirror-gutters,
+.wizard-builder .CodeMirror-gutters,
+.wizard-statement .CodeMirror-gutters {
+  border: none;
+}
+
+/**
+ * Editor theme
+ */
+.cm-s-wizard {
+  /* Default for non-defined tokens */
+  color: hsl(var(--intelli-dark-grey));
+
+  /* OperationType, `fragment`, `on` */
+  & .cm-keyword {
+    color: hsl(var(--intelli-purple));
+  }
+  /* Name (OperationDefinition), FragmentName */
+  & .cm-def {
+    color: hsl(var(--intelli-orange));
+  }
+  /* Punctuator (except `$` and `@`) */
+  & .cm-punctuation {
+    color: black;
+  }
+  /* Variable */
+  & .cm-variable {
+    color: hsl(var(--intelli-yellow));
+  }
+  & .cm-variable-2 {
+    color: hsla(var(--intelli-orange), 1);
+  }
+  /* NamedType */
+  & .cm-atom {
+    color: hsl(var(--color-tertiary));
+  }
+  /* IntValue, FloatValue */
+  & .cm-number {
+    color: hsl(var(--intelli-blue));
+  }
+  /* StringValue */
+  & .cm-string {
+    color: hsl(var(--intelli-green));
+  }
+  /* BooleanValue */
+  & .cm-builtin {
+    color: hsl(var(--color-warning));
+  }
+  /* EnumValue */
+  & .cm-string-2 {
+    color: hsl(var(--color-secondary));
+  }
+  /* QB Predicate */
+  & .cm-predicate {
+    color: hsl(var(--intelli-blue));
+  }
+  /* just give me white */
+  & .cm-readable-token {
+    color: black;
+  }
+  /* Name (ObjectField, Argument) */
+  & .cm-attribute {
+    color: hsl(var(--color-tertiary));
+  }
+  /* Name (Directive) */
+  & .cm-meta {
+    color: hsl(var(--color-info));
+  }
+  /* Name (Alias, Field without Alias) */
+  & .cm-property {
+    color: hsl(var(--color-info));
+  }
+  /* Name (Field with Alias) */
+  & .cm-qualifier {
+    color: hsl(var(--color-secondary));
+  }
+  /* Comment */
+  & .cm-comment {
+    color: hsl(var(--intelli-dark-grey));
+  }
+  /* Whitespace */
+  & .cm-ws {
+    color: hsla(var(--color-neutral), var(--alpha-tertiary));
+  }
+  /* Invalid characters */
+  & .cm-invalidchar {
+    color: hsl(var(--color-error));
+  }
+
+  /* Cursor */
+  & .CodeMirror-cursor {
+    border-left: 2px solid hsla(var(--color-neutral), var(--alpha-secondary));
+  }
+
+  /* Color for line numbers and fold-gutters */
+  & .CodeMirror-linenumber {
+    color: hsla(var(--color-neutral), var(--alpha-tertiary));
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.wizard-light) .cm-s-wizard {
+    /* Default to punctuation */
+    color: hsl(var(--intelli-light-grey));
+
+    /* OperationType, `fragment`, `on` */
+    & .cm-keyword {
+      color: hsl(var(--intelli-orange));
+    }
+    /* Name (OperationDefinition), FragmentName */
+    & .cm-def {
+      color: hsl(var(--intelli-purple));
+    }
+    /* Punctuator (except `$` and `@`) */
+    & .cm-punctuation {
+      color: hsl(var(--intelli-light-grey));
+    }
+    /* Variable */
+    & .cm-variable {
+      color: hsl(var(--intelli-yellow));
+    }
+    & .cm-variable-2 {
+      color: hsla(var(--intelli-yellow), 1);
+    }
+    /* NamedType */
+    & .cm-atom {
+      color: hsl(var(--color-tertiary));
+    }
+    /* IntValue, FloatValue */
+    & .cm-number {
+      color: hsl(var(--intelli-blue));
+    }
+    /* StringValue */
+    & .cm-string {
+      color: hsl(var(--intelli-green));
+    }
+    /* BooleanValue */
+    & .cm-builtin {
+      color: hsl(var(--color-warning));
+    }
+    /* EnumValue */
+    & .cm-string-2 {
+      color: hsl(var(--color-secondary));
+    }
+    /* QB Predicate */
+    & .cm-predicate {
+      color: hsl(var(--intelli-blue));
+    }
+    & .cm-readable-token {
+      color: hsl(var(--color-primary));
+    }
+    /* Name (ObjectField, Argument) */
+    & .cm-attribute {
+      color: hsl(var(--color-tertiary));
+    }
+    /* Name (Directive) */
+    & .cm-meta {
+      color: hsl(var(--color-tertiary));
+    }
+    /* Name (Alias, Field without Alias) */
+    & .cm-property {
+      color: hsl(var(--color-info));
+    }
+    /* Name (Field with Alias) */
+    & .cm-qualifier {
+      color: hsl(var(--color-secondary));
+    }
+    /* Comment */
+    & .cm-comment {
+      color: hsl(var(--intelli-dark-grey));
+    }
+    /* Whitespace */
+    & .cm-ws {
+      color: hsla(var(--color-neutral), var(--alpha-tertiary));
+    }
+    /* Invalid characters */
+    & .cm-invalidchar {
+      color: hsl(var(--color-error));
+    }
+
+    /* Cursor */
+    & .CodeMirror-cursor {
+      border-left: 2px solid hsla(var(--color-neutral), var(--alpha-secondary));
+    }
+
+    /* Color for line numbers and fold-gutters */
+    & .CodeMirror-linenumber {
+      color: hsla(var(--color-neutral), var(--alpha-tertiary));
+    }
+  }
+}
+
+/* Matching bracket colors */
+.wizard-container div.CodeMirror span.CodeMirror-matchingbracket,
+.wizard-container div.CodeMirror span.CodeMirror-nonmatchingbracket {
+  color: hsl(var(--intelli-yellow));
+}
+
+/* Selected text blocks */
+.wizard-container .CodeMirror-selected,
+.wizard-container .CodeMirror-focused .CodeMirror-selected {
+  background: hsla(var(--color-secondary), var(--alpha-tertiary));
+}
+
+/* Position the search dialog */
+.wizard-container .CodeMirror-dialog {
+  background: inherit;
+  color: inherit;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  padding: var(--px-2) var(--px-6);
+  position: absolute;
+  z-index: 6;
+}
+.wizard-container .CodeMirror-dialog-top {
+  border-bottom: 1px solid
+    hsla(var(--color-neutral), var(--alpha-background-heavy));
+  padding-bottom: var(--px-12);
+  top: 0;
+}
+.wizard-container .CodeMirror-dialog-bottom {
+  border-top: 1px solid
+    hsla(var(--color-neutral), var(--alpha-background-heavy));
+  bottom: 0;
+  padding-top: var(--px-12);
+}
+
+/* Hide the search hint */
+.wizard-container .CodeMirror-search-hint {
+  display: none;
+}
+
+/* Style the input field for searching */
+.wizard-container .CodeMirror-dialog input {
+  border: 1px solid hsla(var(--color-neutral), var(--alpha-background-heavy));
+  border-radius: var(--border-radius-4);
+  padding: var(--px-4);
+}
+.wizard-container .CodeMirror-dialog input:focus {
+  outline: hsl(var(--color-primary)) solid 2px;
+}
+
+/* Set the highlight color for search results */
+.wizard-container .cm-searching {
+  background-color: hsla(var(--color-warning), var(--alpha-background-light));
+  /**
+   * When cycling through search results, CodeMirror overlays the current 
+   * selection with another element that has the .CodeMirror-selected class
+   * applied. This adds another background color (see above), but this extra
+   * box does not quite match the height of this element. To match them up we
+   * add some extra padding here. (Note that this doesn't affect the line
+   * height of the CodeMirror editor as all line wrappers have a fixed height.)
+   */
+  padding-bottom: 1.5px;
+  padding-top: 0.5px;
+}
