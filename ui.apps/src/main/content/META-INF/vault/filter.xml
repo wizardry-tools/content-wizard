@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<workspaceFilter version="1.0">
-    <filter root="/apps/content-wizard/clientlibs"/>
-    <filter root="/apps/content-wizard/components"/>
-    <filter root="/apps/content-wizard/i18n"/>
-</workspaceFilter>
