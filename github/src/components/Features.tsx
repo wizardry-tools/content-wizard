@@ -113,9 +113,7 @@ export default function Features() {
               variant="body1"
               sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
             >
-              Provide a brief overview of the key features of the product. For
-              example, you could list the number of features, their types or
-              benefits, and add-ons.
+              These are the various QueryBuilder rules supported within the Query Wizard.
             </Typography>
           </div>
           <Grid container item sx={{ gap: 1, display: { xs: 'auto', sm: 'none' } }}>
@@ -134,10 +132,11 @@ export default function Features() {
           >
             <Box
               sx={(theme) => ({
-                backgroundSize: 'cover',
+                backgroundSize: 'contain',
                 backgroundPosition: 'center',
                 minHeight: 280,
                 backgroundImage: 'var(--items-image)',
+                backgroundRepeat: 'no-repeat'
               })}
               style={
                 {
