@@ -17,10 +17,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Change Directory
-        run: cd github
       - name: Detect package manager
         id: detect-package-manager
+        with:
+          path: /github
         run: |
           if [ -f "yarn.lock" ]; then
             echo "manager=yarn" >> $GITHUB_OUTPUT
@@ -39,16 +39,21 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
+          path: /github
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        with:
+          path: /github
       - name: Build project
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run build
+        with:
+          path: /github
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./build
+          path: /github/build
   # Deployment job
   deploy:
     environment:
