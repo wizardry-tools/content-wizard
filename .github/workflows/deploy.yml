@@ -27,16 +27,16 @@ jobs:
             echo "manager=yarn" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
-            echo "::notice::path $GITHUB_PATH"
+            echo "::notice::workspace path ${{ github.workspace }}"
             exit 0
           elif [ -f "./package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-            echo "::notice::path $GITHUB_PATH"
+            echo "::notice::workspace path ${{ github.workspace }}"
             exit 0
           else
-            echo "::notice::path $GITHUB_PATH"
+            echo "::notice::workspace path ${{ github.workspace }}"
             echo "::error::Unable to determine package manager"
             exit 1
           fi
@@ -44,6 +44,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          path: ./github
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
@@ -52,7 +53,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: /github/build
+          path: ./github/build
   # Deployment job
   deploy:
     environment:
