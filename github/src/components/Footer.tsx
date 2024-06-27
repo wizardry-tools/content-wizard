@@ -79,9 +79,16 @@ export default function Footer() {
           <IconButton
             color="inherit"
             href="https://github.com/wizardry-tools/content-wizard"
+            target="_blank"
             aria-label="Github"
+            title="Get the code on Github!"
+            sx={{
+              height: '5rem',
+              width: '5rem',
+              margin: 'auto'
+            }}
           >
-            <GitHub/>
+            <GitHub sx={{height: '3rem', width: '3rem'}}/>
           </IconButton>
         </Box>
       </Box>
