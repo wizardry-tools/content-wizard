@@ -46,7 +46,6 @@ local.properties
 /github/node_modules
 /github/.pnp
 .pnp.js
-package-lock.json
 
 # testing
 /coverage
