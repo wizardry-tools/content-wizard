@@ -26,14 +26,17 @@ jobs:
             echo "manager=yarn" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
+            echo "::notice::path $GITHUB_PATH"
             exit 0
           elif [ -f "/github/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
+            echo "::notice::path $GITHUB_PATH"
             exit 0
           else
-            echo "Unable to determine package manager"
+            echo "::notice::path $GITHUB_PATH"
+            echo "::error::Unable to determine package manager"
             exit 1
           fi
       - name: Setup Node
