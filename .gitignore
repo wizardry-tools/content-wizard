@@ -1,5 +1,15 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Ignore AEM and Content Wizard related dirs for the gh-pages site
+/all
+/ui.apps
+/ui.apps.structure
+/ui.config
+/ui.content
+/ui.frontend
+
+
+
 ### Eclipse ###
 *.pydevproject
 .metadata
@@ -33,8 +43,8 @@ local.properties
 *.log
 
 # dependencies
-/node_modules
-/.pnp
+/github/node_modules
+/github/.pnp
 .pnp.js
 package-lock.json
 
@@ -42,7 +52,7 @@ package-lock.json
 /coverage
 
 # production
-/build
+/github/build
 
 # misc
 .DS_Store
