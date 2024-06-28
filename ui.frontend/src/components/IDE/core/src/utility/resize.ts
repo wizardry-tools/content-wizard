@@ -1,55 +1,9 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-
-import { useStorageContext } from '../storage';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { ResizableElement, UseDragResizeArgs } from '@/types';
+import { useStorageContext } from '../ide-providers';
 import debounce from './debounce';
 
-type ResizableElement = 'first' | 'second';
-
-type UseDragResizeArgs = {
-  /**
-   * Set the default sizes for the two resizable halves by passing their ratio
-   * (first divided by second).
-   */
-  defaultSizeRelation?: number;
-  /**
-   * The direction in which the two halves should be resizable.
-   */
-  direction: 'horizontal' | 'vertical';
-  /**
-   * Choose one of the two halves that should initially be hidden.
-   */
-  initiallyHidden?: ResizableElement;
-  /**
-   * Invoked when the visibility of one of the halves changes.
-   * @param hiddenElement The element that is now hidden after the change
-   * (`null` if both are visible).
-   */
-  onHiddenElementChange?(hiddenElement: ResizableElement | null): void;
-  /**
-   * The minimum width in pixels for the first half. If it is resized to a
-   * width smaller than this threshold, the half will be hidden.
-   */
-  sizeThresholdFirst?: number;
-  /**
-   * The minimum width in pixels for the second half. If it is resized to a
-   * width smaller than this threshold, the half will be hidden.
-   */
-  sizeThresholdSecond?: number;
-  /**
-   * A key for which the state of resizing is persisted in storage (if storage
-   * is available).
-   */
-  storageKey?: string;
-};
-
-export function useDragResize({
+export const useDragResize = ({
   defaultSizeRelation = DEFAULT_FLEX,
   direction,
   initiallyHidden,
@@ -57,31 +11,29 @@ export function useDragResize({
   sizeThresholdFirst = 100,
   sizeThresholdSecond = 100,
   storageKey,
-}: UseDragResizeArgs) {
+}: UseDragResizeArgs) => {
   const storage = useStorageContext();
 
   const store = useMemo(
     () =>
       debounce(500, (value: string) => {
         if (storageKey) {
-          storage?.set(storageKey, value);
+          storage.set(storageKey, value);
         }
       }),
     [storage, storageKey],
   );
 
-  const [hiddenElement, setHiddenElement] = useState<ResizableElement | null>(
-    () => {
-      const storedValue = storageKey && storage?.get(storageKey);
-      if (storedValue === HIDE_FIRST || initiallyHidden === 'first') {
-        return 'first';
-      }
-      if (storedValue === HIDE_SECOND || initiallyHidden === 'second') {
-        return 'second';
-      }
-      return null;
-    },
-  );
+  const [hiddenElement, setHiddenElement] = useState<ResizableElement | null>(() => {
+    const storedValue = storageKey && storage.get(storageKey);
+    if (storedValue === HIDE_FIRST || initiallyHidden === 'first') {
+      return 'first';
+    }
+    if (storedValue === HIDE_SECOND || initiallyHidden === 'second') {
+      return 'second';
+    }
+    return null;
+  });
 
   const setHiddenElementWithCallback = useCallback(
     (element: ResizableElement | null) => {
@@ -103,15 +55,12 @@ export function useDragResize({
    * Set initial flex values
    */
   useLayoutEffect(() => {
-    const storedValue =
-      (storageKey && storage?.get(storageKey)) || defaultFlexRef.current;
+    const storedValue = (storageKey && storage.get(storageKey)) ?? defaultFlexRef.current;
 
     if (firstRef.current) {
       firstRef.current.style.display = 'flex';
       firstRef.current.style.flex =
-        storedValue === HIDE_FIRST || storedValue === HIDE_SECOND
-          ? defaultFlexRef.current
-          : storedValue;
+        storedValue === HIDE_FIRST || storedValue === HIDE_SECOND ? defaultFlexRef.current : storedValue;
     }
 
     if (secondRef.current) {
@@ -125,8 +74,7 @@ export function useDragResize({
   }, [direction, storage, storageKey]);
 
   const hide = useCallback((resizableElement: ResizableElement) => {
-    const element =
-      resizableElement === 'first' ? firstRef.current : secondRef.current;
+    const element = resizableElement === 'first' ? firstRef.current : secondRef.current;
     if (!element) {
       return;
     }
@@ -153,8 +101,7 @@ export function useDragResize({
 
   const show = useCallback(
     (resizableElement: ResizableElement) => {
-      const element =
-        resizableElement === 'first' ? firstRef.current : secondRef.current;
+      const element = resizableElement === 'first' ? firstRef.current : secondRef.current;
       if (!element) {
         return;
       }
@@ -167,12 +114,8 @@ export function useDragResize({
 
       if (storage && storageKey) {
         const storedValue = storage.get(storageKey);
-        if (
-          firstRef.current &&
-          storedValue !== HIDE_FIRST &&
-          storedValue !== HIDE_SECOND
-        ) {
-          firstRef.current.style.flex = storedValue || defaultFlexRef.current;
+        if (firstRef.current && storedValue !== HIDE_FIRST && storedValue !== HIDE_SECOND) {
+          firstRef.current.style.flex = storedValue ?? defaultFlexRef.current;
         }
       }
     },
@@ -205,29 +148,23 @@ export function useDragResize({
 
     const eventProperty = direction === 'horizontal' ? 'clientX' : 'clientY';
     const rectProperty = direction === 'horizontal' ? 'left' : 'top';
-    const adjacentRectProperty =
-      direction === 'horizontal' ? 'right' : 'bottom';
-    const sizeProperty =
-      direction === 'horizontal' ? 'clientWidth' : 'clientHeight';
+    const adjacentRectProperty = direction === 'horizontal' ? 'right' : 'bottom';
+    const sizeProperty = direction === 'horizontal' ? 'clientWidth' : 'clientHeight';
 
-    function handleMouseDown(downEvent: MouseEvent) {
+    const handleMouseDown = (downEvent: MouseEvent) => {
       downEvent.preventDefault();
 
       // Distance between the start of the drag bar and the exact point where
       // the user clicked on the drag bar.
-      const offset =
-        downEvent[eventProperty] -
-        dragBarContainer.getBoundingClientRect()[rectProperty];
+      const offset = downEvent[eventProperty] - dragBarContainer.getBoundingClientRect()[rectProperty];
 
-      function handleMouseMove(moveEvent: MouseEvent) {
+      const handleMouseMove = (moveEvent: MouseEvent) => {
         if (moveEvent.buttons === 0) {
-          return handleMouseUp();
+          handleMouseUp();
+          return;
         }
 
-        const firstSize =
-          moveEvent[eventProperty] -
-          wrapper.getBoundingClientRect()[rectProperty] -
-          offset;
+        const firstSize = moveEvent[eventProperty] - wrapper.getBoundingClientRect()[rectProperty] - offset;
         const secondSize =
           wrapper.getBoundingClientRect()[adjacentRectProperty] -
           moveEvent[eventProperty] +
@@ -250,26 +187,26 @@ export function useDragResize({
           firstContainer.style.flex = newFlex;
           store(newFlex);
         }
-      }
+      };
 
-      function handleMouseUp() {
+      const handleMouseUp = () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
-      }
+      };
 
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-    }
+    };
 
     dragBarContainer.addEventListener('mousedown', handleMouseDown);
 
-    function reset() {
+    const reset = () => {
       if (firstRef.current) {
         firstRef.current.style.flex = defaultFlexRef.current;
       }
       store(defaultFlexRef.current);
       setHiddenElementWithCallback(null);
-    }
+    };
 
     dragBarContainer.addEventListener('dblclick', reset);
 
@@ -277,13 +214,7 @@ export function useDragResize({
       dragBarContainer.removeEventListener('mousedown', handleMouseDown);
       dragBarContainer.removeEventListener('dblclick', reset);
     };
-  }, [
-    direction,
-    setHiddenElementWithCallback,
-    sizeThresholdFirst,
-    sizeThresholdSecond,
-    store,
-  ]);
+  }, [direction, setHiddenElementWithCallback, sizeThresholdFirst, sizeThresholdSecond, store]);
 
   return useMemo(
     () => ({
@@ -295,7 +226,7 @@ export function useDragResize({
     }),
     [hiddenElement, setHiddenElement],
   );
-}
+};
 
 const DEFAULT_FLEX = 1;
 const HIDE_FIRST = 'hide-first';

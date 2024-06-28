@@ -1,16 +1,10 @@
-import ContentWizard from "./components/ContentWizard/ContentWizard";
-import {AppProvider} from "./components/QueryWizard/providers/AppProvider";
+import { ContentWizard } from '@/components';
+import { AppProvider } from '@/providers';
 
 export default function App() {
-
-  return(
+  return (
     <AppProvider>
       <ContentWizard />
     </AppProvider>
   );
 }
-
-
-
-
-

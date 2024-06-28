@@ -1,10 +1,18 @@
 # Created by https://www.gitignore.io/api/eclipse,java,maven
 
+# Ignore AEM and Content Wizard related dirs for the gh-pages site
+/all
+/ui.apps
+/ui.apps.structure
+/ui.config
+/ui.content
+# /ui.frontend # this is not ignored, so that we can include a demo of Content Wizard on the promo website
+target/
+
 ### Eclipse ###
 *.pydevproject
 .metadata
 .gradle
-bin/
 tmp/
 *.tmp
 *.bak
@@ -91,8 +99,6 @@ buildNumber.properties
 
 # NPM
 node_modules/
-yarn.lock
-package-lock.json
 
 # Webpack
 build/

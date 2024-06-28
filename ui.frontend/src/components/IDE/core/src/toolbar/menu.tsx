@@ -1,15 +1,10 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { ToolbarMenuProps } from '@/types';
+import { createComponentGroup } from '@/utility';
 import { DropdownMenu, Tooltip } from '../ui';
-import { createComponentGroup } from '../utility/component-group';
-
 import './menu.scss';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
-type ToolbarMenuProps = {
-  button: ReactNode;
-  label: string;
-};
 
 const ToolbarMenuRoot = ({
   button,
@@ -22,13 +17,7 @@ const ToolbarMenuRoot = ({
 } & DropdownMenuProps) => (
   <DropdownMenu {...props}>
     <Tooltip label={label}>
-      <DropdownMenu.Button
-        className={clsx(
-          'wizard-un-styled wizard-toolbar-menu',
-          props.className,
-        )}
-        aria-label={label}
-      >
+      <DropdownMenu.Button className={clsx('wizard-un-styled wizard-toolbar-menu', props.className)} aria-label={label}>
         {button}
       </DropdownMenu.Button>
     </Tooltip>

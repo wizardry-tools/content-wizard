@@ -1,51 +1,67 @@
-import { fillLeafs, GetDefaultFieldNamesFn, mergeAst } from '@graphiql/toolkit';
+import { fillLeafs, mergeAst } from '@graphiql/toolkit';
 import type { EditorChange, EditorConfiguration } from 'codemirror';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import copyToClipboard from 'copy-to-clipboard';
 import { parse, print } from 'graphql';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
+import type {
+  Caller,
+  CodeMirrorEditor,
+  EmptyCallback,
+  Query,
+  UseAutoCompleteLeafsArgs,
+  UseCopyQueryArgs,
+  UseCopyResultArgs,
+  UseMergeQueryArgs,
+  UsePrettifyEditorsArgs,
+} from '@/types';
+import { useIsGraphQL, useLogger } from '@/providers';
 import { useExplorerContext } from '../explorer';
-import { usePluginContext } from '../plugin';
-import { useSchemaContext } from '../schema';
-import { useStorageContext } from '../storage';
+import { usePluginContext, useSchemaContext, useStorageContext } from '../ide-providers';
 import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
-import { CodeMirrorEditor } from './types';
-import {useIsGraphQL} from "../../../../QueryWizard/providers/QueryProvider";
 
-export function useSynchronizeValue(
-  editor: CodeMirrorEditor | null,
-  value: string | undefined,
-) {
+/**
+ * This method synchronizes values across editors.
+ * Pass a null value to avoid a synchronization.
+ * @param editor
+ * @param value
+ */
+export const useSynchronizeValue = (editor: CodeMirrorEditor | null, value: Query | string | undefined | null) => {
   useEffect(() => {
-    if (editor && typeof value === 'string' && value !== editor.getValue()) {
-      console.log("updating value, via useSynchronizeValue: ", {value, editor});
-      editor.setValue(value);
+    if (editor && value) {
+      if (typeof value === 'string' && value !== editor.getValue()) {
+        editor.setValue(value);
+      } else if (typeof value !== 'string' && typeof value !== 'undefined' && value.statement !== editor.getValue()) {
+        editor.setValue(value.statement);
+      }
     }
   }, [editor, value]);
-}
+};
 
-export function useSynchronizeOption<K extends keyof EditorConfiguration>(
+export const useSynchronizeOption = <K extends keyof EditorConfiguration>(
   editor: CodeMirrorEditor | null,
   option: K,
   value: EditorConfiguration[K],
-) {
+) => {
+  const logger = useLogger();
   useEffect(() => {
     if (editor) {
+      logger.debug({ message: `useSynchronizeOption useEffect() setOption` });
       editor.setOption(option, value);
     }
-  }, [editor, option, value]);
-}
+  }, [editor, logger, option, value]);
+};
 
-export function useChangeHandler(
+export const useChangeHandler = (
   editor: CodeMirrorEditor | null,
   callback: ((value: string) => void) | undefined,
   storageKey: string | null,
   tabProperty: 'variables' | 'headers',
-  caller: Function,
-) {
+  caller: Caller,
+) => {
+  const logger = useLogger();
   const { updateActiveTabValues } = useEditorContext({ nonNull: true, caller });
   const storage = useStorageContext();
 
@@ -65,38 +81,30 @@ export function useChangeHandler(
       updateActiveTabValues({ [tabProperty]: value });
     });
 
-    const handleChange = (
-      editorInstance: CodeMirrorEditor,
-      changeObj: EditorChange | undefined,
-    ) => {
+    const handleChange = (editorInstance: CodeMirrorEditor, changeObj: EditorChange | undefined) => {
       // When we signal a change manually without actually changing anything
       // we don't want to invoke the callback.
       if (!changeObj) {
         return;
       }
-
+      logger.debug({ message: `useChangeHandler useEffect() handleChange` });
       const newValue = editorInstance.getValue();
       store(newValue);
       updateTab(newValue);
       callback?.(newValue);
     };
     editor.on('change', handleChange);
-    return () => editor.off('change', handleChange);
-  }, [
-    callback,
-    editor,
-    storage,
-    storageKey,
-    tabProperty,
-    updateActiveTabValues,
-  ]);
-}
+    return () => {
+      editor.off('change', handleChange);
+    };
+  }, [callback, editor, logger, storage, storageKey, tabProperty, updateActiveTabValues]);
+};
 
-export function useCompletion(
+export const useCompletion = (
   editor: CodeMirrorEditor | null,
   callback: ((reference: SchemaReference) => void) | null,
-  caller: Function,
-) {
+  caller: Caller,
+) => {
   const { schema } = useSchemaContext({ nonNull: true, caller });
   const explorer = useExplorerContext();
   const plugin = usePluginContext();
@@ -105,35 +113,21 @@ export function useCompletion(
       return;
     }
 
-    const handleCompletion = (
-      instance: CodeMirrorEditor,
-      changeObj?: EditorChange,
-    ) => {
-      onHasCompletion(instance, changeObj, schema, explorer, plugin, type => {
-        callback?.({ kind: 'Type', type, schema: schema || undefined });
+    const handleCompletion = (instance: CodeMirrorEditor, changeObj?: EditorChange) => {
+      onHasCompletion(instance, changeObj, schema, explorer, plugin, (type) => {
+        callback?.({ kind: 'Type', type, schema: schema ?? undefined });
       });
     };
-    editor.on(
-      // @ts-expect-error @TODO additional args for hasCompletion event
-      'hasCompletion',
-      handleCompletion,
-    );
-    return () =>
-      editor.off(
-        // @ts-expect-error @TODO additional args for hasCompletion event
-        'hasCompletion',
-        handleCompletion,
-      );
+    // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
+    editor.on('hasCompletion', handleCompletion);
+    return () => {
+      // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
+      editor.off('hasCompletion', handleCompletion);
+    };
   }, [callback, editor, explorer, plugin, schema]);
-}
+};
 
-type EmptyCallback = () => void;
-
-export function useKeyMap(
-  editor: CodeMirrorEditor | null,
-  keys: string[],
-  callback: EmptyCallback | undefined,
-) {
+export const useKeyMap = (editor: CodeMirrorEditor | null, keys: string[], callback: EmptyCallback | undefined) => {
   useEffect(() => {
     if (!editor) {
       return;
@@ -145,30 +139,19 @@ export function useKeyMap(
     if (callback) {
       const keyMap: Record<string, EmptyCallback> = {};
       for (const key of keys) {
-        keyMap[key] = () => callback();
+        keyMap[key] = () => {
+          callback();
+        };
       }
       editor.addKeyMap(keyMap);
     }
   }, [editor, keys, callback]);
-}
-
-export type UseCopyQueryArgs = {
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
-  /**
-   * Invoked when the current contents of the query editor are copied to the
-   * clipboard.
-   * @param query The content that has been copied.
-   */
-  onCopyQuery?: (query: string) => void;
 };
 
-export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
+export const useCopyQuery = ({ caller, onCopyQuery }: UseCopyQueryArgs = {}): EmptyCallback => {
   const { queryEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useCopyQuery,
+    caller: caller ?? useCopyQuery,
   });
   return useCallback(() => {
     if (!queryEditor) {
@@ -180,19 +163,26 @@ export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
 
     onCopyQuery?.(query);
   }, [queryEditor, onCopyQuery]);
-}
-
-type UseMergeQueryArgs = {
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
 };
 
-export function useMergeQuery({ caller }: UseMergeQueryArgs = {}) {
+export const useCopyResult = ({ caller }: UseCopyResultArgs = {}): EmptyCallback => {
+  const { resultExplorerEditor } = useEditorContext({
+    nonNull: true,
+    caller: caller ?? useCopyResult,
+  });
+  return useCallback(() => {
+    if (!resultExplorerEditor) {
+      return;
+    }
+    const result = resultExplorerEditor.getValue();
+    copyToClipboard(result);
+  }, [resultExplorerEditor]);
+};
+
+export const useMergeQuery = ({ caller }: UseMergeQueryArgs = {}): EmptyCallback => {
   const { queryEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useMergeQuery,
+    caller: caller ?? useMergeQuery,
   });
   const { schema } = useSchemaContext({ nonNull: true, caller: useMergeQuery });
   return useCallback(() => {
@@ -204,30 +194,19 @@ export function useMergeQuery({ caller }: UseMergeQueryArgs = {}) {
 
     queryEditor.setValue(print(mergeAst(documentAST, schema)));
   }, [queryEditor, schema]);
-}
-
-type UsePrettifyEditorsArgs = {
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
 };
 
-export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
+export const usePrettifyEditors = ({ caller }: UsePrettifyEditorsArgs = {}): EmptyCallback => {
   const { queryEditor, headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || usePrettifyEditors,
+    caller: caller ?? usePrettifyEditors,
   });
   const isGraphQL = useIsGraphQL();
   return useCallback(() => {
     if (variableEditor) {
       const variableEditorContent = variableEditor.getValue();
       try {
-        const prettifiedVariableEditorContent = JSON.stringify(
-          JSON.parse(variableEditorContent),
-          null,
-          2,
-        );
+        const prettifiedVariableEditorContent = JSON.stringify(JSON.parse(variableEditorContent), null, 2);
         if (prettifiedVariableEditorContent !== variableEditorContent) {
           variableEditor.setValue(prettifiedVariableEditorContent);
         }
@@ -240,11 +219,7 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
       const headerEditorContent = headerEditor.getValue();
 
       try {
-        const prettifiedHeaderEditorContent = JSON.stringify(
-          JSON.parse(headerEditorContent),
-          null,
-          2,
-        );
+        const prettifiedHeaderEditorContent = JSON.stringify(JSON.parse(headerEditorContent), null, 2);
         if (prettifiedHeaderEditorContent !== headerEditorContent) {
           headerEditor.setValue(prettifiedHeaderEditorContent);
         }
@@ -262,32 +237,18 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
       }
     }
   }, [isGraphQL, queryEditor, variableEditor, headerEditor]);
-}
-
-export type UseAutoCompleteLeafsArgs = {
-  /**
-   * A function to determine which field leafs are automatically added when
-   * trying to execute a query with missing selection sets. It will be called
-   * with the `GraphQLType` for which fields need to be added.
-   */
-  getDefaultFieldNames?: GetDefaultFieldNamesFn;
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
 };
 
-export function useAutoCompleteLeafs({
-  getDefaultFieldNames,
-  caller,
-}: UseAutoCompleteLeafsArgs = {}) {
+export const useAutoCompleteLeafs = ({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}): (() =>
+  | string
+  | undefined) => {
   const { schema } = useSchemaContext({
     nonNull: true,
-    caller: caller || useAutoCompleteLeafs,
+    caller: caller ?? useAutoCompleteLeafs,
   });
   const { queryEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useAutoCompleteLeafs,
+    caller: caller ?? useAutoCompleteLeafs,
   });
   return useCallback(() => {
     if (!queryEditor) {
@@ -295,16 +256,12 @@ export function useAutoCompleteLeafs({
     }
 
     const query = queryEditor.getValue();
-    const { insertions, result } = fillLeafs(
-      schema,
-      query,
-      getDefaultFieldNames,
-    );
+    const { insertions, result } = fillLeafs(schema, query, getDefaultFieldNames);
     if (insertions && insertions.length > 0) {
       queryEditor.operation(() => {
         const cursor = queryEditor.getCursor();
         const cursorIndex = queryEditor.indexFromPos(cursor);
-        queryEditor.setValue(result || '');
+        queryEditor.setValue(result ?? '');
         let added = 0;
         const markers = insertions.map(({ index, string }) =>
           queryEditor.markText(
@@ -334,9 +291,7 @@ export function useAutoCompleteLeafs({
 
     return result;
   }, [getDefaultFieldNames, queryEditor, schema]);
-}
-
-export type InitialState = string | (() => string);
+};
 
 // https://react.dev/learn/you-might-not-need-an-effect
 
@@ -352,10 +307,7 @@ export const useEditorState = (editor: 'query' | 'variable' | 'header') => {
     valueString = editorValue;
   }
 
-  const handleEditorValue = useCallback(
-    (value: string) => editorInstance?.setValue(value),
-    [editorInstance],
-  );
+  const handleEditorValue = useCallback((value: string) => editorInstance?.setValue(value), [editorInstance]);
   return useMemo<[string, (val: string) => void]>(
     () => [valueString, handleEditorValue],
     [valueString, handleEditorValue],
@@ -365,30 +317,21 @@ export const useEditorState = (editor: 'query' | 'variable' | 'header') => {
 /**
  * useState-like hook for current tab operations editor state
  */
-export const useOperationsEditorState = (): [
-  operations: string,
-  setOperations: (content: string) => void,
-] => {
+export const useOperationsEditorState = (): [operations: string, setOperations: (content: string) => void] => {
   return useEditorState('query');
 };
 
 /**
  * useState-like hook for current tab variables editor state
  */
-export const useVariablesEditorState = (): [
-  variables: string,
-  setVariables: (content: string) => void,
-] => {
+export const useVariablesEditorState = (): [variables: string, setVariables: (content: string) => void] => {
   return useEditorState('variable');
 };
 
 /**
  * useState-like hook for current tab variables editor state
  */
-export const useHeadersEditorState = (): [
-  headers: string,
-  setHeaders: (content: string) => void,
-] => {
+export const useHeadersEditorState = (): [headers: string, setHeaders: (content: string) => void] => {
   return useEditorState('header');
 };
 
@@ -409,10 +352,9 @@ export const useHeadersEditorState = (): [
  *   useOptimisticState(useOperationsEditorState());
  * ```
  */
-export function useOptimisticState([
-  upstreamState,
-  upstreamSetState,
-]: ReturnType<typeof useEditorState>): ReturnType<typeof useEditorState> {
+export const useOptimisticState = ([upstreamState, upstreamSetState]: ReturnType<typeof useEditorState>): ReturnType<
+  typeof useEditorState
+> => {
   const lastStateRef = useRef({
     /** The last thing that we sent upstream; we're expecting this back */
     pending: null as string | null,
@@ -450,10 +392,7 @@ export function useOptimisticState([
   const setState = useCallback(
     (newState: string) => {
       setOperationsText(newState);
-      if (
-        lastStateRef.current.pending === null &&
-        lastStateRef.current.last !== newState
-      ) {
+      if (lastStateRef.current.pending === null && lastStateRef.current.last !== newState) {
         // No pending updates and change has occurred... send it upstream
         lastStateRef.current.pending = newState;
         upstreamSetState(newState);
@@ -463,4 +402,4 @@ export function useOptimisticState([
   );
 
   return useMemo(() => [state, setState], [state, setState]);
-}
+};

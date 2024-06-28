@@ -1,14 +1,9 @@
 import { forwardRef } from 'react';
+import type { JSX } from 'react';
 import { clsx } from 'clsx';
+import type { MarkdownContentProps } from '@/types';
 import { markdown } from '../markdown';
-
 import './markdown.scss';
-
-type MarkdownContentProps = {
-  children: string;
-  onlyShowFirstChild?: boolean;
-  type: 'description' | 'deprecation';
-};
 
 export const MarkdownContent = forwardRef<
   HTMLDivElement,
@@ -17,11 +12,7 @@ export const MarkdownContent = forwardRef<
   <div
     {...props}
     ref={ref}
-    className={clsx(
-      `wizard-markdown-${type}`,
-      onlyShowFirstChild && 'wizard-markdown-preview',
-      props.className,
-    )}
+    className={clsx(`wizard-markdown-${type}`, onlyShowFirstChild && 'wizard-markdown-preview', props.className)}
     dangerouslySetInnerHTML={{ __html: markdown.render(children) }}
   />
 ));

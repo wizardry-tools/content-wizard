@@ -52,6 +52,7 @@ a.wizard-doc-explorer-back {
   color: hsla(var(--color-neutral), var(--alpha-secondary));
   display: flex;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

@@ -1,27 +1,20 @@
-import { ExplorerFieldDef, useExplorerContext } from '../context';
-
+import { Link } from '@mui/material';
+import type { FieldLinkProps } from '@/types';
+import { useExplorerContext } from '../ExplorerContext';
 import './field-link.scss';
 
-type FieldLinkProps = {
-  /**
-   * The field or argument that should be linked to.
-   */
-  field: ExplorerFieldDef;
-};
-
-export function FieldLink(props: FieldLinkProps) {
+export const FieldLink = (props: FieldLinkProps) => {
   const { push } = useExplorerContext({ nonNull: true });
 
   return (
-    <a
+    <Link
       className="wizard-doc-explorer-field-name"
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault();
         push({ name: props.field.name, def: props.field });
       }}
-      href="#"
     >
       {props.field.name}
-    </a>
+    </Link>
   );
-}
+};

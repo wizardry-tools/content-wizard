@@ -16,5 +16,4 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <workspaceFilter version="1.0">
     <filter root="/apps/content-wizard-packages"/>
-    <filter root="/apps/content-wizard-vendor-packages"/>
 </workspaceFilter>

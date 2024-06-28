@@ -1,4 +1,4 @@
-import '../../root.scss';
+import '../../IDE.scss';
 
 export {
   EditorContext,
@@ -8,6 +8,7 @@ export {
   QueryEditor,
   ResponseEditor,
   WizardStatementEditor,
+  ResultExplorerEditor,
   useAutoCompleteLeafs,
   useCopyQuery,
   useEditorContext,
@@ -17,6 +18,7 @@ export {
   useQueryEditor,
   useResponseEditor,
   useWizardStatementEditor,
+  useResultExplorerEditor,
   useVariableEditor,
   useEditorState,
   useOperationsEditorState,
@@ -25,11 +27,6 @@ export {
   useHeadersEditorState,
   VariableEditor,
 } from './editor';
-export {
-  ExecutionContext,
-  ExecutionContextProvider,
-  useExecutionContext,
-} from './execution';
 export {
   Argument,
   DefaultValue,
@@ -47,74 +44,10 @@ export {
   TypeLink,
   useExplorerContext,
 } from './explorer';
-export {
-  History,
-  HistoryContext,
-  HistoryContextProvider,
-  useHistoryContext,
-} from './history';
-export {
-  DOC_EXPLORER_PLUGIN,
-  HISTORY_PLUGIN,
-  PluginContext,
-  PluginContextProvider,
-  usePluginContext,
-} from './plugin';
-export { GraphiQLProvider } from './provider';
-export {
-  SchemaContext,
-  SchemaContextProvider,
-  useSchemaContext,
-} from './schema';
-export {
-  StorageContext,
-  StorageContextProvider,
-  useStorageContext,
-} from './storage';
+export { History, HistoryContext, HistoryContextProvider, useHistoryContext } from './history';
+export { StorageContext, StorageContextProvider, useStorageContext } from './ide-providers';
 export { useTheme } from './theme';
 export { useDragResize } from './utility/resize';
-
-export * from '../../../../icons';
 export * from './ui';
 export * from './toolbar';
-
-export type {
-  CommonEditorProps,
-  EditorContextProviderProps,
-  EditorContextType,
-  KeyMap,
-  ResponseTooltipType,
-  TabsState,
-  UseHeaderEditorArgs,
-  UseQueryEditorArgs,
-  UseResponseEditorArgs,
-  UseVariableEditorArgs,
-  WriteableEditorProps,
-} from './editor';
-export type {
-  ExecutionContextProviderProps,
-  ExecutionContextType,
-} from './execution';
-export type {
-  ExplorerContextProviderProps,
-  ExplorerContextType,
-  ExplorerFieldDef,
-  ExplorerNavStack,
-  ExplorerNavStackItem,
-} from './explorer';
-export type {
-  HistoryContextProviderProps,
-  HistoryContextType,
-} from './history';
-export type {
-  GraphiQLPlugin,
-  PluginContextType,
-  PluginContextProviderProps,
-} from './plugin';
-export type { GraphiQLProviderProps } from './provider';
-export type { SchemaContextProviderProps, SchemaContextType } from './schema';
-export type {
-  StorageContextProviderProps,
-  StorageContextType,
-} from './storage';
-export type { Theme } from './theme';
+export * from './ide-providers';

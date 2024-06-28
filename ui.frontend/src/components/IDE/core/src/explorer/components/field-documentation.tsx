@@ -1,32 +1,18 @@
-import { GraphQLArgument } from 'graphql';
+import type { GraphQLArgument } from 'graphql';
 import { useCallback, useState } from 'react';
-
+import type { ExplorerFieldDef, FieldDocumentationProps } from '@/types';
 import { Button, MarkdownContent } from '../../ui';
-import { ExplorerFieldDef } from '../context';
 import { Argument } from './argument';
 import { DeprecationReason } from './deprecation-reason';
 import { Directive } from './directive';
 import { ExplorerSection } from './section';
 import { TypeLink } from './type-link';
 
-type FieldDocumentationProps = {
-  /**
-   * The field or argument that should be rendered.
-   */
-  field: ExplorerFieldDef;
-};
-
-export function FieldDocumentation(props: FieldDocumentationProps) {
+export const FieldDocumentation = (props: FieldDocumentationProps) => {
   return (
     <>
-      {props.field.description ? (
-        <MarkdownContent type="description">
-          {props.field.description}
-        </MarkdownContent>
-      ) : null}
-      <DeprecationReason preview={false}>
-        {props.field.deprecationReason}
-      </DeprecationReason>
+      {props.field.description ? <MarkdownContent type="description">{props.field.description}</MarkdownContent> : null}
+      <DeprecationReason preview={false}>{props.field.deprecationReason}</DeprecationReason>
       <ExplorerSection title="Type">
         <TypeLink type={props.field.type} />
       </ExplorerSection>
@@ -34,9 +20,9 @@ export function FieldDocumentation(props: FieldDocumentationProps) {
       <Directives field={props.field} />
     </>
   );
-}
+};
 
-function Arguments({ field }: { field: ExplorerFieldDef }) {
+const Arguments = ({ field }: { field: ExplorerFieldDef }) => {
   const [showDeprecated, setShowDeprecated] = useState(false);
   const handleShowDeprecated = useCallback(() => {
     setShowDeprecated(true);
@@ -60,7 +46,7 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
     <>
       {args.length > 0 ? (
         <ExplorerSection title="Arguments">
-          {args.map(arg => (
+          {args.map((arg) => (
             <Argument key={arg.name} arg={arg} />
           ))}
         </ExplorerSection>
@@ -68,7 +54,7 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
       {deprecatedArgs.length > 0 ? (
         showDeprecated || args.length === 0 ? (
           <ExplorerSection title="Deprecated Arguments">
-            {deprecatedArgs.map(arg => (
+            {deprecatedArgs.map((arg) => (
               <Argument key={arg.name} arg={arg} />
             ))}
           </ExplorerSection>
@@ -80,20 +66,20 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
       ) : null}
     </>
   );
-}
+};
 
-function Directives({ field }: { field: ExplorerFieldDef }) {
-  const directives = field.astNode?.directives || [];
+const Directives = ({ field }: { field: ExplorerFieldDef }) => {
+  const directives = field.astNode?.directives ?? [];
   if (!directives || directives.length === 0) {
     return null;
   }
   return (
     <ExplorerSection title="Directives">
-      {directives.map(directive => (
+      {directives.map((directive) => (
         <div key={directive.name.value}>
           <Directive directive={directive} />
         </div>
       ))}
     </ExplorerSection>
   );
-}
+};

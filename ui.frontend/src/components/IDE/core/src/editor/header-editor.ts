@@ -1,60 +1,26 @@
 import { useEffect, useRef } from 'react';
-
-import { useExecutionContext } from '../execution';
-import {
-  commonKeys,
-  DEFAULT_EDITOR_THEME,
-  DEFAULT_KEY_MAP,
-  importCodeMirror,
-} from './common';
+import type { Caller, UseHeaderEditorArgs } from '@/types';
+import { useExecutionContext } from '../ide-providers';
+import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
-import {
-  useChangeHandler,
-  useKeyMap,
-  useMergeQuery,
-  usePrettifyEditors,
-  useSynchronizeOption,
-} from './hooks';
-import { WriteableEditorProps } from './types';
+import { useChangeHandler, useKeyMap, useMergeQuery, usePrettifyEditors, useSynchronizeOption } from './hooks';
 
-export type UseHeaderEditorArgs = WriteableEditorProps & {
-  /**
-   * Invoked when the contents of the headers editor change.
-   * @param value The new contents of the editor.
-   */
-  onEdit?(value: string): void;
-};
-
-export function useHeaderEditor(
-  {
-    editorTheme = DEFAULT_EDITOR_THEME,
-    keyMap = DEFAULT_KEY_MAP,
-    onEdit,
-    readOnly = false,
-  }: UseHeaderEditorArgs = {},
-  caller?: Function,
-) {
-  const {
-    initialHeaders,
-    headerEditor,
-    setHeaderEditor,
-    shouldPersistHeaders,
-  } = useEditorContext({
+export const useHeaderEditor = (
+  { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, readOnly = false }: UseHeaderEditorArgs = {},
+  caller?: Caller,
+) => {
+  const { initialHeaders, headerEditor, setHeaderEditor, shouldPersistHeaders } = useEditorContext({
     nonNull: true,
-    caller: caller || useHeaderEditor,
+    caller: caller ?? useHeaderEditor,
   });
   const executionContext = useExecutionContext();
-  const merge = useMergeQuery({ caller: caller || useHeaderEditor });
-  const prettify = usePrettifyEditors({ caller: caller || useHeaderEditor });
+  const merge = useMergeQuery({ caller: caller ?? useHeaderEditor });
+  const prettify = usePrettifyEditors({ caller: caller ?? useHeaderEditor });
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let isActive = true;
-
-    void importCodeMirror([
-      // @ts-expect-error
-      import('codemirror/mode/javascript/javascript'),
-    ]).then(CodeMirror => {
+    void importCodeMirror([import('codemirror/mode/javascript/javascript' as never)]).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;
@@ -66,7 +32,7 @@ export function useHeaderEditor(
       }
 
       const newEditor = CodeMirror(container, {
-        value: initialHeaders,
+        value: initialHeaders ?? '',
         lineNumbers: true,
         tabSize: 2,
         mode: { name: 'javascript', json: true },
@@ -81,16 +47,16 @@ export function useHeaderEditor(
       });
 
       newEditor.addKeyMap({
-        'Cmd-Space'() {
+        'Cmd-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Ctrl-Space'() {
+        'Ctrl-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Alt-Space'() {
+        'Alt-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Shift-Space'() {
+        'Shift-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
       });
@@ -114,19 +80,13 @@ export function useHeaderEditor(
 
   useSynchronizeOption(headerEditor, 'keyMap', keyMap);
 
-  useChangeHandler(
-    headerEditor,
-    onEdit,
-    shouldPersistHeaders ? STORAGE_KEY : null,
-    'headers',
-    useHeaderEditor,
-  );
+  useChangeHandler(headerEditor, undefined, shouldPersistHeaders ? STORAGE_KEY : null, 'headers', useHeaderEditor);
 
   useKeyMap(headerEditor, ['Cmd-Enter', 'Ctrl-Enter'], executionContext?.run);
   useKeyMap(headerEditor, ['Shift-Ctrl-P'], prettify);
   useKeyMap(headerEditor, ['Shift-Ctrl-M'], merge);
 
   return ref;
-}
+};
 
 export const STORAGE_KEY = 'headers';

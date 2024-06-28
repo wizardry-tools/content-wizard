@@ -1,71 +1,21 @@
-import { StorageAPI } from '@graphiql/toolkit';
 import { useCallback, useMemo } from 'react';
-
+import type { Dispatch } from 'react';
+import type {
+  CodeMirrorEditor,
+  CodeMirrorEditorWithOperationFacts,
+  Query,
+  QueryAction,
+  TabDefinition,
+  TabsState,
+  TabState,
+  WizardStorageAPI,
+} from '@/types';
+import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/constants';
+import { isQueryValid, useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
 import debounce from '../utility/debounce';
-import { CodeMirrorEditorWithOperationFacts } from './context';
-import { CodeMirrorEditor } from './types';
 
-export type TabDefinition = {
-  /**
-   * The contents of the query editor of this tab.
-   */
-  query: string | null;
-  /**
-   * The contents of the variable editor of this tab.
-   */
-  variables?: string | null;
-  /**
-   * The contents of the headers editor of this tab.
-   */
-  headers?: string | null;
-};
-
-/**
- * This object describes the state of a single tab.
- */
-export type TabState = TabDefinition & {
-  /**
-   * A GUID value generated when the tab was created.
-   */
-  id: string;
-  /**
-   * A hash that is unique for a combination of the contents of the query
-   * editor, the variable editor and the header editor (i.e. all the editor
-   * where the contents are persisted in storage).
-   */
-  hash: string;
-  /**
-   * The title of the tab shown in the tab element.
-   */
-  title: string;
-  /**
-   * The operation name derived from the contents of the query editor of this
-   * tab.
-   */
-  operationName: string | null;
-  /**
-   * The contents of the response editor of this tab.
-   */
-  response: string | null;
-};
-
-/**
- * This object describes the state of all tabs.
- */
-export type TabsState = {
-  /**
-   * A list of state objects for each tab.
-   */
-  tabs: TabState[];
-  /**
-   * The index of the currently active tab with regards to the `tabs` list of
-   * this object.
-   */
-  activeTabIndex: number;
-};
-
-export function getDefaultTabState({
-  defaultQuery,
+export const getDefaultTabState = ({
   defaultHeaders,
   headers,
   defaultTabs,
@@ -74,21 +24,20 @@ export function getDefaultTabState({
   storage,
   shouldPersistHeaders,
 }: {
-  defaultQuery: string;
   defaultHeaders?: string;
   headers: string | null;
   defaultTabs?: TabDefinition[];
-  query: string | null;
+  query: Query;
   variables: string | null;
-  storage: StorageAPI | null;
+  storage: WizardStorageAPI | null;
   shouldPersistHeaders?: boolean;
-}) {
+}) => {
   const storedState = storage?.get(STORAGE_KEY);
   try {
     if (!storedState) {
       throw new Error('Storage for tabs is empty');
     }
-    const parsed = JSON.parse(storedState);
+    const parsed: Record<string, unknown> = JSON.parse(storedState);
     // if headers are not persisted, do not derive the hash using default headers state
     // or else you will get new tabs on every refresh
     const headersForHash = shouldPersistHeaders ? headers : undefined;
@@ -115,11 +64,11 @@ export function getDefaultTabState({
       if (matchingTabIndex >= 0) {
         parsed.activeTabIndex = matchingTabIndex;
       } else {
-        const operationName = query ? fuzzyExtractOperationName(query) : null;
+        const operationName = query ? fuzzyExtractOperationName(query.statement) : null;
         parsed.tabs.push({
           id: guid(),
           hash: expectedHash,
-          title: operationName || DEFAULT_TITLE,
+          title: query.label ?? operationName ?? QUERY_LANGUAGES[query.language] ?? DEFAULT_TITLE,
           query,
           variables,
           headers,
@@ -128,7 +77,6 @@ export function getDefaultTabState({
         });
         parsed.activeTabIndex = parsed.tabs.length - 1;
       }
-
       return parsed;
     }
     throw new Error('Storage for tabs is invalid');
@@ -136,9 +84,9 @@ export function getDefaultTabState({
     return {
       activeTabIndex: 0,
       tabs: (
-        defaultTabs || [
+        defaultTabs ?? [
           {
-            query: query ?? defaultQuery,
+            query: query ?? defaultAdvancedQueries.GraphQL,
             variables,
             headers: headers ?? defaultHeaders,
           },
@@ -146,9 +94,9 @@ export function getDefaultTabState({
       ).map(createTab),
     };
   }
-}
+};
 
-function isTabsState(obj: any): obj is TabsState {
+const isTabsState = (obj: Record<string, unknown>): obj is TabsState => {
   return (
     obj &&
     typeof obj === 'object' &&
@@ -158,9 +106,9 @@ function isTabsState(obj: any): obj is TabsState {
     Array.isArray(obj.tabs) &&
     obj.tabs.every(isTabState)
   );
-}
+};
 
-function isTabState(obj: any): obj is TabState {
+const isTabState = (obj: Record<string, unknown>): obj is TabState => {
   // We don't persist the hash, so we skip the check here
   return (
     obj &&
@@ -168,40 +116,49 @@ function isTabState(obj: any): obj is TabState {
     !Array.isArray(obj) &&
     hasStringKey(obj, 'id') &&
     hasStringKey(obj, 'title') &&
-    hasStringOrNullKey(obj, 'query') &&
+    hasQueryOrNullKey(obj, 'query') &&
     hasStringOrNullKey(obj, 'variables') &&
     hasStringOrNullKey(obj, 'headers') &&
     hasStringOrNullKey(obj, 'operationName') &&
     hasStringOrNullKey(obj, 'response')
   );
-}
+};
 
-function hasNumberKey(obj: Record<string, any>, key: string) {
+const hasNumberKey = (obj: Record<string, unknown>, key: string) => {
   return key in obj && typeof obj[key] === 'number';
-}
+};
 
-function hasStringKey(obj: Record<string, any>, key: string) {
+const hasStringKey = (obj: Record<string, unknown>, key: string) => {
   return key in obj && typeof obj[key] === 'string';
-}
+};
 
-function hasStringOrNullKey(obj: Record<string, any>, key: string) {
+const hasStringOrNullKey = (obj: Record<string, unknown>, key: string) => {
   return key in obj && (typeof obj[key] === 'string' || obj[key] === null);
-}
+};
 
-export function useSynchronizeActiveTabValues({
+const hasQueryOrNullKey = (obj: Record<string, unknown>, key: string) => {
+  return key in obj && typeof obj[key] === 'object' && obj[key] !== null && isQueryValid(obj[key] as Query);
+};
+
+export const useSynchronizeActiveTabValues = ({
   queryEditor,
   variableEditor,
   headerEditor,
   responseEditor,
+  query = defaultAdvancedQueries.GraphQL,
 }: {
   queryEditor: CodeMirrorEditorWithOperationFacts | null;
   variableEditor: CodeMirrorEditor | null;
   headerEditor: CodeMirrorEditor | null;
   responseEditor: CodeMirrorEditor | null;
-}) {
+  query: Query;
+}) => {
+  const logger = useLogger();
+  const renderCount = useRenderCount();
+  logger.debug({ message: `useSynchronizeActiveTabValues[${renderCount}] render()` });
   return useCallback<(state: TabsState) => TabsState>(
-    state => {
-      const query = queryEditor?.getValue() ?? null;
+    (state) => {
+      logger.debug({ message: `useSynchronizeActiveTabValues callback()` });
       const variables = variableEditor?.getValue() ?? null;
       const headers = headerEditor?.getValue() ?? null;
       const operationName = queryEditor?.operationName ?? null;
@@ -214,30 +171,24 @@ export function useSynchronizeActiveTabValues({
         operationName,
       });
     },
-    [queryEditor, variableEditor, headerEditor, responseEditor],
+    [logger, queryEditor, variableEditor, headerEditor, responseEditor, query],
   );
-}
+};
 
-export function serializeTabState(
-  tabState: TabsState,
-  shouldPersistHeaders = false,
-) {
+export const serializeTabState = (tabState: TabsState, shouldPersistHeaders = false) => {
   return JSON.stringify(tabState, (key, value) =>
-    key === 'hash' ||
-    key === 'response' ||
-    (!shouldPersistHeaders && key === 'headers')
-      ? null
-      : value,
+    key === 'hash' || key === 'response' || (!shouldPersistHeaders && key === 'headers') ? null : (value as string),
   );
-}
+};
 
-export function useStoreTabs({
+export const useStoreTabs = ({
   storage,
   shouldPersistHeaders,
 }: {
-  storage: StorageAPI | null;
+  storage: WizardStorageAPI | null;
   shouldPersistHeaders?: boolean;
-}) {
+}) => {
+  const logger = useLogger();
   const store = useMemo(
     () =>
       debounce(500, (value: string) => {
@@ -247,23 +198,25 @@ export function useStoreTabs({
   );
   return useCallback(
     (currentState: TabsState) => {
+      logger.debug({ message: `useStoreTabs store()` });
       store(serializeTabState(currentState, shouldPersistHeaders));
     },
-    [shouldPersistHeaders, store],
+    [logger, shouldPersistHeaders, store],
   );
-}
+};
 
-export function useSetEditorValues({
-  queryEditor,
+export const useSetEditorValues = ({
+  queryDispatcher,
   variableEditor,
   headerEditor,
   responseEditor,
 }: {
-  queryEditor: CodeMirrorEditorWithOperationFacts | null;
+  queryDispatcher: Dispatch<QueryAction> | null;
   variableEditor: CodeMirrorEditor | null;
   headerEditor: CodeMirrorEditor | null;
   responseEditor: CodeMirrorEditor | null;
-}) {
+}) => {
+  const logger = useLogger();
   return useCallback(
     ({
       query,
@@ -271,63 +224,71 @@ export function useSetEditorValues({
       headers,
       response,
     }: {
-      query: string | null;
+      query: Query;
       variables?: string | null;
       headers?: string | null;
       response: string | null;
     }) => {
-      queryEditor?.setValue(query ?? '');
+      // use queryDispatcher instead to broadcast query changes and let the queryEditor read from useQuery
+      logger.debug({ message: `tabs.useSetEditorValues queryDispatch()` });
+      if (queryDispatcher) {
+        queryDispatcher({
+          ...query,
+          type: 'replaceQuery',
+        });
+      }
+      //queryEditor?.setValue(query.statement ?? '');
       variableEditor?.setValue(variables ?? '');
       headerEditor?.setValue(headers ?? '');
       responseEditor?.setValue(response ?? '');
     },
-    [headerEditor, queryEditor, responseEditor, variableEditor],
+    [logger, queryDispatcher, headerEditor, responseEditor, variableEditor],
   );
-}
+};
 
-export function createTab({
-  query = null,
-  variables = null,
-  headers = null,
-}: Partial<TabDefinition> = {}): TabState {
+export const createTab = ({ query, variables = null, headers = null }: TabDefinition): TabState => {
   return {
     id: guid(),
     hash: hashFromTabContents({ query, variables, headers }),
-    title: (query && fuzzyExtractOperationName(query)) || DEFAULT_TITLE,
+    title:
+      query.label ??
+      (query?.statement && fuzzyExtractOperationName(query.statement)) ??
+      QUERY_LANGUAGES[query.language] ??
+      DEFAULT_TITLE,
     query,
     variables,
     headers,
     operationName: null,
     response: null,
   };
-}
+};
 
-export function setPropertiesInActiveTab(
+export const setPropertiesInActiveTab = (
   state: TabsState,
   partialTab: Partial<Omit<TabState, 'id' | 'hash' | 'title'>>,
-): TabsState {
+): TabsState => {
   return {
     ...state,
     tabs: state.tabs.map((tab, index) => {
       if (index !== state.activeTabIndex) {
         return tab;
       }
-      const newTab = { ...tab, ...partialTab };
+      const newTab: TabState = { ...tab, ...partialTab };
       return {
         ...newTab,
         hash: hashFromTabContents(newTab),
         title:
-          newTab.operationName ||
-          (newTab.query
-            ? fuzzyExtractOperationName(newTab.query)
-            : undefined) ||
+          newTab.query?.label ??
+          newTab.operationName ??
+          (newTab.query?.statement ? fuzzyExtractOperationName(newTab.query.statement) : undefined) ??
+          QUERY_LANGUAGES[newTab.query.language] ??
           DEFAULT_TITLE,
       };
     }),
   };
-}
+};
 
-function guid(): string {
+const guid = (): string => {
   const s4 = () => {
     return Math.floor((1 + Math.random()) * 0x10000)
       .toString(16)
@@ -335,36 +296,30 @@ function guid(): string {
   };
   // return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
   return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
-}
+};
 
-function hashFromTabContents(args: {
-  query: string | null;
-  variables?: string | null;
-  headers?: string | null;
-}): string {
-  return [args.query ?? '', args.variables ?? '', args.headers ?? ''].join('|');
-}
+const hashFromTabContents = (args: { query: Query; variables?: string | null; headers?: string | null }): string => {
+  return [args.query.language ?? '', args.query.statement ?? '', args.variables ?? '', args.headers ?? ''].join('|');
+};
 
-export function fuzzyExtractOperationName(str: string): string | null {
+export const fuzzyExtractOperationName = (str: string): string | null => {
   const regex = /^(?!#).*(query|subscription|mutation)\s+([a-zA-Z0-9_]+)/m;
 
   const match = regex.exec(str);
 
   return match?.[2] ?? null;
-}
+};
 
-export function clearHeadersFromTabs(storage: StorageAPI | null) {
+export const clearHeadersFromTabs = (storage: WizardStorageAPI | null) => {
   const persistedTabs = storage?.get(STORAGE_KEY);
   if (persistedTabs) {
     const parsedTabs = JSON.parse(persistedTabs);
     storage?.set(
       STORAGE_KEY,
-      JSON.stringify(parsedTabs, (key, value) =>
-        key === 'headers' ? null : value,
-      ),
+      JSON.stringify(parsedTabs, (key, value) => (key === 'headers' ? null : (value as string))),
     );
   }
-}
+};
 
 const DEFAULT_TITLE = '<untitled>';
 

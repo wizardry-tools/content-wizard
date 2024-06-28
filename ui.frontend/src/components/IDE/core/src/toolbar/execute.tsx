@@ -1,22 +1,21 @@
+import { PlayIcon, StopIcon } from '@/icons';
 import { useEditorContext } from '../editor';
-import { useExecutionContext } from '../execution';
-import { PlayIcon, StopIcon } from '../../../../../icons';
+import { useExecutionContext } from '../ide-providers';
 import { DropdownMenu, Tooltip } from '../ui';
 
 import './execute.scss';
 
-export function ExecuteButton() {
+export const ExecuteButton = () => {
   const { queryEditor, setOperationName } = useEditorContext({
     nonNull: true,
     caller: ExecuteButton,
   });
-  const { isFetching, isSubscribed, operationName, run, stop } =
-    useExecutionContext({
-      nonNull: true,
-      caller: ExecuteButton,
-    });
+  const { isFetching, isSubscribed, operationName, run, stop } = useExecutionContext({
+    nonNull: true,
+    caller: ExecuteButton,
+  });
 
-  const operations = queryEditor?.operations || [];
+  const operations = queryEditor?.operations ?? [];
   const hasOptions = operations.length > 1 && typeof operationName !== 'string';
   const isRunning = isFetching || isSubscribed;
 
@@ -36,19 +35,13 @@ export function ExecuteButton() {
 
       <DropdownMenu.Content>
         {operations.map((operation, i) => {
-          const opName = operation.name
-            ? operation.name.value
-            : `<Unnamed ${operation.operation}>`;
+          const opName = operation.name ? operation.name.value : `<Unnamed ${operation.operation}>`;
           return (
             <DropdownMenu.Item
               key={`${opName}-${i}`}
               onSelect={() => {
                 const selectedOperationName = operation.name?.value;
-                if (
-                  queryEditor &&
-                  selectedOperationName &&
-                  selectedOperationName !== queryEditor.operationName
-                ) {
+                if (queryEditor && selectedOperationName && selectedOperationName !== queryEditor.operationName) {
                   setOperationName(selectedOperationName);
                 }
                 run();
@@ -74,4 +67,4 @@ export function ExecuteButton() {
       />
     </Tooltip>
   );
-}
+};

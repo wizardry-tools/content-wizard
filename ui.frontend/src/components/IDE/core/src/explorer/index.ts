@@ -10,16 +10,5 @@ export { Search } from './components/search';
 export { ExplorerSection } from './components/section';
 export { TypeDocumentation } from './components/type-documentation';
 export { TypeLink } from './components/type-link';
-export {
-  ExplorerContext,
-  ExplorerContextProvider,
-  useExplorerContext,
-} from './context';
-
-export type {
-  ExplorerContextType,
-  ExplorerContextProviderProps,
-  ExplorerFieldDef,
-  ExplorerNavStack,
-  ExplorerNavStackItem,
-} from './context';
+export * from './ExplorerContextProvider';
+export * from './ExplorerContext';

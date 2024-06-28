@@ -1,14 +1,8 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { useStorageContext } from './storage';
-import {StorageAPI} from "@graphiql/toolkit";
+import type { IDETheme, WizardStorageAPI } from '@/types';
+import { useStorageContext } from './ide-providers';
 
-/**
- * The value `null` semantically means that the user does not explicitly choose
- * any theme, so we use the system default.
- */
-export type Theme = 'light' | 'dark' | null;
-
-function getStoredTheme (storageContext: StorageAPI | null): Theme {
+const getStoredTheme = (storageContext: WizardStorageAPI | null): IDETheme => {
   if (!storageContext) {
     return null;
   }
@@ -25,18 +19,18 @@ function getStoredTheme (storageContext: StorageAPI | null): Theme {
       }
       return null;
   }
-}
+};
 
 /**
  * This is the Theme Provider for the IDE, but it is also being used to
  * drive the Theme for the rest of the APP.
  */
-export function useTheme() {
+export const useTheme = () => {
   const storageContext = useStorageContext();
 
-  const storedTheme = useMemo(()=>getStoredTheme(storageContext),[storageContext])
+  const storedTheme = useMemo(() => getStoredTheme(storageContext), [storageContext]);
 
-  const [theme, setThemeInternal] = useState<Theme>(storedTheme);
+  const [theme, setThemeInternal] = useState<IDETheme>(storedTheme);
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') {
@@ -50,14 +44,14 @@ export function useTheme() {
   }, [theme]);
 
   const setTheme = useCallback(
-    (newTheme: Theme) => {
-      storageContext?.set(STORAGE_KEY, newTheme || '');
+    (newTheme: IDETheme) => {
+      storageContext.set(STORAGE_KEY, newTheme ?? '');
       setThemeInternal(newTheme);
     },
     [storageContext],
   );
 
   return useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
-}
+};
 
 const STORAGE_KEY = 'theme';

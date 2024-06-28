@@ -1,31 +1,25 @@
 import type { Editor, EditorChange } from 'codemirror';
 import type { IHint } from 'codemirror-graphql/hint';
-import {
-  GraphQLNamedType,
-  GraphQLSchema,
-  GraphQLType,
-  isListType,
-  isNonNullType,
-} from 'graphql';
-
-import { ExplorerContextType } from '../explorer';
+import { isListType, isNonNullType } from 'graphql';
+import type { GraphQLNamedType, GraphQLSchema, GraphQLType } from 'graphql';
+import type { ExplorerContextType, PluginContextType } from '@/types';
 import { markdown } from '../markdown';
-import { DOC_EXPLORER_PLUGIN, PluginContextType } from '../plugin';
+import { DOC_EXPLORER_PLUGIN } from '../ide-providers';
 import { importCodeMirror } from './common';
 
 /**
  * Render a custom UI for CodeMirror's hint which includes additional info
  * about the type and description for the selected context.
  */
-export function onHasCompletion(
+export const onHasCompletion = (
   _cm: Editor,
   data: EditorChange | undefined,
   schema: GraphQLSchema | null | undefined,
   explorer: ExplorerContextType | null,
   plugin: PluginContextType | null,
   callback?: (type: GraphQLNamedType) => void,
-): void {
-  void importCodeMirror([], { useCommonAddons: false }).then(CodeMirror => {
+): void => {
+  void importCodeMirror([], { useCommonAddons: false }).then((CodeMirror) => {
     let information: HTMLDivElement | null;
     let fieldName: HTMLSpanElement | null;
     let typeNamePill: HTMLSpanElement | null;
@@ -38,7 +32,7 @@ export function onHasCompletion(
     CodeMirror.on(
       data,
       'select',
-      // @ts-expect-error
+      // @ts-expect-error The @type definition for this handler seems outdated, and doesn't match how it's being used.
       (ctx: IHint, el: HTMLDivElement) => {
         // Only the first time (usually when the hint UI is first displayed)
         // do we create the information nodes.
@@ -84,14 +78,12 @@ export function onHasCompletion(
           information.append(deprecation);
 
           const deprecationLabel = document.createElement('span');
-          deprecationLabel.className =
-            'CodeMirror-hint-information-deprecation-label';
+          deprecationLabel.className = 'CodeMirror-hint-information-deprecation-label';
           deprecationLabel.textContent = 'Deprecated';
           deprecation.append(deprecationLabel);
 
           deprecationReason = document.createElement('div');
-          deprecationReason.className =
-            'CodeMirror-hint-information-deprecation-reason';
+          deprecationReason.className = 'CodeMirror-hint-information-deprecation-reason';
           deprecation.append(deprecationReason);
 
           /**
@@ -134,23 +126,13 @@ export function onHasCompletion(
            *   `content-box` this would not be necessary.
            */
           const defaultInformationPadding =
-            parseInt(
-              window
-                .getComputedStyle(information)
-                .paddingBottom.replace(/px$/, ''),
-              10,
-            ) || 0;
+            parseInt(window.getComputedStyle(information).paddingBottom.replace(/px$/, ''), 10) || 0;
           const defaultInformationMaxHeight =
-            parseInt(
-              window.getComputedStyle(information).maxHeight.replace(/px$/, ''),
-              10,
-            ) || 0;
+            parseInt(window.getComputedStyle(information).maxHeight.replace(/px$/, ''), 10) || 0;
           const handleScroll = () => {
             if (information) {
-              information.style.paddingTop =
-                hintsUl.scrollTop + defaultInformationPadding + 'px';
-              information.style.maxHeight =
-                hintsUl.scrollTop + defaultInformationMaxHeight + 'px';
+              information.style.paddingTop = hintsUl.scrollTop + defaultInformationPadding + 'px';
+              information.style.maxHeight = hintsUl.scrollTop + defaultInformationMaxHeight + 'px';
             }
           };
           hintsUl.addEventListener('scroll', handleScroll);
@@ -167,10 +149,7 @@ export function onHasCompletion(
               hintsUl.removeEventListener('scroll', handleScroll);
               hintsUl.removeEventListener('DOMNodeRemoved', onRemoveFn);
               if (information) {
-                information.removeEventListener(
-                  'click',
-                  onClickHintInformation,
-                );
+                information.removeEventListener('click', onClickHintInformation);
               }
               information = null;
               fieldName = null;
@@ -231,9 +210,7 @@ export function onHasCompletion(
         if (deprecation && deprecationReason) {
           if (ctx.deprecationReason) {
             deprecation.style.display = 'block';
-            deprecationReason.innerHTML = markdown.render(
-              ctx.deprecationReason,
-            );
+            deprecationReason.innerHTML = markdown.render(ctx.deprecationReason);
           } else {
             deprecation.style.display = 'none';
             deprecationReason.innerHTML = '';
@@ -243,22 +220,17 @@ export function onHasCompletion(
     );
   });
 
-  function onClickHintInformation(event: Event) {
-    if (
-      !schema ||
-      !explorer ||
-      !plugin ||
-      !(event.currentTarget instanceof HTMLElement)
-    ) {
+  const onClickHintInformation = (event: Event) => {
+    if (!schema || !explorer || !plugin || !(event.currentTarget instanceof HTMLElement)) {
       return;
     }
 
-    const typeName = event.currentTarget.textContent || '';
+    const typeName = event.currentTarget.textContent ?? '';
     const type = schema.getType(typeName);
     if (type) {
       plugin.setVisiblePlugin(DOC_EXPLORER_PLUGIN);
       explorer.push({ name: type.name, def: type });
       callback?.(type);
     }
-  }
-}
+  };
+};

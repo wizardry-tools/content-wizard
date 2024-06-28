@@ -1,3 +1,27 @@
+<!-- !toc (minlevel=2 omit="Table of Contents") -->
+
+* [Quick Features](#quick-features)
+  * [Query Wizard](#query-wizard)
+  * [Query IDE](#query-ide)
+  * [Results](#results)
+* [Detailed Features](#detailed-features)
+  * [Query Wizard Details](#query-wizard-details)
+  * [Query IDE Details](#query-ide-details)
+  * [Results Table Details](#results-table-details)
+* [Project Structure](#project-structure)
+  * [modules](#modules)
+  * [How to build](#how-to-build)
+  * [Local Development](#local-development)
+    * [M2 Setup](#m2-setup)
+  * [ClientLibs](#clientlibs)
+* QuickLinks
+  * [License](/LICENSE)
+  * [Change Log](/CHANGELOG.md)
+  * [Contributing](/CONTRIBUTING.md)
+  * [Development](/DEVELOPMENT.md)
+
+<!-- toc! -->
+
 # Wizardry Tools - Content Wizard
 This is a Maven Project that builds and deploys a content scanning/reporting tool to an AEM Instance. The tool features
 an easy to use QueryBuilder form, that will build QueryBuilder statements based on the user's input. This tool also 
@@ -19,9 +43,12 @@ The Query IDE retains the advanced GraphQL support that GraphiQL implemented, al
 All iterable results from executed query statements will appear on this tab in a paginated data table.
 ![Results - Paginated Data Table containing Query Results](./images/content-wizard-results.png "Results")
 
-## Detailed Features:
-### Query Wizard
+## Detailed Features
+
+### Query Wizard Details
+
 This mode is for AEM Content Users. It allows users to pick and choose various options to help build a functional QueryBuilder statement.
+
   * Options:
     * Content Path: 
       * This is the path to the Content Tree where the Query should be performed
@@ -237,22 +264,18 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
     * Allows the user to toggle Dark Mode across the entire application. This setting gets persisted into local browser storage.
 
 
-## Result Handling
+### Query IDE Details
+
+
+### Results Table Details
+
 * When a query is executed, if any Results are returned, they will be populated in a Table on the Results tab.
 * The Results table features Pagination where you can define how many results "per page" get displayed.
   * TODO: Need to inform the UI when user updates the pagination option, so that the page becomes scrollable when the results spill out the viewport.
 
 ## TODO FEATURES:
-* Finish Simple Lookup Filtering capabilities.
-* Continue minimizing and organizing project files/folders
+
 * Add User Input sanitization.
-* Improve Query Language Syntax support/highlighting for Advanced IDE.
-* Add Results Sorting/Filtering capabilities.
-* Add Results Exporting capabilities:
-  * Export to CSV
-  * Export to JSON?
-  * Create Content Package?
-  * Send Email?
 * Add Results Management Capabilities:
   * Activate/Deactivate results
   * Run AEM Workflow against results
@@ -266,17 +289,17 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
   * Move/Rename Property on Results
   * Move/Rename Content Node on Results
 
-## Modules
 
-The main parts of the template are:
+## Project Structure
+### Modules
 
-* ui.apps: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, and templates
-* ui.content: contains sample content using the components from the ui.apps
-* ui.config: contains runmode specific OSGi configs for the project
-* [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript)
-* all: a single content package that embeds all of the compiled modules (bundles and content packages) including any vendor dependencies
+* ui.apps: Contains a basic app page and the Client Library for the Content Wizard.
+* ui.content: contains the content that defines the app page in AEM and makes it accessible in the Tool Navigation.
+* ui.config: contains runmode specific OSGi configs for the project (this is installed with the optional `localDev` maven profile during build time)
+* [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript + Vite + SCSS)
+* all: a single content package that embeds all the compiled modules zips and is deployed to AEM.
 
-## How to build
+### How to build
 
 To build all the modules run in the project root directory the following command with Maven 3:
 
@@ -286,17 +309,6 @@ To build all the modules and deploy the `all` package to a local instance of AEM
 
     mvn clean install -PautoInstallSinglePackage
 
-Or to deploy it to a publish instance, run
-
-    mvn clean install -PautoInstallSinglePackagePublish
-
-Or alternatively
-
-    mvn clean install -PautoInstallSinglePackage -Daem.port=4503
-
-Or to deploy only the bundle to the author, run
-
-    mvn clean install -PautoInstallBundle
 
 Or to deploy only a single content package, run in the sub-module directory (i.e `ui.apps`)
 
@@ -304,11 +316,24 @@ Or to deploy only a single content package, run in the sub-module directory (i.e
 
 Note: When building with Maven from the project root, the Maven build will automatically checkout and install a project-scoped version of Node 18 and use it to build the `ui.frontend` module.
 
-## Documentation
 
-The build process also generates documentation in the form of README.md files in each module directory for easy reference. Depending on the options you select at build time, the content may be customized to your project.
 
-## ClientLibs
+### Local Development
+
+If you intend on doing any local development or testing with this tool, include the `localDev` maven Profile. This will setup the required CORS policy.
+
+    mvn clean install -PautoInstallSinglePackage,localDev
+
+Note: If you swap between adding and removing the `localDev` profile, you may have to manually re-install project packages via [CRX PackageManager](/crx/packmgr/index.jsp)
+
+Note: Just refer to the We.Retail content for local dev/testing... Or your own content.
+
+#### M2 Setup
+
+You need you have a settings.xml file defined @ ~/.m2 which configures your connection to a Maven Repository. It is required to build this entire project locally with Maven. More info [here](https://www.baeldung.com/maven-settings-xml).
+
+
+### ClientLibs
 
 The frontend module is made available using an [AEM ClientLib](https://helpx.adobe.com/experience-manager/6-5/sites/developing/using/clientlibs.html). When executing the NPM build script, the app is built and the [`aem-clientlib-generator`](https://github.com/wcm-io-frontend/aem-clientlib-generator) package takes the resulting build output and transforms it into such a ClientLib.
 
@@ -319,9 +344,3 @@ A ClientLib will consist of the following files and directories:
 - `js/`: JavaScript files which can be requested in the HTML
 - `js.txt` (tells AEM the order and names of files in `js/` so they can be merged
 - `resources/`: Source maps, non-entrypoint code chunks (resulting from code splitting), static assets (e.g. icons), etc.
-
-## Maven settings
-
-The project comes with the auto-public repository configured. To setup the repository in your Maven settings, refer to:
-
-    http://helpx.adobe.com/experience-manager/kb/SetUpTheAdobeMavenRepository.html

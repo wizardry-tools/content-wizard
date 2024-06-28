@@ -6,6 +6,6 @@ export const invalidCharacters = Array.from({ length: 11 }, (_, i) => {
 
 const sanitizeRegex = new RegExp('[' + invalidCharacters.join('') + ']', 'g');
 
-export function normalizeWhitespace(line: string) {
+export const normalizeWhitespace = (line: string) => {
   return line.replace(sanitizeRegex, ' ');
-}
+};

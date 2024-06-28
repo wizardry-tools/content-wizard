@@ -1,7 +1,6 @@
-import { astFromValue, print, ValueNode } from 'graphql';
-
-import { ExplorerFieldDef } from '../context';
-
+import { astFromValue, print } from 'graphql';
+import type { ValueNode } from 'graphql';
+import type { DefaultValueProps } from '@/types';
 import './default-value.scss';
 
 const printDefault = (ast?: ValueNode | null): string => {
@@ -11,14 +10,7 @@ const printDefault = (ast?: ValueNode | null): string => {
   return print(ast);
 };
 
-type DefaultValueProps = {
-  /**
-   * The field or argument for which to render the default value.
-   */
-  field: ExplorerFieldDef;
-};
-
-export function DefaultValue({ field }: DefaultValueProps) {
+export const DefaultValue = ({ field }: DefaultValueProps) => {
   if (!('defaultValue' in field) || field.defaultValue === undefined) {
     return null;
   }
@@ -29,9 +21,7 @@ export function DefaultValue({ field }: DefaultValueProps) {
   return (
     <>
       {' = '}
-      <span className="wizard-doc-explorer-default-value">
-        {printDefault(ast)}
-      </span>
+      <span className="wizard-doc-explorer-default-value">{printDefault(ast)}</span>
     </>
   );
-}
+};

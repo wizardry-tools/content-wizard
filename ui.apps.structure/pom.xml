@@ -6,9 +6,9 @@
     <!-- P A R E N T  P R O J E C T  D E S C R I P T I O N                      -->
     <!-- ====================================================================== -->
     <parent>
-        <groupId>com.wizardry.aem</groupId>
+        <groupId>com.wizardry-tools</groupId>
         <artifactId>content-wizard</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,19 +36,7 @@
                         <!-- /apps root -->
                         <filter><root>/apps</root></filter>
                         <filter><root>/apps/content-wizard</root></filter>
-                        <!-- Common overlay roots -->
-                                                <filter><root>/apps/sling</root></filter>
                         <filter><root>/apps/cq</root></filter>
-                        <filter><root>/apps/dam</root></filter>
-                        <filter><root>/apps/wcm</root></filter>
-                        <filter><root>/apps/msm</root></filter>
-
-                        <!-- Immutable context-aware configurations -->
-                        <filter><root>/apps/settings</root></filter>
-
-                        <!-- DAM folder root, will be created via repoinit -->
-                        <filter><root>/content/dam/content-wizard</root></filter>
-
                     </filters>
                 </configuration>
             </plugin>

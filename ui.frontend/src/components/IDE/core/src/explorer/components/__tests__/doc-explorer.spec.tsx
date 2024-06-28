@@ -1,12 +1,13 @@
 import { render } from '@testing-library/react';
 import { GraphQLInt, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { useContext, useEffect } from 'react';
-
-import { SchemaContext, SchemaContextType } from '../../../schema';
-import { ExplorerContext, ExplorerContextProvider } from '../../context';
+import type { SchemaContextType } from '@/types';
+import { SchemaContext } from '../../../ide-providers';
+import { ExplorerContext } from '../../ExplorerContext';
+import { ExplorerContextProvider } from '../../ExplorerContextProvider';
 import { DocExplorer } from '../doc-explorer';
 
-function makeSchema(fieldName = 'field') {
+const makeSchema = (fieldName = 'field') => {
   return new GraphQLSchema({
     description: 'GraphQL Schema for testing',
     query: new GraphQLObjectType({
@@ -23,31 +24,33 @@ function makeSchema(fieldName = 'field') {
       },
     }),
   });
-}
+};
 
+const isFetchingNotRef = { current: false };
+const isFetchingRef = { current: true };
 const defaultSchemaContext: SchemaContextType = {
   fetchError: null,
-  introspect() {},
-  isFetching: false,
+  introspect: () => ({}),
+  isFetching: isFetchingNotRef,
   schema: makeSchema(),
   validationErrors: [],
 };
 
 const withErrorSchemaContext: SchemaContextType = {
   fetchError: 'Error fetching schema',
-  introspect() {},
-  isFetching: false,
+  introspect: () => ({}),
+  isFetching: isFetchingNotRef,
   schema: new GraphQLSchema({ description: 'GraphQL Schema for testing' }),
   validationErrors: [],
 };
 
-function DocExplorerWithContext() {
+const DocExplorerWithContext = () => {
   return (
     <ExplorerContextProvider>
       <DocExplorer />
     </ExplorerContextProvider>
   );
-}
+};
 
 describe('DocExplorer', () => {
   it('renders spinner when the schema is loading', () => {
@@ -55,7 +58,7 @@ describe('DocExplorer', () => {
       <SchemaContext.Provider
         value={{
           ...defaultSchemaContext,
-          isFetching: true,
+          isFetching: isFetchingRef,
           schema: undefined,
         }}
       >
@@ -83,9 +86,7 @@ describe('DocExplorer', () => {
     );
     const error = container.querySelectorAll('.wizard-doc-explorer-error');
     expect(error).toHaveLength(0);
-    expect(
-      container.querySelector('.wizard-markdown-description'),
-    ).toHaveTextContent('GraphQL Schema for testing');
+    expect(container.querySelector('.wizard-markdown-description')).toHaveTextContent('GraphQL Schema for testing');
   });
   it('renders correctly with schema error', () => {
     const { rerender, container } = render(

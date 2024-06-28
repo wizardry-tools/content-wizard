@@ -1,0 +1,22 @@
+{
+  "alloworigin": ["http://localhost:3000","http://192.168.4.49:4502"],
+  "allowedpaths": [
+    "/etc/wizardry.*",
+    "/content/cq:graphql.*",
+    "/graphql.*",
+    "/crx/packmgr.*"
+  ],
+  "supportedheaders": [
+    "Authorization",
+    "Origin",
+    "Accept",
+    "X-Requested-With",
+    "Content-Type",
+    "Access-Control-Allow-Credentials",
+    "Access-Control-Request-Method",
+    "Access-Control-Request-Headers",
+    "CSRF-Token"
+  ],
+  "supportedmethods": ["GET","HEAD", "POST"],
+  "alloworiginregexp": []
+}
