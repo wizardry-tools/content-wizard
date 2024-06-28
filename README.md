@@ -298,7 +298,15 @@ Or to deploy only a single content package, run in the sub-module directory (i.e
 
 Note: When building with Maven from the project root, the Maven build will automatically checkout and install a project-scoped version of Node 18 and use it to build the `ui.frontend` module.
 
-Note: If you intend on using the NPM server for local development, you need to add the `local` runmode to your AEM instance that you are installing to, before you can make POST requests proxied by the NPM server.
+
+
+## Local Development
+
+If you intend on doing any local development or testing with this tool, include the `localDev` maven Profile. This will setup the required CORS policy and example content to search against.
+
+    mvn clean install -PautoInstallSinglePackage,localDev
+
+Note: If you swap between adding and removing the `localDev` profile, you may have to manually re-install project packages via [CRX PackageManager](/crx/packmgr/index.jsp) 
 
 ## Documentation
 
