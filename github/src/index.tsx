@@ -4,7 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {
-  BrowserRouter
+  BrowserRouter,
+  Route,
+  Routes
 } from "react-router-dom";
 
 
@@ -13,8 +15,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename="/content-wizard">
-      <App />
+    <BrowserRouter basename="/">
+      <Routes>
+        <Route path="/content-wizard" Component={App}/>
+      </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );
