@@ -133,7 +133,7 @@
                                 <goal>npm</goal>
                             </goals>
                             <configuration>
-                                <arguments>ci</arguments>
+                                <arguments>ci --no-audit --progress=false</arguments>
                             </configuration>
                         </execution>
                     </executions>
