@@ -243,10 +243,7 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
   * TODO: Need to inform the UI when user updates the pagination option, so that the page becomes scrollable when the results spill out the viewport.
 
 ## TODO FEATURES:
-* Finish Simple Lookup Filtering capabilities.
-* Continue minimizing and organizing project files/folders
 * Add User Input sanitization.
-* Improve Query Language Syntax support/highlighting for Advanced IDE.
 * Add Results Sorting/Filtering capabilities.
 * Add Results Exporting capabilities:
   * Export to CSV
@@ -271,7 +268,7 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
 The main parts of the template are:
 
 * ui.apps: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, and templates
-* ui.content: contains sample content using the components from the ui.apps
+* ui.content: contains the content that defines the Tool page in AEM and makes it accessible in the Tool Navigation.
 * ui.config: contains runmode specific OSGi configs for the project
 * [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript)
 * all: a single content package that embeds all of the compiled modules (bundles and content packages) including any vendor dependencies
@@ -294,15 +291,14 @@ Or alternatively
 
     mvn clean install -PautoInstallSinglePackage -Daem.port=4503
 
-Or to deploy only the bundle to the author, run
-
-    mvn clean install -PautoInstallBundle
 
 Or to deploy only a single content package, run in the sub-module directory (i.e `ui.apps`)
 
     mvn clean install -PautoInstallPackage
 
 Note: When building with Maven from the project root, the Maven build will automatically checkout and install a project-scoped version of Node 18 and use it to build the `ui.frontend` module.
+
+Note: If you intend on using the NPM server for local development, you need to add the `local` runmode to your AEM instance that you are installing to, before you can make POST requests proxied by the NPM server.
 
 ## Documentation
 

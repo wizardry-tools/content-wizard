@@ -9,7 +9,7 @@ import './index.css';
 
 
 import {Container, createRoot} from 'react-dom/client';
-const root = createRoot(document.getElementById('spa-root') as Container);
+const root = createRoot(document.getElementById('app-root') as Container);
 
 root.render(
   <StrictMode>

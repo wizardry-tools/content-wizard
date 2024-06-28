@@ -4,6 +4,5 @@
     <jcr:content
         jcr:primaryType="cq:PageContent"
         jcr:title="Content Wizard"
-        cq:template="/conf/content-wizard/settings/wcm/templates/spa-page-template"
         sling:resourceType="content-wizard/components/page"/>
 </jcr:root>

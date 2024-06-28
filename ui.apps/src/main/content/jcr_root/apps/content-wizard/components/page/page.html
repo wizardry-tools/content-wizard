@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html
-        data-sly-use.page="com.adobe.aem.spa.project.core.models.Page"
-        data-sly-use.pwa="com.adobe.cq.wcm.core.components.models.PWA"
-        lang="${page.language}"
-        data-sly-use.head="head.html"
-        data-sly-use.footer="footer.html"
->
-<head data-sly-call="${head.head @ page = page, pwa = pwa}"></head>
-<body class="coral--light ${page.cssClassNames}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Content Wizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<sly data-sly-test="${!isRedirectPage}">
-    <sly data-sly-include="body.html"></sly>
-    <sly data-sly-call="${footer.footer @ page = page, pwa = pwa}"></sly>
-</sly>
+    <link rel="stylesheet" href="/etc.clientlibs/content-wizard/clientlibs/clientlib-react.css" type="text/css">
+</head>
+<body class="wizard-dark">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="app-root"></div>
+    
+    <script src="/etc.clientlibs/content-wizard/clientlibs/clientlib-react.js"></script>
 </body>
 </html>
