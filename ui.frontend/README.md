@@ -9,6 +9,8 @@ Stack:
 * React v18.3.1
 * Typescript v4.9.5
 
+Note: Internet Explorer is not supported.
+
 ## Scripts
 
 In the project directory, you can run the following commands:
