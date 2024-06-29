@@ -56,16 +56,24 @@ export const isSubscriptionWithName = (
   return isSubscription;
 };
 
-// TODO: The GET method isn't working with original GraphiQL executors.
+
+/**
+ * This GET fetcher isn't used by GraphQL, because GraphQL needs POST.
+ * This is used for the other Query Languages, because the endpoints for those
+ * only require a GET request.
+ *
+ * TODO: ensure that _fetcherParams is truly never useful since it isn't used.
+ * @param options
+ * @param httpFetch
+ */
 export const createSimpleGetFetcher =
   (options: CustomCreateFetcherOptions, httpFetch: typeof fetch): Fetcher =>
-    async (fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
+    async (_fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
       if (!options.query || typeof options.query === 'undefined') {
         return '';
       }
       const queryString = buildQueryString(options.query);
       const token = await getCsrfToken();
-      console.log("Calling Simple GET ASYNC", {fetcherOpts, options, fetcherParams});
       const init:RequestInit = {
         method: 'GET',
         headers: {

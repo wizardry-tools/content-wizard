@@ -46,7 +46,6 @@ export default function Wizard({onTabPanelSelect}: WizardProps) {
 
 
   const handleChange = (field: FieldConfig) => {
-    console.log("field updated: ", field);
     fieldDispatch({
       name: field.name,
       value: field.value,

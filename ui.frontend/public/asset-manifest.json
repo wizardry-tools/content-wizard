@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/content-wizard/static/css/main.cb24ed6d.css",
+    "main.js": "/content-wizard/static/js/main.15168761.js",
+    "static/js/453.17568682.chunk.js": "/content-wizard/static/js/453.17568682.chunk.js",
+    "static/media/content-wizard-results.png": "/content-wizard/static/media/content-wizard-results.307a8cdeeeb74b434eb3.png",
+    "static/media/content-wizard-ide-graphql.png": "/content-wizard/static/media/content-wizard-ide-graphql.6878262e78935fdc1d64.png",
+    "static/media/content-wizard-ide.png": "/content-wizard/static/media/content-wizard-ide.ad903e364672187d5b57.png",
+    "static/media/content-wizard-builder.png": "/content-wizard/static/media/content-wizard-builder.302554b8b11b2941e3bb.png",
+    "static/media/msm-livecopy-rules.png": "/content-wizard/static/media/msm-livecopy-rules.5a26497c3eafb2d25f9b.png",
+    "static/media/targeting-rules.png": "/content-wizard/static/media/targeting-rules.9bc93bc515303aea0c44.png",
+    "static/media/authoring-rules.png": "/content-wizard/static/media/authoring-rules.b6bb3556c62333c83ddb.png",
+    "static/media/replication-rules.png": "/content-wizard/static/media/replication-rules.5ae4cfe47e54d189e581.png",
+    "static/media/aem-tools-navigation.png": "/content-wizard/static/media/aem-tools-navigation.896233010525422c0061.png",
+    "static/media/translation-rules.png": "/content-wizard/static/media/translation-rules.b4231b06c07f410fe155.png",
+    "static/media/msm-rules.png": "/content-wizard/static/media/msm-rules.c7fcd23ef0fa82d6d7b9.png",
+    "static/media/programming-code.svg": "/content-wizard/static/media/programming-code.750f38293886bf8183c1e0a252cfd702.svg",
+    "static/media/wizard-logo.svg": "/content-wizard/static/media/wizard-logo.28b0a8a87bf8ea39e84f4ae17cabd918.svg",
+    "static/media/magic-wand.svg": "/content-wizard/static/media/magic-wand.a6bda211b671d4b0b975586965137c87.svg",
+    "index.html": "/content-wizard/index.html",
+    "static/media/table.svg": "/content-wizard/static/media/table.724a8d5601ec42d2057a9b17fc53198f.svg",
+    "main.cb24ed6d.css.map": "/content-wizard/static/css/main.cb24ed6d.css.map",
+    "main.15168761.js.map": "/content-wizard/static/js/main.15168761.js.map",
+    "453.17568682.chunk.js.map": "/content-wizard/static/js/453.17568682.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cb24ed6d.css",
+    "static/js/main.15168761.js"
+  ]
+}

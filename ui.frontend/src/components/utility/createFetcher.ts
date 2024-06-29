@@ -22,7 +22,6 @@ import {Query, QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/Qu
  * @returns {Fetcher}
  */
 export function createCustomIDEPoster(options: CustomCreateFetcherOptions): Fetcher {
-  console.log("Creating custom POSTER: ", options);
   let httpFetch;
   if (typeof window !== 'undefined' && window.fetch) {
     httpFetch = window.fetch;

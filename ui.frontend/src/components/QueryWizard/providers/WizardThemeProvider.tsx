@@ -134,7 +134,6 @@ export function WizardThemeProvider(props: PropsWithChildren) {
    */
   const darkMqListener = useCallback((event: MediaQueryListEvent): any => {
     // system theme or browser theme updated;
-    console.log("DarkMQListener() system theme must have updated");
     if (!IDETheme) {
       // no IDE Theme, which means we need to inherit from System
       if (event.matches) {
@@ -179,7 +178,6 @@ export function WizardThemeProvider(props: PropsWithChildren) {
    * TODO: This only fires when the IDE has been rendered, which doesn't happen until the user goes to the IDE Tab
    */
   const handleThemeDispatch = useCallback((theme: Theme)=>{
-    console.log("Theme was dispatched as :", theme);
     storageContext?.set(STORAGE_KEY, theme || '');
     setIDETheme(theme);
     // if the IDE theme is set to System Default (null), then this will reset Mui back to system Theme.

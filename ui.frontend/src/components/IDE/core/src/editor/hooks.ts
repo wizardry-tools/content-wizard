@@ -21,7 +21,6 @@ export function useSynchronizeValue(
 ) {
   useEffect(() => {
     if (editor && typeof value === 'string' && value !== editor.getValue()) {
-      console.log("updating value, via useSynchronizeValue: ", {value, editor});
       editor.setValue(value);
     }
   }, [editor, value]);

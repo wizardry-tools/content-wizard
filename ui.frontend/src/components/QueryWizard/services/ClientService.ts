@@ -222,7 +222,6 @@ export default class ClientService {
    */
   async listPersistedQueries (apiId?: string,options:any = {}, retryOptions:any = {}):Promise<GraphQLEndpointConfig[]> {
     const url = !!apiId ? `${AEM_GRAPHQL_ACTIONS.list}/${apiId}` : `${AEM_GRAPHQL_ACTIONS.list}`;
-    console.log(`listPersistedQueries: ${url}`);
     return this.__handleRequest(url, '', { method: 'GET', ...options }, retryOptions);
   }
 

@@ -108,7 +108,6 @@ export function useQueryEditor(
   const codeMirrorRef = useRef<CodeMirrorType>();
   const query = useQuery();
   const isGraphQL = useIsGraphQL();
-  console.log("QueryEditor render()", {ref: ref.current, codeMirrorRef: codeMirrorRef.current});
 
   const onClickReferenceRef = useRef<
     NonNullable<UseQueryEditorArgs['onClickReference']>
@@ -147,7 +146,6 @@ export function useQueryEditor(
 
   useEffect(() => {
     let isActive = true;
-    console.log("QueryEditor main useEffect()");
     let addons:any[] = [
       import('codemirror/addon/comment/comment'),
       import('codemirror/addon/search/search'),
@@ -195,7 +193,6 @@ export function useQueryEditor(
       }
     }
 
-    console.log("QueryEditor, pre-import, mode:", mode);
 
     void importCodeMirror(addons, {useCommonAddons: !isGraphQL}).then(CodeMirror => {
       // Don't continue if the effect has already been cleaned up
@@ -329,12 +326,10 @@ export function useQueryEditor(
       newEditor.operations = null;
       newEditor.variableToType = null;
 
-      console.log("Setting codemirror QueryEditor: ", newEditor);
       setQueryEditor(newEditor);
     });
 
     return () => {
-      console.log("QueryEditor Unmount");
       isActive = false;
     };
   }, [editorTheme, initialQuery, isGraphQL, query.language, query.statement, readOnly, setQueryEditor]);

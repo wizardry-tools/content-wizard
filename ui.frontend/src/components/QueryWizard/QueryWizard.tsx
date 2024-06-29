@@ -31,7 +31,6 @@ function QueryWizardInterface() {
 
   const onResults = useCallback((data: any) => {
     const results:Results = data.hits || data.results || JSON.stringify(data);
-    console.log("fetcher onResults: ", results);
     resultsDispatch(results);
   },[resultsDispatch]);
 

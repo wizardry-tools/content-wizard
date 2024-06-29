@@ -49,7 +49,6 @@ export function GraphiQLProvider({
   variables,
   visiblePlugin,
 }: GraphiQLProviderProps) {
-  console.log('GraphiQLProvider render()');
   return (
     <StorageContextProvider storage={storage}>
       <HistoryContextProvider maxHistoryLength={maxHistoryLength}>

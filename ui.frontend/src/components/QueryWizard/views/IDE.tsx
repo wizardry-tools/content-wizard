@@ -78,7 +78,6 @@ IDE.Toolbar = IDEToolbar;
 IDE.Footer = IDEFooter;
 
 export function IDEInterface() {
-  console.log("IDE Render()");
   const isGraphQL = useIsGraphQL();
   const isVariablesEditorEnabled = isGraphQL ?? true;
   const isHeadersEditorEnabled = isGraphQL ?? true;

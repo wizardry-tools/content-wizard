@@ -11,7 +11,6 @@ export function ResultsProvider({ children }:WithChildren) {
   const [results , setResults] = useState([] as Results)
 
   const updateResults = (results: Results) => {
-    console.log("Dispatching Results: ", results);
     setResults(results);
   }
 

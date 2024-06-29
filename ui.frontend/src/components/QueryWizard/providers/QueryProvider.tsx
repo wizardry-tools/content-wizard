@@ -72,7 +72,6 @@ export function QueryProvider({ children }:WithChildren) {
 
   const rebuildQuery = useCallback(() => {
     const statement= generateQuery(fields);
-    console.log("rebuildQuery() statement: ", statement);
     queryDispatch({
       ...defaultSimpleQuery,
       statement: statement,
