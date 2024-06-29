@@ -1,7 +1,6 @@
 {
   "alloworigin": ["http://localhost:3000","http://192.168.4.49:4502"],
   "allowedpaths": [
-    "/(content|conf)/content-wizard.*",
     "/etc/wizardry.*",
     "/content/cq:graphql.*",
     "/graphql.*"

@@ -17,12 +17,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.wizardry.aem</groupId>
+    <groupId>com.wizardry-tools</groupId>
     <artifactId>content-wizard</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>Content Wizard</name>
-    <description>Content Wizard</description>
+    <description>This is an AEM Tool that can be installed on any AEM Author environment to assist authors or developers with various Content related features.</description>
+    <url>https://www.wizardry-tools.com</url>
+
+    <!-- ====================================================================== -->
+    <!-- S C M  D E F I N I T I O N                                             -->
+    <!-- ====================================================================== -->
+    <scm>
+        <connection>scm:git:git://github.com/wizardry-tools/content-wizard.git</connection>
+        <developerConnection>scm:git:ssh://github.com/wizardry-tools/content-wizard.git</developerConnection>
+        <url>https://github.com/wizardry-tools/content-wizard/</url>
+        <tag>com.wizardry-tools.content-wizard.all-1.0.0</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Darrin Johnson</name>
+            <email>admin@wizardry-tools.com</email>
+            <organization>Wizardry Tools</organization>
+            <organizationUrl>https://www.wizardry-tools.com</organizationUrl>
+        </developer>
+    </developers>
+
     <modules>
         <module>all</module>
         <module>ui.frontend</module>
@@ -287,13 +315,6 @@ Bundle-DocURL:
                         </dependency>
                     </dependencies>
                 </plugin>
-                <!-- AEM Analyser Plugin -->
-                <plugin>
-                    <groupId>com.adobe.aem</groupId>
-                    <artifactId>aemanalyser-maven-plugin</artifactId>
-                    <version>${aemanalyser.version}</version>
-                    <extensions>true</extensions>
-                </plugin>
                 <!-- Content Package Plugin -->
                 <plugin>
                     <groupId>com.day.jcr.vault</groupId>
@@ -395,48 +416,6 @@ Bundle-DocURL:
         </pluginManagement>
     </build>
     <profiles>
-        <!-- ====================================================== -->
-        <!-- A D O B E P U B L I C P R O F I L E -->
-        <!-- ====================================================== -->
-        <profile>
-            <id>adobe-public</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <releaseRepository-Id>adobe-public-releases</releaseRepository-Id>
-                <releaseRepository-Name>Adobe Public Releases</releaseRepository-Name>
-                <releaseRepository-URL>https://repo.adobe.com/nexus/content/groups/public</releaseRepository-URL>
-            </properties>
-            <repositories>
-                <repository>
-                    <id>adobe-public-releases</id>
-                    <name>Adobe Public Repository</name>
-                    <url>https://repo.adobe.com/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>adobe-public-releases</id>
-                    <name>Adobe Public Repository</name>
-                    <url>https://repo.adobe.com/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
         <!-- Development profile: install only the bundle -->
         <profile>
             <id>autoInstallBundle</id>

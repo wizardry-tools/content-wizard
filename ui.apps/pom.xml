@@ -21,7 +21,7 @@
     <!-- P A R E N T  P R O J E C T  D E S C R I P T I O N                      -->
     <!-- ====================================================================== -->
     <parent>
-        <groupId>com.wizardry.aem</groupId>
+        <groupId>com.wizardry-tools</groupId>
         <artifactId>content-wizard</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -51,12 +51,12 @@
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
                     </properties>
-                    <group>com.wizardry.aem</group>
+                    <group>com.wizardry-tools</group>
                     <name>content-wizard.ui.apps</name>
                     <packageType>application</packageType>
                     <repositoryStructurePackages>
                         <repositoryStructurePackage>
-                            <groupId>com.wizardry.aem</groupId>
+                            <groupId>com.wizardry-tools</groupId>
                             <artifactId>content-wizard.ui.apps.structure</artifactId>
                         </repositoryStructurePackage>
                     </repositoryStructurePackages>
@@ -80,13 +80,13 @@
     <!-- ====================================================================== -->
     <dependencies>
         <dependency>
-            <groupId>com.wizardry.aem</groupId>
+            <groupId>com.wizardry-tools</groupId>
             <artifactId>content-wizard.ui.frontend</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.wizardry.aem</groupId>
+            <groupId>com.wizardry-tools</groupId>
             <artifactId>content-wizard.ui.apps.structure</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
