@@ -40,7 +40,7 @@ export const defaultAdvancedQueries: QueryMap = {
     language: QueryLanguageLookup[QueryLanguage.SQL] as QueryLanguageKey,
     statement:
 `select * from nt:unstructured as node
-where node.[sling:resourceType] like "core-components-examples/components/text"`,
+where node.[sling:resourceType] like 'weretail/components/content/teaser'`,
     url: defaultQueryURL,
     isAdvanced: true
   },
@@ -48,17 +48,17 @@ where node.[sling:resourceType] like "core-components-examples/components/text"`
     language: QueryLanguageLookup[QueryLanguage.JCR_SQL2],
     statement:
 `SELECT * FROM [nt:unstructured] AS node
-WHERE ISDESCENDANTNODE(node, "/content/core-components-examples")
-AND PROPERTY(node.[sling:resourceType], "String") LIKE "core-components-examples/components/text"`,
+WHERE ISDESCENDANTNODE(node, "/content/we-retail")
+AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/content/teaser"`,
     url: defaultQueryURL,
     isAdvanced: true
   },
   XPATH: {
     language: QueryLanguageLookup[QueryLanguage.XPATH] as QueryLanguageKey,
     statement:
-`/jcr:root/content/core-components-examples//element(*, nt:unstructured)
+`/jcr:root/content/we-retail//element(*, nt:unstructured)
 [
-  (jcr:like(@sling:resourceType, 'core-components-examples/components/text'))
+  (jcr:like(@sling:resourceType, 'weretail/components/content/teaser'))
 ]`,
     url: defaultQueryURL,
     isAdvanced: true
@@ -66,10 +66,10 @@ AND PROPERTY(node.[sling:resourceType], "String") LIKE "core-components-examples
   QueryBuilder: {
     language: QueryLanguageLookup[QueryLanguage.QueryBuilder] as QueryLanguageKey,
     statement:
-`path=/content/core-components-examples
+`path=/content/we-retail
 type=nt:unstructured
 1_property=sling:resourceType
-1_property.value=core-components-examples/components/text
+1_property.value=weretail/components/content/teaser
 1_property.operation=like
 p.limit=100
 orderby=path`,

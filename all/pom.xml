@@ -66,12 +66,6 @@
                             <type>zip</type>
                             <target>/apps/content-wizard-packages/content/install</target>
                         </embedded>
-                        <embedded>
-                            <groupId>com.wizardry-tools</groupId>
-                            <artifactId>content-wizard.ui.config</artifactId>
-                            <type>zip</type>
-                            <target>/apps/content-wizard-packages/application/install</target>
-                        </embedded>
                     </embeddeds>
                 </configuration>
             </plugin>
@@ -194,24 +188,6 @@
                                     <type>zip</type>
                                     <target>/apps/content-wizard-packages/application/install</target>
                                 </embedded>
-                                <embedded>
-                                    <groupId>com.adobe.cq</groupId>
-                                    <artifactId>core.wcm.components.examples.ui.config</artifactId>
-                                    <type>zip</type>
-                                    <target>/apps/content-wizard-vendor-packages/application/install</target>
-                                </embedded>
-                                <embedded>
-                                    <groupId>com.adobe.cq</groupId>
-                                    <artifactId>core.wcm.components.examples.ui.apps</artifactId>
-                                    <type>zip</type>
-                                    <target>/apps/content-wizard-vendor-packages/application/install</target>
-                                </embedded>
-                                <embedded>
-                                    <groupId>com.adobe.cq</groupId>
-                                    <artifactId>core.wcm.components.examples.ui.content</artifactId>
-                                    <type>zip</type>
-                                    <target>/apps/content-wizard-vendor-packages/content/install</target>
-                                </embedded>
                             </embeddeds>
                         </configuration>
                     </plugin>
@@ -250,22 +226,6 @@
             <groupId>com.wizardry-tools</groupId>
             <artifactId>content-wizard.ui.config</artifactId>
             <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-
-        <dependency>
-            <groupId>com.adobe.cq</groupId>
-            <artifactId>core.wcm.components.examples.ui.config</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.cq</groupId>
-            <artifactId>core.wcm.components.examples.ui.apps</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.adobe.cq</groupId>
-            <artifactId>core.wcm.components.examples.ui.content</artifactId>
             <type>zip</type>
         </dependency>
     </dependencies>

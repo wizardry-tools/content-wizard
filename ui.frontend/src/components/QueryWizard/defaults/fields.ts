@@ -113,7 +113,7 @@ export const fields: FieldsConfig = {
     name: 'path',
     label: 'Content Path',
     fieldType: FieldTypes.SimpleInput,
-    value: '/content/core-components-examples',
+    value: '/content/we-retail',
     required: true,
     category: fieldCategoryTypes.targeting
   }),
@@ -130,7 +130,7 @@ export const fields: FieldsConfig = {
     name: 'targetType',
     label: 'Target Type',
     fieldType: FieldTypes.SimpleSelect,
-    value: TargetTypeLookup[TargetTypes.resource],
+    value: TargetTypeLookup[TargetTypes.text],
     options: TargetTypes,
     category: fieldCategoryTypes.targeting
   }),
@@ -138,7 +138,7 @@ export const fields: FieldsConfig = {
     name: 'targetResourceType',
     label: 'Target Resource Type',
     fieldType: FieldTypes.SimpleInput,
-    value: 'core-components-examples/components/text',
+    value: '',
     isDisabled: (fields: FieldsConfig) => {
       let type = fields.targetType.value;
       return !type || type === TargetTypeLookup[TargetTypes.none] || type === TargetTypeLookup[TargetTypes.text]
@@ -149,7 +149,7 @@ export const fields: FieldsConfig = {
     name: 'fulltext',
     label: 'Text Search',
     fieldType: FieldTypes.SimpleInput,
-    value: '',
+    value: 'winter',
     isDisabled: (fields: FieldsConfig) => {
       return fields.targetType.value !== TargetTypeLookup[TargetTypes.text];
     },

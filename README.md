@@ -20,7 +20,9 @@ All iterable results from executed query statements will appear on this tab in a
 ![Results - Paginated Data Table containing Query Results](./images/content-wizard-results.png "Results")
 
 ## Detailed Features:
+
 ### Query Wizard
+
 This mode is for AEM Content Users. It allows users to pick and choose various options to help build a functional QueryBuilder statement.
   * Options:
     * Content Path: 
@@ -238,11 +240,13 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
 
 
 ## Result Handling
+
 * When a query is executed, if any Results are returned, they will be populated in a Table on the Results tab.
 * The Results table features Pagination where you can define how many results "per page" get displayed.
   * TODO: Need to inform the UI when user updates the pagination option, so that the page becomes scrollable when the results spill out the viewport.
 
 ## TODO FEATURES:
+
 * Add User Input sanitization.
 * Add Results Sorting/Filtering capabilities.
 * Add Results Exporting capabilities:
@@ -265,13 +269,11 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
 
 ## Modules
 
-The main parts of the template are:
-
-* ui.apps: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, and templates
-* ui.content: contains the content that defines the Tool page in AEM and makes it accessible in the Tool Navigation.
-* ui.config: contains runmode specific OSGi configs for the project
-* [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript)
-* all: a single content package that embeds all of the compiled modules (bundles and content packages) including any vendor dependencies
+* ui.apps: Contains a basic app page and the Client Library for the Content Wizard.
+* ui.content: contains the content that defines the app page in AEM and makes it accessible in the Tool Navigation.
+* ui.config: contains runmode specific OSGi configs for the project (this is installed with the optional `localDev` maven profile during build time)
+* [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript + Webpack + SCSS)
+* all: a single content package that embeds all the compiled modules zips and is deployed to AEM.
 
 ## How to build
 
@@ -302,11 +304,13 @@ Note: When building with Maven from the project root, the Maven build will autom
 
 ## Local Development
 
-If you intend on doing any local development or testing with this tool, include the `localDev` maven Profile. This will setup the required CORS policy and example content to search against.
+If you intend on doing any local development or testing with this tool, include the `localDev` maven Profile. This will setup the required CORS policy.
 
     mvn clean install -PautoInstallSinglePackage,localDev
 
-Note: If you swap between adding and removing the `localDev` profile, you may have to manually re-install project packages via [CRX PackageManager](/crx/packmgr/index.jsp) 
+Note: If you swap between adding and removing the `localDev` profile, you may have to manually re-install project packages via [CRX PackageManager](/crx/packmgr/index.jsp)
+
+Note: Just refer to the We.Retail content for local dev/testing... Or your own content. 
 
 ## Documentation
 
@@ -324,8 +328,7 @@ A ClientLib will consist of the following files and directories:
 - `js.txt` (tells AEM the order and names of files in `js/` so they can be merged
 - `resources/`: Source maps, non-entrypoint code chunks (resulting from code splitting), static assets (e.g. icons), etc.
 
-## Maven settings
 
-The project comes with the auto-public repository configured. To setup the repository in your Maven settings, refer to:
+## M2 Setup
 
-    http://helpx.adobe.com/experience-manager/kb/SetUpTheAdobeMavenRepository.html
+You need you have a settings.xml file defined @ ~/.m2 which configures your connection to a Maven Repository. It is required to build this entire project locally with Maven. More info [here](https://www.baeldung.com/maven-settings-xml).
