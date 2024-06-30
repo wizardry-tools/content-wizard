@@ -29,7 +29,7 @@
     <!-- ====================================================================== -->
     <scm>
         <connection>scm:git:git://github.com/wizardry-tools/content-wizard.git</connection>
-        <developerConnection>scm:git:ssh://github.com/wizardry-tools/content-wizard.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/wizardry-tools/content-wizard.git</developerConnection>
         <url>https://github.com/wizardry-tools/content-wizard/</url>
         <tag>content-wizard-${project.version}</tag>
     </scm>
