@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.wizardry-tools</groupId>
         <artifactId>content-wizard</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -77,6 +77,10 @@
                     <verbose>true</verbose>
                     <failOnError>true</failOnError>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -200,7 +204,18 @@
                             <failOnError>true</failOnError>
                         </configuration>
                     </plugin>
-
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>auto-clean</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>

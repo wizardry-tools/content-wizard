@@ -20,10 +20,9 @@
     <groupId>com.wizardry-tools</groupId>
     <artifactId>content-wizard</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>Content Wizard</name>
     <description>This is an AEM Tool that can be installed on any AEM Author environment to assist authors or developers with various Content related features.</description>
-    <url>https://www.wizardry-tools.com</url>
 
     <!-- ====================================================================== -->
     <!-- S C M  D E F I N I T I O N                                             -->
@@ -32,8 +31,20 @@
         <connection>scm:git:git://github.com/wizardry-tools/content-wizard.git</connection>
         <developerConnection>scm:git:ssh://github.com/wizardry-tools/content-wizard.git</developerConnection>
         <url>https://github.com/wizardry-tools/content-wizard/</url>
-        <tag>com.wizardry-tools.content-wizard.all-1.0.0</tag>
+        <tag>content-wizard-${project.version}</tag>
     </scm>
+    <url>https://www.wizardry-tools.com</url>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <licenses>
         <license>
@@ -50,6 +61,7 @@
             <organizationUrl>https://www.wizardry-tools.com</organizationUrl>
         </developer>
     </developers>
+
 
     <modules>
         <module>all</module>
@@ -88,6 +100,37 @@
                     <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
+            <!-- Sonatype and GPG -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
+
             <!-- Maven Source Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -177,60 +220,6 @@
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
-                <!-- BND Maven Plugin -->
-                <plugin>
-                    <groupId>biz.aQute.bnd</groupId>
-                    <artifactId>bnd-maven-plugin</artifactId>
-                    <version>${bnd.version}</version>
-                    <executions>
-                        <execution>
-                            <id>bnd-process</id>
-                            <goals>
-                                <goal>bnd-process</goal>
-                            </goals>
-                            <configuration>
-                                <bnd>
-                                    <![CDATA[
-Bundle-Category: ${componentGroupName}
-
-# export all versioned packages except for conditional ones (https://github.com/bndtools/bnd/issues/3721#issuecomment-579026778)
--exportcontents: ${removeall;${packages;VERSIONED};${packages;CONDITIONAL}}
-
-# reproducible builds (https://github.com/bndtools/bnd/issues/3521)
--noextraheaders: true
--snapshot: SNAPSHOT
-
-Bundle-DocURL:
--plugin org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
--plugin org.apache.sling.bnd.models.ModelsScannerPlugin
-                                ]]>
-                                </bnd>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.sling</groupId>
-                            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
-                            <version>1.0.2</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.sling</groupId>
-                            <artifactId>org.apache.sling.bnd.models</artifactId>
-                            <version>1.0.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.sling</groupId>
-                            <artifactId>scriptingbundle-maven-plugin</artifactId>
-                            <version>0.5.0</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>biz.aQute.bnd</groupId>
-                    <artifactId>bnd-baseline-maven-plugin</artifactId>
-                    <version>${bnd.version}</version>
-                </plugin>
                 <!-- Maven Resources Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -270,6 +259,27 @@ Bundle-DocURL:
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.2</version>
                 </plugin>
+                <!-- GPG -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.2.4</version>
+                </plugin>
+                <!-- Sonatype Staging Deploy Plugin -->
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.5.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                    </configuration>
+                </plugin>
+                <!--<plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.7</version>
+                </plugin> -->
                 <!-- Apache Sling Plugin -->
                 <plugin>
                     <groupId>org.apache.sling</groupId>
@@ -280,15 +290,7 @@ Bundle-DocURL:
                         <deploymentMethod>WebConsole</deploymentMethod>
                     </configuration>
                 </plugin>
-                <!-- HTL Maven Plugin -->
-                <plugin>
-                    <groupId>org.apache.sling</groupId>
-                    <artifactId>htl-maven-plugin</artifactId>
-                    <version>2.0.2-1.4.0</version>
-                    <configuration>
-                        <failOnWarnings>true</failOnWarnings>
-                    </configuration>
-                </plugin>
+
                 <!-- Jackrabbit FileVault Package Plugin -->
                 <plugin>
                     <groupId>org.apache.jackrabbit</groupId>
@@ -415,36 +417,6 @@ Bundle-DocURL:
         </pluginManagement>
     </build>
     <profiles>
-        <!-- Development profile: install only the bundle -->
-        <profile>
-            <id>autoInstallBundle</id>
-            <!--
-                                  To enable this feature for a bundle, the sling-maven-plugin
-                                  (without configuration) needs to be included:
-                  <plugin><groupId>org.apache.sling</groupId><artifactId>sling-maven-plugin</artifactId></plugin>
-                              -->
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.sling</groupId>
-                            <artifactId>sling-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>install-bundle</id>
-                                    <goals>
-                                        <goal>install</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
         <profile>
             <id>autoInstallPackage</id>
             <activation>
