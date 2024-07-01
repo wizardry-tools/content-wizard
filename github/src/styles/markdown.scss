@@ -1,6 +1,7 @@
 $background-color-dark: hsl(0, 0%, 17%);
 $background-color-light: hsl(0, 0%, 100%);
-$copy-icon-background-color: hsla(0, 0%, 30%, 0.3);
+$copy-icon-background-color-dark: hsla(0, 0%, 30%, 0.5);
+$copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
 
 .markdown-container {
 
@@ -66,7 +67,6 @@ $copy-icon-background-color: hsla(0, 0%, 30%, 0.3);
         // default opacity as 0 so they are not visible on load
         opacity: 0;
         backdrop-filter: blur(2px);
-        background-color: $copy-icon-background-color;
 
         &.hide {
           opacity: 0;
@@ -81,6 +81,10 @@ $copy-icon-background-color: hsla(0, 0%, 30%, 0.3);
   &.dark {
     .markdown-paper {
       background: $background-color-dark;
+
+      .clipboard-fab {
+        background-color: $copy-icon-background-color-dark;
+      }
     }
 
     /*!
@@ -188,6 +192,10 @@ $copy-icon-background-color: hsla(0, 0%, 30%, 0.3);
 
     .markdown-paper {
       background: $background-color-light;
+
+      .clipboard-fab {
+        background-color: $copy-icon-background-color-light;
+      }
     }
     /*!
       Theme: a11y-light
