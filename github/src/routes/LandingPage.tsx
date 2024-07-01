@@ -4,16 +4,18 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppAppBar from './components/AppAppBar';
-import Hero from './components/Hero';
-import Highlights from './components/Highlights';
-import Features from './components/Features';
-import FAQ from './components/FAQ';
-import Footer from './components/Footer';
+import AppAppBar from '../components/AppAppBar';
+import Hero from '../components/Hero';
+import Highlights from '../components/Highlights';
+import Features from '../components/Features';
+import FAQ from '../components/FAQ';
+import Footer from '../components/Footer';
+import {InstallationGuide} from "../components/InstallationGuide";
+import getTheme from "../utils/getTheme";
 
 export default function LandingPage() {
   const [mode, setMode] = React.useState<PaletteMode>('dark');
-  const defaultTheme = createTheme({ palette: { mode } });
+  const defaultTheme = createTheme(getTheme(mode));
 
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
@@ -29,6 +31,8 @@ export default function LandingPage() {
         <Divider />
         <Highlights />
         <Divider />
+        <InstallationGuide />
+        <Divider/>
         <FAQ />
         <Divider />
         <Footer />

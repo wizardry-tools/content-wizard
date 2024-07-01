@@ -28,6 +28,12 @@ export default function FAQ() {
     };
 
   return (
+    <Box
+      sx={(theme)=>({
+        color: theme.palette.mode === 'dark' ? 'white' : 'black',
+        bgcolor: theme.palette.mode === 'dark' ? 'hsl(220, 30%, 2%)' : 'hsl(220, 30%, 96%)',
+      })}
+    >
     <Container
       id="faq"
       sx={{
@@ -174,5 +180,6 @@ export default function FAQ() {
         </Accordion>
       </Box>
     </Container>
+  </Box>
   );
 }

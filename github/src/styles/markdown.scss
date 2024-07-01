@@ -1,0 +1,294 @@
+$background-color-dark: hsl(0, 0%, 17%);
+$background-color-light: hsl(0, 0%, 100%);
+$copy-icon-background-color: hsla(0, 0%, 30%, 0.3);
+
+.markdown-container {
+
+  .fade-in {
+    animation: fadeIn 350ms;
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0;}
+    100% { opacity: 1;}
+  }
+
+  .fade-out {
+    animation: fadeOut 350ms;
+  }
+  @keyframes fadeOut {
+    0% { opacity: 1;}
+    100% { opacity: 0;}
+  }
+
+  .markdown-paper {
+    display: flex;
+    align-self: center;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    //width: 100%;
+    max-width: 95vw;
+    overflow: hidden;
+
+
+    pre {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      //width: 100%;
+      overflow: auto;
+
+      code {
+        //width: 100%;
+        //overflow: auto;
+      }
+
+    }
+
+    .code-copy-wrapper {
+      overflow: hidden;
+    }
+
+    span.clipboard {
+      position: relative;
+      float: right;
+      margin-bottom: -3.5rem;
+      margin-left: -3.5rem;
+      right: .25rem;
+      line-height: 1rem;
+      max-height: 3rem;
+
+      svg {
+        display: inline-block;
+        fill: none;
+        margin: .75rem;
+      }
+
+      .clipboard-fab {
+        // default opacity as 0 so they are not visible on load
+        opacity: 0;
+        backdrop-filter: blur(2px);
+        background-color: $copy-icon-background-color;
+
+        &.hide {
+          opacity: 0;
+        }
+        &.show {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &.dark {
+    .markdown-paper {
+      background: $background-color-dark;
+    }
+
+    /*!
+      Theme: a11y-dark
+      Author: @ericwbailey
+      Maintainer: @ericwbailey
+
+      Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css
+    */
+    .hljs {
+      background: $background-color-dark;
+      color: #f8f8f2;
+    }
+
+    /* Comment */
+    .hljs-comment,
+    .hljs-quote {
+      color: #d4d0ab;
+    }
+
+    /* Red */
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class,
+    .hljs-regexp,
+    .hljs-deletion {
+      color: #ffa07a;
+    }
+
+    /* Orange */
+    .hljs-number,
+    .hljs-built_in,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params,
+    .hljs-meta,
+    .hljs-link {
+      color: #f5ab35;
+    }
+
+    /* Yellow */
+    .hljs-attribute {
+      color: #ffd700;
+    }
+
+    /* Green */
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-addition {
+      color: #abe338;
+    }
+
+    /* Blue */
+    .hljs-title,
+    .hljs-section {
+      color: #00e0e0;
+    }
+
+    /* Purple */
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #dcc6e0;
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: bold;
+    }
+
+    @media screen and (-ms-high-contrast: active) {
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-built_in,
+      .hljs-bullet,
+      .hljs-comment,
+      .hljs-link,
+      .hljs-literal,
+      .hljs-meta,
+      .hljs-number,
+      .hljs-params,
+      .hljs-string,
+      .hljs-symbol,
+      .hljs-type,
+      .hljs-quote {
+        color: highlight;
+      }
+
+      .hljs-keyword,
+      .hljs-selector-tag {
+        font-weight: bold;
+      }
+    }
+
+    /** END DARK THEME **/
+  }
+
+  &.light {
+
+    .markdown-paper {
+      background: $background-color-light;
+    }
+    /*!
+      Theme: a11y-light
+      Author: @ericwbailey
+      Maintainer: @ericwbailey
+
+      Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css
+    */
+
+    .hljs {
+      background: $background-color-light;
+      color: #545454;
+    }
+
+    /* Comment */
+    .hljs-comment,
+    .hljs-quote {
+      color: #696969;
+    }
+
+    /* Red */
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class,
+    .hljs-regexp,
+    .hljs-deletion {
+      color: #d91e18;
+    }
+
+    /* Orange */
+    .hljs-number,
+    .hljs-built_in,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params,
+    .hljs-meta,
+    .hljs-link {
+      color: #aa5d00;
+    }
+
+    /* Yellow */
+    .hljs-attribute {
+      color: #aa5d00;
+    }
+
+    /* Green */
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-addition {
+      color: #008000;
+    }
+
+    /* Blue */
+    .hljs-title,
+    .hljs-section {
+      color: #007faa;
+    }
+
+    /* Purple */
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #7928a1;
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: bold;
+    }
+
+    @media screen and (-ms-high-contrast: active) {
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-built_in,
+      .hljs-bullet,
+      .hljs-comment,
+      .hljs-link,
+      .hljs-literal,
+      .hljs-meta,
+      .hljs-number,
+      .hljs-params,
+      .hljs-string,
+      .hljs-symbol,
+      .hljs-type,
+      .hljs-quote {
+        color: highlight;
+      }
+
+      .hljs-keyword,
+      .hljs-selector-tag {
+        font-weight: bold;
+      }
+    }
+    /** END LIGHT THEME **/
+  }
+
+
+}

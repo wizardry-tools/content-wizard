@@ -93,6 +93,14 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 variant="text"
                 color="info"
                 size="small"
+                onClick={() => scrollToSection('installation')}
+              >
+                Installation
+              </Button>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
                 onClick={() => scrollToSection('faq')}
                 sx={{ minWidth: 0 }}
               >
@@ -133,6 +141,9 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 </MenuItem>
                 <MenuItem onClick={() => scrollToSection('highlights')}>
                   Highlights
+                </MenuItem>
+                <MenuItem onClick={() => scrollToSection('installation')}>
+                  Installation
                 </MenuItem>
                 <MenuItem onClick={() => scrollToSection('faq')}>
                   FAQ
