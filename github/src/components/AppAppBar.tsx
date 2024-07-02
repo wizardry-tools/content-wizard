@@ -13,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ToggleColorMode from './ToggleColorMode';
 import {ReactComponent as LogoIcon} from '../wizard-logo.svg';
+import {useScrollToId} from "../utils/scroll";
 
 interface AppAppBarProps {
   mode: PaletteMode;
@@ -21,23 +22,10 @@ interface AppAppBarProps {
 
 export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
   const [open, setOpen] = React.useState(false);
+  const scrollToSection = useScrollToId({hook: setOpen, hookProps: false});
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const sectionElement = document.getElementById(sectionId);
-    const offset = 128;
-    if (sectionElement) {
-      const targetScroll = sectionElement.offsetTop - offset;
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
-      window.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth',
-      });
-      setOpen(false);
-    }
   };
 
   return (
@@ -69,7 +57,7 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
           })}
         >
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <Link onClick={() => scrollToSection('hero')}>
+            <Link onClick={() => scrollToSection.scroll('hero')}>
               <SvgIcon sx={{  height: '3rem', width: '3rem', mr: 2 }} component={LogoIcon} inheritViewBox/>
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -77,7 +65,7 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('features')}
+                onClick={() => scrollToSection.scroll('features')}
               >
                 Features
               </Button>
@@ -85,7 +73,7 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('highlights')}
+                onClick={() => scrollToSection.scroll('highlights')}
               >
                 Highlights
               </Button>
@@ -93,7 +81,7 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('installation')}
+                onClick={() => scrollToSection.scroll('installation')}
               >
                 Installation
               </Button>
@@ -101,7 +89,7 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('faq')}
+                onClick={() => scrollToSection.scroll('faq')}
                 sx={{ minWidth: 0 }}
               >
                 FAQ
@@ -136,16 +124,16 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                   </IconButton>
                 </Box>
                 <Divider sx={{ my: 3 }} />
-                <MenuItem onClick={() => scrollToSection('features')}>
+                <MenuItem onClick={() => scrollToSection.scroll('features')}>
                   Features
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('highlights')}>
+                <MenuItem onClick={() => scrollToSection.scroll('highlights')}>
                   Highlights
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('installation')}>
+                <MenuItem onClick={() => scrollToSection.scroll('installation')}>
                   Installation
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('faq')}>
+                <MenuItem onClick={() => scrollToSection.scroll('faq')}>
                   FAQ
                 </MenuItem>
               </Box>

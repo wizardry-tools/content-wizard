@@ -5,18 +5,20 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import {GitHub} from "@mui/icons-material";
 import {IconButton} from "@mui/material";
+import {useScrollToId} from "../utils/scroll";
 
 function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
       {'Copyright © '}
-      <Link href="https://wizardry-tools.github.io/content-wizard/">Content Wizard&nbsp;</Link>
+      <Link href="https://wizardry-tools.com/">Content Wizard&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
   );
 }
 
 export default function Footer() {
+  const scrollToSection = useScrollToId();
   return (
     <Container
       sx={{
@@ -31,35 +33,38 @@ export default function Footer() {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
+          flexDirection: 'row',
           width: '100%',
           justifyContent: 'space-between',
         }}
       >
         <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
+            display: { xs: 'flex', sm: 'flex' },
             justifyContent: "flex-end",
             flexDirection: 'column',
             gap: 1,
           }}
         >
           <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-            Product
+            Content Wizard
           </Typography>
-          <Link color="text.secondary" variant="body2" href="#">
+          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('features')}>
             Features
           </Link>
-          <Link color="text.secondary" variant="body2" href="#">
+          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('highlights')}>
             Highlights
           </Link>
-          <Link color="text.secondary" variant="body2" href="#">
-            FAQs
+          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('installation')}>
+            Installation
+          </Link>
+          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('faw')}>
+            FAQ
           </Link>
         </Box>
         <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
+            display: 'flex',
             justifyContent: "flex-end",
             alignItems: 'flex-end',
             flexDirection: 'row',
@@ -70,7 +75,7 @@ export default function Footer() {
         </Box>
         <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
+            display: 'flex',
             justifyContent: "flex-end",
             flexDirection: 'row',
             gap: 1,

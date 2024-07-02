@@ -20,15 +20,15 @@ const CopyFab = (props:any) => {
     setMouseOver(true);
     setClicked(false);
     openPopover(e);
-  },[]);
+  },[openPopover]);
   const onFabClick = useCallback((e: MouseEvent) => {
     setClicked(true);
     setMouseOver(false);
     onClick(e);
-  },[]);
+  },[onClick]);
 
-  const openToolTip = Boolean(anchorEl && mouseOver);
-  const openSuccess = Boolean(anchorEl && clicked);
+  const openToolTip = (anchorEl && mouseOver) || false;
+  const openSuccess = (anchorEl && clicked) || false;
 
   return(
     <span className={`clipboard`}>
@@ -39,7 +39,6 @@ const CopyFab = (props:any) => {
         onClick={onFabClick}
         onMouseOver={onMouseOver}
         onMouseLeave={closePopover}
-        title="Copy code snippet"
       >
         <SvgIcon
           component={CopyIcon}
