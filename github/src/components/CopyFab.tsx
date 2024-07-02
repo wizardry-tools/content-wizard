@@ -1,12 +1,11 @@
 import {MouseEvent, useCallback, useState} from "react";
-import {Fab, Popover, SvgIcon} from "@mui/material";
+import {Fab, Popover, SvgIcon, Tooltip, Typography} from "@mui/material";
 import {ReactComponent as CopyIcon} from "../icons/copy.svg";
 
 
 const CopyFab = (props:any) => {
   const {hover, onClick} = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [mouseOver, setMouseOver] = useState(false);
   const [clicked, setClicked] = useState(false);
 
   const openPopover = useCallback((e: MouseEvent) => {
@@ -17,53 +16,36 @@ const CopyFab = (props:any) => {
     setClicked(false);
   },[]);
   const onMouseOver = useCallback((e: MouseEvent) => {
-    setMouseOver(true);
     setClicked(false);
     openPopover(e);
   },[openPopover]);
   const onFabClick = useCallback((e: MouseEvent) => {
     setClicked(true);
-    setMouseOver(false);
     onClick(e);
   },[onClick]);
 
-  const openToolTip = (anchorEl && mouseOver) || false;
   const openSuccess = (anchorEl && clicked) || false;
 
   return(
     <span className={`clipboard`}>
-      <Fab
-        className={`clipboard-fab ${
-          hover ? 'show fade-in' : 'hide fade-out'
-        }`}
-        onClick={onFabClick}
-        onMouseOver={onMouseOver}
-        onMouseLeave={closePopover}
+      <Tooltip
+        id="clipboard-copy-tooltip"
+        title={"Copy code snippet"}
       >
-        <SvgIcon
-          component={CopyIcon}
-          inheritViewBox={true}
-        />
-      </Fab>
-      <Popover
-        id="clipboard-copy-tooltip-popover"
-        anchorEl={anchorEl}
-        open={openToolTip}
-        onClose={closePopover}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        sx={{
-          pointerEvents: 'none',
-        }}
-      >
-        Copy code snippet
-      </Popover>
+        <Fab
+          className={`clipboard-fab ${
+            hover ? 'show fade-in' : 'hide fade-out'
+          }`}
+          onClick={onFabClick}
+          onMouseOver={onMouseOver}
+          onMouseLeave={closePopover}
+        >
+          <SvgIcon
+            component={CopyIcon}
+            inheritViewBox={true}
+          />
+        </Fab>
+      </Tooltip>
       <Popover
         id="clipboard-copy-success-popover"
         anchorEl={anchorEl}
@@ -71,17 +53,16 @@ const CopyFab = (props:any) => {
         onClose={closePopover}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'center',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left',
-        }}
-        sx={{
-          pointerEvents: 'none',
+          horizontal: 'center',
         }}
       >
-        Code snippet copied!
+        <Typography className="message">
+          Code snippet copied!
+        </Typography>
       </Popover>
     </span>
   );

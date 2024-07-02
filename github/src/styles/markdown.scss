@@ -297,6 +297,23 @@ $copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
     }
     /** END LIGHT THEME **/
   }
+}
 
+/** Copy Fab Popover is outside of the App root **/
+#clipboard-copy-success-popover {
+  pointer-events: none;
 
+  .MuiPopover-paper {
+    background-color: rgba(97, 97, 97, 0.92);
+    margin-top: 0.875rem;
+    line-height: 1.125rem;
+    box-shadow: none;
+    background-image: none;
+  }
+  .message {
+    color: #ffffff;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+  }
 }

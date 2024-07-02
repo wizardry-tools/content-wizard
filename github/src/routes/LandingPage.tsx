@@ -18,7 +18,12 @@ export default function LandingPage() {
   const defaultTheme = createTheme(getTheme(mode));
 
   const toggleColorMode = () => {
-    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setMode((prev) => {
+      const newMode = prev === 'dark' ? 'light' : 'dark';
+      document.body.classList.remove(prev)
+      document.body.classList.add(newMode);
+      return newMode;
+    });
   };
 
   return (
