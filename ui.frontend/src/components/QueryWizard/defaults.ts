@@ -21,7 +21,7 @@ export const defaultAdvancedQueries: QueryMap = {
   weRetailStoreInfoList {
     items {
       _path
-      _variation
+      _variations
       storelocation
       contactnumber
       description

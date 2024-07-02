@@ -1,6 +1,6 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
-import CodeMirror from 'codemirror';
+import CodeMirror, {ModeFactory} from 'codemirror';
 
 export interface SqlContext {
   prev: SqlContext | null;
@@ -14,222 +14,236 @@ export interface SqlState {
   context: SqlContext | null;
   indent?: number;
 }
-
+type ModeOptionMap = Record<string, boolean>;
+type HookMap = Record<string, (stream: CodeMirror.StringStream)=>string>;
+export interface ModeOptions {
+  client?: any;
+  atoms?: ModeOptionMap;
+  builtin?: ModeOptionMap;
+  keywords?: ModeOptionMap;
+  operatorChars?: RegExp;
+  support?: ModeOptionMap;
+  hooks?: HookMap;
+  dateSQL?: ModeOptionMap;
+  backslashStringEscapes?: boolean;
+  brackets?: RegExp;
+  punctuation?: RegExp;
+}
 
 (()=>{
-CodeMirror.defineMode("sql", function(config, parserConfig) {
-  let client         = parserConfig.client || {},
-      atoms          = parserConfig.atoms || {"false": true, "true": true, "null": true},
-      builtin        = parserConfig.builtin || set(defaultBuiltin),
-      keywords       = parserConfig.keywords || set(sqlKeywords),
-      operatorChars  = parserConfig.operatorChars || /^[*+\-%<>!=&|~^\/]/,
-      support        = parserConfig.support || {},
-      hooks          = parserConfig.hooks || {},
-      dateSQL        = parserConfig.dateSQL || {"date" : true, "time" : true, "timestamp" : true},
-      backslashStringEscapes = parserConfig.backslashStringEscapes !== false,
-      brackets       = parserConfig.brackets || /^[\{}\(\)\[\]]/,
-      punctuation    = parserConfig.punctuation || /^[;.,:]/;
+  CodeMirror.defineMode("sql", ((config, parserConfig: ModeOptions) =>{
+    let client         = parserConfig.client || {},
+        atoms          = parserConfig.atoms || {"false": true, "true": true, "null": true},
+        builtin        = parserConfig.builtin || set(defaultBuiltin),
+        keywords       = parserConfig.keywords || set(sqlKeywords),
+        operatorChars  = parserConfig.operatorChars || /^[*+\-%<>!=&|~^/]/,
+        support        = parserConfig.support || {},
+        hooks          = parserConfig.hooks || {},
+        dateSQL        = parserConfig.dateSQL || {"date" : true, "time" : true, "timestamp" : true},
+        backslashStringEscapes = parserConfig.backslashStringEscapes !== false,
+        brackets       = parserConfig.brackets || /^[{}()[]]/,
+        punctuation    = parserConfig.punctuation || /^[;.,:]/;
 
-  function tokenBase(stream: CodeMirror.StringStream, state: SqlState) {
-    let ch: string | null = stream.next();
-    if (!ch) {
-      return null;
-    }
-
-    // call hooks from the mime type
-    if (hooks[ch]) {
-      let result = hooks[ch](stream, state);
-      if (result !== false) return result;
-    }
-
-    if (support.hexNumber &&
-      (((ch === "0" && stream.match(/^[xX][0-9a-fA-F]+/))
-      || (ch === "x" || ch === "X")) && stream.match(/^'[0-9a-fA-F]*'/))) {
-      // hex
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/hexadecimal-literals.html
-      return "number";
-    } else if (support.binaryNumber &&
-      (((ch === "b" || ch === "B") && stream.match(/^'[01]*'/))
-      || (ch === "0" && stream.match(/^b[01]+/)))) {
-      // bitstring
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/bit-value-literals.html
-      return "number";
-    } else if (ch.charCodeAt(0) > 47 && ch.charCodeAt(0) < 58) {
-      // numbers
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/number-literals.html
-      stream.match(/^[0-9]*(\.[0-9]+)?([eE][-+]?[0-9]+)?/);
-      support.decimallessFloat && stream.match(/^\.(?!\.)/);
-      return "number";
-    } else if (ch === "?" && (stream.eatSpace() || stream.eol() || stream.eat(";"))) {
-      // placeholders
-      return "variable-3";
-    } else if (ch === "'" || (ch === '"' && support.doubleQuote)) {
-      // strings
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/string-literals.html
-      state.tokenize = tokenLiteral(ch);
-      return state.tokenize(stream, state);
-    } else if ((((support.nCharCast && (ch === "n" || ch === "N"))
-        || (support.charsetCast && ch === "_" && stream.match(/[a-z][a-z0-9]*/i)))
-        && (stream.peek() === "'" || stream.peek() === '"'))) {
-      // charset casting: _utf8'str', N'str', n'str'
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/string-literals.html
-      return "keyword";
-    } else if (support.escapeConstant && (ch === "e" || ch === "E")
-        && (stream.peek() === "'" || (stream.peek() === '"' && support.doubleQuote))) {
-      // escape constant: E'str', e'str'
-      // ref: https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS-ESCAPE
-      state.tokenize = function(stream, state) {
-        return (state.tokenize = tokenLiteral(stream.next(), true))(stream, state);
+    function tokenBase(stream: CodeMirror.StringStream, state: SqlState) {
+      let ch: string | null = stream.next();
+      if (!ch) {
+        return null;
       }
-      return "keyword";
-    } else if (support.commentSlashSlash && ch === "/" && stream.eat("/")) {
-      // 1-line comment
-      stream.skipToEnd();
-      return "comment";
-    } else if ((support.commentHash && ch === "#")
-        || (ch === "-" && stream.eat("-") && (!support.commentSpaceRequired || stream.eat(" ")))) {
-      // 1-line comments
-      // ref: https://kb.askmonty.org/en/comment-syntax/
-      stream.skipToEnd();
-      return "comment";
-    } else if (ch === "/" && stream.eat("*")) {
-      // multi-line comments
-      // ref: https://kb.askmonty.org/en/comment-syntax/
-      state.tokenize = tokenComment(1);
-      return state.tokenize(stream, state);
-    } else if (ch === ".") {
-      // .1 for 0.1
-      if (support.zerolessFloat && stream.match(/^(?:\d+(?:e[+-]?\d+)?)/i))
+
+      // call hooks from the mime type
+      if (hooks[ch]) {
+        let result = hooks[ch](stream);
+        if (result) return result;
+      }
+
+      if (support.hexNumber &&
+        (((ch === "0" && stream.match(/^[xX][0-9a-fA-F]+/))
+        || (ch === "x" || ch === "X")) && stream.match(/^'[0-9a-fA-F]*'/))) {
+        // hex
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/hexadecimal-literals.html
         return "number";
-      if (stream.match(/^\.+/))
-        return null
-      if (stream.match(/^[\w\d_$#]+/))
-        return "variable-2";
-    } else if (operatorChars.test(ch)) {
-      // operators
-      stream.eatWhile(operatorChars);
-      return "operator";
-    } else if (brackets.test(ch)) {
-      // brackets
-      if (support.bracketVariable && ch === "[") {
-        // this turns the square brackets and any values inside them into a variable-2.
-        state.tokenize = tokenLiteral(ch, false, "]");
+      } else if (support.binaryNumber &&
+        (((ch === "b" || ch === "B") && stream.match(/^'[01]*'/))
+        || (ch === "0" && stream.match(/^b[01]+/)))) {
+        // bitstring
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/bit-value-literals.html
+        return "number";
+      } else if (ch.charCodeAt(0) > 47 && ch.charCodeAt(0) < 58) {
+        // numbers
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/number-literals.html
+        stream.match(/^[0-9]*(\.[0-9]+)?([eE][-+]?[0-9]+)?/);
+        support.decimallessFloat && stream.match(/^\.(?!\.)/);
+        return "number";
+      } else if (ch === "?" && (stream.eatSpace() || stream.eol() || stream.eat(";"))) {
+        // placeholders
+        return "variable-3";
+      } else if (ch === "'" || (ch === '"' && support.doubleQuote)) {
+        // strings
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/string-literals.html
+        state.tokenize = tokenLiteral(ch);
         return state.tokenize(stream, state);
-      }
-      return "bracket";
-    } else if (punctuation.test(ch)) {
-      // punctuation
-      stream.eatWhile(punctuation);
-      return "punctuation";
-    } else if (ch === '{' &&
-        (stream.match(/^( )*(d|D|t|T|ts|TS)( )*'[^']*'( )*}/) || stream.match(/^( )*(d|D|t|T|ts|TS)( )*"[^"]*"( )*}/))) {
-      // dates (weird ODBC syntax)
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/date-and-time-literals.html
-      return "number";
-    } else {
-      stream.eatWhile(/^[_\w\d]/);
-      let word = stream.current().toLowerCase();
-      // dates (standard SQL syntax)
-      // ref: https://dev.mysql.com/doc/refman/8.0/en/date-and-time-literals.html
-      if (dateSQL.hasOwnProperty(word) && (stream.match(/^( )+'[^']*'/) || stream.match(/^( )+"[^"]*"/)))
-        return "number";
-      if (atoms.hasOwnProperty(word)) return "atom";
-      if (builtin.hasOwnProperty(word)) return "type";
-      if (keywords.hasOwnProperty(word)) return "keyword";
-      if (client.hasOwnProperty(word)) return "builtin";
-      return null;
-    }
-  }
-
-  // 'string', with char specified in quote escaped by '\'
-  function tokenLiteral(quote: string | null, backslashEscapes: boolean = false, endToken: string | null = '') {
-    return function(stream: CodeMirror.StringStream, state: SqlState) {
-      let escaped = false, ch;
-      let variable = false;
-      while ((ch = stream.next()) != null) {
-        if (ch === quote && !escaped) { // handles "strings"
-          state.tokenize = tokenBase;
-          break;
-        } else if (ch == endToken && !escaped) { // handles [bracketedVariables]
-          variable = true;
-          state.tokenize = tokenBase;
-          break;
+      } else if ((((support.nCharCast && (ch === "n" || ch === "N"))
+          || (support.charsetCast && ch === "_" && stream.match(/[a-z][a-z0-9]*/i)))
+          && (stream.peek() === "'" || stream.peek() === '"'))) {
+        // charset casting: _utf8'str', N'str', n'str'
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/string-literals.html
+        return "keyword";
+      } else if (support.escapeConstant && (ch === "e" || ch === "E")
+          && (stream.peek() === "'" || (stream.peek() === '"' && support.doubleQuote))) {
+        // escape constant: E'str', e'str'
+        // ref: https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS-ESCAPE
+        state.tokenize = function(stream, state) {
+          return (state.tokenize = tokenLiteral(stream.next(), true))(stream, state);
         }
-        escaped = (backslashStringEscapes || backslashEscapes) && !escaped && ch === "\\";
+        return "keyword";
+      } else if (support.commentSlashSlash && ch === "/" && stream.eat("/")) {
+        // 1-line comment
+        stream.skipToEnd();
+        return "comment";
+      } else if ((support.commentHash && ch === "#")
+          || (ch === "-" && stream.eat("-") && (!support.commentSpaceRequired || stream.eat(" ")))) {
+        // 1-line comments
+        // ref: https://kb.askmonty.org/en/comment-syntax/
+        stream.skipToEnd();
+        return "comment";
+      } else if (ch === "/" && stream.eat("*")) {
+        // multi-line comments
+        // ref: https://kb.askmonty.org/en/comment-syntax/
+        state.tokenize = tokenComment(1);
+        return state.tokenize(stream, state);
+      } else if (ch === ".") {
+        // .1 for 0.1
+        if (support.zerolessFloat && stream.match(/^(\d+(?:e[+-]?\d+)?)/i))
+          return "number";
+        if (stream.match(/^\.+/))
+          return null
+        if (stream.match(/^[\w\d_$#]+/))
+          return "variable-2";
+      } else if (operatorChars.test(ch)) {
+        // operators
+        stream.eatWhile(operatorChars);
+        return "operator";
+      } else if (brackets.test(ch)) {
+        // brackets
+        if (support.bracketVariable && ch === "[") {
+          // this turns the square brackets and any values inside them into a variable-2.
+          state.tokenize = tokenLiteral(ch, false, "]");
+          return state.tokenize(stream, state);
+        }
+        return "bracket";
+      } else if (punctuation.test(ch)) {
+        // punctuation
+        stream.eatWhile(punctuation);
+        return "punctuation";
+      } else if (ch === '{' &&
+          (stream.match(/^( )*(d|D|t|T|ts|TS)( )*'[^']*'( )*}/) || stream.match(/^( )*(d|D|t|T|ts|TS)( )*"[^"]*"( )*}/))) {
+        // dates (weird ODBC syntax)
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/date-and-time-literals.html
+        return "number";
+      } else {
+        stream.eatWhile(/^[_\w\d]/);
+        let word = stream.current().toLowerCase();
+        // dates (standard SQL syntax)
+        // ref: https://dev.mysql.com/doc/refman/8.0/en/date-and-time-literals.html
+        if (dateSQL.hasOwnProperty(word) && (stream.match(/^( )+'[^']*'/) || stream.match(/^( )+"[^"]*"/)))
+          return "number";
+        if (atoms.hasOwnProperty(word)) return "atom";
+        if (builtin.hasOwnProperty(word)) return "type";
+        if (keywords.hasOwnProperty(word)) return "keyword";
+        if (client.hasOwnProperty(word)) return "builtin";
+        return null;
       }
-      return variable ? "variable-2" : "string";
-    };
-  }
-  function tokenComment(depth: number) {
-    return function(stream: CodeMirror.StringStream, state: SqlState) {
-      let m = stream.match(/^.*?(\/\*|\*\/)/)
-      if (!m) stream.skipToEnd()
-      else if (m[1] === "/*") state.tokenize = tokenComment(depth + 1)
-      else if (depth > 1) state.tokenize = tokenComment(depth - 1)
-      else state.tokenize = tokenBase
-      return "comment"
     }
-  }
 
-  function pushContext(stream: CodeMirror.StringStream, state: SqlState, type: string) {
-    state.context = {
-      prev: state.context,
-      indent: stream.indentation(),
-      col: stream.column(),
-      type: type
-    };
-  }
-
-  function popContext(state: SqlState) {
-    if (state.context) {
-      state.indent = state.context.indent;
-      state.context = state.context.prev;
+    // 'string', with char specified in quote escaped by '\'
+    function tokenLiteral(quote: string | null, backslashEscapes: boolean = false, endToken: string | null = '') {
+      return function(stream: CodeMirror.StringStream, state: SqlState) {
+        let escaped = false, ch;
+        let variable = false;
+        while ((ch = stream.next()) != null) {
+          if (ch === quote && !escaped) { // handles "strings"
+            state.tokenize = tokenBase;
+            break;
+          } else if (ch === endToken && !escaped) { // handles [bracketedVariables]
+            variable = true;
+            state.tokenize = tokenBase;
+            break;
+          }
+          escaped = (backslashStringEscapes || backslashEscapes) && !escaped && ch === "\\";
+        }
+        return variable ? "variable-2" : "string";
+      };
     }
-  }
+    function tokenComment(depth: number) {
+      return function(stream: CodeMirror.StringStream, state: SqlState) {
+        let m = stream.match(/^.*?(\/\*|\*\/)/)
+        if (!m) stream.skipToEnd()
+        else if (m[1] === "/*") state.tokenize = tokenComment(depth + 1)
+        else if (depth > 1) state.tokenize = tokenComment(depth - 1)
+        else state.tokenize = tokenBase
+        return "comment"
+      }
+    }
 
-  return {
-    startState: function() {
-      return {tokenize: tokenBase, context: null};
-    },
+    function pushContext(stream: CodeMirror.StringStream, state: SqlState, type: string) {
+      state.context = {
+        prev: state.context,
+        indent: stream.indentation(),
+        col: stream.column(),
+        type: type
+      };
+    }
 
-    token: function(stream: CodeMirror.StringStream, state) {
-      if (stream.sol()) {
+    function popContext(state: SqlState) {
+      if (state.context) {
+        state.indent = state.context.indent;
+        state.context = state.context.prev;
+      }
+    }
+
+    return {
+      startState: function() {
+        return {tokenize: tokenBase, context: null};
+      },
+
+      token: function(stream: CodeMirror.StringStream, state) {
+        if (stream.sol()) {
+          if (state.context && state.context.align == null)
+            state.context.align = false;
+        }
+        if (state.tokenize === tokenBase && stream.eatSpace()) return null;
+
+        let style = state.tokenize(stream, state);
+        if (style === "comment") return style;
+
         if (state.context && state.context.align == null)
-          state.context.align = false;
-      }
-      if (state.tokenize === tokenBase && stream.eatSpace()) return null;
+          state.context.align = true;
 
-      let style = state.tokenize(stream, state);
-      if (style === "comment") return style;
+        let tok = stream.current();
+        if (tok === "(")
+          pushContext(stream, state, ")");
+        else if (tok === "[")
+          pushContext(stream, state, "]");
+        else if (state.context && state.context.type === tok)
+          popContext(state);
+        return style;
+      },
 
-      if (state.context && state.context.align == null)
-        state.context.align = true;
+      indent: function(state, textAfter) {
+        let cx = state.context;
+        if (!cx) return CodeMirror.Pass;
+        let closing = textAfter.charAt(0) === cx.type;
+        if (cx.align) return cx.col + (closing ? 0 : 1);
+        else return cx.indent + (closing ? 0 : config.indentUnit);
+      },
 
-      let tok = stream.current();
-      if (tok === "(")
-        pushContext(stream, state, ")");
-      else if (tok === "[")
-        pushContext(stream, state, "]");
-      else if (state.context && state.context.type === tok)
-        popContext(state);
-      return style;
-    },
-
-    indent: function(state, textAfter) {
-      let cx = state.context;
-      if (!cx) return CodeMirror.Pass;
-      let closing = textAfter.charAt(0) === cx.type;
-      if (cx.align) return cx.col + (closing ? 0 : 1);
-      else return cx.indent + (closing ? 0 : config.indentUnit);
-    },
-
-    blockCommentStart: "/*",
-    blockCommentEnd: "*/",
-    lineComment: support.commentSlashSlash ? "//" : support.commentHash ? "#" : "--",
-    closeBrackets: "()[]{}''\"\"``",
-    config: parserConfig
-  };
-}); // end definition
+      blockCommentStart: "/*",
+      blockCommentEnd: "*/",
+      lineComment: support.commentSlashSlash ? "//" : support.commentHash ? "#" : "--",
+      closeBrackets: "()[]{}''\"\"``",
+      config: parserConfig
+    };
+  }) as ModeFactory<any>); // end definition
 
   // `identifier`
   function hookIdentifier(stream: CodeMirror.StringStream) {
@@ -277,7 +291,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     } else if (stream.eat("`")) {
       stream.match(/^.*`/);
       return "variable-2";
-    } else if (stream.match(/^[0-9a-zA-Z$\.\_]+/)) {
+    } else if (stream.match(/^[0-9a-zA-Z$._]+/)) {
       return "variable-2";
     }
     return null;
@@ -325,8 +339,8 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     keywords: set(sqlKeywords + "begin trigger proc view index for add constraint key primary foreign collate clustered nonclustered declare exec go if use index holdlock nolock nowait paglock readcommitted readcommittedlock readpast readuncommitted repeatableread rowlock serializable snapshot tablock tablockx updlock with"),
     builtin: set("bigint numeric bit smallint decimal smallmoney int tinyint money float real char varchar text nchar nvarchar ntext binary varbinary image cursor timestamp hierarchyid uniqueidentifier sql_variant xml table "),
     atoms: set("is not null like and or in left right between inner outer join all any some cross unpivot pivot exists"),
-    operatorChars: /^[*+\-%<>!=^\&|\/]/,
-    brackets: /^[\{}\(\)]/,
+    operatorChars: /^[*+\-%<>!=^&|/]/,
+    brackets: /^[{}()]/,
     punctuation: /^[;.,:/]/,
     backslashStringEscapes: false,
     dateSQL: set("date datetimeoffset datetime2 smalldatetime datetime time"),
@@ -417,7 +431,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     client:     set("appinfo arraysize autocommit autoprint autorecovery autotrace blockterminator break btitle cmdsep colsep compatibility compute concat copycommit copytypecheck define describe echo editfile embedded escape exec execute feedback flagger flush heading headsep instance linesize lno loboffset logsource long longchunksize markup native newpage numformat numwidth pagesize pause pno recsep recsepchar release repfooter repheader serveroutput shiftinout show showmode size spool sqlblanklines sqlcase sqlcode sqlcontinue sqlnumber sqlpluscompatibility sqlprefix sqlprompt sqlterminator suffix tab term termout time timing trimout trimspool ttitle underline verify version wrap"),
     keywords:   set("abort accept access add all alter and any array arraylen as asc assert assign at attributes audit authorization avg base_table begin between binary_integer body boolean by case cast char char_base check close cluster clusters colauth column comment commit compress connect connected constant constraint crash create current currval cursor data_base database date dba deallocate debugoff debugon decimal declare default definition delay delete desc digits dispose distinct do drop else elseif elsif enable end entry escape exception exception_init exchange exclusive exists exit external fast fetch file for force form from function generic goto grant group having identified if immediate in increment index indexes indicator initial initrans insert interface intersect into is key level library like limited local lock log logging long loop master maxextents maxtrans member minextents minus mislabel mode modify multiset new next no noaudit nocompress nologging noparallel not nowait number_base object of off offline on online only open option or order out package parallel partition pctfree pctincrease pctused pls_integer positive positiven pragma primary prior private privileges procedure public raise range raw read rebuild record ref references refresh release rename replace resource restrict return returning returns reverse revoke rollback row rowid rowlabel rownum rows run savepoint schema segment select separate session set share snapshot some space split sql start statement storage subtype successful synonym tabauth table tables tablespace task terminate then to trigger truncate type union unique unlimited unrecoverable unusable update use using validate value values variable view views when whenever where while with work"),
     builtin:    set("abs acos add_months ascii asin atan atan2 average bfile bfilename bigserial bit blob ceil character chartorowid chr clob concat convert cos cosh count dec decode deref dual dump dup_val_on_index empty error exp false float floor found glb greatest hextoraw initcap instr instrb int integer isopen last_day least length lengthb ln lower lpad ltrim lub make_ref max min mlslabel mod months_between natural naturaln nchar nclob new_time next_day nextval nls_charset_decl_len nls_charset_id nls_charset_name nls_initcap nls_lower nls_sort nls_upper nlssort no_data_found notfound null number numeric nvarchar2 nvl others power rawtohex real reftohex round rowcount rowidtochar rowtype rpad rtrim serial sign signtype sin sinh smallint soundex sqlcode sqlerrm sqrt stddev string substr substrb sum sysdate tan tanh to_char text to_date to_label to_multi_byte to_number to_single_byte translate true trunc uid unlogged upper user userenv varchar varchar2 variance varying vsize xml"),
-    operatorChars: /^[*\/+\-%<>!=~]/,
+    operatorChars: /^[*/+\-%<>!=~]/,
     dateSQL:    set("date time timestamp"),
     support:    set("doubleQuote nCharCast zerolessFloat binaryNumber hexNumber")
   } as any);
@@ -442,7 +456,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     // https://www.postgresql.org/docs/11/datatype.html
     builtin: set("bigint int8 bigserial serial8 bit varying varbit boolean bool box bytea character char varchar cidr circle date double precision float8 inet integer int int4 interval json jsonb line lseg macaddr macaddr8 money numeric decimal path pg_lsn point polygon real float4 smallint int2 smallserial serial2 serial serial4 text time zone timetz timestamp timestamptz tsquery tsvector txid_snapshot uuid xml"),
     atoms: set("false true null unknown"),
-    operatorChars: /^[*\/+\-%<>!=&|^\/#@?~]/,
+    operatorChars: /^[*/+\-%<>!=&|^#@?~]/,
     backslashStringEscapes: false,
     dateSQL: set("date time timestamp"),
     support: set("decimallessFloat zerolessFloat binaryNumber hexNumber nCharCast charsetCast escapeConstant")
@@ -465,7 +479,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     keywords: set("abort absolute access action active add admin after aggregate all also alter always analyse analyze and any array as asc assertion assignment asymmetric at authorization backward before begin between bigint binary bit boolean both by cache called cascade cascaded case cast chain char character characteristics check checkpoint class close cluster coalesce codegen collate column comment commit committed concurrency concurrently configuration connection constraint constraints contains content continue conversion copy cost cpu_rate_limit create createdb createexttable createrole createuser cross csv cube current current_catalog current_date current_role current_schema current_time current_timestamp current_user cursor cycle data database day deallocate dec decimal declare decode default defaults deferrable deferred definer delete delimiter delimiters deny desc dictionary disable discard distinct distributed do document domain double drop dxl each else enable encoding encrypted end enum errors escape every except exchange exclude excluding exclusive execute exists explain extension external extract false family fetch fields filespace fill filter first float following for force foreign format forward freeze from full function global grant granted greatest group group_id grouping handler hash having header hold host hour identity if ignore ilike immediate immutable implicit in including inclusive increment index indexes inherit inherits initially inline inner inout input insensitive insert instead int integer intersect interval into invoker is isnull isolation join key language large last leading least left level like limit list listen load local localtime localtimestamp location lock log login mapping master match maxvalue median merge minute minvalue missing mode modifies modify month move name names national natural nchar new newline next no nocreatedb nocreateexttable nocreaterole nocreateuser noinherit nologin none noovercommit nosuperuser not nothing notify notnull nowait null nullif nulls numeric object of off offset oids old on only operator option options or order ordered others out outer over overcommit overlaps overlay owned owner parser partial partition partitions passing password percent percentile_cont percentile_disc placing plans position preceding precision prepare prepared preserve primary prior privileges procedural procedure protocol queue quote randomly range read readable reads real reassign recheck recursive ref references reindex reject relative release rename repeatable replace replica reset resource restart restrict returning returns revoke right role rollback rollup rootpartition row rows rule savepoint scatter schema scroll search second security segment select sequence serializable session session_user set setof sets share show similar simple smallint some split sql stable standalone start statement statistics stdin stdout storage strict strip subpartition subpartitions substring superuser symmetric sysid system table tablespace temp template temporary text then threshold ties time timestamp to trailing transaction treat trigger trim true truncate trusted type unbounded uncommitted unencrypted union unique unknown unlisten until update user using vacuum valid validation validator value values varchar variadic varying verbose version view volatile web when where whitespace window with within without work writable write xml xmlattributes xmlconcat xmlelement xmlexists xmlforest xmlparse xmlpi xmlroot xmlserialize year yes zone"),
     builtin: set("bigint int8 bigserial serial8 bit varying varbit boolean bool box bytea character char varchar cidr circle date double precision float float8 inet integer int int4 interval json jsonb line lseg macaddr macaddr8 money numeric decimal path pg_lsn point polygon real float4 smallint int2 smallserial serial2 serial serial4 text time without zone with timetz timestamp timestamptz tsquery tsvector txid_snapshot uuid xml"),
     atoms: set("false true null unknown"),
-    operatorChars: /^[*+\-%<>!=&|^\/#@?~]/,
+    operatorChars: /^[*+\-%<>!=&|^/#@?~]/,
     dateSQL: set("date time timestamp"),
     support: set("decimallessFloat zerolessFloat binaryNumber hexNumber nCharCast charsetCast")
   } as any);
@@ -476,7 +490,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     keywords: set("add after all alter analyze and anti archive array as asc at between bucket buckets by cache cascade case cast change clear cluster clustered codegen collection column columns comment commit compact compactions compute concatenate cost create cross cube current current_date current_timestamp database databases data dbproperties defined delete delimited deny desc describe dfs directories distinct distribute drop else end escaped except exchange exists explain export extended external false fields fileformat first following for format formatted from full function functions global grant group grouping having if ignore import in index indexes inner inpath inputformat insert intersect interval into is items join keys last lateral lazy left like limit lines list load local location lock locks logical macro map minus msck natural no not null nulls of on optimize option options or order out outer outputformat over overwrite partition partitioned partitions percent preceding principals purge range recordreader recordwriter recover reduce refresh regexp rename repair replace reset restrict revoke right rlike role roles rollback rollup row rows schema schemas select semi separated serde serdeproperties set sets show skewed sort sorted start statistics stored stratify struct table tables tablesample tblproperties temp temporary terminated then to touch transaction transactions transform true truncate unarchive unbounded uncache union unlock unset use using values view when where window with"),
     builtin: set("abs acos acosh add_months aggregate and any approx_count_distinct approx_percentile array array_contains array_distinct array_except array_intersect array_join array_max array_min array_position array_remove array_repeat array_sort array_union arrays_overlap arrays_zip ascii asin asinh assert_true atan atan2 atanh avg base64 between bigint bin binary bit_and bit_count bit_get bit_length bit_or bit_xor bool_and bool_or boolean bround btrim cardinality case cast cbrt ceil ceiling char char_length character_length chr coalesce collect_list collect_set concat concat_ws conv corr cos cosh cot count count_if count_min_sketch covar_pop covar_samp crc32 cume_dist current_catalog current_database current_date current_timestamp current_timezone current_user date date_add date_format date_from_unix_date date_part date_sub date_trunc datediff day dayofmonth dayofweek dayofyear decimal decode degrees delimited dense_rank div double e element_at elt encode every exists exp explode explode_outer expm1 extract factorial filter find_in_set first first_value flatten float floor forall format_number format_string from_csv from_json from_unixtime from_utc_timestamp get_json_object getbit greatest grouping grouping_id hash hex hour hypot if ifnull in initcap inline inline_outer input_file_block_length input_file_block_start input_file_name inputformat instr int isnan isnotnull isnull java_method json_array_length json_object_keys json_tuple kurtosis lag last last_day last_value lcase lead least left length levenshtein like ln locate log log10 log1p log2 lower lpad ltrim make_date make_dt_interval make_interval make_timestamp make_ym_interval map map_concat map_entries map_filter map_from_arrays map_from_entries map_keys map_values map_zip_with max max_by md5 mean min min_by minute mod monotonically_increasing_id month months_between named_struct nanvl negative next_day not now nth_value ntile nullif nvl nvl2 octet_length or outputformat overlay parse_url percent_rank percentile percentile_approx pi pmod posexplode posexplode_outer position positive pow power printf quarter radians raise_error rand randn random rank rcfile reflect regexp regexp_extract regexp_extract_all regexp_like regexp_replace repeat replace reverse right rint rlike round row_number rpad rtrim schema_of_csv schema_of_json second sentences sequence sequencefile serde session_window sha sha1 sha2 shiftleft shiftright shiftrightunsigned shuffle sign signum sin sinh size skewness slice smallint some sort_array soundex space spark_partition_id split sqrt stack std stddev stddev_pop stddev_samp str_to_map string struct substr substring substring_index sum tan tanh textfile timestamp timestamp_micros timestamp_millis timestamp_seconds tinyint to_csv to_date to_json to_timestamp to_unix_timestamp to_utc_timestamp transform transform_keys transform_values translate trim trunc try_add try_divide typeof ucase unbase64 unhex uniontype unix_date unix_micros unix_millis unix_seconds unix_timestamp upper uuid var_pop var_samp variance version weekday weekofyear when width_bucket window xpath xpath_boolean xpath_double xpath_float xpath_int xpath_long xpath_number xpath_short xpath_string xxhash64 year zip_with"),
     atoms: set("false true null"),
-    operatorChars: /^[*\/+\-%<>!=~&|^]/,
+    operatorChars: /^[*/+\-%<>!=~&|^]/,
     dateSQL: set("date time timestamp"),
     support: set("doubleQuote zerolessFloat")
   } as any);
@@ -489,7 +503,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     keywords: set("alter and as asc between by count create delete desc distinct drop from group having in insert into is join like not on or order select set table union update values where limit after all and as at asc avedev avg between by case cast coalesce count create current_timestamp day days delete define desc distinct else end escape events every exists false first from full group having hour hours in inner insert instanceof into irstream is istream join last lastweekday left limit like max match_recognize matches median measures metadatasql min minute minutes msec millisecond milliseconds not null offset on or order outer output partition pattern prev prior regexp retain-union retain-intersection right rstream sec second seconds select set some snapshot sql stddev sum then true unidirectional until update variable weekday when where window"),
     builtin: {},
     atoms: set("false true null"),
-    operatorChars: /^[*+\-%<>!=&|^\/#@?~]/,
+    operatorChars: /^[*+\-%<>!=&|^/#@?~]/,
     dateSQL: set("time"),
     support: set("decimallessFloat zerolessFloat binaryNumber hexNumber")
   } as any);
@@ -507,7 +521,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     builtin: set("array bigint bingtile boolean char codepoints color date decimal double function geometry hyperloglog int integer interval ipaddress joniregexp json json2016 jsonpath kdbtree likepattern map model objectid p4hyperloglog precision qdigest re2jregexp real regressor row setdigest smallint sphericalgeography tdigest time timestamp tinyint uuid varbinary varchar zone"),
     atoms: set("false true null unknown"),
     // https://trino.io/docs/current/functions/list.html#id1
-    operatorChars: /^[[\]|<>=!\-+*/%]/,
+    operatorChars: /^[|<>=!\-+*/%[]]/,
     dateSQL: set("date time timestamp zone"),
     // hexNumber is necessary for VARBINARY literals, e.g. X'65683F'
     // but it also enables 0xFF hex numbers, which Trino doesn't support.
@@ -523,7 +537,7 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
     builtin: set("string binary date long double decimal boolean name path reference weakreference uri"),
     atoms: set("property isdescendantnode contains lower upper false true null unknown"),
     operatorChars: /^[*+\-%<>_!=^|]/,
-    brackets: /^[\{}\(\)\[\]]/,
+    brackets: /^[{}()[]]/,
     punctuation: /^[.,]/,
     dateSQL: set("date time timestamp"),
     support: set("bracketVariable decimallessFloat zerolessFloat binaryNumber hexNumber doubleQuote nCharCast charsetCast commentHash commentSpaceRequired"),

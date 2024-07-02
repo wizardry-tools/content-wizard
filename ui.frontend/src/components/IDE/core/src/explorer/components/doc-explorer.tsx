@@ -11,6 +11,7 @@ import { Search } from './search';
 import { TypeDocumentation } from './type-documentation';
 
 import './doc-explorer.scss';
+import {Link} from "@mui/material";
 
 export function DocExplorer() {
   const { fetchError, isFetching, schema, validationErrors } = useSchemaContext(
@@ -66,8 +67,7 @@ export function DocExplorer() {
       <div className="wizard-doc-explorer-header">
         <div className="wizard-doc-explorer-header-content">
           {prevName && (
-            <a
-              href="#"
+            <Link
               className="wizard-doc-explorer-back"
               onClick={event => {
                 event.preventDefault();
@@ -77,7 +77,7 @@ export function DocExplorer() {
             >
               <ChevronLeftIcon />
               {prevName}
-            </a>
+            </Link>
           )}
           <div className="wizard-doc-explorer-title">{navItem.name}</div>
         </div>

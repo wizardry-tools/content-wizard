@@ -1,6 +1,7 @@
 a.wizard-doc-explorer-type-name {
   color: hsl(var(--color-warning));
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

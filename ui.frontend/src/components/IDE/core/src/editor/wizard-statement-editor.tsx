@@ -15,6 +15,11 @@ export type UseWizardStatementEditorArgs = CommonEditorProps & {
   className?: string;
 };
 
+/**
+ * Not actually used for Editing. This is the code "viewer" for the Query Wizard Statements
+ * @param keyMap
+ * @param caller
+ */
 export function useWizardStatementEditor(
   {
     keyMap = DEFAULT_KEY_MAP,
@@ -84,7 +89,7 @@ export function useWizardStatementEditor(
     return () => {
       isActive = false;
     };
-  }, [setWizardStatementEditor, statement, wizardStatementEditor]);
+  }, [setWizardStatementEditor, statement, wizardStatementEditor, initialWizardStatement]);
 
   useKeyMap(wizardStatementEditor, ['Shift-Ctrl-C'], copy);
   useSynchronizeOption(wizardStatementEditor, 'keyMap', keyMap);
