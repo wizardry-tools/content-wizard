@@ -1,17 +1,16 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import { Chip as MuiChip } from '@mui/material';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-
-import Stack from '@mui/material/Stack';
-import FindInPageIcon from '@mui/icons-material/FindInPage';
-import Typography from '@mui/material/Typography';
-
+import {
+  Box,
+  Button,
+  Card,
+  Chip as MuiChip,
+  Container,
+  Grid,
+  Stack,
+  Typography
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
-
+import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import TranslateIcon from '@mui/icons-material/Translate';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
