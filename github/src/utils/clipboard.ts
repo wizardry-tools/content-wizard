@@ -16,18 +16,17 @@ export const useClipBoard = () => {
 
   const content = useRef('');
 
+  const captureContent = useCallback((node:any, index:any) => {
+    if (node.value && typeof node.value !== 'undefined' && typeof index === 'number') {
+      content.current+=node.value;
+    }
+  },[]);
+
   const copy = useCallback((node: any) =>{
     visit(node, captureContent)
     copyToClipboard(content.current);
     content.current = '';
-  },[]);
-
-  const captureContent = useCallback((node:any, index:any) => {
-    if (node.value && typeof node.value !== 'undefined' && typeof index === 'number') {
-      content.current+=node.value;
-    } else {
-    }
-  },[]);
+  },[captureContent]);
 
   return {copy};
 }

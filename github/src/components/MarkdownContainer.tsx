@@ -36,7 +36,7 @@ const PaperPre = (props: ComponentOverride) => {
   const copyCode = useCallback((_e: Event)=>{
     clipBoard.copy(node);
 
-  },[clipBoard]);
+  },[clipBoard, node]);
   const mouseEnter = useCallback((_e: MouseEvent) => {
     setHover(true)
   },[]);
@@ -58,7 +58,7 @@ const PaperPre = (props: ComponentOverride) => {
   return(
     <Paper
       className="markdown-paper"
-      component={CodeContainer}
+      component={CodeContainer as any}
       onMouseOver={mouseEnter}
       onMouseLeave={mouseLeave}
       onTouchStartCapture={onTouch}
@@ -85,7 +85,7 @@ const MarkdownContainer = ({children}: MarkdownContainerProps) => {
         components={{
           a: Link,
           pre: PaperPre
-        }}
+        } as any}
       >
         {children}
       </Markdown>
