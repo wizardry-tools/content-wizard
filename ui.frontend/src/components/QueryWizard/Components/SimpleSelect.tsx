@@ -1,15 +1,17 @@
-import FormGrid from "./FormGrid";
+import {
+  FormGrid,
+} from ".";
 import {
   InputLabel,
   Select,
   MenuItem,
   FormControl, Paper
 } from "@mui/material";
-import {SimpleInputProps} from "./SimpleInput";
 import {memo, useCallback, useState} from "react";
-import {FieldConfig, InputValue} from "../defaults/fields";
+import {FieldConfig, InputValue} from "./fields";
+import {SimpleInputProps} from "./SimpleInput";
 
-const SimpleSelect = ({onChange, field}: SimpleInputProps) => {
+export const SimpleSelect = memo(({onChange, field}: SimpleInputProps) => {
 
   const {name, label, value, required, options} = {...field};
   const [focused, setFocused] = useState(false);
@@ -67,6 +69,4 @@ const SimpleSelect = ({onChange, field}: SimpleInputProps) => {
       </FormControl>
     </FormGrid>
   );
-}
-
-export default memo(SimpleSelect);
+});

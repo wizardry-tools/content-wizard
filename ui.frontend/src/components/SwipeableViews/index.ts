@@ -1,0 +1,1 @@
+export { SwipeableViews } from "./SwipeableViews";

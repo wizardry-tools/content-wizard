@@ -25,7 +25,7 @@ const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: "bold"
 }));
 
-const ResultTable = () => {
+export const ResultTable = () => {
 
   const rows = useResults();
   const [page, setPage] = useState(0);
@@ -160,5 +160,3 @@ const ResultTable = () => {
     </>
   );
 }
-
-export default ResultTable;

@@ -1,4 +1,4 @@
-import QueryButton from "../FormElements/QueryButton";
+import { QueryButton } from "../Components";
 import {QueryLanguage, QueryLanguageLookup} from "../types/QueryTypes";
 import {
   useQuery,

@@ -1,16 +1,19 @@
-import FormGrid from "./FormGrid";
+import {
+  FormGrid,
+} from ".";
 import {Paper, TextField} from "@mui/material";
 import {ChangeEvent, memo, useCallback, useRef, useState} from "react";
-import {Field, FieldConfig, InputValue} from "../defaults/fields";
-
+import {Field} from ".";
+import {FieldConfig, InputValue} from "./fields";
 
 export type SimpleInputProps = {
-    onChange: (field: FieldConfig)=>void;
-    defaultValue: InputValue;
-    field: FieldConfig;
+  onChange: (field: FieldConfig)=>void;
+  defaultValue: InputValue;
+  field: FieldConfig;
 }
 
-const SimpleInput = ({onChange, field, defaultValue}: SimpleInputProps) => {
+
+export const SimpleInput = memo(({onChange, field, defaultValue}: SimpleInputProps) => {
 
   const [value, setValue] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
@@ -53,5 +56,4 @@ const SimpleInput = ({onChange, field, defaultValue}: SimpleInputProps) => {
       </Paper>
     </FormGrid>
   );
-}
-export default memo(SimpleInput);
+});

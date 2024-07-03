@@ -1,3 +1,4 @@
+export { ResultHandler } from "./ResultHandler";
 
 export type Result = {
   [name: string]: any;

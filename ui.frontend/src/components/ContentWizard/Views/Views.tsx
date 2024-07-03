@@ -1,11 +1,11 @@
-import SwipeableViews from "../../SwipeableViews/SwipeableViews";
+import { SwipeableViews } from "../../SwipeableViews";
 import { TabPanel } from "../TabPanel";
-import ResultHandler from "../../Results/ResultHandler";
+import { ResultHandler } from "../../Results";
 import { useTheme } from "@mui/material/styles";
-import { IDE } from "../../QueryWizard/views/IDE";
+import { IDE } from "../../IDE/IDE";
 import Box from "@mui/material/Box";
 import QueryWizard from "../../QueryWizard/QueryWizard";
-import {ViewsProps} from "./index";
+import { ViewsProps } from "./index";
 
 
 

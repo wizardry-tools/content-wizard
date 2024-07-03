@@ -9,72 +9,11 @@ import {
   createMultipartFetcher,
   createSimplePostFetcher,
   isSubscriptionWithName,
-  getWsFetcher, CustomCreateFetcherOptions, createSimpleGetFetcher,
-} from './libs';
+  getWsFetcher,
+  CustomCreateFetcherOptions,
+  createSimpleGetFetcher,
+} from '.';
 import {Query, QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
-
-/**
- * build a GraphiQL fetcher that is:
- * - backwards compatible
- * - optionally supports graphql-ws or `
- *
- * @param options {CustomCreateFetcherOptions}
- * @returns {Fetcher}
- */
-export function createCustomIDEPoster(options: CustomCreateFetcherOptions): Fetcher {
-  let httpFetch;
-  if (typeof window !== 'undefined' && window.fetch) {
-    httpFetch = window.fetch;
-  }
-  if (
-    options?.enableIncrementalDelivery === null ||
-    options.enableIncrementalDelivery !== false
-  ) {
-    options.enableIncrementalDelivery = true;
-  }
-  if (options.fetch) {
-    httpFetch = options.fetch;
-  }
-  if (!httpFetch) {
-    throw new Error('No valid fetcher implementation available');
-  }
-  // simpler fetcher for schema requests
-  const simpleFetcher = createSimplePostFetcher(options, httpFetch);
-
-  const httpFetcher = options.enableIncrementalDelivery
-    ? createMultipartFetcher(options, httpFetch)
-    : simpleFetcher;
-
-  return (graphQLParams: FetcherParams, fetcherOpts: FetcherOpts | undefined) => {
-    if (graphQLParams.operationName === 'IntrospectionQuery') {
-      return (options.schemaFetcher || simpleFetcher)(
-        graphQLParams,
-        fetcherOpts,
-      );
-    }
-    const isSubscription = fetcherOpts?.documentAST
-      ? isSubscriptionWithName(
-        fetcherOpts.documentAST,
-        graphQLParams.operationName || undefined,
-      )
-      : false;
-    if (isSubscription) {
-      const wsFetcher = getWsFetcher(options, fetcherOpts);
-
-      if (!wsFetcher) {
-        throw new Error(
-          `Your GraphiQL createFetcher is not properly configured for websocket subscriptions yet. ${
-            options.subscriptionUrl
-              ? `Provided URL ${options.subscriptionUrl} failed`
-              : 'Please provide subscriptionUrl, wsClient or legacyClient option first.'
-          }`,
-        );
-      }
-      return wsFetcher(graphQLParams);
-    }
-    return httpFetcher(graphQLParams, fetcherOpts) as FetcherReturnType;
-  };
-}
 
 export function createCustomFetcher(query: Query, onResults: (data: any)=>void): Fetcher {
   let options:CustomCreateFetcherOptions = {

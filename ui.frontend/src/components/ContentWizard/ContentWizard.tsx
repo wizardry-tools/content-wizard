@@ -9,9 +9,9 @@ import {GlobalNav} from "../GlobalNav";
 import {useCallback, useMemo, useState} from "react";
 import { Bar, Views } from ".";
 
-import {Results} from "../QueryWizard/types/ResultType";
+import {Results} from "../Results";
 import {Fetcher} from "@graphiql/toolkit/src/create-fetcher/types";
-import {createCustomFetcher} from "../utility/createFetcher";
+import {createCustomFetcher} from "../utility";
 
 import "./ContentWizard.scss";
 

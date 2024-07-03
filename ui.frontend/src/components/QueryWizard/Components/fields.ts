@@ -1,15 +1,17 @@
 import {ContentTypeLookup, ContentTypes} from "../types/ContentTypes";
 import {TargetTypeLookup, TargetTypes} from "../types/TargetTypes";
-import * as React from "react";
-import SimpleInput from "../FormElements/SimpleInput";
-import SimpleSelect from "../FormElements/SimpleSelect";
-import SimpleCheckbox from "../FormElements/SimpleCheckbox";
-import SimpleDatePicker from "../FormElements/SimpleDatePicker";
-import SimpleSlider from "../FormElements/SimpleSlider";
+import {
+  ElementType
+} from "react";
+import { SimpleInput } from "./SimpleInput";
+import { SimpleSelect } from "./SimpleSelect";
+import { SimpleCheckbox } from "./SimpleCheckbox";
+import { SimpleDatePicker } from "./SimpleDatePicker";
+import { SimpleSlider } from "./SimpleSlider";
 import dayjs from "dayjs";
 
 
-export const FieldTypes: { [key: string]: React.ElementType} = {
+export const FieldTypes: { [key: string]: ElementType} = {
   SimpleInput,
   SimpleSelect,
   SimpleCheckbox,

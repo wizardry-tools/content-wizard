@@ -3,10 +3,12 @@ import {Stack, IconButton, Paper} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {LocalizationProvider, DateTimePicker, PickersDay} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {SimpleInputProps} from "./SimpleInput";
-import FormGrid from "./FormGrid";
+import {
+  FormGrid
+} from ".";
 import {memo, useCallback, useState} from "react";
-import {DateRange, DayTime, FieldConfig} from "../defaults/fields";
+import {DateRange, DayTime, FieldConfig} from "./fields";
+import {SimpleInputProps} from "./SimpleInput";
 
 
 const StyledButton = styled(IconButton)(({ theme }) => ({
@@ -30,7 +32,7 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
   }
 }));
 
-const SimpleDatePicker = ({onChange, field}: SimpleInputProps) => {
+export const SimpleDatePicker = memo(({onChange, field}: SimpleInputProps) => {
 
   const {name, label, value} = {...field};
   const {lowerBound, upperBound} = {...value as DateRange};
@@ -127,6 +129,4 @@ const SimpleDatePicker = ({onChange, field}: SimpleInputProps) => {
       </LocalizationProvider>
     </FormGrid>
   );
-}
-
-export default memo(SimpleDatePicker);
+});

@@ -18,16 +18,13 @@ import type {
   ExecutionResultPayload,
   CreateFetcherOptions,
 } from "@graphiql/toolkit/src/create-fetcher/types";
-import {Observable} from "@graphiql/toolkit";
-import {getCsrfToken} from "./csrf";
-import {buildQueryString} from "./query";
-import {setAuthorization} from "../QueryWizard/handlers/AEMHeadlessClient";
-import {Query} from "../QueryWizard/types/QueryTypes";
-
-export type CustomCreateFetcherOptions = CreateFetcherOptions & {
-  onResults: (data: any) => void;
-  query?: Query
-}
+import { Observable } from "@graphiql/toolkit";
+import { setAuthorization } from "../QueryWizard/handlers/AEMHeadlessClient";
+import {
+  CustomCreateFetcherOptions,
+  getCsrfToken,
+  buildQueryString
+} from ".";
 
 
 const errorHasCode = (err: unknown): err is { code: string } => {
@@ -203,6 +200,7 @@ export const createLegacyWebsocketsFetcher =
  * `@stream` and `@defer` support using `fetch-multipart-graphql`
  *
  * @param options {CreateFetcherOptions}
+ * @param httpFetch {typeof fetch}
  * @returns {Fetcher}
  */
 export const createMultipartFetcher = (
@@ -252,6 +250,7 @@ export const createMultipartFetcher = (
 /**
  * If `wsClient` or `legacyClient` are provided, then `subscriptionUrl` is overridden.
  * @param options {CreateFetcherOptions}
+ * @param fetcherOpts {FetcherOpts | undefined}
  * @returns
  */
 export const getWsFetcher = (

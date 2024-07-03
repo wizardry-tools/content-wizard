@@ -1,10 +1,10 @@
-import ResultTable from "./ResultTable";
+import { ResultTable } from "./ResultTable";
 import {Paper, TextField} from "@mui/material";
-import FormGrid from "../QueryWizard/FormElements/FormGrid";
+import { FormGrid } from "../QueryWizard/Components";
 import {QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
 import {useResults, useQuery} from "../Providers";
 
-export default function ResultHandler() {
+export function ResultHandler() {
   const results = useResults();
   const query = useQuery();
 

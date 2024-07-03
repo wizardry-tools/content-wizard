@@ -10,7 +10,7 @@ interface QueryButtonProps {
 }
 
 
-const QueryButton = ({isRunning = false, disabled = false, onClick = ()=>{}}: QueryButtonProps) => {
+export const QueryButton = ({isRunning = false, disabled = false, onClick = ()=>{}}: QueryButtonProps) => {
 
   const [hover, setHover] = useState(false);
 
@@ -53,5 +53,3 @@ const QueryButton = ({isRunning = false, disabled = false, onClick = ()=>{}}: Qu
       </Fab>
   );
 }
-
-export default QueryButton;

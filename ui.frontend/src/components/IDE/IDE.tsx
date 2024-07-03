@@ -20,14 +20,14 @@ import {
   useMergeQuery, usePluginContext, usePrettifyEditors,
   useSchemaContext, useStorageContext,
   VariableEditor
-} from "../../IDE/core/src";
+} from "./core/src";
 import {
   useIsGraphQL,
   useIDETheme,
   useThemeDispatch
-} from "../../Providers";
+} from "../Providers";
 import Paper from '@mui/material/Paper';
-import "../../IDE/style.scss"
+import "./style.scss"
 
 
 

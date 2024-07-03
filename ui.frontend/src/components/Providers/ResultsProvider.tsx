@@ -5,7 +5,7 @@ import {
   PropsWithChildren,
   Dispatch
 } from "react";
-import {Results} from "../QueryWizard/types/ResultType";
+import {Results} from "../Results";
 
 
 const ResultsContext = createContext<Results>([] as Results);

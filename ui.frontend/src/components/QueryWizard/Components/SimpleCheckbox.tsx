@@ -1,9 +1,11 @@
 import {Checkbox, FormControlLabel} from "@mui/material";
-import FormGrid from "./FormGrid";
-import {SimpleInputProps} from "./SimpleInput";
+import {
+  FormGrid
+} from ".";
 import {ChangeEvent, memo, useCallback} from "react";
+import {SimpleInputProps} from "./SimpleInput";
 
-const SimpleCheckbox = ({onChange, field}: SimpleInputProps) => {
+export const SimpleCheckbox = memo(({onChange, field}: SimpleInputProps) => {
 
   const {name, label, value, checkboxValue = true, required} = {...field};
 
@@ -36,6 +38,4 @@ const SimpleCheckbox = ({onChange, field}: SimpleInputProps) => {
     );
   }
   return null;
-}
-
-export default memo(SimpleCheckbox);
+});

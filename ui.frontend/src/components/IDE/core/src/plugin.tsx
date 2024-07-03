@@ -11,8 +11,8 @@ import { History, useHistoryContext } from './history';
 import {DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode} from '../../../../icons';
 import { useStorageContext } from './storage';
 import { createContextHook, createNullableContext } from './utility/context';
-import {useIsGraphQL} from "../../../Providers/QueryProvider";
-import LanguageSelector from "./language-selector/language-selector";
+import {useIsGraphQL} from "../../../Providers";
+import { LanguageSelector } from "./language-selector";
 
 export type GraphiQLPlugin = {
   /**

@@ -1,6 +1,6 @@
 import {AEM_GRAPHQL_ACTIONS} from "../QueryWizard/services/ClientService";
 import {Query, QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
-import {getParams} from "./http";
+import {getParams} from ".";
 
 
 export const endpoints: {[name: string]: string} = {

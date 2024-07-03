@@ -1,4 +1,7 @@
-import * as React from "react";
+import {
+  useState,
+  useEffect
+} from "react";
 import {
   FormControl,
   InputLabel,
@@ -14,13 +17,13 @@ type GraphQLSelectProps = {
 }
 
 //TODO Refactor this to utilize the fetcher logic, rather than the AEMHeadless framework.
-const GraphQLSelect = ({onApiChange,onPersistedQuerySelect}: GraphQLSelectProps) => {
+export const GraphQLSelect = ({onApiChange,onPersistedQuerySelect}: GraphQLSelectProps) => {
 
-  const [APIs, setAPIs] = React.useState([] as GraphQLAPI[]);
-  const [selectedAPI, setSelectedAPI] = React.useState<GraphQLAPI>({endpoint:'', persistedQueries: []});
-  const [selectedPersistedQuery, setSelectedPersistedQuery] = React.useState({path: {shortForm:''}, data:{query:''}} as PersistedQuery);
+  const [APIs, setAPIs] = useState([] as GraphQLAPI[]);
+  const [selectedAPI, setSelectedAPI] = useState<GraphQLAPI>({endpoint:'', persistedQueries: []});
+  const [selectedPersistedQuery, setSelectedPersistedQuery] = useState({path: {shortForm:''}, data:{query:''}} as PersistedQuery);
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
       try {
         const aemHeadlessClient = getHeadlessClient({});
@@ -121,5 +124,3 @@ const GraphQLSelect = ({onApiChange,onPersistedQuerySelect}: GraphQLSelectProps)
     </>
   );
 }
-
-export default GraphQLSelect;

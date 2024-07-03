@@ -1,8 +1,20 @@
-import {Slider, InputLabel, Tooltip} from "@mui/material";
-import FormGrid from "./FormGrid";
+import {
+  Slider,
+  InputLabel,
+  Tooltip
+} from "@mui/material";
+import {
+  FormGrid
+} from ".";
+import {
+  memo,
+  useCallback,
+  useMemo,
+  useRef,
+  useState
+} from "react";
+import {NumberValue} from "./fields";
 import {SimpleInputProps} from "./SimpleInput";
-import {memo, useCallback, useMemo, useRef, useState} from "react";
-import {NumberValue} from "../defaults/fields";
 
 type SimpleSliderProps = SimpleInputProps & {
   min: number;
@@ -10,7 +22,7 @@ type SimpleSliderProps = SimpleInputProps & {
   step: number;
 };
 
-const SimpleSlider = ({min = -1, max = 1000, step = 10, defaultValue, onChange, field}: SimpleSliderProps) => {
+export const SimpleSlider = memo(({min = -1, max = 1000, step = 10, defaultValue, onChange, field}: SimpleSliderProps) => {
 
   const [value, setValue] = useState(defaultValue);
   const {name, label} = {...field};
@@ -80,6 +92,4 @@ const SimpleSlider = ({min = -1, max = 1000, step = 10, defaultValue, onChange, 
         />
     </FormGrid>
   );
-}
-
-export default memo(SimpleSlider);
+});

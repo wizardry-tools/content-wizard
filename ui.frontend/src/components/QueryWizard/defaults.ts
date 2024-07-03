@@ -4,7 +4,7 @@ import {
   QueryLanguageLookup,
   QueryMap
 } from "./types/QueryTypes";
-import {buildGraphQLURL} from "../utility/query";
+import {buildGraphQLURL} from "../utility";
 
 
 export const defaultQueryURL: string = '/crx/de/query.jsp';

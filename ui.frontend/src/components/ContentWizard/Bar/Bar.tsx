@@ -1,5 +1,5 @@
 import {AppBar, Tabs, Tab} from "@mui/material";
-import {a11yProps} from "../../utility/ui";
+import {a11yProps} from "../../utility";
 import {useResults} from "../../Providers";
 import {MagicWand, ProgrammingCode, TableIcon} from "../../../icons";
 

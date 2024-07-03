@@ -1,4 +1,4 @@
-import FormGrid from "../../../../QueryWizard/FormElements/FormGrid";
+import { FormGrid } from "../../../../QueryWizard/Components";
 import {
   API,
   QueryLanguage,
@@ -8,12 +8,12 @@ import {
 } from "../../../../QueryWizard/types/QueryTypes";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
-import GraphQLSelect from "./GraphQLSelect";
-import {useQuery, useQueryDispatch} from "../../../../Providers/QueryProvider";
+import { GraphQLSelect } from "./GraphQLSelect";
+import {useQuery, useQueryDispatch} from "../../../../Providers";
 
 import "./language-selector.scss";
 
-export default function LanguageSelector() {
+export function LanguageSelector() {
 
   const {language} = useQuery();
   const queryDispatch = useQueryDispatch();

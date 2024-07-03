@@ -17,8 +17,12 @@ import {
   QueryResponse,
   Statement
 } from "../QueryWizard/types/QueryTypes";
-import {buildGraphQLURL, buildQueryString} from "../utility/query";
-import {DYNAMIC_HEADERS, getParams} from "../utility/http"
+import {
+  buildGraphQLURL,
+  buildQueryString,
+  DYNAMIC_HEADERS,
+  getParams
+} from "../utility";
 import {useStorageContext} from "../IDE/core/src";
 
 import {
@@ -26,8 +30,8 @@ import {
   FieldConfigAction, FieldConfigNameKey,
   fields as defaultFields,
   FieldsConfig, InputValue
-} from "../QueryWizard/defaults/fields";
-import {PredicateConfig, predicates, predicateTypes} from "../QueryWizard/defaults/predicates";
+} from "../QueryWizard/Components/fields";
+import {PredicateConfig, predicates, predicateTypes} from "../QueryWizard/Components/predicates";
 
 
 const QueryContext = createContext<Query>(null!);

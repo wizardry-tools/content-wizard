@@ -2,9 +2,9 @@ import {Accordion as AccordionTab, AccordionSummary, Stack, Paper, Typography, T
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {ElementType, ReactNode, SyntheticEvent, useCallback, useMemo, useState} from "react";
 import {useFields, useFieldDispatch, useQuery} from "../Providers";
-import {fieldCategories, fieldCategoryTypes, FieldConfig} from "./defaults/fields";
+import {fieldCategories, fieldCategoryTypes, FieldConfig} from "./Components/fields";
 import {Tooltip, WizardStatementEditor} from "../IDE/core/src";
-import FormGrid from "./FormElements/FormGrid";
+import { FormGrid } from "./Components";
 import {ViewsProps} from "../ContentWizard/Views";
 import QueryHandler from "./handlers/QueryHandler";
 

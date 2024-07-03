@@ -1,6 +1,6 @@
-import {buildGraphQLURL} from "../../utility/query";
+import {Results} from "../../Results";
+import {buildGraphQLURL} from "../../utility";
 import {createReverseMapping} from "../../utility/libs";
-import {Results} from "./ResultType";
 
 
 /** Language Support */

@@ -34,9 +34,8 @@ import {SwipeableViewsProps} from "react-swipeable-views";
  * @param props
  * @constructor
  */
-const SwipeableViews = (props: SwipeableViewsProps) => {
+export const SwipeableViews = (props: SwipeableViewsProps) => {
 
-  console.log("SwipeableViews render()");
   const initialIndex = props.index || 0;
   const {
     action,
@@ -668,9 +667,4 @@ We are expecting a valid React Element`,
   );
 }
 
-// Added as an ads for people using the React dev tools in production.
-// So they know, the tool used to build the awesome UI they
-// are looking at/retro engineering.
 SwipeableViews.displayName = 'ReactSwipableView';
-
-export default SwipeableViews;
