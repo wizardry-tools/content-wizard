@@ -5,28 +5,39 @@ import {
   useContext,
   useState
 } from "react";
+import {WizardAlertProps} from "./index";
+import {Alert} from "@mui/material";
 
 const ALERT_TIMEOUT = 5000;
 
-const AlertContext = createContext<string>('');
-const AlertDispatcher = createContext<Dispatch<string>>(null!);
+const AlertContext = createContext<WizardAlertProps>(null!);
+const AlertDispatcher = createContext<Dispatch<WizardAlertProps>>(null!);
+
+const emptyAlert: WizardAlertProps = {message: '', severity: 'info'};
 
 export function AlertContextProvider({children}: PropsWithChildren) {
 
-  const [message, setMessage] = useState('');
+  const [alert, setAlert] = useState(emptyAlert);
 
-  const handleMessageDispatch = useCallback((message: string)=>{
-    setMessage(message);
+  const handleAlertDispatch = useCallback((alert: WizardAlertProps)=>{
+    setAlert(alert)
     setTimeout(()=>{
       // after timeout, revert message back to emptyString;
-      setMessage('');
+      setAlert(emptyAlert);
     }, ALERT_TIMEOUT);
   },[]);
 
   return (
-    <AlertContext.Provider value={message}>
-      <AlertDispatcher.Provider value={handleMessageDispatch}>
+    <AlertContext.Provider value={alert}>
+      <AlertDispatcher.Provider value={handleAlertDispatch}>
         {children}
+        <Alert
+          className={`alert-container ${alert.message ? 'show' : 'hide'}`}
+          severity={alert.severity || "info"}
+          variant="filled"
+        >
+          {alert.message}
+        </Alert>
       </AlertDispatcher.Provider>
     </AlertContext.Provider>
   )

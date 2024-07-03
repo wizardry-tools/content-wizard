@@ -6,6 +6,7 @@ import {
   Dispatch
 } from "react";
 import {Results} from "../Results";
+import {useAlertDispatcher} from "./AlertContextProvider";
 
 
 const ResultsContext = createContext<Results>([] as Results);
@@ -14,9 +15,16 @@ const ResultsDispatchContext = createContext<Dispatch<Results>>(null!);
 
 export function ResultsProvider({ children }:PropsWithChildren) {
   const [results , setResults] = useState([] as Results)
+  const alertDispatcher = useAlertDispatcher();
 
   const updateResults = (results: Results) => {
     setResults(results);
+    if (!results || results.length < 1) {
+      alertDispatcher({
+        message: 'No results were found.',
+        severity: 'warning'
+      });
+    }
   }
 
   return (

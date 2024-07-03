@@ -26,6 +26,7 @@ import {
 
 import { useEditorContext } from './editor';
 import { createContextHook, createNullableContext } from './utility/context';
+import { useAlertDispatcher } from "../../../Providers";
 
 type MaybeGraphQLSchema = GraphQLSchema | null | undefined;
 
@@ -119,6 +120,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
       'The `SchemaContextProvider` component requires a `fetcher` function to be passed as prop.',
     );
   }
+  const alertDispatcher = useAlertDispatcher();
 
   const { initialHeaders, headerEditor } = useEditorContext({
     nonNull: true,
@@ -152,6 +154,15 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
      */
     counterRef.current++;
   }, [props.schema]);
+
+  useEffect(()=>{
+    if (fetchError) {
+      alertDispatcher({
+        message: 'An error occurred with the GraphQL request. Please ensure that your AEM GraphQL endpoints are configured correctly.',
+        severity: 'error'
+      });
+    }
+  }, [fetchError, alertDispatcher]);
 
   /**
    * Keep a ref to the current headers

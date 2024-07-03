@@ -2,9 +2,9 @@ import {
   ContentWizardProvider,
   useResultsDispatch,
   useQuery,
-  IDEProvider
+  IDEProvider,
 } from "../Providers";
-import { Box } from "@mui/material";
+import {Box} from "@mui/material";
 import {GlobalNav} from "../GlobalNav";
 import {useCallback, useMemo, useState} from "react";
 import { Bar, Views } from ".";
@@ -46,6 +46,12 @@ function ContentWizardInterface() {
 
   const fetcher:Fetcher = useMemo(()=>createCustomFetcher(query, onResults),[query,onResults]);
 
+
+
+  /*
+    IDEProvider can't be included in the ContentWizardProvider, since ContentWizardProvider contains the
+    initialization of other Providers that IDEProvider relies on.
+   */
   return (
     <IDEProvider
       fetcher={fetcher}

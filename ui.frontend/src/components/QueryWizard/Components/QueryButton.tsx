@@ -1,6 +1,7 @@
 import {Fab, SvgIcon, Typography} from "@mui/material";
 import {RunIcon} from "../../../icons";
-import {MouseEvent, useState} from "react";
+import {MouseEvent, useRef, useState} from "react";
+import {useAlertContext} from "../../Providers";
 
 
 interface QueryButtonProps {
@@ -12,7 +13,10 @@ interface QueryButtonProps {
 
 export const QueryButton = ({isRunning = false, disabled = false, onClick = ()=>{}}: QueryButtonProps) => {
 
+  const alert = useAlertContext();
   const [hover, setHover] = useState(false);
+
+  const timer = useRef<number | null>(null);
 
   const buttonText = () => {
     return `${!isRunning ? 'Run ' : ''}Query ${isRunning ? 'Running' : ''}`;
@@ -21,17 +25,20 @@ export const QueryButton = ({isRunning = false, disabled = false, onClick = ()=>
 
   const mouseEnter = (_e: MouseEvent) => {
     setHover(true);
-
+    if (timer.current) {
+      window.clearTimeout(timer.current);
+    }
   }
 
   const mouseLeave = (_e: MouseEvent) => {
-    setTimeout(()=>{
+    if (timer.current) {
+      window.clearTimeout(timer.current);
+    }
+    timer.current = window.setTimeout(()=>{
       setHover(false);
     }, 500);
 
   }
-
-  // TODO: The animation doesn't work, need to figure it out.
 
   return(
       <Fab
@@ -40,7 +47,7 @@ export const QueryButton = ({isRunning = false, disabled = false, onClick = ()=>
         variant="extended"
         color="secondary"
         onClick={onClick}
-        disabled={disabled || isRunning}
+        disabled={disabled || isRunning || !!alert.message}
         onMouseEnter={mouseEnter}
         onMouseLeave={mouseLeave}
       >

@@ -1,3 +1,8 @@
+import { AlertProps } from "@mui/material";
+export type WizardAlertProps = AlertProps & {
+  message: string;
+}
+
 export {
   AlertContextProvider,
   useAlertContext,

@@ -7,7 +7,7 @@ import 'custom-event-polyfill';
 
 import {StrictMode} from 'react';
 import App from './App';
-import './index.css';
+import './index.scss';
 
 
 import {Container, createRoot} from 'react-dom/client';
