@@ -4,11 +4,11 @@
 .content-wizard-bar {
   height: $header-height;
   display: inline-flex;
-  position: initial;
+  position: initial !important;
   flex-shrink: 0;
   .content-wizard-bar-tabs {
     .content-wizard-bar-tab {
-      min-height: 50px;
+      min-height: $header-height;
       &:hover {
         svg {
           animation: hithere 1s ease infinite;

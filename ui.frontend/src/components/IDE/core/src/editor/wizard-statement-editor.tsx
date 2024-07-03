@@ -16,7 +16,7 @@ export type UseWizardStatementEditorArgs = CommonEditorProps & {
 };
 
 /**
- * Not actually used for Editing. This is the code "viewer" for the Query QueryWizard Statements
+ * Not actually used for Editing. This is the code "viewer" for the Query Wizard Statements
  * @param keyMap
  * @param caller
  */

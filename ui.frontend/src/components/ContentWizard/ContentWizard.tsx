@@ -51,7 +51,7 @@ function ContentWizardInterface() {
       fetcher={fetcher}
       query={query.statement}>
       <Box className="content-wizard-main">
-        <GlobalNav pageTitle="Content QueryWizard" />
+        <GlobalNav pageTitle="Content Wizard" />
         <Box className="content-wizard-content-wrapper">
           <Bar
             tabValue={tabValue}

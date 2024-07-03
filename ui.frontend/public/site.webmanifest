@@ -1,6 +1,6 @@
 {
-    "name": "Content QueryWizard",
-    "short_name": "Content QueryWizard",
+    "name": "Content Wizard",
+    "short_name": "Content Wizard",
     "icons": [
         {
             "src": "/etc.clientlibs/content-wizard/clientlibs/clientlib-react/resources/android-chrome-192x192.png",

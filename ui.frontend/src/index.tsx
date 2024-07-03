@@ -1,4 +1,4 @@
-// ContentWizard, copyright (c) by Darrin Johnson and Content QueryWizard Contributors
+// ContentWizard, copyright (c) by Darrin Johnson and Content Wizard Contributors
 // Distributed under an MIT license: https://github.com/wizardry-tools/content-wizard/blob/main/LICENSE
 
 import 'react-app-polyfill/stable';

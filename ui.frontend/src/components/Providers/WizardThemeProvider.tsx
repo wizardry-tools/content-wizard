@@ -64,7 +64,7 @@ function buildMuiTheme(theme: Theme): MuiTheme {
     breakpoints: {
       values: {
         xs: 0,
-        sm: 500,
+        sm: 557,
         md: 967,
         lg: 1400,
         xl: 1536,
@@ -76,10 +76,10 @@ function buildMuiTheme(theme: Theme): MuiTheme {
         '@media (max-width: 1400px)': {
           fontSize: "1.5rem"
         },
-        '@media (max-width: 1100px)': {
+        '@media (max-width: 967px)': {
           fontSize: "1.2rem"
         },
-        '@media (max-width: 500px)': {
+        '@media (max-width: 557px)': {
           fontSize: "0.8rem"
         }
       }

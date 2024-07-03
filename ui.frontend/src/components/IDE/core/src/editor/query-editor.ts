@@ -50,7 +50,7 @@ import {
   WriteableEditorProps,
 } from './types';
 import { normalizeWhitespace } from './whitespace';
-import {useIsGraphQL, useQuery} from "../../../../Providers/QueryProvider";
+import {useIsGraphQL, useQuery} from "../../../../Providers";
 import {QueryLanguage, QueryLanguageLookup} from "../../../../QueryWizard/types/QueryTypes";
 
 export type UseQueryEditorArgs = WriteableEditorProps &

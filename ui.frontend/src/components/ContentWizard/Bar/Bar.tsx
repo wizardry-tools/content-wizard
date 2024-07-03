@@ -12,7 +12,7 @@ type QueryWizardBarProps = {
 
 const tabCssProps = {
   fontSize: {
-    xs: '.8rem',
+    xs: '.75rem',
     sm: '1rem',
     md: '1.5rem'
   }
@@ -32,7 +32,7 @@ export const Bar = ({tabValue, onTabSelect}: QueryWizardBarProps) => {
         className="content-wizard-bar-tabs"
       >
         <Tab
-          label="Query QueryWizard"
+          label="Query Wizard"
           {...a11yProps(0)}
           icon={<MagicWand/>}
           iconPosition="start"
