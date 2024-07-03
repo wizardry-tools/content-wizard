@@ -388,7 +388,7 @@ export function useQueryEditor(
       (editorInstance: CodeMirrorEditorWithOperationFacts) => {
         const query = editorInstance.getValue();
         storage?.set(STORAGE_KEY_QUERY, query);
-        
+
         const currentOperationName = editorInstance.operationName;
         const operationFacts = getAndUpdateOperationFacts(editorInstance);
         if (operationFacts?.operationName !== undefined) {

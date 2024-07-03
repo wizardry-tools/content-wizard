@@ -8,12 +8,22 @@ import {
 import { useEditorContext } from './context';
 import {useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue} from './hooks';
 import {CodeMirrorType, CommonEditorProps} from './types';
-import {useQuery} from "../../../../Providers/QueryProvider";
+import {useQuery} from "../../../../Providers";
+import {QueryLanguage, QueryLanguageLookup} from "../../../../QueryWizard/types/QueryTypes";
 
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {
   className?: string;
 };
+
+const getStatement = (language: string, statement: string) => {
+  // only use the statement if the language is QueryBuilder
+  if (language === QueryLanguageLookup[QueryLanguage.QueryBuilder]) {
+    return statement;
+  }
+  return '';
+}
+
 
 /**
  * Not actually used for Editing. This is the code "viewer" for the Query Wizard Statements
@@ -26,14 +36,20 @@ export function useWizardStatementEditor(
   }: UseWizardStatementEditorArgs = {},
   caller?: Function,
 ) {
-  const { initialWizardStatement, wizardStatementEditor, setWizardStatementEditor } =
+  const {language, statement} = useQuery();
+  // used for setting initialWizardStatement if initialWizardStatement is empty;
+  // initialWizardStatement reloads codemirror if modified, so we're using a Ref instead
+  const getInitialQueryStatement = useRef(getStatement(language, statement));
+
+  // used for synching the editor
+  const { initialWizardStatement = getInitialQueryStatement.current, wizardStatementEditor, setWizardStatementEditor } =
     useEditorContext({
       nonNull: true,
       caller: caller || useWizardStatementEditor,
     });
   const copy = useCopyQuery({ caller: caller || useWizardStatementEditor });
   const ref = useRef<HTMLDivElement>(null);
-  const {statement} = useQuery();
+
 
   const codeMirrorRef = useRef<CodeMirrorType>();
 
@@ -70,7 +86,7 @@ export function useWizardStatementEditor(
 
       // Handle image tooltips and custom tooltips
       const newEditor = CodeMirror(container, {
-        value: initialWizardStatement || statement,
+        value: initialWizardStatement,
         lineWrapping: true,
         readOnly: true,
         lineNumbers: true,
@@ -89,11 +105,11 @@ export function useWizardStatementEditor(
     return () => {
       isActive = false;
     };
-  }, [setWizardStatementEditor, statement, wizardStatementEditor, initialWizardStatement]);
+  }, [setWizardStatementEditor, wizardStatementEditor, initialWizardStatement]);
 
   useKeyMap(wizardStatementEditor, ['Shift-Ctrl-C'], copy);
   useSynchronizeOption(wizardStatementEditor, 'keyMap', keyMap);
-  useSynchronizeValue(wizardStatementEditor, statement);
+  useSynchronizeValue(wizardStatementEditor, getStatement(language, statement));
 
   return ref;
 }
