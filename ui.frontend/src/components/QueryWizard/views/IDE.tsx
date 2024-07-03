@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useState
 } from "react";
-import {useIsGraphQL} from "../providers/QueryProvider";
 import {
   Button,
   ButtonGroup,
@@ -22,7 +21,11 @@ import {
   useSchemaContext, useStorageContext,
   VariableEditor
 } from "../../IDE/core/src";
-import {useIDETheme, useThemeDispatch} from "../providers/WizardThemeProvider";
+import {
+  useIsGraphQL,
+  useIDETheme,
+  useThemeDispatch
+} from "../../Providers";
 import Paper from '@mui/material/Paper';
 import "../../IDE/style.scss"
 

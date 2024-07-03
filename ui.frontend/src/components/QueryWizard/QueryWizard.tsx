@@ -1,63 +1,153 @@
-import {useCallback, useMemo, useState} from 'react';
+import {Accordion as AccordionTab, AccordionSummary, Stack, Paper, Typography, Theme} from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {ElementType, ReactNode, SyntheticEvent, useCallback, useMemo, useState} from "react";
+import {useFields, useFieldDispatch, useQuery} from "../Providers";
+import {fieldCategories, fieldCategoryTypes, FieldConfig} from "./defaults/fields";
+import {Tooltip, WizardStatementEditor} from "../IDE/core/src";
+import FormGrid from "./FormElements/FormGrid";
+import {ViewsProps} from "../ContentWizard/Views";
+import QueryHandler from "./handlers/QueryHandler";
 
-import Box from '@mui/material/Box';
-import {QueryProvider, useQuery} from "./providers/QueryProvider";
-import {ResultsProvider, useResultsDispatch} from "./providers/ResultsProvider";
-import QueryWizardBar from "./QueryWizardBar";
-import QueryWizardViews from "./QueryWizardViews";
-import {IDEProvider} from "./providers/IDEProvider";
-import {Results} from "./types/ResultType";
-import {Fetcher} from "@graphiql/toolkit/src/create-fetcher/types";
-import {createCustomFetcher} from "../utility/createFetcher";
+import "./QueryWizard.scss";
 
-import './QueryWizard.scss';
+const buttonStackStyles = (_theme: Theme) => {
+  return {
+    display: 'block',
+    overflowX: 'visible',
+    width: 0
+  }
+};
 
-export default function QueryWizard() {
 
-  return (
-    <QueryProvider>
-      <ResultsProvider>
-          <QueryWizardInterface/>
-      </ResultsProvider>
-    </QueryProvider>
-  )
 
-}
+type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
 
-function QueryWizardInterface() {
-  const [tabValue, setTabValue] = useState(0);
-  const resultsDispatch = useResultsDispatch();
+export default function QueryWizard({onTabPanelSelect}: QueryWizardProps) {
+
+  const fields = useFields();
+  const targetingFields = useMemo(()=>{
+    return Object.values(fields).filter((field)=>field.category === fieldCategoryTypes.targeting)
+  },[fields]);
+  const authoringFields = useMemo(()=>{
+    return Object.values(fields).filter((field)=>field.category === fieldCategoryTypes.authoring)
+  },[fields]);
+  const replicationFields = useMemo(()=>{
+    return Object.values(fields).filter((field)=>field.category === fieldCategoryTypes.replication)
+  },[fields]);
+  const msmFields = useMemo(()=>{
+    return Object.values(fields).filter((field)=>field.category === fieldCategoryTypes.msm)
+  },[fields]);
+  const translationFields = useMemo(()=>{
+    return Object.values(fields).filter((field)=>field.category === fieldCategoryTypes.translation)
+  },[fields]);
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const fieldDispatch = useFieldDispatch();
   const query = useQuery();
 
-  const onResults = useCallback((data: any) => {
-    const results:Results = data.hits || data.results || JSON.stringify(data);
-    resultsDispatch(results);
-  },[resultsDispatch]);
 
-  const fetcher:Fetcher = useMemo(()=>createCustomFetcher(query, onResults),[query,onResults]);
+  const handleChange = (field: FieldConfig) => {
+    fieldDispatch({
+      name: field.name,
+      value: field.value,
+      type: 'UPDATE_VALUE'
+    });
+  }
+  const memoizedHandleChange = useCallback(handleChange,[fieldDispatch]);
 
-  const onTabSelect = (_event: any, value: any) => {
-    setTabValue(value);
+  const handleAccordionChange =
+    (panel: string) => (_event: SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+
+
+  const Tab = useCallback((accordionFields: FieldConfig[]) => {
+    const category = accordionFields[0].category;
+    const drawerID = `accordion-drawer--${category}`;
+    const summary = fieldCategories[category];
+    const drawerContents = accordionFields.map((field)=>{
+      if (field.isDisabled && field.isDisabled(fields)) {
+        return null;
+      }
+      const Component: ElementType = field.fieldType as ElementType;
+      return (
+        <Component
+          onChange={memoizedHandleChange}
+          key={field.name}
+          defaultValue={field.value}
+          field={field}/>
+      )
+    })
+    return(
+      <AccordionTab key={drawerID} expanded={expanded === drawerID} onChange={handleAccordionChange(drawerID)}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={`${drawerID}-content`}
+          id={`${drawerID}-header`}
+        >
+          <Typography variant="h4" sx={{ flexShrink: 1 }}>
+            {summary}
+          </Typography>
+        </AccordionSummary>
+        <FormGrid className={`${drawerID}-grid smooth-transition`} container padding={1} spacing={2}>
+          {drawerContents}
+        </FormGrid>
+      </AccordionTab>
+    );
+  },[expanded, fields, memoizedHandleChange]);
+
+  const Accordion = () => {
+    let drawers: ReactNode[] = [];
+    drawers.push(Tab(targetingFields));
+    drawers.push(Tab(authoringFields));
+    drawers.push(Tab(replicationFields));
+    drawers.push(Tab(msmFields));
+    drawers.push(Tab(translationFields));
+    return (
+      <Paper className="accordion-paper" elevation={3}>
+        {drawers}
+      </Paper>
+    );
   }
 
-  const onTabPanelSelect = (index: number) => {
-    setTabValue(index);
-  }
+  const StatementWindow = useMemo(() => {
+    if (query.statement) {
+      return (
+        <Paper elevation={3} className="statement-paper">
+          <Tooltip.Provider>
+            <Stack className="wizard-editor-stack" direction="row" spacing={1}>
+              <WizardStatementEditor
+                editorTheme="wizard"
+                keyMap="sublime"
+                className="querybuilder-statement"
+              />
+            </Stack>
+          </Tooltip.Provider>
+        </Paper>
+      );
+    }
+    return null;
+  },[query.statement]);
 
-  return (
-    <IDEProvider
-      fetcher={fetcher}
-      query={query.statement}>
-      <Box className="query-wizard-content-wrapper">
-        <QueryWizardBar
-          tabValue={tabValue}
-          onTabSelect={onTabSelect}
-        />
-        <QueryWizardViews
-          tabValue={tabValue}
-          onTabPanelSelect={onTabPanelSelect}
-        />
-      </Box>
-    </IDEProvider>
-  )
+  return(
+    <Paper className="wizard-builder">
+      <Stack
+        className="main-stack"
+        direction="row"
+        useFlexGap
+
+      >
+        <Stack className="statement-stack">
+          {StatementWindow}
+        </Stack>
+        <Stack className="accordion-stack">
+          {Accordion()}
+        </Stack>
+        <Stack className="query-button-stack" sx={buttonStackStyles} justifyContent="flex-start">
+          <QueryHandler onResults={onTabPanelSelect}/>
+        </Stack>
+      </Stack>
+    </Paper>
+  );
 }
+

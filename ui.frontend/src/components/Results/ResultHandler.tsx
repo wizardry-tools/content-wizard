@@ -1,9 +1,8 @@
-import ResultTable from "../elements/ResultTable";
+import ResultTable from "./ResultTable";
 import {Paper, TextField} from "@mui/material";
-import FormGrid from "../FormElements/FormGrid";
-import {QueryLanguage, QueryLanguageLookup} from "../types/QueryTypes";
-import {useResults} from "../providers/ResultsProvider";
-import {useQuery} from "../providers/QueryProvider";
+import FormGrid from "../QueryWizard/FormElements/FormGrid";
+import {QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
+import {useResults, useQuery} from "../Providers";
 
 export default function ResultHandler() {
   const results = useResults();

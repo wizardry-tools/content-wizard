@@ -1,7 +1,11 @@
-import QueryButton from "../elements/QueryButton";
+import QueryButton from "../FormElements/QueryButton";
 import {QueryLanguage, QueryLanguageLookup} from "../types/QueryTypes";
-import {useQuery, useQueryDispatch, useQueryRunner} from "../providers/QueryProvider";
-import {useResultsDispatch} from "../providers/ResultsProvider";
+import {
+  useQuery,
+  useQueryDispatch,
+  useQueryRunner,
+  useResultsDispatch
+} from "../../Providers";
 
 type QueryHandlerProps = {
   onResults: (index: number)=>void;

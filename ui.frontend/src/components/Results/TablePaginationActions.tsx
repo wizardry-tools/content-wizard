@@ -14,7 +14,7 @@ type TablePaginationActionsProps = {
     rowsPerPage: number,
 };
 
-const TablePaginationActions = (props: TablePaginationActionsProps) => {
+export const TablePaginationActions = (props: TablePaginationActionsProps) => {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
 
@@ -67,7 +67,3 @@ const TablePaginationActions = (props: TablePaginationActionsProps) => {
     </Box>
   );
 }
-
-
-
-export default TablePaginationActions;

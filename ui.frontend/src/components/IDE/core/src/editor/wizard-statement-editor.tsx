@@ -8,7 +8,7 @@ import {
 import { useEditorContext } from './context';
 import {useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue} from './hooks';
 import {CodeMirrorType, CommonEditorProps} from './types';
-import {useQuery} from "../../../../QueryWizard/providers/QueryProvider";
+import {useQuery} from "../../../../Providers/QueryProvider";
 
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {
@@ -16,7 +16,7 @@ export type UseWizardStatementEditorArgs = CommonEditorProps & {
 };
 
 /**
- * Not actually used for Editing. This is the code "viewer" for the Query Wizard Statements
+ * Not actually used for Editing. This is the code "viewer" for the Query QueryWizard Statements
  * @param keyMap
  * @param caller
  */

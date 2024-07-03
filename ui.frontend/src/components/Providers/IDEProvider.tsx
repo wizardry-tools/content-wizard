@@ -6,7 +6,7 @@ import {
   HistoryContextProviderProps, PluginContextProvider,
   PluginContextProviderProps, SchemaContextProvider,
   SchemaContextProviderProps
-} from "../../IDE/core/src";
+} from "../IDE/core/src";
 import {useIsGraphQL} from "./QueryProvider";
 
 export type IDEProviderProps = EditorContextProviderProps &

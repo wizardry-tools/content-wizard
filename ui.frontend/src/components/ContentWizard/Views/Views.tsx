@@ -1,22 +1,19 @@
-import SwipeableViews from "../SwipeableViews/SwipeableViews";
-import TabPanel from "./elements/TabPanel";
-import ResultHandler from "./handlers/ResultHandler";
-import {useTheme} from "@mui/material/styles";
-import {IDE} from "./views/IDE";
+import SwipeableViews from "../../SwipeableViews/SwipeableViews";
+import { TabPanel } from "../TabPanel";
+import ResultHandler from "../../Results/ResultHandler";
+import { useTheme } from "@mui/material/styles";
+import { IDE } from "../../QueryWizard/views/IDE";
 import Box from "@mui/material/Box";
-import Wizard from "./views/Wizard";
-
-export type QueryWizardViewsProps = {
-  tabValue: number,
-  onTabPanelSelect: (index: number)=>void;
-}
+import QueryWizard from "../../QueryWizard/QueryWizard";
+import {ViewsProps} from "./index";
 
 
-export default function QueryWizardViews({tabValue, onTabPanelSelect}: QueryWizardViewsProps) {
+
+export function Views({tabValue, onTabPanelSelect}: ViewsProps) {
   const theme = useTheme();
 
   return (
-    <Box className="query-wizard-content">
+    <Box className="content-wizard-content">
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         disableLazyLoading={true}
@@ -25,7 +22,7 @@ export default function QueryWizardViews({tabValue, onTabPanelSelect}: QueryWiza
         slideClassName="react-swipeable-view-slide"
       >
         <TabPanel value={tabValue} index={0} dir={theme.direction}>
-          <Wizard onTabPanelSelect={onTabPanelSelect}/>
+          <QueryWizard onTabPanelSelect={onTabPanelSelect}/>
         </TabPanel>
         <TabPanel value={tabValue} index={1} padding={0} dir={theme.direction}>
           <IDE/>

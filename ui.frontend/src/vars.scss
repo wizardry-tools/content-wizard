@@ -1,0 +1,8 @@
+$min-app-width: 400px;
+$wrapper-height: 100vh;
+$header-height: 50px;
+$content-height: calc(#{$wrapper-height} - #{$header-height});
+$builder-height: calc(#{$content-height} - 6vh);
+$builder-bg-color: rgba(59, 75, 104, 0.1);
+$builder-context-height: calc(#{$builder-height} - 8vh);
+$button-hover-bg-color: hsla(338, 100%, 67%, 0.9);

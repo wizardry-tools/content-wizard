@@ -1,0 +1,19 @@
+@use "../../../vars" as *;
+
+/* APP BAR */
+.content-wizard-bar {
+  height: $header-height;
+  display: inline-flex;
+  position: initial;
+  flex-shrink: 0;
+  .content-wizard-bar-tabs {
+    .content-wizard-bar-tab {
+      min-height: 50px;
+      &:hover {
+        svg {
+          animation: hithere 1s ease infinite;
+        }
+      }
+    }
+  }
+}

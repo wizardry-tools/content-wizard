@@ -13,13 +13,13 @@ type TabPanelProps = {
 const StyledBox = styled(Box)({
 });
 
-const TabPanel = (props: TabPanelProps) => {
+export const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, padding = 3, ...other } = props;
 
   return (
     <StyledBox
       role="tabpanel"
-      className="query-wizard-content-panel"
+      className="content-wizard-content-panel"
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
@@ -30,5 +30,3 @@ const TabPanel = (props: TabPanelProps) => {
     </StyledBox>
   )
 }
-
-export default TabPanel;

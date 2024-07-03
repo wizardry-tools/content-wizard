@@ -13,7 +13,7 @@ import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
 import { CodeMirrorEditor } from './types';
-import {useIsGraphQL} from "../../../../QueryWizard/providers/QueryProvider";
+import {useIsGraphQL} from "../../../../Providers/QueryProvider";
 
 export function useSynchronizeValue(
   editor: CodeMirrorEditor | null,

@@ -1,13 +1,13 @@
 import {
   createContext,
-  Dispatch,
+  Dispatch, PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useReducer
 } from "react";
-import {queryBuilderURL} from "../defaults";
+import {queryBuilderURL} from "../QueryWizard/defaults";
 import {
   GraphQLAPI,
   Query,
@@ -16,19 +16,18 @@ import {
   QueryLanguageLookup,
   QueryResponse,
   Statement
-} from "../types/QueryTypes";
-import {WithChildren} from "../types/StandardTypes";
-import {buildGraphQLURL, buildQueryString} from "../../utility/query";
-import {DYNAMIC_HEADERS, getParams} from "../../utility/http"
-import {useStorageContext} from "../../IDE/core/src";
+} from "../QueryWizard/types/QueryTypes";
+import {buildGraphQLURL, buildQueryString} from "../utility/query";
+import {DYNAMIC_HEADERS, getParams} from "../utility/http"
+import {useStorageContext} from "../IDE/core/src";
 
 import {
   DateRange,
   FieldConfigAction, FieldConfigNameKey,
   fields as defaultFields,
   FieldsConfig, InputValue
-} from "../defaults/fields";
-import {PredicateConfig, predicates, predicateTypes} from "../defaults/predicates";
+} from "../QueryWizard/defaults/fields";
+import {PredicateConfig, predicates, predicateTypes} from "../QueryWizard/defaults/predicates";
 
 
 const QueryContext = createContext<Query>(null!);
@@ -47,7 +46,7 @@ const defaultSimpleQuery:Query = {
   isAdvanced: false,
 }
 
-export function QueryProvider({ children }:WithChildren) {
+export function QueryProvider({ children }:PropsWithChildren) {
   useStorageContext()
   //const predicateService = useMemo(()=>new PredicateService(defaultQueryFilters),[]);
 

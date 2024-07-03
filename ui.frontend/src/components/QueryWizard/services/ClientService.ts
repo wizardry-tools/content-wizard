@@ -112,11 +112,11 @@ const __getFetch = (fetch:any):any => {
 }
 
 /**
- * Returns Authorization Header value.
+ * Returns Authorization GlobalNav value.
  *
  * @private
  * @param {string|array} auth - Bearer token string or [user,pass] pair array
- * @returns {string} Authorization Header value
+ * @returns {string} Authorization GlobalNav value
  */
 const __getAuthHeader = (auth: string|string[]) => {
   //let authType = 'Bearer'

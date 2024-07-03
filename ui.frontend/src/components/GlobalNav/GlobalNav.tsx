@@ -1,28 +1,30 @@
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import {
+  Box,
+  Link,
+  IconButton
+} from '@mui/material';
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
-import IconButton from "@mui/material/IconButton";
-import * as React from "react";
+import {useMemo} from "react";
 import {useTheme} from "@mui/material/styles";
-import {DARK, LIGHT, useThemeDispatch} from "../QueryWizard/providers/WizardThemeProvider";
+import {DARK, LIGHT, useThemeDispatch} from "../Providers";
 
-import './Header.scss';
+import './GlobalNav.scss';
 
 const headerCssProps = {
   fontSize: {
     xs: '.7rem',
-    sm: '1rem',
+    sm: '.9rem',
     md: '1.2rem'
   }
 };
 
-export default function Header({pageTitle}:{pageTitle:string}) {
+export function GlobalNav({pageTitle}:{pageTitle:string}) {
 
   const theme = useTheme();
   const themeDispatch = useThemeDispatch();
 
-  const colorMode = React.useMemo(
+  const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
         themeDispatch((!theme || theme.palette.mode === LIGHT) ? DARK : LIGHT);
@@ -55,7 +57,7 @@ export default function Header({pageTitle}:{pageTitle:string}) {
         <span style={{lineHeight: '2.375rem'}}> / Wizardry Tools / {pageTitle || 'Page Title'}</span>
       </div>
       <div className="globalnav-theme-toggle">
-        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
+        <IconButton onClick={colorMode.toggleColorMode} color="inherit">
           {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
       </div>

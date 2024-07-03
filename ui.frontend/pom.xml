@@ -32,7 +32,7 @@
     <!-- ====================================================================== -->
     <artifactId>content-wizard.ui.frontend</artifactId>
     <packaging>pom</packaging>
-    <name>Content Wizard - UI Frontend</name>
+    <name>Content QueryWizard - UI Frontend</name>
 
 
     <!-- ====================================================================== -->

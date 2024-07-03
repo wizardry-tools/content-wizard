@@ -9,7 +9,7 @@ import {
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
 import GraphQLSelect from "./GraphQLSelect";
-import {useQuery, useQueryDispatch} from "../../../../QueryWizard/providers/QueryProvider";
+import {useQuery, useQueryDispatch} from "../../../../Providers/QueryProvider";
 
 import "./language-selector.scss";
 

@@ -1,13 +1,18 @@
-import React, {useState, createContext, useContext} from "react";
-import {WithChildren} from "../types/StandardTypes";
-import {Results} from "../types/ResultType";
+import {
+  useState,
+  createContext,
+  useContext,
+  PropsWithChildren,
+  Dispatch
+} from "react";
+import {Results} from "../QueryWizard/types/ResultType";
 
 
 const ResultsContext = createContext<Results>([] as Results);
-const ResultsDispatchContext = createContext<React.Dispatch<Results>>(null!);
+const ResultsDispatchContext = createContext<Dispatch<Results>>(null!);
 
 
-export function ResultsProvider({ children }:WithChildren) {
+export function ResultsProvider({ children }:PropsWithChildren) {
   const [results , setResults] = useState([] as Results)
 
   const updateResults = (results: Results) => {

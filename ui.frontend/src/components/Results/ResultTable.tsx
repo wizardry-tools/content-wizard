@@ -1,4 +1,10 @@
-import * as React from "react";
+import {
+  useState,
+  useMemo,
+  MouseEvent,
+  ChangeEvent,
+  ReactNode
+} from "react";
 import {
   Table,
   TableContainer,
@@ -11,9 +17,9 @@ import {
   Paper,
   Link
 } from "@mui/material";
-import {styled} from "@mui/system";
-import TablePaginationActions from "./ResultTablePagination";
-import {useResults} from "../providers/ResultsProvider";
+import { styled } from "@mui/system";
+import { TablePaginationActions } from "./TablePaginationActions";
+import { useResults } from "../Providers";
 
 const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: "bold"
@@ -22,26 +28,26 @@ const TableHeadCell = styled(TableCell)(() => ({
 const ResultTable = () => {
 
   const rows = useResults();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const keys = React.useMemo(()=>Object.keys((rows && rows[0]) || {}), [rows]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const keys = useMemo(()=>Object.keys((rows && rows[0]) || {}), [rows]);
 
 
   const handleChangePage = (
-    _event: React.MouseEvent<HTMLButtonElement> | null,
+    _event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const buildLink = ({value}:{value:string}):React.ReactNode => {
+  const buildLink = ({value}:{value:string}): ReactNode => {
     let href = value.includes("jcr:content") ? `${value}.5.json` : `/editor.html${value}.html`;
     return (<Link href={href} color="secondary" target="_blank" >{value}</Link>);
   }
