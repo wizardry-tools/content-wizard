@@ -50,7 +50,7 @@ import {
   WriteableEditorProps,
 } from './types';
 import { normalizeWhitespace } from './whitespace';
-import {useIsGraphQL, useQuery} from "../../../../Providers";
+import {useIsGraphQL, useQuery, useQueryDispatch} from "../../../../Providers";
 import {QueryLanguage, QueryLanguageLookup} from "../../../../QueryWizard/types/QueryTypes";
 
 export type UseQueryEditorArgs = WriteableEditorProps &
@@ -84,6 +84,9 @@ export function useQueryEditor(
     nonNull: true,
     caller: caller || useQueryEditor,
   });
+  const queryObj = useQuery();
+  const queryObjStatement = useRef(queryObj.statement);
+  const queryLanguage = useMemo(()=>queryObj.language,[queryObj.language]);
   const {
     externalFragments,
     initialQuery,
@@ -106,7 +109,7 @@ export function useQueryEditor(
   const prettify = usePrettifyEditors({ caller: caller || useQueryEditor });
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorRef = useRef<CodeMirrorType>();
-  const query = useQuery();
+  const queryDisptacher = useQueryDispatch();
   const isGraphQL = useIsGraphQL();
 
   const onClickReferenceRef = useRef<
@@ -152,7 +155,7 @@ export function useQueryEditor(
     ];
 
     let mode = '';
-    switch (query.language) {
+    switch (queryLanguage) {
       case QueryLanguageLookup[QueryLanguage.GraphQL]: {
         addons.push(
           import('codemirror-graphql/esm/hint'),
@@ -209,7 +212,7 @@ export function useQueryEditor(
 
       // @ts-ignore
       const newEditor = CodeMirror(container, {
-        value: initialQuery || query.statement,
+        value: initialQuery || queryObjStatement.current || '',
         lineNumbers: true,
         tabSize: 2,
         foldGutter: true,
@@ -332,7 +335,7 @@ export function useQueryEditor(
     return () => {
       isActive = false;
     };
-  }, [editorTheme, initialQuery, isGraphQL, query.language, query.statement, readOnly, setQueryEditor]);
+  }, [editorTheme, initialQuery, isGraphQL, readOnly, queryLanguage, setQueryEditor]);
 
   useSynchronizeOption(queryEditor, 'keyMap', keyMap);
 
@@ -385,7 +388,7 @@ export function useQueryEditor(
       (editorInstance: CodeMirrorEditorWithOperationFacts) => {
         const query = editorInstance.getValue();
         storage?.set(STORAGE_KEY_QUERY, query);
-
+        
         const currentOperationName = editorInstance.operationName;
         const operationFacts = getAndUpdateOperationFacts(editorInstance);
         if (operationFacts?.operationName !== undefined) {
@@ -408,6 +411,11 @@ export function useQueryEditor(
           query,
           operationName: operationFacts?.operationName ?? null,
         });
+
+        queryDisptacher({
+          statement: query,
+          type: 'statementChange'
+        })
       },
     ) as (editorInstance: CodeMirrorEditor) => void;
 
