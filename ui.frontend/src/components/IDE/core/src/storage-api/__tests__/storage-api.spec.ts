@@ -1,5 +1,7 @@
 import { WizardStorageAPI } from '../.';
 
+const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
+
 describe('WizardStorageAPI', () => {
   let storage = new WizardStorageAPI();
 
@@ -73,13 +75,13 @@ describe('WizardStorageAPI', () => {
     // @ts-ignore
     const throwingStorage = new WizardStorageAPI({
       setItem() {
-        throw new DOMException('Terrible Error');
+        throw new DOMException(ERROR_MESSAGE);
       },
       length: 1,
     });
     const result = throwingStorage.set('key', 'value');
 
-    expect(result.error?.message).toEqual('Terrible Error');
+    expect(result.error?.message).toEqual(ERROR_MESSAGE);
     expect(result.isQuotaError).toBe(false);
   });
 
@@ -87,13 +89,13 @@ describe('WizardStorageAPI', () => {
     // @ts-ignore
     const throwingStorage = new WizardStorageAPI({
       setItem() {
-        throw new DOMException('Terrible Error', 'QuotaExceededError');
+        throw new DOMException(ERROR_MESSAGE, 'QuotaExceededError');
       },
       length: 1,
     });
     const result = throwingStorage.set('key', 'value');
 
-    expect(result.error?.message).toEqual('Terrible Error');
+    expect(result.error?.message).toEqual(ERROR_MESSAGE);
     expect(result.isQuotaError).toBe(true);
   });
 });

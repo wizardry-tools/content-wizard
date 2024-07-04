@@ -119,7 +119,7 @@ describe('getDefaultTabState', () => {
       tabs: [
         expect.objectContaining({
           query: defaultAdvancedQueries.GraphQL,
-          title: '<untitled>',
+          title: 'GraphQL',
         }),
       ],
     });
