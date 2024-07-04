@@ -1,4 +1,4 @@
-import { StorageAPI } from '@graphiql/toolkit';
+import { WizardStorageAPI } from '../../storage-api';
 import {
   createTab,
   fuzzyExtractOperationName,
@@ -6,20 +6,23 @@ import {
   clearHeadersFromTabs,
   STORAGE_KEY,
 } from '../tabs';
+import {defaultAdvancedQueries} from "../../../../../QueryWizard/defaults";
+import {QueryLanguage} from "../../../../../QueryWizard/types/QueryTypes";
 
 describe('createTab', () => {
-  it('creates with default title', () => {
-    expect(createTab({})).toEqual(
+  it('creates with language title', () => {
+    expect(createTab({ query: {...defaultAdvancedQueries.JCR_SQL2, statement: 'select * from nt:unstructured'}})).toEqual(
       expect.objectContaining({
         id: expect.any(String),
         hash: expect.any(String),
-        title: '<untitled>',
+        title: QueryLanguage.JCR_SQL2,
       }),
     );
   });
 
+
   it('creates with title from query', () => {
-    expect(createTab({ query: 'query Foo {}' })).toEqual(
+    expect(createTab({ query: {...defaultAdvancedQueries.GraphQL, statement: 'query Foo {}'} })).toEqual(
       expect.objectContaining({
         id: expect.any(String),
         hash: expect.any(String),
@@ -106,9 +109,8 @@ describe('getDefaultTabState', () => {
   it('returns default tab', () => {
     expect(
       getDefaultTabState({
-        defaultQuery: '# Default',
         headers: null,
-        query: null,
+        query: defaultAdvancedQueries.GraphQL,
         variables: null,
         storage: null,
       }),
@@ -116,7 +118,7 @@ describe('getDefaultTabState', () => {
       activeTabIndex: 0,
       tabs: [
         expect.objectContaining({
-          query: '# Default',
+          query: defaultAdvancedQueries.GraphQL,
           title: '<untitled>',
         }),
       ],
@@ -126,21 +128,20 @@ describe('getDefaultTabState', () => {
   it('returns initial tabs', () => {
     expect(
       getDefaultTabState({
-        defaultQuery: '# Default',
         headers: null,
         defaultTabs: [
           {
             headers: null,
-            query: 'query Person { person { name } }',
+            query: {...defaultAdvancedQueries.GraphQL, statement: 'query Person { person { name } }'},
             variables: '{"id":"foo"}',
           },
           {
             headers: '{"x-header":"foo"}',
-            query: 'query Image { image }',
+            query: {...defaultAdvancedQueries.GraphQL, statement: 'query Image { image }'},
             variables: null,
           },
         ],
-        query: null,
+        query: defaultAdvancedQueries.GraphQL,
         variables: null,
         storage: null,
       }),
@@ -148,13 +149,13 @@ describe('getDefaultTabState', () => {
       activeTabIndex: 0,
       tabs: [
         expect.objectContaining({
-          query: 'query Person { person { name } }',
+          query: {...defaultAdvancedQueries.GraphQL, statement: 'query Person { person { name } }'},
           title: 'Person',
           variables: '{"id":"foo"}',
         }),
         expect.objectContaining({
           headers: '{"x-header":"foo"}',
-          query: 'query Image { image }',
+          query: {...defaultAdvancedQueries.GraphQL, statement: 'query Image { image }'},
           title: 'Image',
         }),
       ],
@@ -165,14 +166,14 @@ describe('getDefaultTabState', () => {
 describe('clearHeadersFromTabs', () => {
   const createMockStorage = () => {
     const mockStorage = new Map();
-    return mockStorage as unknown as StorageAPI;
+    return mockStorage as unknown as WizardStorageAPI;
   };
 
   it('preserves tab state except for headers', () => {
     const storage = createMockStorage();
     const stateWithoutHeaders = {
       operationName: 'test',
-      query: 'query test {\n  test {\n    id\n  }\n}',
+      query: {...defaultAdvancedQueries.GraphQL, statement: 'query test {\n  test {\n    id\n  }\n}'},
       test: {
         a: 'test',
       },

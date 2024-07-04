@@ -13,15 +13,20 @@ import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
 import { CodeMirrorEditor } from './types';
-import {useIsGraphQL} from "../../../../Providers/QueryProvider";
+import {useIsGraphQL} from "../../../../Providers";
+import {Query} from "../../../../QueryWizard/types/QueryTypes";
 
 export function useSynchronizeValue(
   editor: CodeMirrorEditor | null,
-  value: string | undefined,
+value: Query | string | undefined,
 ) {
   useEffect(() => {
-    if (editor && typeof value === 'string' && value !== editor.getValue()) {
-      editor.setValue(value);
+    if (editor) {
+      if (typeof value === 'string' && value !== editor.getValue()) {
+        editor.setValue(value);
+      } else if (typeof value !== 'string' && typeof value !== 'undefined' && value.statement !== editor.getValue()) {
+        editor.setValue(value.statement);
+      }
     }
   }, [editor, value]);
 }

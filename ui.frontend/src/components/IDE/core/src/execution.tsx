@@ -20,6 +20,7 @@ import { useAutoCompleteLeafs, useEditorContext } from './editor';
 import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
+import {useQuery} from "../../../Providers";
 
 export type ExecutionContextType = {
   /**
@@ -101,6 +102,9 @@ export function ExecutionContextProvider({
   const [isFetching, setIsFetching] = useState(false);
   const [subscription, setSubscription] = useState<Unsubscribable | null>(null);
   const queryIdRef = useRef(0);
+  // capture these values from the current wizard Query,
+  // don't capture statement, as it's already captured directly from the editor in the run callback
+  const {language} = useQuery();
 
   const stop = useCallback(() => {
     subscription?.unsubscribe();
@@ -181,6 +185,7 @@ export function ExecutionContextProvider({
 
     history?.addToHistory({
       query,
+      language,
       variables: variablesString,
       headers: headersString,
       operationName: opName,
@@ -272,6 +277,7 @@ export function ExecutionContextProvider({
       setSubscription(null);
     }
   }, [
+    language,
     autoCompleteLeafs,
     externalFragments,
     fetcher,

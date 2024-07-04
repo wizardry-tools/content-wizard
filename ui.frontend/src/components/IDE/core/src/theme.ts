@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useStorageContext } from './storage';
-import {StorageAPI} from "@graphiql/toolkit";
+import { WizardStorageAPI } from "./storage-api";
 
 /**
  * The value `null` semantically means that the user does not explicitly choose
@@ -8,7 +8,7 @@ import {StorageAPI} from "@graphiql/toolkit";
  */
 export type Theme = 'light' | 'dark' | null;
 
-function getStoredTheme (storageContext: StorageAPI | null): Theme {
+function getStoredTheme (storageContext: WizardStorageAPI | null): Theme {
   if (!storageContext) {
     return null;
   }

@@ -1,4 +1,4 @@
-import type { QueryStoreItem } from '@graphiql/toolkit';
+import type { WizardStoreItem } from '../storage-api';
 import {
   MouseEventHandler,
   useCallback,
@@ -20,6 +20,9 @@ import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
 
 import './style.scss';
+import {useQueryDispatch} from "../../../../Providers";
+import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
+import {QueryLanguageKey} from "../../../../QueryWizard/types/QueryTypes";
 
 export function History() {
   const { items: all, deleteFromHistory } = useHistoryContext({
@@ -103,16 +106,18 @@ export function History() {
 }
 
 type QueryHistoryItemProps = {
-  item: QueryStoreItem & { index?: number };
+  item: WizardStoreItem & { index?: number };
 };
 
 export function HistoryItem(props: QueryHistoryItemProps) {
+  const queryDispatcher = useQueryDispatch();
   const { editLabel, toggleFavorite, deleteFromHistory, setActive } =
     useHistoryContext({
       nonNull: true,
       caller: HistoryItem,
     });
-  const { headerEditor, queryEditor, variableEditor } = useEditorContext({
+  //const { headerEditor, queryEditor, variableEditor } = useEditorContext({
+  const { headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
     caller: HistoryItem,
   });
@@ -129,7 +134,7 @@ export function HistoryItem(props: QueryHistoryItemProps) {
   const displayName =
     props.item.label ||
     props.item.operationName ||
-    formatQuery(props.item.query);
+    (`${props.item.language} ` && formatQuery(props.item.query || ''));
 
   const handleSave = useCallback(() => {
     setIsEditable(false);
@@ -151,12 +156,20 @@ export function HistoryItem(props: QueryHistoryItemProps) {
 
   const handleHistoryItemClick: MouseEventHandler<HTMLButtonElement> =
     useCallback(() => {
-      const { query, variables, headers } = props.item;
-      queryEditor?.setValue(query ?? '');
+      const { query, language, variables, headers, label } = props.item;
+      // dispatch the query object instead
+      // TODO: Make sure that API isn't needed as well...
+      queryDispatcher({
+        ...defaultAdvancedQueries[language as QueryLanguageKey],
+        statement: query,
+        label,
+        type: 'replaceQuery'
+      })
+      // queryEditor?.setValue(query?.statement ?? '');
       variableEditor?.setValue(variables ?? '');
       headerEditor?.setValue(headers ?? '');
       setActive(props.item);
-    }, [headerEditor, props.item, queryEditor, setActive, variableEditor]);
+    }, [headerEditor, props.item, queryDispatcher, setActive, variableEditor]);
 
   const handleDeleteItemFromHistory: MouseEventHandler<HTMLButtonElement> =
     useCallback(

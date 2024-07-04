@@ -1,9 +1,11 @@
-import { Storage, StorageAPI } from '@graphiql/toolkit';
+
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import { createContextHook, createNullableContext } from './utility/context';
+import {WizardStorageAPI, WizardStorage } from "./storage-api";
+import {useAlertDispatcher} from "../../../Providers";
 
-export type StorageContextType = StorageAPI;
+export type StorageContextType = WizardStorageAPI;
 
 export const StorageContext =
   createNullableContext<StorageContextType>('StorageContext');
@@ -16,20 +18,21 @@ export type StorageContextProviderProps = {
    * @see {@link https://graphiql-test.netlify.app/typedoc/modules/graphiql_toolkit.html#storage-2|API docs}
    * for details on the required interface.
    */
-  storage?: Storage;
+  storage?: WizardStorage;
 };
 
 export function StorageContextProvider(props: StorageContextProviderProps) {
   const isInitialRender = useRef(true);
-  const [storage, setStorage] = useState(new StorageAPI(props.storage));
+  const [storage, setStorage] = useState(new WizardStorageAPI(props.storage));
+  const alertDispatcher = useAlertDispatcher();
 
   useEffect(() => {
     if (isInitialRender.current) {
       isInitialRender.current = false;
     } else {
-      setStorage(new StorageAPI(props.storage));
+      setStorage(new WizardStorageAPI(props.storage, alertDispatcher));
     }
-  }, [props.storage]);
+  }, [alertDispatcher, props.storage]);
 
   return (
     <StorageContext.Provider value={storage}>

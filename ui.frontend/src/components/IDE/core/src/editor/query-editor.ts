@@ -212,7 +212,7 @@ export function useQueryEditor(
 
       // @ts-ignore
       const newEditor = CodeMirror(container, {
-        value: initialQuery || queryObjStatement.current || '',
+        value: initialQuery.statement || queryObjStatement.current || '',
         lineNumbers: true,
         tabSize: 2,
         foldGutter: true,
@@ -348,7 +348,6 @@ export function useQueryEditor(
     if (!queryEditor) {
       return;
     }
-
     function getAndUpdateOperationFacts(
       editorInstance: CodeMirrorEditorWithOperationFacts,
     ) {
@@ -379,15 +378,17 @@ export function useQueryEditor(
           operationFacts?.variableToType;
         codeMirrorRef.current?.signal(variableEditor, 'change', variableEditor);
       }
-
       return operationFacts ? { ...operationFacts, operationName } : null;
     }
 
     const handleChange = debounce(
       100,
       (editorInstance: CodeMirrorEditorWithOperationFacts) => {
-        const query = editorInstance.getValue();
-        storage?.set(STORAGE_KEY_QUERY, query);
+        const query = {
+          ...queryObj,
+          statement: editorInstance.getValue()
+        };
+        storage?.set(STORAGE_KEY_QUERY, JSON.stringify(query));
 
         const currentOperationName = editorInstance.operationName;
         const operationFacts = getAndUpdateOperationFacts(editorInstance);
@@ -399,7 +400,7 @@ export function useQueryEditor(
         }
 
         // Invoke callback props only after the operation facts have been updated
-        onEdit?.(query, operationFacts?.documentAST);
+        onEdit?.(query.statement, operationFacts?.documentAST);
         if (
           operationFacts?.operationName &&
           currentOperationName !== operationFacts.operationName
@@ -411,9 +412,8 @@ export function useQueryEditor(
           query,
           operationName: operationFacts?.operationName ?? null,
         });
-
         queryDisptacher({
-          statement: query,
+          statement: query.statement,
           type: 'statementChange'
         })
       },
@@ -432,6 +432,8 @@ export function useQueryEditor(
     storage,
     variableEditor,
     updateActiveTabValues,
+    queryDisptacher,
+    queryObj
   ]);
 
   useSynchronizeSchema(queryEditor, schema ?? null, codeMirrorRef);
@@ -507,7 +509,7 @@ function useSynchronizeSchema(
       return;
     }
 
-    const didChange = editor.options.lint.schema !== schema;
+    const didChange = JSON.stringify(editor.options.lint.schema) !== JSON.stringify(schema);
 
     editor.state.lint.linterOptions.schema = schema;
     editor.options.lint.schema = schema;
@@ -556,7 +558,6 @@ function useSynchronizeExternalFragments(
     if (!editor) {
       return;
     }
-
     const didChange =
       editor.options.lint.externalFragments !== externalFragmentList;
 

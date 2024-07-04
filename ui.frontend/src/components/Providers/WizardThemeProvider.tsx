@@ -15,7 +15,7 @@ import {Theme as MuiTheme} from "@mui/material/styles/createTheme";
 import {createTheme} from "@mui/material/styles";
 import {blue} from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";
-import {StorageAPI} from "@graphiql/toolkit";
+import { WizardStorageAPI } from "../IDE/core/src/storage-api";
 
 
 
@@ -209,7 +209,7 @@ export function useIDETheme() {
 }
 
 export const STORAGE_KEY = 'theme';
-function getStoredTheme (storageContext: StorageAPI | null): Theme {
+function getStoredTheme (storageContext: WizardStorageAPI | null): Theme {
   if (!storageContext) {
     return null;
   }

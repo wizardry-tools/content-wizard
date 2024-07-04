@@ -119,7 +119,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
       pluginList.push(DOC_EXPLORER_PLUGIN);
       pluginTitles[DOC_EXPLORER_PLUGIN.title] = true;
     }
-    if (isGraphQL && hasHistoryContext) {
+    if (hasHistoryContext) {
       pluginList.push(HISTORY_PLUGIN);
       pluginTitles[HISTORY_PLUGIN.title] = true;
     }

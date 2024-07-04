@@ -55,7 +55,9 @@ function ContentWizardInterface() {
   return (
     <IDEProvider
       fetcher={fetcher}
-      query={query.statement}>
+      query={query}
+      shouldPersistHeaders={true}
+    >
       <Box className="content-wizard-main">
         <GlobalNav pageTitle="Content Wizard" />
         <Box className="content-wizard-content-wrapper">

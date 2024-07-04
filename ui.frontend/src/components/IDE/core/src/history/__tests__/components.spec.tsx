@@ -4,6 +4,7 @@ import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
 import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
+import {useQueryDispatch} from "../../../../../Providers";
 
 jest.mock('../../editor', () => {
   const mockedSetQueryEditor = jest.fn();
@@ -17,6 +18,14 @@ jest.mock('../../editor', () => {
         headerEditor: { setValue: mockedSetHeaderEditor },
       };
     },
+  };
+});
+jest.mock('../../../../../Providers',() => {
+  const mockQueryDispatcher = jest.fn(()=>{});
+  return {
+    useQueryDispatch() {
+      return mockQueryDispatcher;
+    }
   };
 });
 
@@ -65,17 +74,19 @@ function getMockProps(
   };
 }
 
-describe('QueryHistoryItem', () => {
+describe('HistoryItem', () => {
   const mockedSetQueryEditor = useEditorContext()?.queryEditor
     ?.setValue as jest.Mock;
   const mockedSetVariableEditor = useEditorContext()?.variableEditor
     ?.setValue as jest.Mock;
   const mockedSetHeaderEditor = useEditorContext()?.headerEditor
     ?.setValue as jest.Mock;
+  const mockedQueryDispatcher = useQueryDispatch() as jest.Mock;
   beforeEach(() => {
     mockedSetQueryEditor.mockClear();
     mockedSetVariableEditor.mockClear();
     mockedSetHeaderEditor.mockClear();
+    mockedQueryDispatcher.mockClear();
   });
   it('renders operationName if label is not provided', () => {
     const otherMockProps = { item: { operationName: mockOperationName } };
@@ -106,8 +117,9 @@ describe('QueryHistoryItem', () => {
     fireEvent.click(
       container.querySelector('button.wizard-history-item-label')!,
     );
-    expect(mockedSetQueryEditor).toHaveBeenCalledTimes(1);
-    expect(mockedSetQueryEditor).toHaveBeenCalledWith(mockProps.item.query);
+    expect(mockedQueryDispatcher).toHaveBeenCalledTimes(1);
+    expect(mockedSetQueryEditor).toHaveBeenCalledTimes(0);
+    //expect(mockedSetQueryEditor).toHaveBeenCalledWith(mockProps.item.query);
     expect(mockedSetVariableEditor).toHaveBeenCalledTimes(1);
     expect(mockedSetVariableEditor).toHaveBeenCalledWith(
       mockProps.item.variables,

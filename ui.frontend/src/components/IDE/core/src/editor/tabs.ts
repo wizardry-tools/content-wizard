@@ -1,15 +1,17 @@
-import { StorageAPI } from '@graphiql/toolkit';
-import { useCallback, useMemo } from 'react';
+import {WizardStorageAPI} from '../storage-api';
+import {Dispatch, useCallback, useMemo} from 'react';
 
 import debounce from '../utility/debounce';
-import { CodeMirrorEditorWithOperationFacts } from './context';
-import { CodeMirrorEditor } from './types';
+import {CodeMirrorEditorWithOperationFacts} from './context';
+import {CodeMirrorEditor} from './types';
+import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
+import {Query, QueryAction, QueryLanguage,} from "../../../../QueryWizard/types/QueryTypes";
 
 export type TabDefinition = {
   /**
    * The contents of the query editor of this tab.
    */
-  query: string | null;
+  query: Query;
   /**
    * The contents of the variable editor of this tab.
    */
@@ -65,7 +67,6 @@ export type TabsState = {
 };
 
 export function getDefaultTabState({
-  defaultQuery,
   defaultHeaders,
   headers,
   defaultTabs,
@@ -74,13 +75,12 @@ export function getDefaultTabState({
   storage,
   shouldPersistHeaders,
 }: {
-  defaultQuery: string;
   defaultHeaders?: string;
   headers: string | null;
   defaultTabs?: TabDefinition[];
-  query: string | null;
+  query: Query;
   variables: string | null;
-  storage: StorageAPI | null;
+  storage: WizardStorageAPI | null;
   shouldPersistHeaders?: boolean;
 }) {
   const storedState = storage?.get(STORAGE_KEY);
@@ -115,11 +115,11 @@ export function getDefaultTabState({
       if (matchingTabIndex >= 0) {
         parsed.activeTabIndex = matchingTabIndex;
       } else {
-        const operationName = query ? fuzzyExtractOperationName(query) : null;
+        const operationName = query ? fuzzyExtractOperationName(query.statement) : null;
         parsed.tabs.push({
           id: guid(),
           hash: expectedHash,
-          title: operationName || DEFAULT_TITLE,
+          title: query.label || operationName || query.language || DEFAULT_TITLE,
           query,
           variables,
           headers,
@@ -138,7 +138,7 @@ export function getDefaultTabState({
       tabs: (
         defaultTabs || [
           {
-            query: query ?? defaultQuery,
+            query: query ?? defaultAdvancedQueries.GraphQL,
             variables,
             headers: headers ?? defaultHeaders,
           },
@@ -168,7 +168,7 @@ function isTabState(obj: any): obj is TabState {
     !Array.isArray(obj) &&
     hasStringKey(obj, 'id') &&
     hasStringKey(obj, 'title') &&
-    hasStringOrNullKey(obj, 'query') &&
+    hasQueryOrNullKey(obj, 'query') &&
     hasStringOrNullKey(obj, 'variables') &&
     hasStringOrNullKey(obj, 'headers') &&
     hasStringOrNullKey(obj, 'operationName') &&
@@ -188,20 +188,25 @@ function hasStringOrNullKey(obj: Record<string, any>, key: string) {
   return key in obj && (typeof obj[key] === 'string' || obj[key] === null);
 }
 
+function hasQueryOrNullKey(obj: Record<string, any>, key: string) {
+  return key in obj && (typeof obj[key] === 'object' && obj[key] !== null && !!(obj[key] as Query));
+}
+
 export function useSynchronizeActiveTabValues({
   queryEditor,
   variableEditor,
   headerEditor,
   responseEditor,
+  query = defaultAdvancedQueries.GraphQL,
 }: {
   queryEditor: CodeMirrorEditorWithOperationFacts | null;
   variableEditor: CodeMirrorEditor | null;
   headerEditor: CodeMirrorEditor | null;
   responseEditor: CodeMirrorEditor | null;
+  query: Query;
 }) {
   return useCallback<(state: TabsState) => TabsState>(
     state => {
-      const query = queryEditor?.getValue() ?? null;
       const variables = variableEditor?.getValue() ?? null;
       const headers = headerEditor?.getValue() ?? null;
       const operationName = queryEditor?.operationName ?? null;
@@ -214,7 +219,7 @@ export function useSynchronizeActiveTabValues({
         operationName,
       });
     },
-    [queryEditor, variableEditor, headerEditor, responseEditor],
+    [queryEditor, variableEditor, headerEditor, responseEditor, query],
   );
 }
 
@@ -235,7 +240,7 @@ export function useStoreTabs({
   storage,
   shouldPersistHeaders,
 }: {
-  storage: StorageAPI | null;
+  storage: WizardStorageAPI | null;
   shouldPersistHeaders?: boolean;
 }) {
   const store = useMemo(
@@ -254,12 +259,12 @@ export function useStoreTabs({
 }
 
 export function useSetEditorValues({
-  queryEditor,
+  queryDispatcher,
   variableEditor,
   headerEditor,
-  responseEditor,
+  responseEditor
 }: {
-  queryEditor: CodeMirrorEditorWithOperationFacts | null;
+  queryDispatcher: Dispatch<QueryAction> | null;
   variableEditor: CodeMirrorEditor | null;
   headerEditor: CodeMirrorEditor | null;
   responseEditor: CodeMirrorEditor | null;
@@ -271,29 +276,36 @@ export function useSetEditorValues({
       headers,
       response,
     }: {
-      query: string | null;
+      query: Query;
       variables?: string | null;
       headers?: string | null;
       response: string | null;
     }) => {
-      queryEditor?.setValue(query ?? '');
+      // use queryDispatcher instead to broadcast query changes and let the queryEditor read from useQuery
+      if (queryDispatcher) {
+        queryDispatcher({
+          ...query,
+          type: 'replaceQuery'
+        })
+      }
+      //queryEditor?.setValue(query.statement ?? '');
       variableEditor?.setValue(variables ?? '');
       headerEditor?.setValue(headers ?? '');
       responseEditor?.setValue(response ?? '');
     },
-    [headerEditor, queryEditor, responseEditor, variableEditor],
+    [queryDispatcher, headerEditor, responseEditor, variableEditor],
   );
 }
 
 export function createTab({
-  query = null,
+  query,
   variables = null,
   headers = null,
-}: Partial<TabDefinition> = {}): TabState {
+}: TabDefinition): TabState {
   return {
     id: guid(),
     hash: hashFromTabContents({ query, variables, headers }),
-    title: (query && fuzzyExtractOperationName(query)) || DEFAULT_TITLE,
+    title: query.label || ((query?.statement && fuzzyExtractOperationName(query.statement)) || QueryLanguage[query.language]) || DEFAULT_TITLE,
     query,
     variables,
     headers,
@@ -317,10 +329,12 @@ export function setPropertiesInActiveTab(
         ...newTab,
         hash: hashFromTabContents(newTab),
         title:
+          newTab.query?.label ||
           newTab.operationName ||
-          (newTab.query
-            ? fuzzyExtractOperationName(newTab.query)
+          (newTab.query?.statement
+            ? fuzzyExtractOperationName(newTab.query.statement)
             : undefined) ||
+          QueryLanguage[newTab.query.language]  ||
           DEFAULT_TITLE,
       };
     }),
@@ -338,11 +352,11 @@ function guid(): string {
 }
 
 function hashFromTabContents(args: {
-  query: string | null;
+  query: Query;
   variables?: string | null;
   headers?: string | null;
 }): string {
-  return [args.query ?? '', args.variables ?? '', args.headers ?? ''].join('|');
+  return [args.query.language ?? '', args.query.statement ?? '', args.variables ?? '', args.headers ?? ''].join('|');
 }
 
 export function fuzzyExtractOperationName(str: string): string | null {
@@ -353,7 +367,7 @@ export function fuzzyExtractOperationName(str: string): string | null {
   return match?.[2] ?? null;
 }
 
-export function clearHeadersFromTabs(storage: StorageAPI | null) {
+export function clearHeadersFromTabs(storage: WizardStorageAPI | null) {
   const persistedTabs = storage?.get(STORAGE_KEY);
   if (persistedTabs) {
     const parsedTabs = JSON.parse(persistedTabs);

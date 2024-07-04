@@ -198,6 +198,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
      * prop is passed an introspection result, we do continue but skip the
      * introspection request.
      */
+
     if (isSchema(props.schema) || props.schema === null) {
       return;
     }
@@ -205,7 +206,6 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
     const counter = ++counterRef.current;
 
     const maybeIntrospectionData = props.schema;
-
     async function fetchIntrospectionData() {
       if (maybeIntrospectionData) {
         // No need to introspect if we already have the data

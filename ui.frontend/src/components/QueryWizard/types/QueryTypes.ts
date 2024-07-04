@@ -35,7 +35,8 @@ export type Query = {
   url: string;
   api?: API;
   status?: string;
-  isAdvanced: boolean;
+  isAdvanced: boolean; // this is mainly for QueryBuilder language, as it's used in two different UIs and this differentiates the UIs.
+  label?: string; // this gets populated when a History Query has an edited label.
 }
 export type QueryAction = Partial<Query> & {
   type: string;
