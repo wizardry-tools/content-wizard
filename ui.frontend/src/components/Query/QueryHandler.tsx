@@ -1,11 +1,11 @@
-import { QueryButton } from "../Components";
-import {QueryLanguage, QueryLanguageLookup} from "../types/QueryTypes";
+import { QueryButton } from "../QueryWizard/Components";
+import {QueryLanguage, QueryLanguageLookup} from ".";
 import {
   useQuery,
   useQueryDispatch,
   useQueryRunner,
   useResultsDispatch
-} from "../../Providers";
+} from "../Providers";
 
 type QueryHandlerProps = {
   onResults: (index: number)=>void;
@@ -38,7 +38,7 @@ export default function QueryHandler({onResults}:QueryHandlerProps) {
           if (queryResponse.results.length > 0) {
             // switch to results tab
             onResults(2);
-          } // else no results TODO: (display some sort of notice in this case)
+          }
         } else {
           resultsDispatch([]);
           console.debug(`No Results for query: ${queryResponse.status}`, query);

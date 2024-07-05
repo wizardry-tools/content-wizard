@@ -1,4 +1,4 @@
-import {Query, QueryLanguage, QueryLanguageKey, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
+import {Query, QueryLanguage, QueryLanguageKey, QueryLanguageLookup} from "../Query";
 
 /**
  * The AUTH_TOKEN exists for dev builds

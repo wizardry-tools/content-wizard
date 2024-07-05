@@ -7,8 +7,10 @@ import {
   useMemo,
   useReducer
 } from "react";
-import {queryBuilderURL} from "../QueryWizard/defaults";
+import {queryBuilderURL} from "../Query";
 import {
+  buildGraphQLURL,
+  buildQueryString,
   GraphQLAPI,
   Query,
   QueryAction,
@@ -16,10 +18,8 @@ import {
   QueryLanguageLookup,
   QueryResponse,
   Statement
-} from "../QueryWizard/types/QueryTypes";
+} from "../Query";
 import {
-  buildGraphQLURL,
-  buildQueryString,
   DYNAMIC_HEADERS,
   getParams
 } from "../utility";
@@ -31,7 +31,7 @@ import {
   fields as defaultFields,
   FieldsConfig, InputValue
 } from "../QueryWizard/Components/fields";
-import {PredicateConfig, predicates, predicateTypes} from "../QueryWizard/Components/predicates";
+import {PredicateConfig, predicates, predicateTypes} from "../QueryWizard/Components";
 
 
 const QueryContext = createContext<Query>(null!);

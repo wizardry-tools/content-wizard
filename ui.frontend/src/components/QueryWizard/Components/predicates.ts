@@ -1,5 +1,5 @@
-import {ContentType, ContentTypeMap} from "../types/ContentTypes";
-import {TargetType, TargetTypeLookup, TargetTypes} from "../types/TargetTypes";
+import {ContentType, ContentTypeMap} from "../../Query/ContentTypes";
+import {TargetType, TargetTypeLookup, TargetTypes} from "../../Query/TargetTypes";
 import {DateRange, FieldConfigNameKey, FieldsConfig, InputValue} from "./fields";
 
 export const predicateTypes = {

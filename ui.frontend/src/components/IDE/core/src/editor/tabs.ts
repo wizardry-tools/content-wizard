@@ -4,8 +4,7 @@ import {Dispatch, useCallback, useMemo} from 'react';
 import debounce from '../utility/debounce';
 import {CodeMirrorEditorWithOperationFacts} from './context';
 import {CodeMirrorEditor} from './types';
-import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
-import {Query, QueryAction, QueryLanguage,} from "../../../../QueryWizard/types/QueryTypes";
+import {defaultAdvancedQueries, Query, QueryAction, QueryLanguage,} from "../../../../Query";
 
 export type TabDefinition = {
   /**

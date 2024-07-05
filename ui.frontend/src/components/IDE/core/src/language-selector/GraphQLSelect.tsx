@@ -8,8 +8,8 @@ import {
   Select,
   MenuItem
 } from "@mui/material";
-import {GraphQLAPI, API, PersistedQuery} from "../../../../QueryWizard/types/QueryTypes";
-import {getHeadlessClient} from "../../../../QueryWizard/handlers/AEMHeadlessClient";
+import {GraphQLAPI, API, PersistedQuery} from "../../../../Query";
+import {getHeadlessClient} from "../../../../utility/AEMHeadlessClient";
 
 type GraphQLSelectProps = {
   onApiChange: (api: API) => void;

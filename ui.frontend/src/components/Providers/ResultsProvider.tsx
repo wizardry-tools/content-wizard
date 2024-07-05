@@ -6,7 +6,7 @@ import {
   Dispatch
 } from "react";
 import {Results} from "../Results";
-import {useAlertDispatcher} from "./AlertContextProvider";
+import {useAlertDispatcher} from "./AlertProvider";
 
 
 const ResultsContext = createContext<Results>([] as Results);

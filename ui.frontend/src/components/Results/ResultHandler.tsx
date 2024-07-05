@@ -1,7 +1,7 @@
 import { ResultTable } from "./ResultTable";
 import {Paper, TextField} from "@mui/material";
 import { FormGrid } from "../QueryWizard/Components";
-import {QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
+import {QueryLanguage, QueryLanguageLookup} from "../Query";
 import {useResults, useQuery} from "../Providers";
 
 export function ResultHandler() {

@@ -1,5 +1,5 @@
-import {ContentTypeLookup, ContentTypes} from "../types/ContentTypes";
-import {TargetTypeLookup, TargetTypes} from "../types/TargetTypes";
+import {ContentTypeLookup, ContentTypes} from "../../Query/ContentTypes";
+import {TargetTypeLookup, TargetTypes} from "../../Query/TargetTypes";
 import {
   ElementType
 } from "react";

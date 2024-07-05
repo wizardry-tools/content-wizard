@@ -1,4 +1,4 @@
-import {createReverseMapping} from "../../utility/libs";
+import {createReverseMapping} from "../utility";
 
 export type TargetType = "none" | "resource" | "template" | "text";
 export const TargetTypes: Record<TargetType, string> = {

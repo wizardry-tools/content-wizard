@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
-import {QueryLanguageKey, Statement} from "../../../../QueryWizard/types/QueryTypes";
+import {QueryLanguageKey, Statement} from "../../../../Query";
 
 export type HistoryContextType = {
   /**

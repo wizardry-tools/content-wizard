@@ -1,14 +1,13 @@
-import { AlertProps } from "@mui/material";
-export type WizardAlertProps = AlertProps & {
-  message: string;
-}
 
 export {
-  AlertContextProvider,
+  AlertProvider,
   useAlertContext,
   useAlertDispatcher
-} from "./AlertContextProvider";
-
+} from "./AlertProvider";
+export type {
+  AlertProviderProps,
+  WizardAlertProps
+} from "./AlertProvider";
 export { AppProvider } from "./AppProvider";
 export { ContentWizardProvider } from "./ContentWizardProvider";
 export { IDEProvider } from "./IDEProvider";

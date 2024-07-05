@@ -1,5 +1,5 @@
 import {getQueryType, graphQLQueryBuilder} from "./GraphQLQueryBuilder";
-import {GraphQLAPI, GraphQLEndpointConfig} from "../types/QueryTypes";
+import {GraphQLAPI, GraphQLEndpointConfig} from "../Query";
 
 export const AEM_GRAPHQL_ACTIONS = {
   persist: 'graphql/persist.json',

@@ -51,7 +51,7 @@ import {
 } from './types';
 import { normalizeWhitespace } from './whitespace';
 import {useIsGraphQL, useQuery, useQueryDispatch} from "../../../../Providers";
-import {QueryLanguage, QueryLanguageLookup} from "../../../../QueryWizard/types/QueryTypes";
+import {QueryLanguage, QueryLanguageLookup} from "../../../../Query";
 
 export type UseQueryEditorArgs = WriteableEditorProps &
   Pick<UseCopyQueryArgs, 'onCopyQuery'> & {

@@ -2,11 +2,11 @@ import {Accordion as AccordionTab, AccordionSummary, Stack, Paper, Typography, T
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {ElementType, ReactNode, SyntheticEvent, useCallback, useMemo, useState} from "react";
 import {useFields, useFieldDispatch, useQuery} from "../Providers";
-import {fieldCategories, fieldCategoryTypes, FieldConfig} from "./Components/fields";
+import {fieldCategories, fieldCategoryTypes, FieldConfig} from "./Components";
 import {Tooltip, WizardStatementEditor} from "../IDE/core/src";
 import { FormGrid } from "./Components";
 import {ViewsProps} from "../ContentWizard/Views";
-import QueryHandler from "./handlers/QueryHandler";
+import QueryHandler from "../Query/QueryHandler";
 
 import "./QueryWizard.scss";
 
@@ -20,7 +20,7 @@ const buttonStackStyles = (_theme: Theme) => {
 
 
 
-type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
+export type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
 
 export default function QueryWizard({onTabPanelSelect}: QueryWizardProps) {
 

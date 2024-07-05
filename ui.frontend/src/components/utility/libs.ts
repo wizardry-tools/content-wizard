@@ -19,12 +19,15 @@ import type {
   CreateFetcherOptions,
 } from "@graphiql/toolkit/src/create-fetcher/types";
 import { Observable } from "@graphiql/toolkit";
-import { setAuthorization } from "../QueryWizard/handlers/AEMHeadlessClient";
+import { setAuthorization } from "./AEMHeadlessClient";
 import {
   CustomCreateFetcherOptions,
   getCsrfToken,
-  buildQueryString
 } from ".";
+import {
+  buildQueryString
+} from "../Query";
+
 
 
 const errorHasCode = (err: unknown): err is { code: string } => {
@@ -274,20 +277,7 @@ export const getWsFetcher = (
 
 
 
-/**
- * This is a helper function that takes a Mapped Object and Reverse the Values with the Keys.
- * This is needed when dealing with 'as const' Types, where the Values and Keys are not identical.
- * @param obj
- */
-export function createReverseMapping<T extends Record<string, string>>(obj: T): Record<T[keyof T], keyof T> {
-  const reverseMapping: Record<string, string> = {};
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      reverseMapping[obj[key]] = key;
-    }
-  }
-  return reverseMapping as Record<T[keyof T], keyof T>;
-}
+
 
 /**
  * Does what the name says, extracts the name of a file/endpoint from a URL.

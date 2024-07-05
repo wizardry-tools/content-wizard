@@ -13,7 +13,7 @@ import {
   CustomCreateFetcherOptions,
   createSimpleGetFetcher,
 } from '.';
-import {Query, QueryLanguage, QueryLanguageLookup} from "../QueryWizard/types/QueryTypes";
+import {Query, QueryLanguage, QueryLanguageLookup} from "../Query";
 
 export function createCustomFetcher(query: Query, onResults: (data: any)=>void): Fetcher {
   let options:CustomCreateFetcherOptions = {

@@ -37,9 +37,8 @@ import {
 } from './tabs';
 import { CodeMirrorEditor } from './types';
 import { STORAGE_KEY as STORAGE_KEY_VARIABLES } from './variable-editor';
-import {Query} from "../../../../QueryWizard/types/QueryTypes";
 import {useQuery, useQueryDispatch} from "../../../../Providers";
-import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
+import {defaultAdvancedQueries,Query} from "../../../../Query";
 
 export type CodeMirrorEditorWithOperationFacts = CodeMirrorEditor & {
   documentAST: DocumentNode | null;

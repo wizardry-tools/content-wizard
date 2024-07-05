@@ -8,7 +8,7 @@ it.
 */
 
 // Use the AEM Headless SDK to make the GraphQL requests
-import ClientService from "../services/ClientService";
+import ClientService from "./ClientService";
 
 // environment variable for configuring the headless client
 const {

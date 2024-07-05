@@ -21,8 +21,10 @@ import { useHistoryContext } from './context';
 
 import './style.scss';
 import {useQueryDispatch} from "../../../../Providers";
-import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
-import {QueryLanguageKey} from "../../../../QueryWizard/types/QueryTypes";
+import {
+  defaultAdvancedQueries,
+  QueryLanguageKey
+} from "../../../../Query";
 
 export function History() {
   const { items: all, deleteFromHistory } = useHistoryContext({

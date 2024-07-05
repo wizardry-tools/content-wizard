@@ -9,7 +9,7 @@ import { useEditorContext } from './context';
 import {useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue} from './hooks';
 import {CodeMirrorType, CommonEditorProps} from './types';
 import {useQuery} from "../../../../Providers";
-import {QueryLanguage, QueryLanguageLookup} from "../../../../QueryWizard/types/QueryTypes";
+import {QueryLanguage, QueryLanguageLookup} from "../../../../Query";
 
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {

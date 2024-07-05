@@ -1,14 +1,14 @@
 import {StorageContextProvider} from "../IDE/core/src";
 import {PropsWithChildren} from "react";
-import {AlertContextProvider} from "./AlertContextProvider";
+import {AlertProvider} from "./AlertProvider";
 
 export function AppProvider(props: PropsWithChildren){
 
   return (
     <StorageContextProvider>
-      <AlertContextProvider>
+      <AlertProvider>
         {props.children}
-      </AlertContextProvider>
+      </AlertProvider>
     </StorageContextProvider>
   );
 }

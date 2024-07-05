@@ -10,7 +10,7 @@ import {
   QueryLanguageLookup,
   QueryLanguageKey,
   Statement
-} from "../../../../QueryWizard/types/QueryTypes";
+} from "../../../../Query";
 
 
 const MAX_QUERY_SIZE = 100000;

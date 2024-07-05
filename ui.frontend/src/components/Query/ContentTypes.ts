@@ -1,4 +1,4 @@
-import {createReverseMapping} from "../../utility/libs";
+import {createReverseMapping} from "../utility";
 
 
 export type ContentType = "page" | "xf" | "asset" | "cf" | "child";

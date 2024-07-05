@@ -1,13 +1,13 @@
 import { FormGrid } from "../../../../QueryWizard/Components";
 import {
   API,
+  defaultAdvancedQueries,
   QueryLanguage,
   QueryLanguageKey,
   QueryLanguageLookup,
   Statement
-} from "../../../../QueryWizard/types/QueryTypes";
+} from "../../../../Query";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
-import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
 import { GraphQLSelect } from "./GraphQLSelect";
 import {useQuery, useQueryDispatch} from "../../../../Providers";
 

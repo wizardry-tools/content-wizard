@@ -33,7 +33,7 @@
     <!-- ====================================================================== -->
     <artifactId>content-wizard.all</artifactId>
     <packaging>content-package</packaging>
-    <name>Content Wizard - All - Local Development</name>
+    <name>Content Wizard - All</name>
     <description>All content package for Content Wizard, on a local dev environment</description>
 
     <!-- ====================================================================== -->
