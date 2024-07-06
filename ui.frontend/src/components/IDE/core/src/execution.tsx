@@ -20,7 +20,7 @@ import { useAutoCompleteLeafs, useEditorContext } from './editor';
 import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
-import {useQuery} from "../../../Providers";
+import {useQuery} from "src/providers";
 
 export type ExecutionContextType = {
   /**

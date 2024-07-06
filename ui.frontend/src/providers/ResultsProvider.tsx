@@ -5,7 +5,7 @@ import {
   PropsWithChildren,
   Dispatch
 } from "react";
-import {Results} from "../Results";
+import {Results} from "src/components/Results";
 import {useAlertDispatcher} from "./AlertProvider";
 
 

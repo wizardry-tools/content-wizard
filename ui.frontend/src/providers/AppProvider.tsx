@@ -1,4 +1,4 @@
-import {StorageContextProvider} from "../IDE/core/src";
+import {StorageContextProvider} from "src/components/IDE/core/src";
 import {PropsWithChildren} from "react";
 import {AlertProvider} from "./AlertProvider";
 

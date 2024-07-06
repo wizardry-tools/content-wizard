@@ -7,7 +7,7 @@ import '../style/editor.scss';
 import {useMemo} from "react";
 import {Paper, Stack} from "@mui/material";
 import {ToolbarButton} from "../../toolbar";
-import {CopyIcon} from "../../../../../../icons";
+import {CopyIcon} from "src/icons";
 import {useCopyQuery} from "../hooks";
 
 export function WizardStatementEditor(props: UseWizardStatementEditorArgs) {

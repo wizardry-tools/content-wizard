@@ -9,25 +9,46 @@ import React, {
 import {
   Button,
   ButtonGroup,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  CopyIcon, Dialog, ExecuteButton, HeaderEditor, KeyboardShortcutIcon,
-  MergeIcon, PlusIcon,
-  PrettifyIcon, QueryEditor, ReloadIcon, ResponseEditor, SettingsIcon, Spinner, Tab, Tabs,
-  ToolbarButton, Tooltip, UnStyledButton,
-  useCopyQuery, useDragResize,
-  useEditorContext, useExecutionContext,
-  useMergeQuery, usePluginContext, usePrettifyEditors,
-  useSchemaContext, useStorageContext,
+  Dialog,
+  ExecuteButton,
+  HeaderEditor,
+  QueryEditor,
+  ResponseEditor,
+  Spinner,
+  Tab,
+  Tabs,
+  ToolbarButton,
+  Tooltip,
+  UnStyledButton,
+  useCopyQuery,
+  useDragResize,
+  useEditorContext,
+  useExecutionContext,
+  useMergeQuery,
+  usePluginContext,
+  usePrettifyEditors,
+  useSchemaContext,
+  useStorageContext,
   VariableEditor
 } from "./core/src";
 import {
   useIsGraphQL,
   useIDETheme,
   useThemeDispatch
-} from "../Providers";
+} from "src/providers";
 import Paper from '@mui/material/Paper';
-import "./style.scss"
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CopyIcon,
+  KeyboardShortcutIcon,
+  MergeIcon,
+  PlusIcon,
+  PrettifyIcon,
+  ReloadIcon,
+  SettingsIcon,
+} from "src/icons";
+import "./style.scss";
 
 
 

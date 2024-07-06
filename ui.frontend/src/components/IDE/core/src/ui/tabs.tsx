@@ -1,7 +1,7 @@
 import { forwardRef, ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { Reorder } from 'framer-motion';
-import { CloseIcon } from '../../../../../icons';
+import { CloseIcon } from 'src/icons';
 import { createComponentGroup } from '../utility/component-group';
 import { UnStyledButton } from './button';
 import { Tooltip } from './tooltip';

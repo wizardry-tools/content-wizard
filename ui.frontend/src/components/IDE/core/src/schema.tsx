@@ -26,7 +26,7 @@ import {
 
 import { useEditorContext } from './editor';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useAlertDispatcher } from "../../../Providers";
+import { useAlertDispatcher } from "src/providers";
 
 type MaybeGraphQLSchema = GraphQLSchema | null | undefined;
 

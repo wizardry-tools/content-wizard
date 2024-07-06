@@ -3,17 +3,22 @@ import {
   useResultsDispatch,
   useQuery,
   IDEProvider,
-} from "../Providers";
+} from "src/providers";
 import {Box} from "@mui/material";
 import {GlobalNav} from "../GlobalNav";
 import {useCallback, useMemo, useState} from "react";
-import { Bar, Views } from ".";
+import { Bar, Views } from "./index";
 
-import {Results} from "../Results";
+import {Results} from "src/components/Results";
 import {Fetcher} from "@graphiql/toolkit/src/create-fetcher/types";
-import {createCustomFetcher} from "../utility";
+import {
+  createGraphQLFetcher,
+  createMultiLanguageFetcher,
+  CustomCreateFetcherOptions
+} from "src/utility";
 
 import "./ContentWizard.scss";
+import {buildQueryString, Query, QueryLanguage, QueryLanguageKey} from "src/components/Query";
 
 
 export function ContentWizard() {
@@ -44,7 +49,7 @@ function ContentWizardInterface() {
     resultsDispatch(results);
   },[resultsDispatch]);
 
-  const fetcher:Fetcher = useMemo(()=>createCustomFetcher(query, onResults),[query,onResults]);
+  const fetcher:Fetcher = useMemo(()=>createQueryFetcher(query, onResults),[query,onResults]);
 
 
 
@@ -73,4 +78,20 @@ function ContentWizardInterface() {
       </Box>
     </IDEProvider>
   )
+}
+
+function createQueryFetcher(query: Query, onResults: (data: any)=>void): Fetcher {
+  // only append queryString if it's not GraphQL
+  let options:CustomCreateFetcherOptions = {
+    url: query.url + (query.language !== QueryLanguage.GraphQL as QueryLanguageKey ? buildQueryString(query): ''),
+    onResults: onResults
+  }
+  switch (query.language) {
+    case QueryLanguage.GraphQL as QueryLanguageKey: {
+      return createGraphQLFetcher(options);
+    }
+    default: {
+      return createMultiLanguageFetcher(options);
+    }
+  }
 }

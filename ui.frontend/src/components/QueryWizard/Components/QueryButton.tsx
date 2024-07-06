@@ -1,7 +1,7 @@
 import {Fab, SvgIcon, Typography} from "@mui/material";
-import {RunIcon} from "../../../icons";
+import {RunIcon} from "src/icons";
 import {MouseEvent, useRef, useState} from "react";
-import {useAlertContext} from "../../Providers";
+import {useAlertContext} from "src/providers";
 
 
 interface QueryButtonProps {

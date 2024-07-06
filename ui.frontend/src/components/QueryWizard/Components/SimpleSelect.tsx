@@ -1,6 +1,6 @@
 import {
   FormGrid,
-} from ".";
+} from "./FormGrid";
 import {
   InputLabel,
   Select,

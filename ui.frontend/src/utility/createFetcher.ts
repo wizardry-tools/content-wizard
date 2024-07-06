@@ -10,28 +10,17 @@ import {
   createSimplePostFetcher,
   isSubscriptionWithName,
   getWsFetcher,
-  CustomCreateFetcherOptions,
-  createSimpleGetFetcher,
-} from '.';
-import {Query, QueryLanguage, QueryLanguageLookup} from "../Query";
+  createGetFetcher, createSimpleGetFetcher, SimpleFetcher,
+} from './libs';
+import {CreateFetcherOptions} from "@graphiql/toolkit/src/create-fetcher/types";
 
-export function createCustomFetcher(query: Query, onResults: (data: any)=>void): Fetcher {
-  let options:CustomCreateFetcherOptions = {
-    url: query.url,
-    onResults: onResults
-  }
-  switch (query.language) {
-    case QueryLanguageLookup[QueryLanguage.GraphQL]: {
-      return createGraphQLFetcher(options);
-    }
-    default: {
-      options.query = query;
-      return createMultiLanguageFetcher(options);
-    }
-  }
+export type CustomCreateFetcherOptions = CreateFetcherOptions & {
+  onResults?: (data: any) => void;
 }
 
-function createGraphQLFetcher(options: CustomCreateFetcherOptions): Fetcher {
+
+
+export function createGraphQLFetcher(options: CustomCreateFetcherOptions): Fetcher {
   let httpFetch;
   if (typeof window !== 'undefined' && window.fetch) {
     httpFetch = window.fetch;
@@ -98,5 +87,20 @@ export function createMultiLanguageFetcher(options: CustomCreateFetcherOptions):
     throw new Error('No valid fetcher implementation available');
   }
   // simpler fetcher for schema requests
+  return createGetFetcher(options, httpFetch);
+}
+
+
+export function createAPIFetcher(options: CustomCreateFetcherOptions): SimpleFetcher {
+  let httpFetch;
+  if (typeof window !== 'undefined' && window.fetch) {
+    httpFetch = window.fetch;
+  }
+  if (options.fetch) {
+    httpFetch = options.fetch;
+  }
+  if (!httpFetch) {
+    throw new Error('No valid fetcher implementation available');
+  }
   return createSimpleGetFetcher(options, httpFetch);
 }

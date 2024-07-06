@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { TablePaginationActions } from "./TablePaginationActions";
-import { useResults } from "../Providers";
+import { useResults } from "src/providers";
 
 const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: "bold"

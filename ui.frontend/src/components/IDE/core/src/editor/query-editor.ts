@@ -50,8 +50,8 @@ import {
   WriteableEditorProps,
 } from './types';
 import { normalizeWhitespace } from './whitespace';
-import {useIsGraphQL, useQuery, useQueryDispatch} from "../../../../Providers";
-import {QueryLanguage, QueryLanguageLookup} from "../../../../Query";
+import {useIsGraphQL, useQuery, useQueryDispatch} from "src/providers";
+import {QueryLanguage, QueryLanguageKey} from "src/components/Query";
 
 export type UseQueryEditorArgs = WriteableEditorProps &
   Pick<UseCopyQueryArgs, 'onCopyQuery'> & {
@@ -156,7 +156,7 @@ export function useQueryEditor(
 
     let mode = '';
     switch (queryLanguage) {
-      case QueryLanguageLookup[QueryLanguage.GraphQL]: {
+      case QueryLanguage.GraphQL as QueryLanguageKey: {
         addons.push(
           import('codemirror-graphql/esm/hint'),
           import('codemirror-graphql/esm/lint'),
@@ -167,21 +167,21 @@ export function useQueryEditor(
         mode = 'graphql';
         break;
       }
-      case QueryLanguageLookup[QueryLanguage.SQL]: {
+      case QueryLanguage.SQL as QueryLanguageKey: {
         addons.push(
           import('../../modes/sql/sql')
         )
         mode = 'text/x-sql';
         break;
       }
-      case QueryLanguageLookup[QueryLanguage.JCR_SQL2]: {
+      case QueryLanguage.JCR_SQL2 as QueryLanguageKey: {
         addons.push(
           import('../../modes/sql/sql')
         )
         mode = 'text/x-jcrsql2';
         break;
       }
-      case QueryLanguageLookup[QueryLanguage.XPATH]: {
+      case QueryLanguage.XPATH as QueryLanguageKey: {
         addons.push(
           import('../../modes/xpath/xpath')
         )

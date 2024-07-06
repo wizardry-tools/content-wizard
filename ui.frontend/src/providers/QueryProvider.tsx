@@ -7,31 +7,33 @@ import {
   useMemo,
   useReducer
 } from "react";
-import {queryBuilderURL} from "../Query";
-import {
-  buildGraphQLURL,
-  buildQueryString,
-  GraphQLAPI,
-  Query,
-  QueryAction,
-  QueryLanguage,
-  QueryLanguageLookup,
-  QueryResponse,
-  Statement
-} from "../Query";
 import {
   DYNAMIC_HEADERS,
   getParams
-} from "../utility";
-import {useStorageContext} from "../IDE/core/src";
+} from "src/utility";
+import {
+  buildGraphQLURL,
+  buildQueryString,
+  endpoints,
+  Query,
+  QueryAction,
+  QueryLanguage, QueryLanguageKey,
+  QueryResponse,
+  Statement
+} from "src/components/Query";
+import {useStorageContext, API} from "src/components/IDE/core/src";
 
 import {
   DateRange,
-  FieldConfigAction, FieldConfigNameKey,
+  FieldConfigAction,
+  FieldConfigNameKey,
   fields as defaultFields,
-  FieldsConfig, InputValue
-} from "../QueryWizard/Components/fields";
-import {PredicateConfig, predicates, predicateTypes} from "../QueryWizard/Components";
+  FieldsConfig,
+  InputValue,
+  PredicateConfig,
+  predicates,
+  predicateTypes
+} from "src/components/QueryWizard/Components";
 
 
 const QueryContext = createContext<Query>(null!);
@@ -44,8 +46,8 @@ const IsGraphQLContext = createContext<boolean>(false);
 
 const defaultSimpleQuery:Query = {
   statement: '', // build inside provider init
-  language: QueryLanguageLookup[QueryLanguage.QueryBuilder],
-  url: queryBuilderURL,
+  language: QueryLanguage.QueryBuilder as QueryLanguageKey,
+  url: endpoints.queryBuilderPath,
   status: '',
   isAdvanced: false,
 }
@@ -71,7 +73,7 @@ export function QueryProvider({ children }:PropsWithChildren) {
    * This boolean will toggle features on/off for the IDE,
    * since the IDE was originally written for GraphQL.
    */
-  const isGraphQL = useMemo(()=>query.language === QueryLanguageLookup.GraphQL,[query.language]);
+  const isGraphQL = useMemo(()=>query.language === QueryLanguage.GraphQL as QueryLanguageKey,[query.language]);
 
   const rebuildQuery = useCallback(() => {
     const statement= generateQuery(fields);
@@ -92,7 +94,7 @@ export function QueryProvider({ children }:PropsWithChildren) {
         query
       };
     }
-    let params = query.language === QueryLanguageLookup[QueryLanguage.GraphQL] ? getParams(query) : DYNAMIC_HEADERS;
+    let params = isGraphQL ? getParams(query) : DYNAMIC_HEADERS;
 
     // flight
     try {
@@ -119,7 +121,7 @@ export function QueryProvider({ children }:PropsWithChildren) {
       status: `Failed to fetch results`,
       query
     };
-  },[]);
+  },[isGraphQL]);
 
 
   useEffect(rebuildQuery,[fields,rebuildQuery]);
@@ -194,7 +196,7 @@ function queryReducer(query:Query, action:QueryAction):Query {
       }
     }
     case 'apiChange': { // 4
-      const api = action.api as GraphQLAPI;
+      const api = action.api as API;
       return {
         ...query,
         api: api,

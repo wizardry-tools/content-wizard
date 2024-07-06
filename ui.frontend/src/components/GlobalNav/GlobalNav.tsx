@@ -7,7 +7,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import {useMemo} from "react";
 import {useTheme} from "@mui/material/styles";
-import {DARK, LIGHT, useThemeDispatch} from "../Providers";
+import {DARK, LIGHT, useThemeDispatch} from "src/providers";
 
 import './GlobalNav.scss';
 

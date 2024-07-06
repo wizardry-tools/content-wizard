@@ -16,7 +16,7 @@ import {
   useState,
 } from 'react';
 import { Combobox } from '@headlessui/react';
-import { MagnifyingGlassIcon } from '../../../../../../icons';
+import { MagnifyingGlassIcon } from 'src/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';
 

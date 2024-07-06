@@ -10,12 +10,12 @@ import {
   useState
 } from "react";
 import {PaletteMode, ThemeProvider as MuiThemeProvider} from "@mui/material";
-import {useStorageContext} from "../IDE/core/src";
+import {useStorageContext} from "src/components/IDE/core/src";
 import {Theme as MuiTheme} from "@mui/material/styles/createTheme";
 import {createTheme} from "@mui/material/styles";
 import {blue} from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";
-import { WizardStorageAPI } from "../IDE/core/src/storage-api";
+import { WizardStorageAPI } from "src/components/IDE/core/src/storage-api";
 
 
 

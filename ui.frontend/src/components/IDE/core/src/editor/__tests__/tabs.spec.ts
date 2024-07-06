@@ -6,7 +6,7 @@ import {
   clearHeadersFromTabs,
   STORAGE_KEY,
 } from '../tabs';
-import {defaultAdvancedQueries, QueryLanguage} from "../../../../../Query";
+import {defaultAdvancedQueries, QueryLanguage} from "src/components/Query";
 
 describe('createTab', () => {
   it('creates with language title', () => {

@@ -1,10 +1,9 @@
+import {ChangeEvent, memo, useCallback, useRef, useState} from "react";
 import {
   FormGrid,
-} from ".";
+} from "./FormGrid";
 import {Paper, TextField} from "@mui/material";
-import {ChangeEvent, memo, useCallback, useRef, useState} from "react";
-import {Field} from ".";
-import {FieldConfig, InputValue} from "./fields";
+import {Field, FieldConfig, InputValue} from "./fields";
 
 export type SimpleInputProps = {
   onChange: (field: FieldConfig)=>void;

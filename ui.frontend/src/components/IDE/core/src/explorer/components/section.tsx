@@ -11,7 +11,7 @@ import {
   ImplementsIcon,
   RootTypeIcon,
   TypeIcon,
-} from '../../../../../../icons';
+} from 'src/icons';
 
 import './section.scss';
 

@@ -15,16 +15,16 @@ import {
   StarFilledIcon,
   StarIcon,
   TrashIcon,
-} from '../../../../../icons';
+} from 'src/icons';
 import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
 
 import './style.scss';
-import {useQueryDispatch} from "../../../../Providers";
+import {useQueryDispatch} from "src/providers";
 import {
   defaultAdvancedQueries,
   QueryLanguageKey
-} from "../../../../Query";
+} from "src/components/Query";
 
 export function History() {
   const { items: all, deleteFromHistory } = useHistoryContext({

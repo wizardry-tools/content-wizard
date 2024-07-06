@@ -8,10 +8,10 @@ import {
 } from 'react';
 import { DocExplorer, useExplorerContext } from './explorer';
 import { History, useHistoryContext } from './history';
-import {DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode} from '../../../../icons';
+import {DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode} from 'src/icons';
 import { useStorageContext } from './storage';
 import { createContextHook, createNullableContext } from './utility/context';
-import {useIsGraphQL} from "../../../Providers";
+import {useIsGraphQL} from "src/providers";
 import { LanguageSelector } from "./language-selector";
 
 export type GraphiQLPlugin = {

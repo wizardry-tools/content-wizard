@@ -1,4 +1,4 @@
-import {WizardAlertProps} from "../../../../Providers";
+import {WizardAlertProps} from "src/providers";
 import {Dispatch} from "react";
 
 /**

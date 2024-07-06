@@ -74,7 +74,6 @@ export {
 export { useTheme } from './theme';
 export { useDragResize } from './utility/resize';
 
-export * from '../../../../icons';
 export * from './ui';
 export * from './toolbar';
 
@@ -118,3 +117,14 @@ export type {
   StorageContextType,
 } from './storage';
 export type { Theme } from './theme';
+
+export * from "./api";
+export type {
+  API,
+  PersistedQuery,
+  PersistedQueryData,
+  PersistedQueryPath,
+  GraphQLEndpointConfig,
+  APIContextType,
+  APIContextProviderProps
+} from "./api";

@@ -6,8 +6,9 @@ import {
   HistoryContextProviderProps, PluginContextProvider,
   PluginContextProviderProps, SchemaContextProvider,
   SchemaContextProviderProps
-} from "../IDE/core/src";
+} from "src/components/IDE/core/src";
 import {useIsGraphQL} from "./QueryProvider";
+import {APIContextProvider} from "src/components/IDE/core/src";
 
 export type IDEProviderProps = EditorContextProviderProps &
   ExecutionContextProviderProps &
@@ -63,31 +64,33 @@ export function IDEProvider(
           validationRules={validationRules}
           variables={variables}
         >
-          <SchemaContextProvider
-            dangerouslyAssumeSchemaIsValid={dangerouslyAssumeSchemaIsValid}
-            fetcher={fetcher}
-            inputValueDeprecation={inputValueDeprecation}
-            introspectionQueryName={introspectionQueryName}
-            onSchemaChange={onSchemaChange}
-            schema={isGraphQL ? schema : null}
-            schemaDescription={schemaDescription}
-          >
-            <ExecutionContextProvider
-              getDefaultFieldNames={getDefaultFieldNames}
+          <APIContextProvider>
+            <SchemaContextProvider
+              dangerouslyAssumeSchemaIsValid={dangerouslyAssumeSchemaIsValid}
               fetcher={fetcher}
-              operationName={operationName}
+              inputValueDeprecation={inputValueDeprecation}
+              introspectionQueryName={introspectionQueryName}
+              onSchemaChange={onSchemaChange}
+              schema={isGraphQL ? schema : null}
+              schemaDescription={schemaDescription}
             >
-              <ExplorerContextProvider>
-                <PluginContextProvider
-                  onTogglePluginVisibility={onTogglePluginVisibility}
-                  plugins={plugins}
-                  visiblePlugin={visiblePlugin}
-                >
-                  {children}
-                </PluginContextProvider>
-              </ExplorerContextProvider>
-            </ExecutionContextProvider>
-          </SchemaContextProvider>
+              <ExecutionContextProvider
+                getDefaultFieldNames={getDefaultFieldNames}
+                fetcher={fetcher}
+                operationName={operationName}
+              >
+                <ExplorerContextProvider>
+                  <PluginContextProvider
+                    onTogglePluginVisibility={onTogglePluginVisibility}
+                    plugins={plugins}
+                    visiblePlugin={visiblePlugin}
+                  >
+                    {children}
+                  </PluginContextProvider>
+                </ExplorerContextProvider>
+              </ExecutionContextProvider>
+            </SchemaContextProvider>
+          </APIContextProvider>
         </EditorContextProvider>
       </HistoryContextProvider>
   );

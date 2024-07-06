@@ -1,13 +1,15 @@
-import { SwipeableViews } from "../../SwipeableViews";
+import { SwipeableViews } from "src/components/SwipeableViews";
 import { TabPanel } from "../TabPanel";
-import { ResultHandler } from "../../Results";
+import { ResultHandler } from "src/components/Results";
 import { useTheme } from "@mui/material/styles";
-import { IDE } from "../../IDE/IDE";
+import { IDE } from "src/components/IDE";
 import Box from "@mui/material/Box";
-import QueryWizard from "../../QueryWizard/QueryWizard";
-import { ViewsProps } from "./index";
+import { QueryWizard } from "src/components/QueryWizard";
 
-
+export type ViewsProps = {
+  tabValue: number,
+  onTabPanelSelect: (index: number)=>void;
+}
 
 export function Views({tabValue, onTabPanelSelect}: ViewsProps) {
   const theme = useTheme();

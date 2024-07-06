@@ -5,7 +5,7 @@ import {LocalizationProvider, DateTimePicker, PickersDay} from "@mui/x-date-pick
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {
   FormGrid
-} from ".";
+} from "./FormGrid";
 import {memo, useCallback, useState} from "react";
 import {DateRange, DayTime, FieldConfig} from "./fields";
 import {SimpleInputProps} from "./SimpleInput";

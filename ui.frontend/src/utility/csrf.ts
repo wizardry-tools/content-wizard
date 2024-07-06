@@ -1,4 +1,4 @@
-import {DYNAMIC_HEADERS} from ".";
+import {DYNAMIC_HEADERS} from "./http";
 
 export type CSRFToken = Awaited<ReturnType<typeof getCsrfToken>>;
 

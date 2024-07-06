@@ -1,6 +1,5 @@
-import {ContentType, ContentTypeMap} from "../../Query/ContentTypes";
-import {TargetType, TargetTypeLookup, TargetTypes} from "../../Query/TargetTypes";
 import {DateRange, FieldConfigNameKey, FieldsConfig, InputValue} from "./fields";
+import {ContentType, ContentTypeMap, TargetType, TargetTypeLookup, TargetTypes} from "src/components/Query";
 
 export const predicateTypes = {
   fulltext: "fulltext",

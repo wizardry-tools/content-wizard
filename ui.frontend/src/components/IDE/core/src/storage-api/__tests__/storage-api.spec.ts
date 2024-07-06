@@ -1,4 +1,4 @@
-import { WizardStorageAPI } from '../.';
+import { WizardStorageAPI } from '../storage-api';
 
 const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
 

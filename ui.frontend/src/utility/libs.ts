@@ -19,15 +19,37 @@ import type {
   CreateFetcherOptions,
 } from "@graphiql/toolkit/src/create-fetcher/types";
 import { Observable } from "@graphiql/toolkit";
-import { setAuthorization } from "./AEMHeadlessClient";
 import {
   CustomCreateFetcherOptions,
   getCsrfToken,
-} from ".";
-import {
-  buildQueryString
-} from "../Query";
+} from "./index";
+import {FetcherReturnType} from "@graphiql/toolkit/src/create-fetcher/types";
 
+// environment variable for configuring the headless client
+const {
+  //REACT_APP_HOST_URI,
+  //REACT_APP_GRAPHQL_ENDPOINT,
+  //REACT_APP_USE_PROXY,
+  REACT_APP_AUTH_METHOD,
+  REACT_APP_DEV_TOKEN,
+  REACT_APP_BASIC_AUTH_USER,
+  REACT_APP_BASIC_AUTH_PASS,
+} = process.env;
+
+//const serviceURL = REACT_APP_USE_PROXY === "true" ? "/" : REACT_APP_HOST_URI;
+
+// Get authorization based on environment variables
+// authorization is not needed when connecting to Publish environments
+export const setAuthorization = (): [string|undefined,string|undefined] | string | undefined => {
+  if (REACT_APP_AUTH_METHOD === "basic") {
+    return [REACT_APP_BASIC_AUTH_USER, REACT_APP_BASIC_AUTH_PASS];
+  } else if (REACT_APP_AUTH_METHOD === "dev-token") {
+    return REACT_APP_DEV_TOKEN;
+  } else {
+    // no authentication set
+    return;
+  }
+};
 
 
 const errorHasCode = (err: unknown): err is { code: string } => {
@@ -56,6 +78,21 @@ export const isSubscriptionWithName = (
   return isSubscription;
 };
 
+const getRequestInit = async (options: CustomCreateFetcherOptions, fetcherOpts?: FetcherOpts): Promise<RequestInit> => {
+  const token = await getCsrfToken();
+  return {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      credentials: 'same-origin',
+      'CSRF-Token': token,
+      'Authorization': (setAuthorization() || '') as string,
+      "Accept": "application/json",
+      ...options.headers,
+      ...fetcherOpts?.headers,
+    },
+  }
+}
 
 /**
  * This GET fetcher isn't used by GraphQL, because GraphQL needs POST.
@@ -66,27 +103,28 @@ export const isSubscriptionWithName = (
  * @param options
  * @param httpFetch
  */
-export const createSimpleGetFetcher =
+export const createGetFetcher =
   (options: CustomCreateFetcherOptions, httpFetch: typeof fetch): Fetcher =>
     async (_fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
-      if (!options.query || typeof options.query === 'undefined') {
-        return '';
+      const init:RequestInit = await getRequestInit(options, fetcherOpts);
+      const data = await httpFetch(options.url, init);
+      const json = await data.json();
+      if (options.onResults && typeof options.onResults === 'function') {
+        options.onResults(json);
       }
-      const queryString = buildQueryString(options.query);
-      const token = await getCsrfToken();
-      const init:RequestInit = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          credentials: 'same-origin',
-          'CSRF-Token': token,
-          'Authorization': (setAuthorization() || '') as string,
-          "Accept": "application/json",
-          ...options.headers,
-          ...fetcherOpts?.headers,
-        },
-      };
-      const data = await httpFetch(options.url + queryString, init);
+      return json;
+    };
+
+export type SimpleFetcher = (
+  opts?: FetcherOpts,
+) => FetcherReturnType;
+
+export const createSimpleGetFetcher =
+  (options: CustomCreateFetcherOptions, httpFetch: typeof fetch): SimpleFetcher =>
+    async (fetcherOpts?: FetcherOpts) => {
+
+      const init:RequestInit = await getRequestInit(options, fetcherOpts);
+      const data = await httpFetch(options.url, init);
       const json = await data.json();
       if (options.onResults && typeof options.onResults === 'function') {
         options.onResults(json);

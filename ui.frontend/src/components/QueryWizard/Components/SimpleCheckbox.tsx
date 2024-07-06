@@ -1,7 +1,7 @@
 import {Checkbox, FormControlLabel} from "@mui/material";
 import {
   FormGrid
-} from ".";
+} from "./FormGrid";
 import {ChangeEvent, memo, useCallback} from "react";
 import {SimpleInputProps} from "./SimpleInput";
 

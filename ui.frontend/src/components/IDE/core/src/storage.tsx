@@ -1,9 +1,8 @@
-
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import { createContextHook, createNullableContext } from './utility/context';
 import {WizardStorageAPI, WizardStorage } from "./storage-api";
-import {useAlertDispatcher} from "../../../Providers";
+import {useAlertDispatcher} from "src/providers";
 
 export type StorageContextType = WizardStorageAPI;
 

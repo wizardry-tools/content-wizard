@@ -1,7 +1,7 @@
 import {AppBar, Tabs, Tab} from "@mui/material";
-import {a11yProps} from "../../utility";
-import {useResults} from "../../Providers";
-import {MagicWand, ProgrammingCode, TableIcon} from "../../../icons";
+import {a11yProps} from "src/utility";
+import {useResults} from "src/providers";
+import {MagicWand, ProgrammingCode, TableIcon} from "src/icons";
 
 import "./Bar.scss";
 

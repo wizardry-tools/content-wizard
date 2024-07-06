@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import {
   FormGrid
-} from ".";
+} from "./FormGrid";
 import {
   memo,
   useCallback,

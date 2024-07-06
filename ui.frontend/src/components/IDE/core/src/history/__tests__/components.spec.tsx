@@ -4,7 +4,7 @@ import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
 import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
-import {useQueryDispatch} from "../../../../../Providers";
+import {useQueryDispatch} from "src/providers";
 
 jest.mock('../../editor', () => {
   const mockedSetQueryEditor = jest.fn();
@@ -20,7 +20,7 @@ jest.mock('../../editor', () => {
     },
   };
 });
-jest.mock('../../../../../Providers',() => {
+jest.mock('src/providers',() => {
   const mockQueryDispatcher = jest.fn(()=>{});
   return {
     useQueryDispatch() {

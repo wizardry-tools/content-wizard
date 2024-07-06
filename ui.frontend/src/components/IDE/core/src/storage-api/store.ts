@@ -1,8 +1,8 @@
 
 import {
   WizardStorageAPI
-} from ".";
-import {QueryLanguageKey, Statement} from "../../../../Query";
+} from "./storage-api";
+import {QueryLanguageKey, Statement} from "src/components/Query";
 
 export type WizardStoreItem = {
   query?: Statement;

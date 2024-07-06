@@ -1,4 +1,5 @@
-import { WizardStore, WizardStorageAPI } from '../.';
+import { WizardStorageAPI } from '../storage-api';
+import { WizardStore } from '../store';
 
 class StorageMock {
   shouldThrow: () => boolean;
@@ -48,6 +49,7 @@ describe('QueryStore', () => {
 
     it('will fail silently on quota error', () => {
       let i = 0;
+      // @ts-ignore
       const store = new WizardStore('normal', new StorageMock(() => i > 4));
 
       for (; i < 10; i++) {
@@ -79,6 +81,7 @@ describe('QueryStore', () => {
       let retryCounter = 0;
       const store = new WizardStore(
         'normal',
+        // @ts-ignore
         new StorageMock(() => {
           retryCounter++;
           return shouldThrow();
@@ -111,6 +114,7 @@ describe('QueryStore', () => {
       let retryCounter = 0;
       const store = new WizardStore(
         'normal',
+        // @ts-ignore
         new StorageMock(() => {
           retryCounter++;
           return shouldThrow();

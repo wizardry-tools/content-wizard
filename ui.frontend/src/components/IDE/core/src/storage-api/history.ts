@@ -2,15 +2,14 @@ import { parse } from 'graphql';
 
 import {
   WizardStore,
-  WizardStoreItem,
-  WizardStorageAPI
-} from '.';
+  WizardStoreItem
+} from './store';
+import { WizardStorageAPI } from "./storage-api"
 import {
   QueryLanguage,
-  QueryLanguageLookup,
   QueryLanguageKey,
   Statement
-} from "../../../../Query";
+} from "src/components/Query";
 
 
 const MAX_QUERY_SIZE = 100000;
@@ -46,7 +45,7 @@ export class WizardHistoryStore {
       return false;
     }
 
-    if (language === QueryLanguageLookup[QueryLanguage.GraphQL]) {
+    if (language === QueryLanguage.GraphQL as QueryLanguageKey) {
       try {
         parse(query);
       } catch {

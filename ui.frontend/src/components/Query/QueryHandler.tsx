@@ -1,17 +1,17 @@
-import { QueryButton } from "../QueryWizard/Components";
-import {QueryLanguage, QueryLanguageLookup} from ".";
+import { QueryButton } from "src/components/QueryWizard/Components";
+import {QueryLanguage, QueryLanguageKey} from "./QueryType";
 import {
   useQuery,
   useQueryDispatch,
   useQueryRunner,
   useResultsDispatch
-} from "../Providers";
+} from "src/providers";
 
 type QueryHandlerProps = {
   onResults: (index: number)=>void;
 }
 
-export default function QueryHandler({onResults}:QueryHandlerProps) {
+export function QueryHandler({onResults}:QueryHandlerProps) {
 
   const query = useQuery();
   const queryDispatch = useQueryDispatch();
@@ -22,7 +22,7 @@ export default function QueryHandler({onResults}:QueryHandlerProps) {
     return (!query ||
       !query.statement ||
       !query.language ||
-      (query.language === QueryLanguageLookup[QueryLanguage.GraphQL] && !query.api))
+      (query.language === QueryLanguage.GraphQL as QueryLanguageKey && !query.api))
   }
 
   const doQuery = () => {

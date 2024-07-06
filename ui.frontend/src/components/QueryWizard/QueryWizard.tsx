@@ -1,12 +1,12 @@
 import {Accordion as AccordionTab, AccordionSummary, Stack, Paper, Typography, Theme} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {ElementType, ReactNode, SyntheticEvent, useCallback, useMemo, useState} from "react";
-import {useFields, useFieldDispatch, useQuery} from "../Providers";
+import {useFields, useFieldDispatch, useQuery} from "src/providers";
 import {fieldCategories, fieldCategoryTypes, FieldConfig} from "./Components";
-import {Tooltip, WizardStatementEditor} from "../IDE/core/src";
+import {Tooltip, WizardStatementEditor} from "src/components/IDE/core/src";
 import { FormGrid } from "./Components";
-import {ViewsProps} from "../ContentWizard/Views";
-import QueryHandler from "../Query/QueryHandler";
+import {ViewsProps} from "src/components/ContentWizard/Views";
+import {QueryHandler} from "src/components/Query";
 
 import "./QueryWizard.scss";
 
@@ -22,7 +22,7 @@ const buttonStackStyles = (_theme: Theme) => {
 
 export type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
 
-export default function QueryWizard({onTabPanelSelect}: QueryWizardProps) {
+export function QueryWizard({onTabPanelSelect}: QueryWizardProps) {
 
   const fields = useFields();
   const targetingFields = useMemo(()=>{
