@@ -23,22 +23,19 @@ export const AEM_GRAPHQL_ACTIONS = {
 /** Language Support */
 export const QueryLanguage = {
   SQL: 'SQL',
-  JCR_SQL2: 'JCR SQL2',
+  JCR_SQL2: 'JCR_SQL2',
   XPATH: 'XPATH',
   QueryBuilder: 'QueryBuilder',
   GraphQL: 'GraphQL'
 } as const;
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export type QueryLanguage = {
-  SQL: 'SQL';
-  JCR_SQL2: 'JCR SQL2';
-  XPATH: 'XPATH';
-  QueryBuilder: 'QueryBuilder';
-  GraphQL: 'GraphQL';
-}
 export type QueryLanguageKey = keyof typeof QueryLanguage;
-export type QueryLanguageType = typeof QueryLanguage[QueryLanguageKey];
+export const QueryLanguageLabels: Record<QueryLanguageKey, string> = {
+  SQL: 'SQL',
+  JCR_SQL2: 'JCR SQL2',
+  XPATH: 'XPATH',
+  QueryBuilder: 'QueryBuilder',
+  GraphQL: 'GraphQL'
+}
 
 
 /** Query Support */
@@ -70,7 +67,7 @@ export function buildGraphQLURL(endpoint: string): string {
 }
 
 export function buildQueryString(query: Query): string {
-  if (query.language === QueryLanguage.GraphQL as QueryLanguageKey) {
+  if (query.language === QueryLanguage.GraphQL) {
     if (query.url) {
       return query.url;
     }
@@ -88,7 +85,7 @@ export function buildQueryString(query: Query): string {
 
 export const defaultAdvancedQueries: QueryMap = {
   GraphQL: {
-    language: QueryLanguage.GraphQL as QueryLanguageKey,
+    language: QueryLanguage.GraphQL,
     url: buildGraphQLURL("we-retail"),
     statement:
       `{
@@ -111,7 +108,7 @@ export const defaultAdvancedQueries: QueryMap = {
     isAdvanced: true
   },
   SQL: {
-    language: QueryLanguage.SQL as QueryLanguageKey,
+    language: QueryLanguage.SQL,
     statement:
       `select * from nt:unstructured as node
 where node.[sling:resourceType] like 'weretail/components/content/teaser'`,
@@ -119,7 +116,7 @@ where node.[sling:resourceType] like 'weretail/components/content/teaser'`,
     isAdvanced: true
   },
   JCR_SQL2: {
-    language: QueryLanguage.JCR_SQL2 as QueryLanguageKey,
+    language: QueryLanguage.JCR_SQL2,
     statement:
       `SELECT * FROM [nt:unstructured] AS node
 WHERE ISDESCENDANTNODE(node, "/content/we-retail")
@@ -128,7 +125,7 @@ AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/cont
     isAdvanced: true
   },
   XPATH: {
-    language: QueryLanguage.XPATH as QueryLanguageKey,
+    language: QueryLanguage.XPATH,
     statement:
       `/jcr:root/content/we-retail//element(*, nt:unstructured)
 [
@@ -138,7 +135,7 @@ AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/cont
     isAdvanced: true
   },
   QueryBuilder: {
-    language: QueryLanguage.QueryBuilder as QueryLanguageKey,
+    language: QueryLanguage.QueryBuilder,
     statement:
       `path=/content/we-retail
 type=nt:unstructured

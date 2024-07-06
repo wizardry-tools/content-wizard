@@ -1,5 +1,5 @@
 import { QueryButton } from "src/components/QueryWizard/Components";
-import {QueryLanguage, QueryLanguageKey} from "./QueryType";
+import {QueryLanguage} from "./QueryType";
 import {
   useQuery,
   useQueryDispatch,
@@ -22,7 +22,7 @@ export function QueryHandler({onResults}:QueryHandlerProps) {
     return (!query ||
       !query.statement ||
       !query.language ||
-      (query.language === QueryLanguage.GraphQL as QueryLanguageKey && !query.api))
+      (query.language === QueryLanguage.GraphQL && !query.api))
   }
 
   const doQuery = () => {

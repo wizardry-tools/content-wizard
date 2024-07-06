@@ -1,7 +1,7 @@
 import { ResultTable } from "./ResultTable";
 import {Paper, TextField} from "@mui/material";
 import { FormGrid } from "src/components/QueryWizard/Components";
-import {QueryLanguage, QueryLanguageKey} from "src/components/Query";
+import {QueryLanguage} from "src/components/Query";
 import {useResults, useQuery} from "src/providers";
 
 export function ResultHandler() {
@@ -10,7 +10,7 @@ export function ResultHandler() {
 
   const resultTable = () => {
     if (results) {
-      if (typeof results !== 'string' && query.language !== QueryLanguage.GraphQL as QueryLanguageKey) {
+      if (typeof results !== 'string' && query.language !== QueryLanguage.GraphQL) {
         return (
           <ResultTable/>
         );

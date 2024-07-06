@@ -45,7 +45,7 @@ export class WizardHistoryStore {
       return false;
     }
 
-    if (language === QueryLanguage.GraphQL as QueryLanguageKey) {
+    if (language === QueryLanguage.GraphQL) {
       try {
         parse(query);
       } catch {

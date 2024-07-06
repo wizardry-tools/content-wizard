@@ -5,16 +5,15 @@ import 'react-app-polyfill/stable';
 import 'react-app-polyfill/ie9';
 import 'custom-event-polyfill';
 
-import {StrictMode} from 'react';
+import { StrictMode } from 'react';
 import App from './App';
 import './index.scss';
 
-
-import {Container, createRoot} from 'react-dom/client';
+import { Container, createRoot } from 'react-dom/client';
 const root = createRoot(document.getElementById('app-root') as Container);
 
 root.render(
   <StrictMode>
-    <App/>
-  </StrictMode>
-)
+    <App />
+  </StrictMode>,
+);

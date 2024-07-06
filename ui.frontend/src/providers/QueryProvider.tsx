@@ -46,7 +46,7 @@ const IsGraphQLContext = createContext<boolean>(false);
 
 const defaultSimpleQuery:Query = {
   statement: '', // build inside provider init
-  language: QueryLanguage.QueryBuilder as QueryLanguageKey,
+  language: QueryLanguage.QueryBuilder,
   url: endpoints.queryBuilderPath,
   status: '',
   isAdvanced: false,

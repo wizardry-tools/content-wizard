@@ -18,7 +18,7 @@ import {
 } from "src/utility";
 
 import "./ContentWizard.scss";
-import {buildQueryString, Query, QueryLanguage, QueryLanguageKey} from "src/components/Query";
+import {buildQueryString, Query, QueryLanguage} from "src/components/Query";
 
 
 export function ContentWizard() {
@@ -83,11 +83,11 @@ function ContentWizardInterface() {
 function createQueryFetcher(query: Query, onResults: (data: any)=>void): Fetcher {
   // only append queryString if it's not GraphQL
   let options:CustomCreateFetcherOptions = {
-    url: query.url + (query.language !== QueryLanguage.GraphQL as QueryLanguageKey ? buildQueryString(query): ''),
+    url: query.url + (query.language !== QueryLanguage.GraphQL ? buildQueryString(query): ''),
     onResults: onResults
   }
   switch (query.language) {
-    case QueryLanguage.GraphQL as QueryLanguageKey: {
+    case QueryLanguage.GraphQL: {
       return createGraphQLFetcher(options);
     }
     default: {

@@ -51,7 +51,7 @@ import {
 } from './types';
 import { normalizeWhitespace } from './whitespace';
 import {useIsGraphQL, useQuery, useQueryDispatch} from "src/providers";
-import {QueryLanguage, QueryLanguageKey} from "src/components/Query";
+import {QueryLanguage} from "src/components/Query";
 
 export type UseQueryEditorArgs = WriteableEditorProps &
   Pick<UseCopyQueryArgs, 'onCopyQuery'> & {
@@ -156,7 +156,7 @@ export function useQueryEditor(
 
     let mode = '';
     switch (queryLanguage) {
-      case QueryLanguage.GraphQL as QueryLanguageKey: {
+      case QueryLanguage.GraphQL: {
         addons.push(
           import('codemirror-graphql/esm/hint'),
           import('codemirror-graphql/esm/lint'),
@@ -167,21 +167,21 @@ export function useQueryEditor(
         mode = 'graphql';
         break;
       }
-      case QueryLanguage.SQL as QueryLanguageKey: {
+      case QueryLanguage.SQL: {
         addons.push(
           import('../../modes/sql/sql')
         )
         mode = 'text/x-sql';
         break;
       }
-      case QueryLanguage.JCR_SQL2 as QueryLanguageKey: {
+      case QueryLanguage.JCR_SQL2: {
         addons.push(
           import('../../modes/sql/sql')
         )
         mode = 'text/x-jcrsql2';
         break;
       }
-      case QueryLanguage.XPATH as QueryLanguageKey: {
+      case QueryLanguage.XPATH: {
         addons.push(
           import('../../modes/xpath/xpath')
         )

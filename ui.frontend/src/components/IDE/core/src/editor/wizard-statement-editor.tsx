@@ -9,7 +9,7 @@ import { useEditorContext } from './context';
 import {useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue} from './hooks';
 import {CodeMirrorType, CommonEditorProps} from './types';
 import {useQuery} from "src/providers";
-import {QueryLanguage, QueryLanguageKey} from "src/components/Query";
+import {QueryLanguage} from "src/components/Query";
 
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {
@@ -18,7 +18,7 @@ export type UseWizardStatementEditorArgs = CommonEditorProps & {
 
 const getStatement = (language: string, statement: string) => {
   // only use the statement if the language is QueryBuilder
-  if (language === QueryLanguage.QueryBuilder as QueryLanguageKey) {
+  if (language === QueryLanguage.QueryBuilder) {
     return statement;
   }
   return '';

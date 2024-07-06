@@ -3,6 +3,7 @@ import {
   defaultAdvancedQueries,
   QueryLanguage,
   QueryLanguageKey,
+  QueryLanguageLabels,
   Statement
 } from "src/components/Query";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
@@ -105,7 +106,7 @@ export function LanguageSelector() {
             required
           >
             {Object.values(QueryLanguage).map((lang)=>
-              <MenuItem key={QueryLanguage[lang as QueryLanguageKey]} value={QueryLanguage[lang as QueryLanguageKey]} >{lang}</MenuItem>
+              <MenuItem key={QueryLanguage[lang]} value={QueryLanguage[lang]} >{QueryLanguageLabels[lang]}</MenuItem>
             )}
           </Select>
         </FormControl>
@@ -139,7 +140,7 @@ export function LanguageSelector() {
       <LanguageSelectorHeader/>
       <div className="wizard-language-selector-content">
         <QueryLanguageSelector/>
-        {language === QueryLanguage.GraphQL as QueryLanguageKey && (
+        {language === QueryLanguage.GraphQL && (
           <GraphQLForm/>
         )}
       </div>
