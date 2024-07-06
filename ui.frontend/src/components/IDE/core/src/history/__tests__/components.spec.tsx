@@ -4,7 +4,7 @@ import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
 import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
-import {useQueryDispatch} from "src/providers";
+import { useQueryDispatch } from 'src/providers';
 
 jest.mock('../../editor', () => {
   const mockedSetQueryEditor = jest.fn();
@@ -20,12 +20,12 @@ jest.mock('../../editor', () => {
     },
   };
 });
-jest.mock('src/providers',() => {
-  const mockQueryDispatcher = jest.fn(()=>{});
+jest.mock('src/providers', () => {
+  const mockQueryDispatcher = jest.fn(() => {});
   return {
     useQueryDispatch() {
       return mockQueryDispatcher;
-    }
+    },
   };
 });
 
@@ -64,9 +64,7 @@ const baseMockProps: QueryHistoryItemProps = {
   },
 };
 
-function getMockProps(
-  customProps?: Partial<QueryHistoryItemProps>,
-): QueryHistoryItemProps {
+function getMockProps(customProps?: Partial<QueryHistoryItemProps>): QueryHistoryItemProps {
   return {
     ...baseMockProps,
     ...customProps,
@@ -75,12 +73,9 @@ function getMockProps(
 }
 
 describe('HistoryItem', () => {
-  const mockedSetQueryEditor = useEditorContext()?.queryEditor
-    ?.setValue as jest.Mock;
-  const mockedSetVariableEditor = useEditorContext()?.variableEditor
-    ?.setValue as jest.Mock;
-  const mockedSetHeaderEditor = useEditorContext()?.headerEditor
-    ?.setValue as jest.Mock;
+  const mockedSetQueryEditor = useEditorContext()?.queryEditor?.setValue as jest.Mock;
+  const mockedSetVariableEditor = useEditorContext()?.variableEditor?.setValue as jest.Mock;
+  const mockedSetHeaderEditor = useEditorContext()?.headerEditor?.setValue as jest.Mock;
   const mockedQueryDispatcher = useQueryDispatch() as jest.Mock;
   beforeEach(() => {
     mockedSetQueryEditor.mockClear();
@@ -92,51 +87,33 @@ describe('HistoryItem', () => {
     const otherMockProps = { item: { operationName: mockOperationName } };
     const props = getMockProps(otherMockProps);
     const { container } = render(<QueryHistoryItemWithContext {...props} />);
-    expect(
-      container.querySelector('button.wizard-history-item-label')!
-        .textContent,
-    ).toBe(mockOperationName);
+    expect(container.querySelector('button.wizard-history-item-label')!.textContent).toBe(mockOperationName);
   });
 
   it('renders a string version of the query if label or operation name are not provided', () => {
-    const { container } = render(
-      <QueryHistoryItemWithContext {...getMockProps()} />,
-    );
-    expect(
-      container.querySelector('button.wizard-history-item-label')!
-        .textContent,
-    ).toBe(formatQuery(mockQuery));
+    const { container } = render(<QueryHistoryItemWithContext {...getMockProps()} />);
+    expect(container.querySelector('button.wizard-history-item-label')!.textContent).toBe(formatQuery(mockQuery));
   });
 
   it('selects the item when history label button is clicked', () => {
     const otherMockProps = { item: { operationName: mockOperationName } };
     const mockProps = getMockProps(otherMockProps);
-    const { container } = render(
-      <QueryHistoryItemWithContext {...mockProps} />,
-    );
-    fireEvent.click(
-      container.querySelector('button.wizard-history-item-label')!,
-    );
+    const { container } = render(<QueryHistoryItemWithContext {...mockProps} />);
+    fireEvent.click(container.querySelector('button.wizard-history-item-label')!);
     expect(mockedQueryDispatcher).toHaveBeenCalledTimes(1);
     expect(mockedSetQueryEditor).toHaveBeenCalledTimes(0);
     //expect(mockedSetQueryEditor).toHaveBeenCalledWith(mockProps.item.query);
     expect(mockedSetVariableEditor).toHaveBeenCalledTimes(1);
-    expect(mockedSetVariableEditor).toHaveBeenCalledWith(
-      mockProps.item.variables,
-    );
+    expect(mockedSetVariableEditor).toHaveBeenCalledWith(mockProps.item.variables);
     expect(mockedSetHeaderEditor).toHaveBeenCalledTimes(1);
     expect(mockedSetHeaderEditor).toHaveBeenCalledWith(mockProps.item.headers);
   });
 
   it('renders label input if the edit label button is clicked', () => {
-    const { container, getByLabelText } = render(
-      <QueryHistoryItemWithContext {...getMockProps()} />,
-    );
+    const { container, getByLabelText } = render(<QueryHistoryItemWithContext {...getMockProps()} />);
     fireEvent.click(getByLabelText('Edit label'));
     expect(container.querySelectorAll('li.editable').length).toBe(1);
     expect(container.querySelectorAll('input').length).toBe(1);
-    expect(
-      container.querySelectorAll('button.wizard-history-item-label').length,
-    ).toBe(0);
+    expect(container.querySelectorAll('button.wizard-history-item-label').length).toBe(0);
   });
 });

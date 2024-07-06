@@ -1,10 +1,10 @@
-import {WizardStorageAPI} from '../storage-api';
-import {Dispatch, useCallback, useMemo} from 'react';
+import { WizardStorageAPI } from '../storage-api';
+import { Dispatch, useCallback, useMemo } from 'react';
 
 import debounce from '../utility/debounce';
-import {CodeMirrorEditorWithOperationFacts} from './context';
-import {CodeMirrorEditor} from './types';
-import {defaultAdvancedQueries, Query, QueryAction, QueryLanguage,} from "src/components/Query";
+import { CodeMirrorEditorWithOperationFacts } from './context';
+import { CodeMirrorEditor } from './types';
+import { defaultAdvancedQueries, Query, QueryAction, QueryLanguage } from 'src/components/Query';
 
 export type TabDefinition = {
   /**
@@ -188,7 +188,7 @@ function hasStringOrNullKey(obj: Record<string, any>, key: string) {
 }
 
 function hasQueryOrNullKey(obj: Record<string, any>, key: string) {
-  return key in obj && (typeof obj[key] === 'object' && obj[key] !== null && !!(obj[key] as Query));
+  return key in obj && typeof obj[key] === 'object' && obj[key] !== null && !!(obj[key] as Query);
 }
 
 export function useSynchronizeActiveTabValues({
@@ -205,7 +205,7 @@ export function useSynchronizeActiveTabValues({
   query: Query;
 }) {
   return useCallback<(state: TabsState) => TabsState>(
-    state => {
+    (state) => {
       const variables = variableEditor?.getValue() ?? null;
       const headers = headerEditor?.getValue() ?? null;
       const operationName = queryEditor?.operationName ?? null;
@@ -222,16 +222,9 @@ export function useSynchronizeActiveTabValues({
   );
 }
 
-export function serializeTabState(
-  tabState: TabsState,
-  shouldPersistHeaders = false,
-) {
+export function serializeTabState(tabState: TabsState, shouldPersistHeaders = false) {
   return JSON.stringify(tabState, (key, value) =>
-    key === 'hash' ||
-    key === 'response' ||
-    (!shouldPersistHeaders && key === 'headers')
-      ? null
-      : value,
+    key === 'hash' || key === 'response' || (!shouldPersistHeaders && key === 'headers') ? null : value,
   );
 }
 
@@ -261,7 +254,7 @@ export function useSetEditorValues({
   queryDispatcher,
   variableEditor,
   headerEditor,
-  responseEditor
+  responseEditor,
 }: {
   queryDispatcher: Dispatch<QueryAction> | null;
   variableEditor: CodeMirrorEditor | null;
@@ -284,8 +277,8 @@ export function useSetEditorValues({
       if (queryDispatcher) {
         queryDispatcher({
           ...query,
-          type: 'replaceQuery'
-        })
+          type: 'replaceQuery',
+        });
       }
       //queryEditor?.setValue(query.statement ?? '');
       variableEditor?.setValue(variables ?? '');
@@ -296,15 +289,15 @@ export function useSetEditorValues({
   );
 }
 
-export function createTab({
-  query,
-  variables = null,
-  headers = null,
-}: TabDefinition): TabState {
+export function createTab({ query, variables = null, headers = null }: TabDefinition): TabState {
   return {
     id: guid(),
     hash: hashFromTabContents({ query, variables, headers }),
-    title: query.label || ((query?.statement && fuzzyExtractOperationName(query.statement)) || QueryLanguage[query.language]) || DEFAULT_TITLE,
+    title:
+      query.label ||
+      (query?.statement && fuzzyExtractOperationName(query.statement)) ||
+      QueryLanguage[query.language] ||
+      DEFAULT_TITLE,
     query,
     variables,
     headers,
@@ -330,10 +323,8 @@ export function setPropertiesInActiveTab(
         title:
           newTab.query?.label ||
           newTab.operationName ||
-          (newTab.query?.statement
-            ? fuzzyExtractOperationName(newTab.query.statement)
-            : undefined) ||
-          QueryLanguage[newTab.query.language]  ||
+          (newTab.query?.statement ? fuzzyExtractOperationName(newTab.query.statement) : undefined) ||
+          QueryLanguage[newTab.query.language] ||
           DEFAULT_TITLE,
       };
     }),
@@ -350,11 +341,7 @@ function guid(): string {
   return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 }
 
-function hashFromTabContents(args: {
-  query: Query;
-  variables?: string | null;
-  headers?: string | null;
-}): string {
+function hashFromTabContents(args: { query: Query; variables?: string | null; headers?: string | null }): string {
   return [args.query.language ?? '', args.query.statement ?? '', args.variables ?? '', args.headers ?? ''].join('|');
 }
 
@@ -372,9 +359,7 @@ export function clearHeadersFromTabs(storage: WizardStorageAPI | null) {
     const parsedTabs = JSON.parse(persistedTabs);
     storage?.set(
       STORAGE_KEY,
-      JSON.stringify(parsedTabs, (key, value) =>
-        key === 'headers' ? null : value,
-      ),
+      JSON.stringify(parsedTabs, (key, value) => (key === 'headers' ? null : value)),
     );
   }
 }

@@ -25,11 +25,7 @@ export {
   useHeadersEditorState,
   VariableEditor,
 } from './editor';
-export {
-  ExecutionContext,
-  ExecutionContextProvider,
-  useExecutionContext,
-} from './execution';
+export { ExecutionContext, ExecutionContextProvider, useExecutionContext } from './execution';
 export {
   Argument,
   DefaultValue,
@@ -47,30 +43,11 @@ export {
   TypeLink,
   useExplorerContext,
 } from './explorer';
-export {
-  History,
-  HistoryContext,
-  HistoryContextProvider,
-  useHistoryContext,
-} from './history';
-export {
-  DOC_EXPLORER_PLUGIN,
-  HISTORY_PLUGIN,
-  PluginContext,
-  PluginContextProvider,
-  usePluginContext,
-} from './plugin';
+export { History, HistoryContext, HistoryContextProvider, useHistoryContext } from './history';
+export { DOC_EXPLORER_PLUGIN, HISTORY_PLUGIN, PluginContext, PluginContextProvider, usePluginContext } from './plugin';
 export { GraphiQLProvider } from './provider';
-export {
-  SchemaContext,
-  SchemaContextProvider,
-  useSchemaContext,
-} from './schema';
-export {
-  StorageContext,
-  StorageContextProvider,
-  useStorageContext,
-} from './storage';
+export { SchemaContext, SchemaContextProvider, useSchemaContext } from './schema';
+export { StorageContext, StorageContextProvider, useStorageContext } from './storage';
 export { useTheme } from './theme';
 export { useDragResize } from './utility/resize';
 
@@ -90,10 +67,7 @@ export type {
   UseVariableEditorArgs,
   WriteableEditorProps,
 } from './editor';
-export type {
-  ExecutionContextProviderProps,
-  ExecutionContextType,
-} from './execution';
+export type { ExecutionContextProviderProps, ExecutionContextType } from './execution';
 export type {
   ExplorerContextProviderProps,
   ExplorerContextType,
@@ -101,24 +75,14 @@ export type {
   ExplorerNavStack,
   ExplorerNavStackItem,
 } from './explorer';
-export type {
-  HistoryContextProviderProps,
-  HistoryContextType,
-} from './history';
-export type {
-  GraphiQLPlugin,
-  PluginContextType,
-  PluginContextProviderProps,
-} from './plugin';
+export type { HistoryContextProviderProps, HistoryContextType } from './history';
+export type { GraphiQLPlugin, PluginContextType, PluginContextProviderProps } from './plugin';
 export type { GraphiQLProviderProps } from './provider';
 export type { SchemaContextProviderProps, SchemaContextType } from './schema';
-export type {
-  StorageContextProviderProps,
-  StorageContextType,
-} from './storage';
+export type { StorageContextProviderProps, StorageContextType } from './storage';
 export type { Theme } from './theme';
 
-export * from "./api";
+export * from './api';
 export type {
   API,
   PersistedQuery,
@@ -126,5 +90,5 @@ export type {
   PersistedQueryPath,
   GraphQLEndpointConfig,
   APIContextType,
-  APIContextProviderProps
-} from "./api";
+  APIContextProviderProps,
+} from './api';

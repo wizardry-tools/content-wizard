@@ -1,27 +1,27 @@
-import {AppBar, Tabs, Tab} from "@mui/material";
-import {a11yProps} from "src/utility";
-import {useResults} from "src/providers";
-import {MagicWand, ProgrammingCode, TableIcon} from "src/icons";
+import { AppBar, Tabs, Tab } from '@mui/material';
+import { a11yProps } from 'src/utility';
+import { useResults } from 'src/providers';
+import { MagicWand, ProgrammingCode, TableIcon } from 'src/icons';
 
-import "./Bar.scss";
+import './Bar.scss';
 
 type QueryWizardBarProps = {
   tabValue: number;
-  onTabSelect: (_event: any, value: any)=>void;
-}
+  onTabSelect: (_event: any, value: any) => void;
+};
 
 const tabCssProps = {
   fontSize: {
     xs: '.75rem',
     sm: '1rem',
-    md: '1.5rem'
-  }
+    md: '1.5rem',
+  },
 };
 
-export const Bar = ({tabValue, onTabSelect}: QueryWizardBarProps) => {
+export const Bar = ({ tabValue, onTabSelect }: QueryWizardBarProps) => {
   const results = useResults();
 
-  return(
+  return (
     <AppBar className="content-wizard-bar">
       <Tabs
         value={tabValue}
@@ -34,7 +34,7 @@ export const Bar = ({tabValue, onTabSelect}: QueryWizardBarProps) => {
         <Tab
           label="Query Wizard"
           {...a11yProps(0)}
-          icon={<MagicWand/>}
+          icon={<MagicWand />}
           iconPosition="start"
           className="content-wizard-bar-tab query-wizard-tab"
           sx={tabCssProps}
@@ -42,7 +42,7 @@ export const Bar = ({tabValue, onTabSelect}: QueryWizardBarProps) => {
         <Tab
           label="Query IDE"
           {...a11yProps(1)}
-          icon={<ProgrammingCode/>}
+          icon={<ProgrammingCode />}
           iconPosition="start"
           className="content-wizard-bar-tab ide-tab"
           sx={tabCssProps}
@@ -50,13 +50,13 @@ export const Bar = ({tabValue, onTabSelect}: QueryWizardBarProps) => {
         <Tab
           label="Results"
           {...a11yProps(2)}
-          icon={<TableIcon/>}
+          icon={<TableIcon />}
           iconPosition="start"
-          disabled={!results || results.length<1}
+          disabled={!results || results.length < 1}
           className="content-wizard-bar-tab results-tab"
           sx={tabCssProps}
         />
       </Tabs>
     </AppBar>
   );
-}
+};

@@ -1,8 +1,8 @@
-import { ResultTable } from "./ResultTable";
-import {Paper, TextField} from "@mui/material";
-import { FormGrid } from "src/components/QueryWizard/Components";
-import {QueryLanguage} from "src/components/Query";
-import {useResults, useQuery} from "src/providers";
+import { ResultTable } from './ResultTable';
+import { Paper, TextField } from '@mui/material';
+import { FormGrid } from 'src/components/QueryWizard/Components';
+import { QueryLanguage } from 'src/components/Query';
+import { useResults, useQuery } from 'src/providers';
 
 export function ResultHandler() {
   const results = useResults();
@@ -11,9 +11,7 @@ export function ResultHandler() {
   const resultTable = () => {
     if (results) {
       if (typeof results !== 'string' && query.language !== QueryLanguage.GraphQL) {
-        return (
-          <ResultTable/>
-        );
+        return <ResultTable />;
       } else {
         return (
           <FormGrid item xs={12} md={12}>
@@ -28,22 +26,21 @@ export function ResultHandler() {
               disabled={true}
             />
           </FormGrid>
-        )
+        );
       }
     }
-  }
+  };
 
-  return(
+  return (
     <Paper
-      className={"result-handler"}
+      className={'result-handler'}
       elevation={3}
       sx={{
-        overflow: "auto",
-        padding: "2rem"
+        overflow: 'auto',
+        padding: '2rem',
       }}
     >
       {resultTable()}
     </Paper>
   );
 }
-

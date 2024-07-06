@@ -1,17 +1,14 @@
-import {useTheme} from "@mui/material/styles";
-import { Box, IconButton } from "@mui/material";
-import {
-  KeyboardArrowLeft,
-  KeyboardArrowRight
-} from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { Box, IconButton } from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
 
 type TablePaginationActionsProps = {
-    count: number,
-    onPageChange: (event: any, number: number)=>void,
-    page: number,
-    rowsPerPage: number,
+  count: number;
+  onPageChange: (event: any, number: number) => void;
+  page: number;
+  rowsPerPage: number;
 };
 
 export const TablePaginationActions = (props: TablePaginationActionsProps) => {
@@ -36,18 +33,10 @@ export const TablePaginationActions = (props: TablePaginationActionsProps) => {
 
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
+      <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page">
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
+      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
       <IconButton
@@ -66,4 +55,4 @@ export const TablePaginationActions = (props: TablePaginationActionsProps) => {
       </IconButton>
     </Box>
   );
-}
+};

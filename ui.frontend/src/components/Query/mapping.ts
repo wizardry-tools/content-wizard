@@ -1,5 +1,3 @@
-
-
 /**
  * This is a helper function that takes a Mapped Object and Reverse the Values with the Keys.
  * This is needed when dealing with 'as const' Types, where the Values and Keys are not identical.

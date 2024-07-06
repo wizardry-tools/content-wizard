@@ -1,3 +1,3 @@
-export * from "./APISelector";
-export * from "./language-selector";
-export * from "./PersistedQuerySelector"
+export * from './APISelector';
+export * from './language-selector';
+export * from './PersistedQuerySelector';

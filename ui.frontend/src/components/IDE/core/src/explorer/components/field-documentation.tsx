@@ -19,14 +19,8 @@ type FieldDocumentationProps = {
 export function FieldDocumentation(props: FieldDocumentationProps) {
   return (
     <>
-      {props.field.description ? (
-        <MarkdownContent type="description">
-          {props.field.description}
-        </MarkdownContent>
-      ) : null}
-      <DeprecationReason preview={false}>
-        {props.field.deprecationReason}
-      </DeprecationReason>
+      {props.field.description ? <MarkdownContent type="description">{props.field.description}</MarkdownContent> : null}
+      <DeprecationReason preview={false}>{props.field.deprecationReason}</DeprecationReason>
       <ExplorerSection title="Type">
         <TypeLink type={props.field.type} />
       </ExplorerSection>
@@ -60,7 +54,7 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
     <>
       {args.length > 0 ? (
         <ExplorerSection title="Arguments">
-          {args.map(arg => (
+          {args.map((arg) => (
             <Argument key={arg.name} arg={arg} />
           ))}
         </ExplorerSection>
@@ -68,7 +62,7 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
       {deprecatedArgs.length > 0 ? (
         showDeprecated || args.length === 0 ? (
           <ExplorerSection title="Deprecated Arguments">
-            {deprecatedArgs.map(arg => (
+            {deprecatedArgs.map((arg) => (
               <Argument key={arg.name} arg={arg} />
             ))}
           </ExplorerSection>
@@ -89,7 +83,7 @@ function Directives({ field }: { field: ExplorerFieldDef }) {
   }
   return (
     <ExplorerSection title="Directives">
-      {directives.map(directive => (
+      {directives.map((directive) => (
         <div key={directive.name.value}>
           <Directive directive={directive} />
         </div>

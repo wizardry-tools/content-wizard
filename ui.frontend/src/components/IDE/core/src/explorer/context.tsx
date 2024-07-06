@@ -1,9 +1,4 @@
-import type {
-  GraphQLArgument,
-  GraphQLField,
-  GraphQLInputField,
-  GraphQLNamedType,
-} from 'graphql';
+import type { GraphQLArgument, GraphQLField, GraphQLInputField, GraphQLNamedType } from 'graphql';
 import {
   isEnumType,
   isInputObjectType,
@@ -17,10 +12,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSchemaContext } from '../schema';
 import { createContextHook, createNullableContext } from '../utility/context';
 
-export type ExplorerFieldDef =
-  | GraphQLField<{}, {}, {}>
-  | GraphQLInputField
-  | GraphQLArgument;
+export type ExplorerFieldDef = GraphQLField<{}, {}, {}> | GraphQLInputField | GraphQLArgument;
 
 export type ExplorerNavStackItem = {
   /**
@@ -35,10 +27,7 @@ export type ExplorerNavStackItem = {
 };
 
 // There's always at least one item in the nav stack
-export type ExplorerNavStack = [
-  ExplorerNavStackItem,
-  ...ExplorerNavStackItem[],
-];
+export type ExplorerNavStack = [ExplorerNavStackItem, ...ExplorerNavStackItem[]];
 
 const initialNavStackItem: ExplorerNavStackItem = { name: 'Docs' };
 
@@ -64,8 +53,7 @@ export type ExplorerContextType = {
   reset(): void;
 };
 
-export const ExplorerContext =
-  createNullableContext<ExplorerContextType>('ExplorerContext');
+export const ExplorerContext = createNullableContext<ExplorerContextType>('ExplorerContext');
 
 export type ExplorerContextProviderProps = {
   children: ReactNode;
@@ -77,12 +65,10 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
     caller: ExplorerContextProvider,
   });
 
-  const [navStack, setNavStack] = useState<ExplorerNavStack>([
-    initialNavStackItem,
-  ]);
+  const [navStack, setNavStack] = useState<ExplorerNavStack>([initialNavStackItem]);
 
   const push = useCallback((item: ExplorerNavStackItem) => {
-    setNavStack(currentState => {
+    setNavStack((currentState) => {
       const lastItem = currentState.at(-1)!;
       return lastItem.def === item.def
         ? // Avoid pushing duplicate items
@@ -92,17 +78,13 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
   }, []);
 
   const pop = useCallback(() => {
-    setNavStack(currentState =>
-      currentState.length > 1
-        ? (currentState.slice(0, -1) as ExplorerNavStack)
-        : currentState,
+    setNavStack((currentState) =>
+      currentState.length > 1 ? (currentState.slice(0, -1) as ExplorerNavStack) : currentState,
     );
   }, []);
 
   const reset = useCallback(() => {
-    setNavStack(currentState =>
-      currentState.length === 1 ? currentState : [initialNavStackItem],
-    );
+    setNavStack((currentState) => (currentState.length === 1 ? currentState : [initialNavStackItem]));
   }, []);
 
   useEffect(() => {
@@ -111,13 +93,12 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
       reset();
     } else {
       // Replace the nav stack with an updated version using the new schema
-      setNavStack(oldNavStack => {
+      setNavStack((oldNavStack) => {
         if (oldNavStack.length === 1) {
           return oldNavStack;
         }
         const newNavStack: ExplorerNavStack = [initialNavStackItem];
-        let lastEntity: GraphQLNamedType | GraphQLField<any, any, any> | null =
-          null;
+        let lastEntity: GraphQLNamedType | GraphQLField<any, any, any> | null = null;
         for (const item of oldNavStack) {
           if (item === initialNavStackItem) {
             // No need to copy the initial item
@@ -141,10 +122,7 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
             } else if (lastEntity === null) {
               // We can't have a sub-entity if we have no entity; stop rebuilding the nav stack
               break;
-            } else if (
-              isObjectType(lastEntity) ||
-              isInputObjectType(lastEntity)
-            ) {
+            } else if (isObjectType(lastEntity) || isInputObjectType(lastEntity)) {
               // item.def must be a Field / input field; replace with the new field of the same name
               const field = lastEntity.getFields()[item.name];
               if (field) {
@@ -169,7 +147,7 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
               // lastEntity must be a field (because it's not a named type)
               const field: GraphQLField<any, any, any> = lastEntity;
               // Thus item.def must be an argument, so find the same named argument in the new schema
-              const arg = field.args.find(a => a.name === item.name);
+              const arg = field.args.find((a) => a.name === item.name);
               if (arg) {
                 newNavStack.push({
                   name: item.name,
@@ -195,11 +173,7 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
     [navStack, push, pop, reset],
   );
 
-  return (
-    <ExplorerContext.Provider value={value}>
-      {props.children}
-    </ExplorerContext.Provider>
-  );
+  return <ExplorerContext.Provider value={value}>{props.children}</ExplorerContext.Provider>;
 }
 
 export const useExplorerContext = createContextHook(ExplorerContext);

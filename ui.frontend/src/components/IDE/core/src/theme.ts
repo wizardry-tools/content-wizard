@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useStorageContext } from './storage';
-import { WizardStorageAPI } from "./storage-api";
+import { WizardStorageAPI } from './storage-api';
 
 /**
  * The value `null` semantically means that the user does not explicitly choose
@@ -8,7 +8,7 @@ import { WizardStorageAPI } from "./storage-api";
  */
 export type Theme = 'light' | 'dark' | null;
 
-function getStoredTheme (storageContext: WizardStorageAPI | null): Theme {
+function getStoredTheme(storageContext: WizardStorageAPI | null): Theme {
   if (!storageContext) {
     return null;
   }
@@ -34,7 +34,7 @@ function getStoredTheme (storageContext: WizardStorageAPI | null): Theme {
 export function useTheme() {
   const storageContext = useStorageContext();
 
-  const storedTheme = useMemo(()=>getStoredTheme(storageContext),[storageContext])
+  const storedTheme = useMemo(() => getStoredTheme(storageContext), [storageContext]);
 
   const [theme, setThemeInternal] = useState<Theme>(storedTheme);
 

@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
-import {Direction} from "@mui/system";
-import {styled} from "@mui/material/styles";
+import { Direction } from '@mui/system';
+import { styled } from '@mui/material/styles';
 
 type TabPanelProps = {
   children: any;
@@ -10,8 +10,7 @@ type TabPanelProps = {
   padding?: number;
 };
 
-const StyledBox = styled(Box)({
-});
+const StyledBox = styled(Box)({});
 
 export const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, padding = 3, ...other } = props;
@@ -28,5 +27,5 @@ export const TabPanel = (props: TabPanelProps) => {
     >
       {children}
     </StyledBox>
-  )
-}
+  );
+};

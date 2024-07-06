@@ -1,9 +1,4 @@
-import {
-  GraphQLNamedType,
-  GraphQLType,
-  isListType,
-  isNonNullType,
-} from 'graphql';
+import { GraphQLNamedType, GraphQLType, isListType, isNonNullType } from 'graphql';
 
 export function renderType(
   type: GraphQLType,

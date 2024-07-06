@@ -4,12 +4,7 @@ import { ComponentType, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useSchemaContext } from '../schema';
 
-import {
-  commonKeys,
-  DEFAULT_EDITOR_THEME,
-  DEFAULT_KEY_MAP,
-  importCodeMirror,
-} from './common';
+import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { ImagePreview } from './components';
 import { useEditorContext } from './context';
 import { useSynchronizeOption } from './hooks';
@@ -35,27 +30,20 @@ export type UseResponseEditorArgs = CommonEditorProps & {
 };
 
 export function useResponseEditor(
-  {
-    responseTooltip,
-    editorTheme = DEFAULT_EDITOR_THEME,
-    keyMap = DEFAULT_KEY_MAP,
-  }: UseResponseEditorArgs = {},
+  { responseTooltip, editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP }: UseResponseEditorArgs = {},
   caller?: Function,
 ) {
   const { fetchError, validationErrors } = useSchemaContext({
     nonNull: true,
     caller: caller || useResponseEditor,
   });
-  const { initialResponse, responseEditor, setResponseEditor } =
-    useEditorContext({
-      nonNull: true,
-      caller: caller || useResponseEditor,
-    });
+  const { initialResponse, responseEditor, setResponseEditor } = useEditorContext({
+    nonNull: true,
+    caller: caller || useResponseEditor,
+  });
   const ref = useRef<HTMLDivElement>(null);
 
-  const responseTooltipRef = useRef<ResponseTooltipType | undefined>(
-    responseTooltip,
-  );
+  const responseTooltipRef = useRef<ResponseTooltipType | undefined>(responseTooltip);
   useEffect(() => {
     responseTooltipRef.current = responseTooltip;
   }, [responseTooltip]);
@@ -76,7 +64,7 @@ export function useResponseEditor(
         import('codemirror-graphql/esm/utils/info-addon'),
       ],
       { useCommonAddons: false },
-    ).then(CodeMirror => {
+    ).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;
@@ -92,15 +80,11 @@ export function useResponseEditor(
 
           const ResponseTooltipComponent = responseTooltipRef.current;
           if (ResponseTooltipComponent) {
-            infoElements.push(
-              <ResponseTooltipComponent pos={pos} token={token} />,
-            );
+            infoElements.push(<ResponseTooltipComponent pos={pos} token={token} />);
           }
 
           if (ImagePreview.shouldRender(token)) {
-            infoElements.push(
-              <ImagePreview key="image-preview" token={token} />,
-            );
+            infoElements.push(<ImagePreview key="image-preview" token={token} />);
           }
 
           // We can't refactor to root.unmount() from React 18 because we support React 16/17 too

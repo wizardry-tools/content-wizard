@@ -1,5 +1,3 @@
-
-
 // For TabPanel
 export function a11yProps(index: number, id: string = 'full-width-tab-') {
   return {

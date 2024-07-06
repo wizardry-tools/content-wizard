@@ -1,1 +1,1 @@
-export { SwipeableViews } from "./SwipeableViews";
+export { SwipeableViews } from './SwipeableViews';

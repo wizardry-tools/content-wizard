@@ -6,11 +6,7 @@ export {
   WizardStatementEditor,
   VariableEditor,
 } from './components';
-export {
-  EditorContext,
-  EditorContextProvider,
-  useEditorContext,
-} from './context';
+export { EditorContext, EditorContextProvider, useEditorContext } from './context';
 export { useHeaderEditor } from './header-editor';
 export {
   useAutoCompleteLeafs,
@@ -31,10 +27,7 @@ export { useWizardStatementEditor } from './wizard-statement-editor';
 export type { EditorContextType, EditorContextProviderProps } from './context';
 export type { UseHeaderEditorArgs } from './header-editor';
 export type { UseQueryEditorArgs } from './query-editor';
-export type {
-  ResponseTooltipType,
-  UseResponseEditorArgs,
-} from './response-editor';
+export type { ResponseTooltipType, UseResponseEditorArgs } from './response-editor';
 export type { TabsState } from './tabs';
 export type { UseVariableEditorArgs } from './variable-editor';
 

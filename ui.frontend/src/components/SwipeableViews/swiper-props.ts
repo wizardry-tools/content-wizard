@@ -1,9 +1,9 @@
-import {CSSProperties} from "react";
+import { CSSProperties } from 'react';
 
 export type SwiperStyles = {
-  container: CSSProperties,
-  slide: CSSProperties
-}
+  container: CSSProperties;
+  slide: CSSProperties;
+};
 export const defaultSwiperStyles: SwiperStyles = {
   container: {
     direction: 'ltr',
@@ -18,22 +18,22 @@ export const defaultSwiperStyles: SwiperStyles = {
   },
 };
 
-export type TranslationFunc = (translate:number)=>string;
+export type TranslationFunc = (translate: number) => string;
 export type Position = {
   x: number[];
   y: number[];
-}
-export type Axis = "x" | "x-reverse" | "y" | "y-reverse";
+};
+export type Axis = 'x' | 'x-reverse' | 'y' | 'y-reverse';
 export type AxisProps = {
-  root: Record<Axis,CSSProperties>;
-  flexDirection: Record<Axis,string>;
-  transform: Record<Axis,TranslationFunc>;
-  length: Record<Axis,string>;
-  rotationMatrix: Record<Axis,Position>;
-  scrollPosition: Record<Axis,string>;
-  scrollLength: Record<Axis,string>;
-  clientLength: Record<Axis,string>;
-}
+  root: Record<Axis, CSSProperties>;
+  flexDirection: Record<Axis, string>;
+  transform: Record<Axis, TranslationFunc>;
+  length: Record<Axis, string>;
+  rotationMatrix: Record<Axis, Position>;
+  scrollPosition: Record<Axis, string>;
+  scrollLength: Record<Axis, string>;
+  clientLength: Record<Axis, string>;
+};
 export const axisProperties: AxisProps = {
   root: {
     x: {
@@ -57,10 +57,10 @@ export const axisProperties: AxisProps = {
     'y-reverse': 'column-reverse',
   },
   transform: {
-    x: translate => `translate(${-translate}%, 0)`,
-    'x-reverse': translate => `translate(${translate}%, 0)`,
-    y: translate => `translate(0, ${-translate}%)`,
-    'y-reverse': translate => `translate(0, ${translate}%)`,
+    x: (translate) => `translate(${-translate}%, 0)`,
+    'x-reverse': (translate) => `translate(${translate}%, 0)`,
+    y: (translate) => `translate(0, ${-translate}%)`,
+    'y-reverse': (translate) => `translate(0, ${translate}%)`,
   },
   length: {
     x: 'width',

@@ -2,33 +2,30 @@ import type {
   Fetcher,
   FetcherParams,
   FetcherOpts,
-  FetcherReturnType
-} from "@graphiql/toolkit/src/create-fetcher/types";
+  FetcherReturnType,
+} from '@graphiql/toolkit/src/create-fetcher/types';
 
 import {
   createMultipartFetcher,
   createSimplePostFetcher,
   isSubscriptionWithName,
   getWsFetcher,
-  createGetFetcher, createSimpleGetFetcher, SimpleFetcher,
+  createGetFetcher,
+  createSimpleGetFetcher,
+  SimpleFetcher,
 } from './libs';
-import {CreateFetcherOptions} from "@graphiql/toolkit/src/create-fetcher/types";
+import { CreateFetcherOptions } from '@graphiql/toolkit/src/create-fetcher/types';
 
 export type CustomCreateFetcherOptions = CreateFetcherOptions & {
   onResults?: (data: any) => void;
-}
-
-
+};
 
 export function createGraphQLFetcher(options: CustomCreateFetcherOptions): Fetcher {
   let httpFetch;
   if (typeof window !== 'undefined' && window.fetch) {
     httpFetch = window.fetch;
   }
-  if (
-    options?.enableIncrementalDelivery === null ||
-    options.enableIncrementalDelivery !== false
-  ) {
+  if (options?.enableIncrementalDelivery === null || options.enableIncrementalDelivery !== false) {
     options.enableIncrementalDelivery = true;
   }
   if (options.fetch) {
@@ -40,22 +37,14 @@ export function createGraphQLFetcher(options: CustomCreateFetcherOptions): Fetch
   // simpler fetcher for schema requests
   const simpleFetcher = createSimplePostFetcher(options, httpFetch);
 
-  const httpFetcher = options.enableIncrementalDelivery
-    ? createMultipartFetcher(options, httpFetch)
-    : simpleFetcher;
+  const httpFetcher = options.enableIncrementalDelivery ? createMultipartFetcher(options, httpFetch) : simpleFetcher;
 
   return (graphQLParams: FetcherParams, fetcherOpts: FetcherOpts | undefined) => {
     if (graphQLParams.operationName === 'IntrospectionQuery') {
-      return (options.schemaFetcher || simpleFetcher)(
-        graphQLParams,
-        fetcherOpts,
-      );
+      return (options.schemaFetcher || simpleFetcher)(graphQLParams, fetcherOpts);
     }
     const isSubscription = fetcherOpts?.documentAST
-      ? isSubscriptionWithName(
-        fetcherOpts.documentAST,
-        graphQLParams.operationName || undefined,
-      )
+      ? isSubscriptionWithName(fetcherOpts.documentAST, graphQLParams.operationName || undefined)
       : false;
     if (isSubscription) {
       const wsFetcher = getWsFetcher(options, fetcherOpts);
@@ -89,7 +78,6 @@ export function createMultiLanguageFetcher(options: CustomCreateFetcherOptions):
   // simpler fetcher for schema requests
   return createGetFetcher(options, httpFetch);
 }
-
 
 export function createAPIFetcher(options: CustomCreateFetcherOptions): SimpleFetcher {
   let httpFetch;

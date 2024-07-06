@@ -1,8 +1,5 @@
-import {
-  Children, MutableRefObject,
-  ReactElement
-} from "react";
-import {Axis, axisProperties, Position} from "./swiper-props";
+import { Children, MutableRefObject, ReactElement } from 'react';
+import { Axis, axisProperties, Position } from './swiper-props';
 
 export const defaultComputeValues = {
   RESISTANCE_COEF: 0.6,
@@ -41,16 +38,16 @@ export function computeIndex(params: any) {
 }
 
 export type EventListenerProps = {
-  event: any,
-  handler: any,
-  options?: any | undefined,
-}
+  event: any;
+  handler: any;
+  options?: any | undefined;
+};
 
 export type AddEventListenerProps = EventListenerProps & {
-  node: HTMLDivElement
-}
+  node: HTMLDivElement;
+};
 
-export function addEventListener({node, event, handler, options}: AddEventListenerProps) {
+export function addEventListener({ node, event, handler, options }: AddEventListenerProps) {
   node.addEventListener(event, handler, options);
   return {
     remove() {
@@ -59,12 +56,13 @@ export function addEventListener({node, event, handler, options}: AddEventListen
   };
 }
 
-export function adaptMouse(event: any) { //MouseEvent
-  event.touches = [{ pageX: event.pageX, pageY: event.pageY}];
+export function adaptMouse(event: any) {
+  //MouseEvent
+  event.touches = [{ pageX: event.pageX, pageY: event.pageY }];
   return event; //TouchEvent
 }
 
-export function createTransition(property:any, options:any):string {
+export function createTransition(property: any, options: any): string {
   const { duration, easeFunction, delay } = options;
 
   return `${property} ${duration} ${easeFunction} ${delay}`;
@@ -79,19 +77,18 @@ export function applyRotationMatrix(touch: any, axis: Axis) {
   };
 }
 
-
 export type IndexedChildren = {
   index: number | undefined;
-  children: ReactElement[]
+  children: ReactElement[];
 };
 export type DisplaySameSlideProps = {
-  previousProps: IndexedChildren,
-  props: IndexedChildren
-}
-export const getDisplaySameSlide = ({previousProps, props}:DisplaySameSlideProps) => {
+  previousProps: IndexedChildren;
+  props: IndexedChildren;
+};
+export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlideProps) => {
   let displaySameSlide = false;
 
-  const getChildrenKey = (child:ReactElement) => (child ? child.key : 'empty');
+  const getChildrenKey = (child: ReactElement) => (child ? child.key : 'empty');
 
   if (previousProps.children.length && props.children.length) {
     const oldKeys = Children.map(props.children, getChildrenKey);
@@ -157,12 +154,12 @@ export type NativeHandlerParams = {
   startX: number;
   axis: Axis;
   nodeReference: MutableRefObject<HTMLDivElement>;
-}
+};
 
 export function findNativeHandler(params: NativeHandlerParams) {
   const { domTreeShapes, pageX, startX, axis, nodeReference } = params;
 
-  return domTreeShapes.some(shape => {
+  return domTreeShapes.some((shape) => {
     // Determine if we are going backward or forward.
     let goingForward = pageX >= startX;
     if (axis === 'x' || axis === 'y') {

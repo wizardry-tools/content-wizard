@@ -1,5 +1,5 @@
 import { ExplorerFieldDef, useExplorerContext } from '../context';
-import {Link} from '@mui/material';
+import { Link } from '@mui/material';
 
 import './field-link.scss';
 
@@ -16,7 +16,7 @@ export function FieldLink(props: FieldLinkProps) {
   return (
     <Link
       className="wizard-doc-explorer-field-name"
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault();
         push({ name: props.field.name, def: props.field });
       }}

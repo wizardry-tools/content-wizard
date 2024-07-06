@@ -1,16 +1,11 @@
-import {useEffect, useRef} from 'react';
+import { useEffect, useRef } from 'react';
 
-import {
-  commonKeys,
-  DEFAULT_KEY_MAP,
-  importCodeMirror,
-} from './common';
+import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
-import {useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue} from './hooks';
-import {CodeMirrorType, CommonEditorProps} from './types';
-import {useQuery} from "src/providers";
-import {QueryLanguage} from "src/components/Query";
-
+import { useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
+import { CodeMirrorType, CommonEditorProps } from './types';
+import { useQuery } from 'src/providers';
+import { QueryLanguage } from 'src/components/Query';
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {
   className?: string;
@@ -22,8 +17,7 @@ const getStatement = (language: string, statement: string) => {
     return statement;
   }
   return '';
-}
-
+};
 
 /**
  * Not actually used for Editing. This is the code "viewer" for the Query Wizard Statements
@@ -31,28 +25,27 @@ const getStatement = (language: string, statement: string) => {
  * @param caller
  */
 export function useWizardStatementEditor(
-  {
-    keyMap = DEFAULT_KEY_MAP,
-  }: UseWizardStatementEditorArgs = {},
+  { keyMap = DEFAULT_KEY_MAP }: UseWizardStatementEditorArgs = {},
   caller?: Function,
 ) {
-  const {language, statement} = useQuery();
+  const { language, statement } = useQuery();
   // used for setting initialWizardStatement if initialWizardStatement is empty;
   // initialWizardStatement reloads codemirror if modified, so we're using a Ref instead
   const getInitialQueryStatement = useRef(getStatement(language, statement));
 
   // used for synching the editor
-  const { initialWizardStatement = getInitialQueryStatement.current, wizardStatementEditor, setWizardStatementEditor } =
-    useEditorContext({
-      nonNull: true,
-      caller: caller || useWizardStatementEditor,
-    });
+  const {
+    initialWizardStatement = getInitialQueryStatement.current,
+    wizardStatementEditor,
+    setWizardStatementEditor,
+  } = useEditorContext({
+    nonNull: true,
+    caller: caller || useWizardStatementEditor,
+  });
   const copy = useCopyQuery({ caller: caller || useWizardStatementEditor });
   const ref = useRef<HTMLDivElement>(null);
 
-
   const codeMirrorRef = useRef<CodeMirrorType>();
-
 
   useEffect(() => {
     if (wizardStatementEditor) {
@@ -68,12 +61,9 @@ export function useWizardStatementEditor(
       import('codemirror/addon/search/jump-to-line'),
       // @ts-expect-error
       import('codemirror/keymap/sublime'),
-      import('../../modes/querybuilder/querybuilder')
+      import('../../modes/querybuilder/querybuilder'),
     ];
-    void importCodeMirror(
-        addons,
-      { useCommonAddons: true },
-    ).then(CodeMirror => {
+    void importCodeMirror(addons, { useCommonAddons: true }).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;

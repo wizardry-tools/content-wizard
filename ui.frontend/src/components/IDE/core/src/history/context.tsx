@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
-import {QueryLanguageKey, Statement} from "src/components/Query";
+import { QueryLanguageKey, Statement } from 'src/components/Query';
 
 export type HistoryContextType = {
   /**
@@ -73,8 +73,7 @@ export type HistoryContextType = {
   setActive(args: WizardStoreItem): void;
 };
 
-export const HistoryContext =
-  createNullableContext<HistoryContextType>('HistoryContext');
+export const HistoryContext = createNullableContext<HistoryContextType>('HistoryContext');
 
 export type HistoryContextProviderProps = {
   children: ReactNode;
@@ -102,42 +101,32 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
   );
   const [items, setItems] = useState(historyStore.current?.queries || []);
 
-  const addToHistory: HistoryContextType['addToHistory'] = useCallback(
-    (operation: WizardStoreItem) => {
-      historyStore.current?.updateHistory(operation);
-      setItems(historyStore.current.queries);
-    },
-    [],
-  );
+  const addToHistory: HistoryContextType['addToHistory'] = useCallback((operation: WizardStoreItem) => {
+    historyStore.current?.updateHistory(operation);
+    setItems(historyStore.current.queries);
+  }, []);
 
-  const editLabel: HistoryContextType['editLabel'] = useCallback(
-    (operation: WizardStoreItem, index?: number) => {
-      historyStore.current.editLabel(operation, index);
-      setItems(historyStore.current.queries);
-    },
-    [],
-  );
+  const editLabel: HistoryContextType['editLabel'] = useCallback((operation: WizardStoreItem, index?: number) => {
+    historyStore.current.editLabel(operation, index);
+    setItems(historyStore.current.queries);
+  }, []);
 
-  const toggleFavorite: HistoryContextType['toggleFavorite'] = useCallback(
-    (operation: WizardStoreItem) => {
-      historyStore.current.toggleFavorite(operation);
-      setItems(historyStore.current.queries);
-    },
-    [],
-  );
+  const toggleFavorite: HistoryContextType['toggleFavorite'] = useCallback((operation: WizardStoreItem) => {
+    historyStore.current.toggleFavorite(operation);
+    setItems(historyStore.current.queries);
+  }, []);
 
-  const setActive: HistoryContextType['setActive'] = useCallback(
-    (item: WizardStoreItem) => {
-      return item;
-    },
-    [],
-  );
+  const setActive: HistoryContextType['setActive'] = useCallback((item: WizardStoreItem) => {
+    return item;
+  }, []);
 
-  const deleteFromHistory: HistoryContextType['deleteFromHistory'] =
-    useCallback((item: WizardStoreItem, clearFavorites = false) => {
+  const deleteFromHistory: HistoryContextType['deleteFromHistory'] = useCallback(
+    (item: WizardStoreItem, clearFavorites = false) => {
       historyStore.current.deleteHistory(item, clearFavorites);
       setItems(historyStore.current.queries);
-    }, []);
+    },
+    [],
+  );
 
   const value = useMemo<HistoryContextType>(
     () => ({
@@ -148,24 +137,12 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
       setActive,
       deleteFromHistory,
     }),
-    [
-      addToHistory,
-      editLabel,
-      items,
-      toggleFavorite,
-      setActive,
-      deleteFromHistory,
-    ],
+    [addToHistory, editLabel, items, toggleFavorite, setActive, deleteFromHistory],
   );
 
-  return (
-    <HistoryContext.Provider value={value}>
-      {props.children}
-    </HistoryContext.Provider>
-  );
+  return <HistoryContext.Provider value={value}>{props.children}</HistoryContext.Provider>;
 }
 
-export const useHistoryContext =
-  createContextHook<HistoryContextType>(HistoryContext);
+export const useHistoryContext = createContextHook<HistoryContextType>(HistoryContext);
 
 const DEFAULT_HISTORY_LENGTH = 20;

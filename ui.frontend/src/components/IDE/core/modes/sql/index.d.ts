@@ -1,11 +1,11 @@
-import CodeMirror from "codemirror";
+import CodeMirror from 'codemirror';
 
-declare module "sql" {
+declare module 'sql' {
   export interface SqlContext {
     prev: SqlContext | null;
-    indent: number,
-    col: number,
-    type: string
+    indent: number;
+    col: number;
+    type: string;
   }
 
   export interface SqlState {
@@ -15,4 +15,4 @@ declare module "sql" {
   }
 }
 
-export {}
+export {};

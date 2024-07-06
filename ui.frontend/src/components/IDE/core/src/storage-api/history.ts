@@ -1,16 +1,8 @@
 import { parse } from 'graphql';
 
-import {
-  WizardStore,
-  WizardStoreItem
-} from './store';
-import { WizardStorageAPI } from "./storage-api"
-import {
-  QueryLanguage,
-  QueryLanguageKey,
-  Statement
-} from "src/components/Query";
-
+import { WizardStore, WizardStoreItem } from './store';
+import { WizardStorageAPI } from './storage-api';
+import { QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
 
 const MAX_QUERY_SIZE = 100000;
 
@@ -23,11 +15,7 @@ export class WizardHistoryStore {
     private storage: WizardStorageAPI,
     private maxHistoryLength: number,
   ) {
-    this.history = new WizardStore(
-      'queries',
-      this.storage,
-      this.maxHistoryLength,
-    );
+    this.history = new WizardStore('queries', this.storage, this.maxHistoryLength);
     // favorites are not automatically deleted, so there's no need for a max length
     this.favorite = new WizardStore('favorites', this.storage, null);
 
@@ -61,12 +49,8 @@ export class WizardHistoryStore {
       return true;
     }
     if (JSON.stringify(query) === JSON.stringify(lastQuerySaved.query)) {
-      if (
-        JSON.stringify(variables) === JSON.stringify(lastQuerySaved.variables)
-      ) {
-        if (
-          JSON.stringify(headers) === JSON.stringify(lastQuerySaved.headers)
-        ) {
+      if (JSON.stringify(variables) === JSON.stringify(lastQuerySaved.variables)) {
+        if (JSON.stringify(headers) === JSON.stringify(lastQuerySaved.headers)) {
           return false;
         }
         if (headers && !lastQuerySaved.headers) {
@@ -80,23 +64,8 @@ export class WizardHistoryStore {
     return true;
   }
 
-  updateHistory = ({
-                     query,
-                     language,
-                     variables,
-                     headers,
-                     operationName,
-                   }: WizardStoreItem) => {
-
-    if (
-      !WizardHistoryStore.shouldSaveQuery(
-        query,
-        language,
-        variables,
-        headers,
-        this.history.fetchRecent(),
-      )
-    ) {
+  updateHistory = ({ query, language, variables, headers, operationName }: WizardStoreItem) => {
+    if (!WizardHistoryStore.shouldSaveQuery(query, language, variables, headers, this.history.fetchRecent())) {
       return;
     }
     this.history.push({
@@ -111,15 +80,7 @@ export class WizardHistoryStore {
     this.queries = historyQueries.concat(favoriteQueries);
   };
 
-  toggleFavorite({
-                   query,
-                   language,
-                   variables,
-                   headers,
-                   operationName,
-                   label,
-                   favorite,
-                 }: WizardStoreItem) {
+  toggleFavorite({ query, language, variables, headers, operationName, label, favorite }: WizardStoreItem) {
     const item: WizardStoreItem = {
       query,
       language,
@@ -140,18 +101,7 @@ export class WizardHistoryStore {
     this.queries = [...this.history.items, ...this.favorite.items];
   }
 
-  editLabel(
-    {
-      query,
-      language,
-      variables,
-      headers,
-      operationName,
-      label,
-      favorite,
-    }: WizardStoreItem,
-    index?: number,
-  ) {
+  editLabel({ query, language, variables, headers, operationName, label, favorite }: WizardStoreItem, index?: number) {
     const item = {
       query,
       language,
@@ -175,7 +125,7 @@ export class WizardHistoryStore {
     // TODO: Remove this method, not sure why this was added this if the regular store already performs the same checks....
     function deleteFromStore(store: WizardStore) {
       const found = store.items.find(
-        (x:any) =>
+        (x: any) =>
           x.query === query &&
           x.language === language &&
           x.variables === variables &&

@@ -1,8 +1,5 @@
-
-import {
-  WizardStorageAPI
-} from "./storage-api";
-import {QueryLanguageKey, Statement} from "src/components/Query";
+import { WizardStorageAPI } from './storage-api';
+import { QueryLanguageKey, Statement } from 'src/components/Query';
 
 export type WizardStoreItem = {
   query?: Statement;
@@ -15,13 +12,15 @@ export type WizardStoreItem = {
   favorite?: boolean;
 };
 
-const compareStoreItem = (storeItem:WizardStoreItem, item:WizardStoreItem):boolean => {
-  return storeItem.query === item.query &&
+const compareStoreItem = (storeItem: WizardStoreItem, item: WizardStoreItem): boolean => {
+  return (
+    storeItem.query === item.query &&
     storeItem.language === item.language &&
     storeItem.variables === item.variables &&
     storeItem.headers === item.headers &&
-    storeItem.operationName === item.operationName;
-}
+    storeItem.operationName === item.operationName
+  );
+};
 
 export class WizardStore {
   items: Array<WizardStoreItem>;
@@ -39,9 +38,7 @@ export class WizardStore {
   }
 
   contains(item: WizardStoreItem) {
-    return this.items.some(
-      x => compareStoreItem(x, item),
-    );
+    return this.items.some((x) => compareStoreItem(x, item));
   }
 
   edit(item: WizardStoreItem, index?: number) {
@@ -54,9 +51,7 @@ export class WizardStore {
       }
     }
 
-    const itemIndex = this.items.findIndex(
-      x => compareStoreItem(x, item),
-    );
+    const itemIndex = this.items.findIndex((x) => compareStoreItem(x, item));
     if (itemIndex !== -1) {
       this.items.splice(itemIndex, 1, item);
       this.save();
@@ -64,9 +59,7 @@ export class WizardStore {
   }
 
   delete(item: WizardStoreItem) {
-    const itemIndex = this.items.findIndex(
-      x => compareStoreItem(x, item),
-    );
+    const itemIndex = this.items.findIndex((x) => compareStoreItem(x, item));
     if (itemIndex !== -1) {
       this.items.splice(itemIndex, 1);
       this.save();
@@ -93,10 +86,7 @@ export class WizardStore {
     }
 
     for (let attempts = 0; attempts < 5; attempts++) {
-      const response = this.storage.set(
-        this.key,
-        JSON.stringify({ [this.key]: items }),
-      );
+      const response = this.storage.set(this.key, JSON.stringify({ [this.key]: items }));
       if (!response?.error) {
         this.items = items;
       } else if (response.isQuotaError && this.maxSize) {

@@ -15,56 +15,40 @@ type TabProps = {
   children: ReactNode;
 };
 
-const TabRoot = forwardRef<HTMLLIElement, TabProps>(
-  ({ isActive, value, children, className, ...props }, ref) => (
-    <Reorder.Item
-      {...props}
-      ref={ref}
-      value={value}
-      aria-selected={isActive ? 'true' : undefined}
-      role="tab"
-      className={clsx(
-        'wizard-tab',
-        isActive && 'wizard-tab-active',
-        className,
-      )}
-    >
-      {children}
-    </Reorder.Item>
-  ),
-);
-TabRoot.displayName = 'Tab';
-
-const TabButton = forwardRef<
-  HTMLButtonElement,
-  JSX.IntrinsicElements['button']
->((props, ref) => (
-  <UnStyledButton
+const TabRoot = forwardRef<HTMLLIElement, TabProps>(({ isActive, value, children, className, ...props }, ref) => (
+  <Reorder.Item
     {...props}
     ref={ref}
-    type="button"
-    className={clsx('wizard-tab-button', props.className)}
+    value={value}
+    aria-selected={isActive ? 'true' : undefined}
+    role="tab"
+    className={clsx('wizard-tab', isActive && 'wizard-tab-active', className)}
   >
+    {children}
+  </Reorder.Item>
+));
+TabRoot.displayName = 'Tab';
+
+const TabButton = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>((props, ref) => (
+  <UnStyledButton {...props} ref={ref} type="button" className={clsx('wizard-tab-button', props.className)}>
     {props.children}
   </UnStyledButton>
 ));
 TabButton.displayName = 'Tab.Button';
 
-const TabClose = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>(
-  (props, ref) => (
-    <Tooltip label="Close Tab">
-      <UnStyledButton
-        aria-label="Close Tab"
-        {...props}
-        ref={ref}
-        type="button"
-        className={clsx('wizard-tab-close', props.className)}
-      >
-        <CloseIcon />
-      </UnStyledButton>
-    </Tooltip>
-  ),
-);
+const TabClose = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>((props, ref) => (
+  <Tooltip label="Close Tab">
+    <UnStyledButton
+      aria-label="Close Tab"
+      {...props}
+      ref={ref}
+      type="button"
+      className={clsx('wizard-tab-close', props.className)}
+    >
+      <CloseIcon />
+    </UnStyledButton>
+  </Tooltip>
+));
 TabClose.displayName = 'Tab.Close';
 
 export const Tab = createComponentGroup(TabRoot, {

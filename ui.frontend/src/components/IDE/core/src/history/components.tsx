@@ -1,30 +1,15 @@
 import type { WizardStoreItem } from '../storage-api';
-import {
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 
 import { useEditorContext } from '../editor';
-import {
-  CloseIcon,
-  PenIcon,
-  StarFilledIcon,
-  StarIcon,
-  TrashIcon,
-} from 'src/icons';
+import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from 'src/icons';
 import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
 
 import './style.scss';
-import {useQueryDispatch} from "src/providers";
-import {
-  defaultAdvancedQueries,
-  QueryLanguageKey
-} from "src/components/Query";
+import { useQueryDispatch } from 'src/providers';
+import { defaultAdvancedQueries, QueryLanguageKey } from 'src/components/Query';
 
 export function History() {
   const { items: all, deleteFromHistory } = useHistoryContext({
@@ -37,14 +22,12 @@ export function History() {
     .slice()
     .map((item, i) => ({ ...item, index: i }))
     .reverse();
-  const favorites = items.filter(item => item.favorite);
+  const favorites = items.filter((item) => item.favorite);
   if (favorites.length) {
-    items = items.filter(item => !item.favorite);
+    items = items.filter((item) => !item.favorite);
   }
 
-  const [clearStatus, setClearStatus] = useState<'success' | 'error' | null>(
-    null,
-  );
+  const [clearStatus, setClearStatus] = useState<'success' | 'error' | null>(null);
   useEffect(() => {
     if (clearStatus) {
       // reset button after a couple seconds
@@ -70,12 +53,7 @@ export function History() {
       <div className="wizard-history-header">
         History
         {(clearStatus || items.length > 0) && (
-          <Button
-            type="button"
-            state={clearStatus || undefined}
-            disabled={!items.length}
-            onClick={handleClearStatus}
-          >
+          <Button type="button" state={clearStatus || undefined} disabled={!items.length} onClick={handleClearStatus}>
             {{
               success: 'Cleared',
               error: 'Failed to Clear',
@@ -86,19 +64,17 @@ export function History() {
 
       {Boolean(favorites.length) && (
         <ul className="wizard-history-items">
-          {favorites.map(item => (
+          {favorites.map((item) => (
             <HistoryItem item={item} key={item.index} />
           ))}
         </ul>
       )}
 
-      {Boolean(favorites.length) && Boolean(items.length) && (
-        <div className="wizard-history-item-spacer" />
-      )}
+      {Boolean(favorites.length) && Boolean(items.length) && <div className="wizard-history-item-spacer" />}
 
       {Boolean(items.length) && (
         <ul className="wizard-history-items">
-          {items.map(item => (
+          {items.map((item) => (
             <HistoryItem item={item} key={item.index} />
           ))}
         </ul>
@@ -113,11 +89,10 @@ type QueryHistoryItemProps = {
 
 export function HistoryItem(props: QueryHistoryItemProps) {
   const queryDispatcher = useQueryDispatch();
-  const { editLabel, toggleFavorite, deleteFromHistory, setActive } =
-    useHistoryContext({
-      nonNull: true,
-      caller: HistoryItem,
-    });
+  const { editLabel, toggleFavorite, deleteFromHistory, setActive } = useHistoryContext({
+    nonNull: true,
+    caller: HistoryItem,
+  });
   //const { headerEditor, queryEditor, variableEditor } = useEditorContext({
   const { headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
@@ -134,9 +109,7 @@ export function HistoryItem(props: QueryHistoryItemProps) {
   }, [isEditable]);
 
   const displayName =
-    props.item.label ||
-    props.item.operationName ||
-    (`${props.item.language} ` && formatQuery(props.item.query || ''));
+    props.item.label || props.item.operationName || (`${props.item.language} ` && formatQuery(props.item.query || ''));
 
   const handleSave = useCallback(() => {
     setIsEditable(false);
@@ -148,48 +121,42 @@ export function HistoryItem(props: QueryHistoryItemProps) {
     setIsEditable(false);
   }, []);
 
-  const handleEditLabel: MouseEventHandler<HTMLButtonElement> = useCallback(
-    e => {
+  const handleEditLabel: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
+    e.stopPropagation();
+    setIsEditable(true);
+  }, []);
+
+  const handleHistoryItemClick: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
+    const { query, language, variables, headers, label } = props.item;
+    // dispatch the query object instead
+    // TODO: Make sure that API isn't needed as well...
+    queryDispatcher({
+      ...defaultAdvancedQueries[language as QueryLanguageKey],
+      statement: query,
+      label,
+      type: 'replaceQuery',
+    });
+    // queryEditor?.setValue(query?.statement ?? '');
+    variableEditor?.setValue(variables ?? '');
+    headerEditor?.setValue(headers ?? '');
+    setActive(props.item);
+  }, [headerEditor, props.item, queryDispatcher, setActive, variableEditor]);
+
+  const handleDeleteItemFromHistory: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (e) => {
       e.stopPropagation();
-      setIsEditable(true);
+      deleteFromHistory(props.item);
     },
-    [],
+    [props.item, deleteFromHistory],
   );
 
-  const handleHistoryItemClick: MouseEventHandler<HTMLButtonElement> =
-    useCallback(() => {
-      const { query, language, variables, headers, label } = props.item;
-      // dispatch the query object instead
-      // TODO: Make sure that API isn't needed as well...
-      queryDispatcher({
-        ...defaultAdvancedQueries[language as QueryLanguageKey],
-        statement: query,
-        label,
-        type: 'replaceQuery'
-      })
-      // queryEditor?.setValue(query?.statement ?? '');
-      variableEditor?.setValue(variables ?? '');
-      headerEditor?.setValue(headers ?? '');
-      setActive(props.item);
-    }, [headerEditor, props.item, queryDispatcher, setActive, variableEditor]);
-
-  const handleDeleteItemFromHistory: MouseEventHandler<HTMLButtonElement> =
-    useCallback(
-      e => {
-        e.stopPropagation();
-        deleteFromHistory(props.item);
-      },
-      [props.item, deleteFromHistory],
-    );
-
-  const handleToggleFavorite: MouseEventHandler<HTMLButtonElement> =
-    useCallback(
-      e => {
-        e.stopPropagation();
-        toggleFavorite(props.item);
-      },
-      [props.item, toggleFavorite],
-    );
+  const handleToggleFavorite: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (e) => {
+      e.stopPropagation();
+      toggleFavorite(props.item);
+    },
+    [props.item, toggleFavorite],
+  );
 
   return (
     <li className={clsx('wizard-history-item', isEditable && 'editable')}>
@@ -199,7 +166,7 @@ export function HistoryItem(props: QueryHistoryItemProps) {
             type="text"
             defaultValue={props.item.label}
             ref={inputRef}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'Esc') {
                 setIsEditable(false);
               } else if (e.key === 'Enter') {
@@ -238,22 +205,14 @@ export function HistoryItem(props: QueryHistoryItemProps) {
               <PenIcon aria-hidden="true" />
             </UnStyledButton>
           </Tooltip>
-          <Tooltip
-            label={props.item.favorite ? 'Remove favorite' : 'Add favorite'}
-          >
+          <Tooltip label={props.item.favorite ? 'Remove favorite' : 'Add favorite'}>
             <UnStyledButton
               type="button"
               className="wizard-history-item-action"
               onClick={handleToggleFavorite}
-              aria-label={
-                props.item.favorite ? 'Remove favorite' : 'Add favorite'
-              }
+              aria-label={props.item.favorite ? 'Remove favorite' : 'Add favorite'}
             >
-              {props.item.favorite ? (
-                <StarFilledIcon aria-hidden="true" />
-              ) : (
-                <StarIcon aria-hidden="true" />
-              )}
+              {props.item.favorite ? <StarFilledIcon aria-hidden="true" /> : <StarIcon aria-hidden="true" />}
             </UnStyledButton>
           </Tooltip>
           <Tooltip label="Delete from history">
@@ -275,7 +234,7 @@ export function HistoryItem(props: QueryHistoryItemProps) {
 export function formatQuery(query?: string) {
   return query
     ?.split('\n')
-    .map(line => line.replace(/#(.*)/, ''))
+    .map((line) => line.replace(/#(.*)/, ''))
     .join(' ')
     .replaceAll('{', ' { ')
     .replaceAll('}', ' } ')

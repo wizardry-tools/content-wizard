@@ -1,14 +1,13 @@
-import {createReverseMapping} from "./mapping";
+import { createReverseMapping } from './mapping';
 
-
-export type ContentType = "page" | "xf" | "asset" | "cf" | "child";
+export type ContentType = 'page' | 'xf' | 'asset' | 'cf' | 'child';
 export const ContentTypes: Record<ContentType, string> = {
   page: 'Page',
   xf: 'XF (Experience Fragment)',
   asset: 'Asset',
   cf: 'CF (Content Fragment)',
-  child: 'Child (Component)'
-}
+  child: 'Child (Component)',
+};
 
 export const ContentTypeLookup = createReverseMapping(ContentTypes);
 
@@ -18,7 +17,5 @@ export const ContentTypeMap: Record<ContentType, string> = {
   xf: 'cq:Page',
   asset: 'dam:Asset',
   cf: 'dam:Asset',
-  child: 'nt:unstructured'
+  child: 'nt:unstructured',
 };
-
-

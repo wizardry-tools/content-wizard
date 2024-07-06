@@ -2,18 +2,17 @@
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
 
-
 /**
  * Customized QueryBuilder codemirror parser mode originally based off of the OOTB "Properties" mode
  */
 export interface PropertiesState {
-  position: "predicate" | "quote" | "comment" | "equals" | "string";
+  position: 'predicate' | 'quote' | 'comment' | 'equals' | 'string';
   nextMultiline: boolean;
   inMultiline: boolean;
   afterSection: boolean;
 }
-(()=> {
-  CodeMirror.defineMode("querybuilder", function () {
+(() => {
+  CodeMirror.defineMode('querybuilder', function () {
     return {
       token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
         var sol = stream.sol() || state.afterSection;
@@ -26,44 +25,44 @@ export interface PropertiesState {
             state.inMultiline = true;
             state.nextMultiline = false;
           } else {
-            state.position = "predicate";
+            state.position = 'predicate';
           }
         }
 
         if (eol && !state.nextMultiline) {
           state.inMultiline = false;
-          state.position = "predicate";
+          state.position = 'predicate';
         }
 
         if (sol) {
-          while (stream.eatSpace()) {
-          }
+          while (stream.eatSpace()) {}
         }
 
         var ch = stream.next();
 
-        if (state.position === "equals" && ch !== "=") {
+        if (state.position === 'equals' && ch !== '=') {
           // just assume everything past the '=' is tokenized
-          state.position = "string";
+          state.position = 'string';
           stream.skipToEnd();
-          return "string";
+          return 'string';
         }
 
-        if (sol && (ch === "#" || ch === "!" || ch === ";")) {
-          state.position = "comment";
+        if (sol && (ch === '#' || ch === '!' || ch === ';')) {
+          state.position = 'comment';
           stream.skipToEnd();
-          return "comment";
-        } else if (sol && ch === "[") {
+          return 'comment';
+        } else if (sol && ch === '[') {
           state.afterSection = true;
-          stream.skipTo("]");
-          stream.eat("]");
-          return "header";
-        } else if (ch === "=" && state.position !== "equals") {
+          stream.skipTo(']');
+          stream.eat(']');
+          return 'header';
+        } else if (ch === '=' && state.position !== 'equals') {
           // custom logic for Query Builder
-          state.position = "equals";
-          return "readable-token"; // assumes defualt style
-        } else if (ch === "\\" && state.position === "quote") {
-          if (stream.eol()) {  // end of line?
+          state.position = 'equals';
+          return 'readable-token'; // assumes defualt style
+        } else if (ch === '\\' && state.position === 'quote') {
+          if (stream.eol()) {
+            // end of line?
             // Multiline value
             state.nextMultiline = true;
           }
@@ -74,13 +73,12 @@ export interface PropertiesState {
 
       startState: function () {
         return {
-          position: "predicate",       // Current position, "def", "quote" or "comment"
-          nextMultiline: false,  // Is the next line multiline value
-          inMultiline: false,    // Is the current line a multiline value
-          afterSection: false    // Did we just open a section
+          position: 'predicate', // Current position, "def", "quote" or "comment"
+          nextMultiline: false, // Is the next line multiline value
+          inMultiline: false, // Is the current line a multiline value
+          afterSection: false, // Did we just open a section
         };
-      }
-
+      },
     };
   });
-})()
+})();

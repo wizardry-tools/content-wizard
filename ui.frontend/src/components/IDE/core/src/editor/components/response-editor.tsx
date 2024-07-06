@@ -8,12 +8,6 @@ import '../style/editor.scss';
 export function ResponseEditor(props: UseResponseEditorArgs) {
   const ref = useResponseEditor(props, ResponseEditor);
   return (
-    <section
-      className="result-window"
-      aria-label="Result Window"
-      aria-live="polite"
-      aria-atomic="true"
-      ref={ref}
-    />
+    <section className="result-window" aria-label="Result Window" aria-live="polite" aria-atomic="true" ref={ref} />
   );
 }

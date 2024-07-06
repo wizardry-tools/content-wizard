@@ -1,7 +1,7 @@
-import {memo, useMemo} from "react";
-import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
-import {SelectChangeEvent} from "@mui/material/Select/SelectInput";
-import {API} from "../api";
+import { memo, useMemo } from 'react';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { API } from '../api';
 
 type APISelectorProps = {
   /**
@@ -16,30 +16,30 @@ type APISelectorProps = {
   /**
    * Callback for when the user selects a new API.
    */
-  onAPIChange: (event: SelectChangeEvent)=>void;
-}
+  onAPIChange: (event: SelectChangeEvent) => void;
+};
 
 /**
  * This component allows the user to select a configured GraphQL API from AEM.
  */
-export const APISelector = memo((props: APISelectorProps)=>{
-
-  const {APIs, endpoint = '', onAPIChange = ()=>{}} = props;
+export const APISelector = memo((props: APISelectorProps) => {
+  const { APIs, endpoint = '', onAPIChange = () => {} } = props;
 
   const menuItems = useMemo(() => {
-    return (APIs?.length) ?
-      (APIs.map((api,index) =>
-        <MenuItem key={index} value={api.endpoint} >{api.endpoint}</MenuItem>
-      )) : null;
-  },[APIs]);
+    return APIs?.length
+      ? APIs.map((api, index) => (
+          <MenuItem key={index} value={api.endpoint}>
+            {api.endpoint}
+          </MenuItem>
+        ))
+      : null;
+  }, [APIs]);
 
   return (
-    <FormControl
-      variant="filled"
-      color="secondary"
-      className="wizard-language-selector-api-selector"
-    >
-      <InputLabel id={'graphql-select-label'} required>GraphQL API</InputLabel>
+    <FormControl variant="filled" color="secondary" className="wizard-language-selector-api-selector">
+      <InputLabel id={'graphql-select-label'} required>
+        GraphQL API
+      </InputLabel>
       <Select
         labelId={'graphql-select-label'}
         id={'graphql-select'}
@@ -53,5 +53,5 @@ export const APISelector = memo((props: APISelectorProps)=>{
         {menuItems}
       </Select>
     </FormControl>
-  )
+  );
 });

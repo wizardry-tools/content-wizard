@@ -1,27 +1,26 @@
 import {
   createContext,
-  Dispatch, PropsWithChildren,
+  Dispatch,
+  PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
   useMemo,
-  useReducer
-} from "react";
-import {
-  DYNAMIC_HEADERS,
-  getParams
-} from "src/utility";
+  useReducer,
+} from 'react';
+import { DYNAMIC_HEADERS, getParams } from 'src/utility';
 import {
   buildGraphQLURL,
   buildQueryString,
   endpoints,
   Query,
   QueryAction,
-  QueryLanguage, QueryLanguageKey,
+  QueryLanguage,
+  QueryLanguageKey,
   QueryResponse,
-  Statement
-} from "src/components/Query";
-import {useStorageContext, API} from "src/components/IDE/core/src";
+  Statement,
+} from 'src/components/Query';
+import { useStorageContext, API } from 'src/components/IDE/core/src';
 
 import {
   DateRange,
@@ -32,115 +31,106 @@ import {
   InputValue,
   PredicateConfig,
   predicates,
-  predicateTypes
-} from "src/components/QueryWizard/Components";
-
+  predicateTypes,
+} from 'src/components/QueryWizard/Components';
 
 const QueryContext = createContext<Query>(null!);
 const QueryDispatchContext = createContext<Dispatch<QueryAction>>(null!);
 const FieldsConfigContext = createContext<FieldsConfig>(null!);
 const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);
-const QueryRunnerContext = createContext<(query:Query)=>Promise<QueryResponse>>(null!);
+const QueryRunnerContext = createContext<(query: Query) => Promise<QueryResponse>>(null!);
 const IsGraphQLContext = createContext<boolean>(false);
 
-
-const defaultSimpleQuery:Query = {
+const defaultSimpleQuery: Query = {
   statement: '', // build inside provider init
   language: QueryLanguage.QueryBuilder,
   url: endpoints.queryBuilderPath,
   status: '',
   isAdvanced: false,
-}
+};
 
-export function QueryProvider({ children }:PropsWithChildren) {
-  useStorageContext()
+export function QueryProvider({ children }: PropsWithChildren) {
+  useStorageContext();
   //const predicateService = useMemo(()=>new PredicateService(defaultQueryFilters),[]);
 
-  const [fields, configDispatch] = useReducer(
-    fieldConfigReducer,
-    defaultFields
-  );
-  const [query , queryDispatch] = useReducer(
-    queryReducer,
-    {
-      ...defaultSimpleQuery,
-      statement: generateQuery(fields)
-    }
-  );
-
+  const [fields, configDispatch] = useReducer(fieldConfigReducer, defaultFields);
+  const [query, queryDispatch] = useReducer(queryReducer, {
+    ...defaultSimpleQuery,
+    statement: generateQuery(fields),
+  });
 
   /**
    * This boolean will toggle features on/off for the IDE,
    * since the IDE was originally written for GraphQL.
    */
-  const isGraphQL = useMemo(()=>query.language === QueryLanguage.GraphQL as QueryLanguageKey,[query.language]);
+  const isGraphQL = useMemo(() => query.language === (QueryLanguage.GraphQL as QueryLanguageKey), [query.language]);
 
   const rebuildQuery = useCallback(() => {
-    const statement= generateQuery(fields);
+    const statement = generateQuery(fields);
     queryDispatch({
       ...defaultSimpleQuery,
       statement: statement,
-      type: 'replaceQuery'
+      type: 'replaceQuery',
     });
   }, [fields]);
 
-  const queryRunner = useCallback(async (query: Query): Promise<QueryResponse> => {
-    const url = query.url + buildQueryString(query);
-    // prechecks
-    if (!url) {
-      return {
-        results: [],
-        status: "Refusing to query with empty URL",
-        query
-      };
-    }
-    let params = isGraphQL ? getParams(query) : DYNAMIC_HEADERS;
-
-    // flight
-    try {
-      let response = await fetch(url, params);
-      if (response.ok) {
-        let json = await response.json();
+  const queryRunner = useCallback(
+    async (query: Query): Promise<QueryResponse> => {
+      const url = query.url + buildQueryString(query);
+      // prechecks
+      if (!url) {
         return {
-          results: json.hits || json.results || JSON.stringify(json.data),
-          status: response.status,
-          query
+          results: [],
+          status: 'Refusing to query with empty URL',
+          query,
         };
       }
-    } catch (e) {
-      console.error(e);
+      let params = isGraphQL ? getParams(query) : DYNAMIC_HEADERS;
+
+      // flight
+      try {
+        let response = await fetch(url, params);
+        if (response.ok) {
+          let json = await response.json();
+          return {
+            results: json.hits || json.results || JSON.stringify(json.data),
+            status: response.status,
+            query,
+          };
+        }
+      } catch (e) {
+        console.error(e);
+        return {
+          results: null,
+          status: `ERROR occurred while fetching results: ${e}`,
+          query,
+        };
+      }
+      // default
       return {
         results: null,
-        status: `ERROR occurred while fetching results: ${e}`,
-        query
+        status: `Failed to fetch results`,
+        query,
       };
-    }
-    // default
-    return {
-      results: null,
-      status: `Failed to fetch results`,
-      query
-    };
-  },[isGraphQL]);
+    },
+    [isGraphQL],
+  );
 
-
-  useEffect(rebuildQuery,[fields,rebuildQuery]);
+  useEffect(rebuildQuery, [fields, rebuildQuery]);
 
   return (
     <QueryContext.Provider value={query}>
       <IsGraphQLContext.Provider value={isGraphQL}>
         <QueryDispatchContext.Provider value={queryDispatch}>
-            <FieldsConfigContext.Provider value={fields}>
-              <FieldConfigDispatchContext.Provider value={configDispatch}>
-                <QueryRunnerContext.Provider value={queryRunner}>
-                  {children}
-                </QueryRunnerContext.Provider>
-              </FieldConfigDispatchContext.Provider>
-            </FieldsConfigContext.Provider>
+          <FieldsConfigContext.Provider value={fields}>
+            <FieldConfigDispatchContext.Provider value={configDispatch}>
+              <QueryRunnerContext.Provider value={queryRunner}>{children}</QueryRunnerContext.Provider>
+            </FieldConfigDispatchContext.Provider>
+          </FieldsConfigContext.Provider>
         </QueryDispatchContext.Provider>
       </IsGraphQLContext.Provider>
     </QueryContext.Provider>
-  )
+  );
 }
 
 export function useQuery() {
@@ -176,35 +166,39 @@ export function useIsGraphQL() {
  * @param query
  * @param action
  */
-function queryReducer(query:Query, action:QueryAction):Query {
+function queryReducer(query: Query, action: QueryAction): Query {
   switch (action.type) {
-    case 'statementChange': { // 1
+    case 'statementChange': {
+      // 1
       return {
         ...query,
-        statement: action.statement as Statement
-      }
-    }
-    case 'replaceQuery': { // 2
-      return {
-        ...action as Query
+        statement: action.statement as Statement,
       };
     }
-    case 'statusChange': { // 3
+    case 'replaceQuery': {
+      // 2
+      return {
+        ...(action as Query),
+      };
+    }
+    case 'statusChange': {
+      // 3
       return {
         ...query,
-        status: action.status as string
-      }
+        status: action.status as string,
+      };
     }
-    case 'apiChange': { // 4
+    case 'apiChange': {
+      // 4
       const api = action.api as API;
       return {
         ...query,
         api: api,
-        url: buildGraphQLURL(api.endpoint)
-      }
+        url: buildGraphQLURL(api.endpoint),
+      };
     }
     default: {
-      throw Error(`Unknown Query Action ${action.type}`)
+      throw Error(`Unknown Query Action ${action.type}`);
     }
   }
 }
@@ -215,23 +209,22 @@ function queryReducer(query:Query, action:QueryAction):Query {
  * @param fields
  * @param action
  */
-function fieldConfigReducer(fields: FieldsConfig, action:FieldConfigAction):FieldsConfig {
+function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigAction): FieldsConfig {
   switch (action.type) {
     case 'UPDATE_VALUE': {
-
       const key = action.name as FieldConfigNameKey;
       const oldField = fields[key];
       const updatedField = {
         ...oldField,
-        value: action.value
-      }
+        value: action.value,
+      };
       return {
         ...fields,
-        [key]: updatedField
+        [key]: updatedField,
       };
     }
     default: {
-      throw Error(`Unknown Query Filter Action ${action.type}`)
+      throw Error(`Unknown Query Filter Action ${action.type}`);
     }
   }
 }
@@ -246,7 +239,7 @@ function fieldConfigReducer(fields: FieldsConfig, action:FieldConfigAction):Fiel
  */
 function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, fields: FieldsConfig, index?: number) {
   const dateRange = value as DateRange;
-  const {rawInject, property, configInject, operation} = {...predicate};
+  const { rawInject, property, configInject, operation } = { ...predicate };
 
   // 1_, 2_, ...
   let prefix = index ? `${index}_` : '';
@@ -259,10 +252,10 @@ function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, 
   }
 
   if (dateRange.upperBound || dateRange.lowerBound) {
-    prefix = `${prefix}daterange.`
+    prefix = `${prefix}daterange.`;
   }
 
-  let predicateString = ''
+  let predicateString = '';
 
   // initial property definition required before appending a value statement
   if (configInject && predicate.useConfig) {
@@ -303,12 +296,12 @@ function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, 
 const generateQuery = (fields: FieldsConfig): string => {
   let propCounter = 1;
   return Object.values(fields)
-    .map((field)  => {
+    .map((field) => {
       const value = field.value;
       const predicate = predicates[field.name];
       // check validity of the predicate against the corresponding field value
       // also don't process disabled fields
-      if ((!field.isDisabled || !field.isDisabled(fields)) && (predicate.isValid && predicate.isValid(value))) {
+      if ((!field.isDisabled || !field.isDisabled(fields)) && predicate.isValid && predicate.isValid(value)) {
         if (predicate.raw) {
           // if raw, nothing to build, return the raw statement
           return predicate.raw;
@@ -327,6 +320,7 @@ const generateQuery = (fields: FieldsConfig): string => {
       } else {
       }
       return '';
-    }).filter((statement)=> !!statement && statement !== '')
+    })
+    .filter((statement) => !!statement && statement !== '')
     .join('');
 };

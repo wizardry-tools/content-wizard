@@ -1,18 +1,11 @@
-import {
-  ComponentType,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { DocExplorer, useExplorerContext } from './explorer';
 import { History, useHistoryContext } from './history';
-import {DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode} from 'src/icons';
+import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from 'src/icons';
 import { useStorageContext } from './storage';
 import { createContextHook, createNullableContext } from './utility/context';
-import {useIsGraphQL} from "src/providers";
-import { LanguageSelector } from "./language-selector";
+import { useIsGraphQL } from 'src/providers';
+import { LanguageSelector } from './language-selector';
 
 export type GraphiQLPlugin = {
   /**
@@ -35,11 +28,7 @@ export const DOC_EXPLORER_PLUGIN: GraphiQLPlugin = {
   title: 'Documentation Explorer',
   icon: function Icon() {
     const pluginContext = usePluginContext();
-    return pluginContext?.visiblePlugin === DOC_EXPLORER_PLUGIN ? (
-      <DocsFilledIcon />
-    ) : (
-      <DocsIcon />
-    );
+    return pluginContext?.visiblePlugin === DOC_EXPLORER_PLUGIN ? <DocsFilledIcon /> : <DocsIcon />;
   },
   content: DocExplorer,
 };
@@ -53,7 +42,7 @@ export const LANGUAGE_SELECTOR_PLUGIN: GraphiQLPlugin = {
   title: 'Language Selector',
   icon: ProgrammingCode,
   content: LanguageSelector,
-}
+};
 
 export type PluginContextType = {
   /**
@@ -75,8 +64,7 @@ export type PluginContextType = {
   visiblePlugin: GraphiQLPlugin | null;
 };
 
-export const PluginContext =
-  createNullableContext<PluginContextType>('PluginContext');
+export const PluginContext = createNullableContext<PluginContextType>('PluginContext');
 
 export type PluginContextProviderProps = {
   children: ReactNode;
@@ -141,42 +129,34 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
     return pluginList;
   }, [hasExplorerContext, hasHistoryContext, isGraphQL, props.plugins]);
 
-  const [visiblePlugin, internalSetVisiblePlugin] =
-    useState<GraphiQLPlugin | null>(() => {
-      const storedValue = storage?.get(STORAGE_KEY);
-      const pluginForStoredValue = plugins.find(
-        plugin => plugin.title === storedValue,
-      );
-      if (pluginForStoredValue) {
-        return pluginForStoredValue;
-      }
-      if (storedValue) {
-        storage?.set(STORAGE_KEY, '');
-      }
+  const [visiblePlugin, internalSetVisiblePlugin] = useState<GraphiQLPlugin | null>(() => {
+    const storedValue = storage?.get(STORAGE_KEY);
+    const pluginForStoredValue = plugins.find((plugin) => plugin.title === storedValue);
+    if (pluginForStoredValue) {
+      return pluginForStoredValue;
+    }
+    if (storedValue) {
+      storage?.set(STORAGE_KEY, '');
+    }
 
-      if (!props.visiblePlugin) {
-        return null;
-      }
+    if (!props.visiblePlugin) {
+      return null;
+    }
 
-      return (
-        plugins.find(
-          plugin =>
-            (typeof props.visiblePlugin === 'string'
-              ? plugin.title
-              : plugin) === props.visiblePlugin,
-        ) || null
-      );
-    });
+    return (
+      plugins.find(
+        (plugin) => (typeof props.visiblePlugin === 'string' ? plugin.title : plugin) === props.visiblePlugin,
+      ) || null
+    );
+  });
 
   const { onTogglePluginVisibility, children } = props;
   const setVisiblePlugin = useCallback<PluginContextType['setVisiblePlugin']>(
-    plugin => {
+    (plugin) => {
       const newVisiblePlugin = plugin
-        ? plugins.find(
-            p => (typeof plugin === 'string' ? p.title : p) === plugin,
-          ) || null
+        ? plugins.find((p) => (typeof plugin === 'string' ? p.title : p) === plugin) || null
         : null;
-      internalSetVisiblePlugin(current => {
+      internalSetVisiblePlugin((current) => {
         if (newVisiblePlugin === current) {
           return current;
         }
@@ -198,9 +178,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
     [plugins, setVisiblePlugin, visiblePlugin],
   );
 
-  return (
-    <PluginContext.Provider value={value}>{children}</PluginContext.Provider>
-  );
+  return <PluginContext.Provider value={value}>{children}</PluginContext.Provider>;
 }
 
 export const usePluginContext = createContextHook(PluginContext);

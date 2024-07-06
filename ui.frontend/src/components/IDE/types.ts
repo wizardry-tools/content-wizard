@@ -11,12 +11,4 @@ export type ReactElementLike = {
   key: string | number | null;
 };
 
-export type ReactNodeLike =
-  | {}
-  | ReactElementLike
-  | Array<ReactNodeLike>
-  | string
-  | number
-  | boolean
-  | null
-  | undefined;
+export type ReactNodeLike = {} | ReactElementLike | Array<ReactNodeLike> | string | number | boolean | null | undefined;

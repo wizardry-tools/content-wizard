@@ -1,1 +1,1 @@
-export { GlobalNav } from "./GlobalNav";
+export { GlobalNav } from './GlobalNav';

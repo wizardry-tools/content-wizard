@@ -1,16 +1,10 @@
-import { ContentWizard } from "src/components/ContentWizard";
-import { AppProvider } from "src/providers";
+import { ContentWizard } from 'src/components/ContentWizard';
+import { AppProvider } from 'src/providers';
 
 export default function App() {
-
-  return(
+  return (
     <AppProvider>
       <ContentWizard />
     </AppProvider>
   );
 }
-
-
-
-
-

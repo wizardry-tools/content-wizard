@@ -30,7 +30,7 @@ export function ImagePreview(props: ImagePreviewProps) {
     }
 
     fetch(src, { method: 'HEAD' })
-      .then(response => {
+      .then((response) => {
         setMime(response.headers.get('Content-Type'));
       })
       .catch(() => {

@@ -1,16 +1,10 @@
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  useContext, useRef,
-  useState
-} from "react";
-import {Alert, AlertColor} from "@mui/material";
+import { createContext, Dispatch, PropsWithChildren, useContext, useRef, useState } from 'react';
+import { Alert, AlertColor } from '@mui/material';
 
-import { AlertProps } from "@mui/material";
+import { AlertProps } from '@mui/material';
 export type WizardAlertProps = AlertProps & {
   message: string;
-}
+};
 const AlertContext = createContext<WizardAlertProps>(null!);
 const AlertDispatcher = createContext<Dispatch<WizardAlertProps>>(null!);
 
@@ -18,7 +12,7 @@ export type AlertProviderProps = PropsWithChildren & {
   alertTimeout?: number;
   defaultMessage?: string;
   defaultSeverity?: AlertColor | undefined;
-}
+};
 
 /**
  * Provides Alert Context and Alert Dispatcher to the React Node and it's Children
@@ -29,38 +23,33 @@ export type AlertProviderProps = PropsWithChildren & {
  * @param other unused properties passed to the @mui/maertial/Alert
  * @constructor
  */
-export function AlertProvider({
-  alertTimeout,
-  children,
-  defaultMessage,
-  defaultSeverity,
-  ...other
-}: AlertProviderProps = {
-  alertTimeout: 5000,
-  defaultMessage: '',
-  defaultSeverity: 'info',
-}) {
-
+export function AlertProvider(
+  { alertTimeout, children, defaultMessage, defaultSeverity, ...other }: AlertProviderProps = {
+    alertTimeout: 5000,
+    defaultMessage: '',
+    defaultSeverity: 'info',
+  },
+) {
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState(defaultSeverity);
 
   const timeoutRef = useRef(0);
 
-  const handleAlertDispatch = (alert: WizardAlertProps = {message, severity})=>{
+  const handleAlertDispatch = (alert: WizardAlertProps = { message, severity }) => {
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current);
     }
-    const {message, severity} = alert;
+    const { message, severity } = alert;
     setMessage(message);
     setSeverity(severity);
-    timeoutRef.current = window.setTimeout(()=>{
+    timeoutRef.current = window.setTimeout(() => {
       // after timeout, revert message back to empty string;
       setMessage('');
     }, alertTimeout);
   };
 
   return (
-    <AlertContext.Provider value={{message,severity}}>
+    <AlertContext.Provider value={{ message, severity }}>
       <AlertDispatcher.Provider value={handleAlertDispatch}>
         {children}
         <Alert
@@ -73,7 +62,7 @@ export function AlertProvider({
         </Alert>
       </AlertDispatcher.Provider>
     </AlertContext.Provider>
-  )
+  );
 }
 
 export function useAlertContext() {

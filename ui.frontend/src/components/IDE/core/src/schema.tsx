@@ -1,11 +1,4 @@
-import {
-  Fetcher,
-  FetcherOpts,
-  fetcherReturnToPromise,
-  formatError,
-  formatResult,
-  isPromise,
-} from '@graphiql/toolkit';
+import { Fetcher, FetcherOpts, fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
 import {
   buildClientSchema,
   getIntrospectionQuery,
@@ -15,18 +8,11 @@ import {
   isSchema,
   validateSchema,
 } from 'graphql';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useEditorContext } from './editor';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useAlertDispatcher } from "src/providers";
+import { useAlertDispatcher } from 'src/providers';
 
 type MaybeGraphQLSchema = GraphQLSchema | null | undefined;
 
@@ -60,8 +46,7 @@ export type SchemaContextType = {
   validationErrors: readonly GraphQLError[];
 };
 
-export const SchemaContext =
-  createNullableContext<SchemaContextType>('SchemaContext');
+export const SchemaContext = createNullableContext<SchemaContextType>('SchemaContext');
 
 export type SchemaContextProviderProps = {
   children: ReactNode;
@@ -116,9 +101,7 @@ export type SchemaContextProviderProps = {
 
 export function SchemaContextProvider(props: SchemaContextProviderProps) {
   if (!props.fetcher) {
-    throw new TypeError(
-      'The `SchemaContextProvider` component requires a `fetcher` function to be passed as prop.',
-    );
+    throw new TypeError('The `SchemaContextProvider` component requires a `fetcher` function to be passed as prop.');
   }
   const alertDispatcher = useAlertDispatcher();
 
@@ -140,13 +123,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
    * Synchronize prop changes with state
    */
   useEffect(() => {
-    setSchema(
-      isSchema(props.schema) ||
-        props.schema === null ||
-        props.schema === undefined
-        ? props.schema
-        : undefined,
-    );
+    setSchema(isSchema(props.schema) || props.schema === null || props.schema === undefined ? props.schema : undefined);
 
     /**
      * Increment the counter so that in-flight introspection requests don't
@@ -155,11 +132,12 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
     counterRef.current++;
   }, [props.schema]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (fetchError) {
       alertDispatcher({
-        message: 'An error occurred with the GraphQL request. Please ensure that your AEM GraphQL endpoints are configured correctly.',
-        severity: 'error'
+        message:
+          'An error occurred with the GraphQL request. Please ensure that your AEM GraphQL endpoints are configured correctly.',
+        severity: 'error',
       });
     }
   }, [fetchError, alertDispatcher]);
@@ -177,11 +155,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
   /**
    * Get introspection query for settings given via props
    */
-  const {
-    introspectionQuery,
-    introspectionQueryName,
-    introspectionQuerySansSubscriptions,
-  } = useIntrospectionQuery({
+  const { introspectionQuery, introspectionQueryName, introspectionQuerySansSubscriptions } = useIntrospectionQuery({
     inputValueDeprecation: props.inputValueDeprecation,
     introspectionQueryName: props.introspectionQueryName,
     schemaDescription: props.schemaDescription,
@@ -190,8 +164,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
   /**
    * Fetch the schema
    */
-  const { fetcher, onSchemaChange, dangerouslyAssumeSchemaIsValid, children } =
-    props;
+  const { fetcher, onSchemaChange, dangerouslyAssumeSchemaIsValid, children } = props;
   const introspect = useCallback(() => {
     /**
      * Only introspect if there is no schema provided via props. If the
@@ -218,9 +191,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
         return;
       }
 
-      const fetcherOpts: FetcherOpts = parsedHeaders.headers
-        ? { headers: parsedHeaders.headers }
-        : {};
+      const fetcherOpts: FetcherOpts = parsedHeaders.headers ? { headers: parsedHeaders.headers } : {};
 
       const fetch = fetcherReturnToPromise(
         fetcher(
@@ -242,11 +213,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
 
       let result = await fetch;
 
-      if (
-        typeof result !== 'object' ||
-        result === null ||
-        !('data' in result)
-      ) {
+      if (typeof result !== 'object' || result === null || !('data' in result)) {
         // Try the stock introspection query first, falling back on the
         // sans-subscriptions query for services which do not yet support it.
         const fetch2 = fetcherReturnToPromise(
@@ -259,9 +226,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
           ),
         );
         if (!isPromise(fetch2)) {
-          throw new Error(
-            'Fetcher did not return a Promise for introspection.',
-          );
+          throw new Error('Fetcher did not return a Promise for introspection.');
         }
         result = await fetch2;
       }
@@ -273,13 +238,12 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
       }
 
       // handle as if it were an error if the fetcher response is not a string or response.data is not present
-      const responseString =
-        typeof result === 'string' ? result : formatResult(result);
+      const responseString = typeof result === 'string' ? result : formatResult(result);
       setFetchError(responseString);
     }
 
     fetchIntrospectionData()
-      .then(introspectionData => {
+      .then((introspectionData) => {
         /**
          * Don't continue if another introspection request has been started in
          * the meantime or if there is no introspection data.
@@ -296,7 +260,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
           setFetchError(formatError(error));
         }
       })
-      .catch(error => {
+      .catch((error) => {
         /**
          * Don't continue if another introspection request has been started in
          * the meantime.
@@ -362,9 +326,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
     [fetchError, introspect, isFetching, schema, validationErrors],
   );
 
-  return (
-    <SchemaContext.Provider value={value}>{children}</SchemaContext.Provider>
-  );
+  return <SchemaContext.Provider value={value}>{children}</SchemaContext.Provider>;
 }
 
 export const useSchemaContext = createContextHook(SchemaContext);
@@ -406,10 +368,7 @@ function useIntrospectionQuery({
       query = query.replace('query IntrospectionQuery', `query ${queryName}`);
     }
 
-    const querySansSubscriptions = query.replace(
-      'subscriptionType { name }',
-      '',
-    );
+    const querySansSubscriptions = query.replace('subscriptionType { name }', '');
 
     return {
       introspectionQueryName: queryName,

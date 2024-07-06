@@ -72,17 +72,18 @@ export const TableIcon = generateIcon(_Table);
 export const TrashIcon = generateIcon(_TrashIcon, 'trash icon');
 export const TypeIcon = generateIcon(_TypeIcon);
 
-function generateIcon(
-  RawComponent: any,
-  titleProp?: string
-): FC<ComponentProps<'svg'>> {
-  const title = titleProp || (typeof RawComponent.name !== 'undefined' && RawComponent.name
-    // Icon component name starts with `Svg${CamelCaseFilename without .svg}`
-    .replace('Svg', '')
-    // Insert a space before all caps
-    .replaceAll(/([A-Z])/g, ' $1')
-    .trimStart()
-    .toLowerCase() + ' icon') || undefined;
+function generateIcon(RawComponent: any, titleProp?: string): FC<ComponentProps<'svg'>> {
+  const title =
+    titleProp ||
+    (typeof RawComponent.name !== 'undefined' &&
+      RawComponent.name
+        // Icon component name starts with `Svg${CamelCaseFilename without .svg}`
+        .replace('Svg', '')
+        // Insert a space before all caps
+        .replaceAll(/([A-Z])/g, ' $1')
+        .trimStart()
+        .toLowerCase() + ' icon') ||
+    undefined;
   function IconComponent(props: ComponentProps<'svg'>) {
     return <RawComponent title={title} {...props} />;
   }

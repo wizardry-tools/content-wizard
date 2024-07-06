@@ -1,5 +1,5 @@
-import {WizardAlertProps} from "src/providers";
-import {Dispatch} from "react";
+import { WizardAlertProps } from 'src/providers';
+import { Dispatch } from 'react';
 
 /**
  * This describes the attributes and methods that a store has to support in
@@ -62,7 +62,9 @@ export class WizardStorageAPI {
     if (alertDispatcher) {
       this.alertDispatcher = alertDispatcher;
     } else {
-      this.alertDispatcher = (obj: any)=>{console.error(obj)};
+      this.alertDispatcher = (obj: any) => {
+        console.error(obj);
+      };
     }
     if (storage) {
       this.storage = storage;
@@ -114,10 +116,7 @@ export class WizardStorageAPI {
     return value || null;
   }
 
-  set(
-    name: string,
-    value: string,
-  ): { isQuotaError: boolean; error: Error | null } {
+  set(name: string, value: string): { isQuotaError: boolean; error: Error | null } {
     let quotaError = false;
     let error: Error | null = null;
 
@@ -129,10 +128,10 @@ export class WizardStorageAPI {
         } catch (e) {
           error = e instanceof Error ? e : new Error(`${e}`);
           quotaError = isQuotaError(this.storage, e);
-          const errMessage = quotaError ? 'Local Storage is out of Space. 5MB max: ' : 'An error occurred: '
+          const errMessage = quotaError ? 'Local Storage is out of Space. 5MB max: ' : 'An error occurred: ';
           this.alertDispatcher({
             message: errMessage + error.message,
-            severity: 'error'
+            severity: 'error',
           });
         }
       } else {

@@ -68,93 +68,49 @@ function FieldDocumentationWithContext(props: { field: ExplorerFieldDef }) {
 
 describe('FieldDocumentation', () => {
   it('should render a simple string field', () => {
-    const { container } = render(
-      <FieldDocumentationWithContext
-        field={exampleObject.getFields().string}
-      />,
-    );
-    expect(
-      container.querySelector('.wizard-markdown-description'),
-    ).not.toBeInTheDocument();
-    expect(
-      container.querySelector('.wizard-doc-explorer-type-name'),
-    ).toHaveTextContent('String');
-    expect(
-      container.querySelector('.wizard-doc-explorer-argument'),
-    ).not.toBeInTheDocument();
+    const { container } = render(<FieldDocumentationWithContext field={exampleObject.getFields().string} />);
+    expect(container.querySelector('.wizard-markdown-description')).not.toBeInTheDocument();
+    expect(container.querySelector('.wizard-doc-explorer-type-name')).toHaveTextContent('String');
+    expect(container.querySelector('.wizard-doc-explorer-argument')).not.toBeInTheDocument();
   });
 
   it('should re-render on field change', () => {
-    const { container, rerender } = render(
-      <FieldDocumentationWithContext
-        field={exampleObject.getFields().string}
-      />,
-    );
-    expect(
-      container.querySelector('.wizard-markdown-description'),
-    ).not.toBeInTheDocument();
-    expect(
-      container.querySelector('.wizard-doc-explorer-type-name'),
-    ).toHaveTextContent('String');
-    expect(
-      container.querySelector('.wizard-doc-explorer-argument'),
-    ).not.toBeInTheDocument();
+    const { container, rerender } = render(<FieldDocumentationWithContext field={exampleObject.getFields().string} />);
+    expect(container.querySelector('.wizard-markdown-description')).not.toBeInTheDocument();
+    expect(container.querySelector('.wizard-doc-explorer-type-name')).toHaveTextContent('String');
+    expect(container.querySelector('.wizard-doc-explorer-argument')).not.toBeInTheDocument();
 
-    rerender(
-      <FieldDocumentationWithContext
-        field={exampleObject.getFields().stringWithArgs}
-      />,
+    rerender(<FieldDocumentationWithContext field={exampleObject.getFields().stringWithArgs} />);
+    expect(container.querySelector('.wizard-doc-explorer-type-name')).toHaveTextContent('String');
+    expect(container.querySelector('.wizard-markdown-description')).toHaveTextContent(
+      'Example String field with arguments',
     );
-    expect(
-      container.querySelector('.wizard-doc-explorer-type-name'),
-    ).toHaveTextContent('String');
-    expect(
-      container.querySelector('.wizard-markdown-description'),
-    ).toHaveTextContent('Example String field with arguments');
   });
 
   it('should render a string field with arguments', () => {
     const { container, getByText } = render(
-      <FieldDocumentationWithContext
-        field={exampleObject.getFields().stringWithArgs}
-      />,
+      <FieldDocumentationWithContext field={exampleObject.getFields().stringWithArgs} />,
     );
-    expect(
-      container.querySelector('.wizard-doc-explorer-type-name'),
-    ).toHaveTextContent('String');
-    expect(
-      container.querySelector('.wizard-markdown-description'),
-    ).toHaveTextContent('Example String field with arguments');
-    expect(
-      container.querySelectorAll('.wizard-doc-explorer-argument'),
-    ).toHaveLength(1);
-    expect(
-      container.querySelector('.wizard-doc-explorer-argument'),
-    ).toHaveTextContent('stringArg: String');
+    expect(container.querySelector('.wizard-doc-explorer-type-name')).toHaveTextContent('String');
+    expect(container.querySelector('.wizard-markdown-description')).toHaveTextContent(
+      'Example String field with arguments',
+    );
+    expect(container.querySelectorAll('.wizard-doc-explorer-argument')).toHaveLength(1);
+    expect(container.querySelector('.wizard-doc-explorer-argument')).toHaveTextContent('stringArg: String');
     // by default, the deprecation docs should be hidden
-    expect(
-      container.querySelectorAll('.wizard-markdown-deprecation'),
-    ).toHaveLength(0);
+    expect(container.querySelectorAll('.wizard-markdown-deprecation')).toHaveLength(0);
     // make sure deprecation is present
     fireEvent.click(getByText('Show Deprecated Arguments'));
-    const deprecationDocs = container.querySelectorAll(
-      '.wizard-markdown-deprecation',
-    );
+    const deprecationDocs = container.querySelectorAll('.wizard-markdown-deprecation');
     expect(deprecationDocs).toHaveLength(1);
     expect(deprecationDocs[0]).toHaveTextContent('no longer used');
   });
 
   it('should render a string field with directives', () => {
     const { container } = render(
-      <FieldDocumentationWithContext
-        field={exampleObject.getFields().stringWithDirective}
-      />,
+      <FieldDocumentationWithContext field={exampleObject.getFields().stringWithDirective} />,
     );
-    expect(
-      container.querySelector('.wizard-doc-explorer-type-name'),
-    ).toHaveTextContent('String');
-    expect(
-      container.querySelector('.wizard-doc-explorer-directive'),
-    ).toHaveTextContent('@development');
+    expect(container.querySelector('.wizard-doc-explorer-type-name')).toHaveTextContent('String');
+    expect(container.querySelector('.wizard-doc-explorer-directive')).toHaveTextContent('@development');
   });
 });

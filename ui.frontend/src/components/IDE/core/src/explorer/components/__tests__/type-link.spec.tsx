@@ -20,11 +20,9 @@ function TypeLinkWithContext(props: ComponentProps<typeof TypeLink>) {
       <TypeLink {...props} />
       {/* Print the top of the current nav stack for test assertions */}
       <ExplorerContext.Consumer>
-        {context => (
+        {(context) => (
           <span data-testid="nav-stack">
-            {JSON.stringify(
-              context!.explorerNavStack[context!.explorerNavStack.length + 1],
-            )}
+            {JSON.stringify(context!.explorerNavStack[context!.explorerNavStack.length + 1])}
           </span>
         )}
       </ExplorerContext.Consumer>
@@ -49,16 +47,12 @@ describe('TypeLink', () => {
     expect(container.querySelectorAll('span')).toHaveLength(1);
   });
   it('should push to the nav stack on click', () => {
-    const { container, getByTestId } = render(
-      <TypeLinkWithContext type={listType} />,
-    );
+    const { container, getByTestId } = render(<TypeLinkWithContext type={listType} />);
     fireEvent.click(container.querySelector('a')!);
     expect(getByTestId('nav-stack')).toHaveTextContent('');
   });
   it('should re-render on type change', () => {
-    const { container, rerender } = render(
-      <TypeLinkWithContext type={listType} />,
-    );
+    const { container, rerender } = render(<TypeLinkWithContext type={listType} />);
     expect(container).toHaveTextContent('[String]');
     rerender(<TypeLinkWithContext type={GraphQLString} />);
     expect(container).toHaveTextContent('String');

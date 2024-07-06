@@ -4,7 +4,7 @@ import { WizardStore } from '../store';
 class StorageMock {
   shouldThrow: () => boolean;
   count: number = 0;
-  map:any = {};
+  map: any = {};
   storage: any = {};
   constructor(shouldThrow: () => boolean) {
     this.shouldThrow = shouldThrow;

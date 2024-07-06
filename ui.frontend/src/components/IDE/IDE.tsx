@@ -1,11 +1,4 @@
-import React, {
-  Fragment,
-  MouseEventHandler,
-  PropsWithChildren,
-  ReactElement,
-  useCallback,
-  useState
-} from "react";
+import React, { Fragment, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -29,13 +22,9 @@ import {
   usePrettifyEditors,
   useSchemaContext,
   useStorageContext,
-  VariableEditor
-} from "./core/src";
-import {
-  useIsGraphQL,
-  useIDETheme,
-  useThemeDispatch
-} from "src/providers";
+  VariableEditor,
+} from './core/src';
+import { useIsGraphQL, useIDETheme, useThemeDispatch } from 'src/providers';
 import Paper from '@mui/material/Paper';
 import {
   ChevronDownIcon,
@@ -47,15 +36,10 @@ import {
   PrettifyIcon,
   ReloadIcon,
   SettingsIcon,
-} from "src/icons";
-import "./style.scss";
-
-
-
-
+} from 'src/icons';
+import './style.scss';
 
 const majorVersion = parseInt(React.version.slice(0, 2), 10);
-
 
 if (majorVersion < 18) {
   throw new Error(
@@ -81,7 +65,6 @@ export type IDEToolbarConfig = {
   additionalComponent?: React.JSXElementConstructor<any>;
 };
 
-
 /**
  * The top-level React component for IDE, intended to encompass the entire
  * browser viewport.
@@ -90,10 +73,7 @@ export type IDEToolbarConfig = {
  */
 
 export function IDE() {
-
-  return (
-    <IDEInterface/>
-  );
+  return <IDEInterface />;
 }
 
 // Export main windows/panes to be used separately if desired.
@@ -144,22 +124,13 @@ export function IDEInterface() {
     storageKey: 'secondaryEditorFlex',
   });
 
-  const [activeSecondaryEditor, setActiveSecondaryEditor] = useState<
-    'variables' | 'headers'
-    >(() => {
-
-    return !editorContext.initialVariables &&
-    editorContext.initialHeaders &&
-    isHeadersEditorEnabled
+  const [activeSecondaryEditor, setActiveSecondaryEditor] = useState<'variables' | 'headers'>(() => {
+    return !editorContext.initialVariables && editorContext.initialHeaders && isHeadersEditorEnabled
       ? 'headers'
       : 'variables';
   });
-  const [showDialog, setShowDialog] = useState<
-    'settings' | 'short-keys' | null
-    >(null);
-  const [clearStorageStatus, setClearStorageStatus] = useState<
-    'success' | 'error' | null
-    >(null);
+  const [showDialog, setShowDialog] = useState<'settings' | 'short-keys' | null>(null);
+  const [clearStorageStatus, setClearStorageStatus] = useState<'success' | 'error' | null>(null);
 
   const logo = <IDE.Logo />;
 
@@ -170,10 +141,7 @@ export function IDEInterface() {
           <ToolbarButton onClick={prettify} label="Prettify query (Shift-Ctrl-P)">
             <PrettifyIcon className="wizard-toolbar-icon" aria-hidden="true" />
           </ToolbarButton>
-          <ToolbarButton
-            onClick={merge}
-            label="Merge fragments into query (Shift-Ctrl-M)"
-          >
+          <ToolbarButton onClick={merge} label="Merge fragments into query (Shift-Ctrl-M)">
             <MergeIcon className="wizard-toolbar-icon" aria-hidden="true" />
           </ToolbarButton>
         </>
@@ -201,22 +169,16 @@ export function IDEInterface() {
     }
   }, [storageContext]);
 
-  const handlePersistHeaders: MouseEventHandler<HTMLButtonElement> =
-    useCallback(
-      event => {
-        editorContext.setShouldPersistHeaders(
-          event.currentTarget.dataset.value === 'true',
-        );
-      },
-      [editorContext],
-    );
+  const handlePersistHeaders: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event) => {
+      editorContext.setShouldPersistHeaders(event.currentTarget.dataset.value === 'true');
+    },
+    [editorContext],
+  );
 
   const handleChangeTheme: MouseEventHandler<HTMLButtonElement> = useCallback(
-    event => {
-      const selectedTheme = event.currentTarget.dataset.theme as
-        | 'light'
-        | 'dark'
-        | undefined;
+    (event) => {
+      const selectedTheme = event.currentTarget.dataset.theme as 'light' | 'dark' | undefined;
       themeDispatch(selectedTheme || null);
     },
     [themeDispatch],
@@ -226,17 +188,12 @@ export function IDEInterface() {
   const handleRefetchSchema = schemaContext.introspect;
   const handleReorder = editorContext.moveTab;
 
-  const handleShowDialog: MouseEventHandler<HTMLButtonElement> = useCallback(
-    event => {
-      setShowDialog(
-        event.currentTarget.dataset.value as 'short-keys' | 'settings',
-      );
-    },
-    [],
-  );
+  const handleShowDialog: MouseEventHandler<HTMLButtonElement> = useCallback((event) => {
+    setShowDialog(event.currentTarget.dataset.value as 'short-keys' | 'settings');
+  }, []);
 
   const handlePluginClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-    e => {
+    (e) => {
       const context = pluginContext!;
       const pluginIndex = Number(e.currentTarget.dataset.index!);
       const plugin = context.plugins.find((_, index) => pluginIndex === index)!;
@@ -253,23 +210,18 @@ export function IDEInterface() {
   );
 
   const handleToolsTabClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-    event => {
+    (event) => {
       if (editorToolsResize.hiddenElement === 'second') {
         editorToolsResize.setHiddenElement(null);
       }
-      setActiveSecondaryEditor(
-        event.currentTarget.dataset.name as 'variables' | 'headers',
-      );
+      setActiveSecondaryEditor(event.currentTarget.dataset.name as 'variables' | 'headers');
     },
     [editorToolsResize],
   );
 
-  const toggleEditorTools: MouseEventHandler<HTMLButtonElement> =
-    useCallback(() => {
-      editorToolsResize.setHiddenElement(
-        editorToolsResize.hiddenElement === 'second' ? null : 'second',
-      );
-    }, [editorToolsResize]);
+  const toggleEditorTools: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
+    editorToolsResize.setHiddenElement(editorToolsResize.hiddenElement === 'second' ? null : 'second');
+  }, [editorToolsResize]);
 
   const handleOpenShortKeysDialog = useCallback((isOpen: boolean) => {
     if (!isOpen) {
@@ -286,12 +238,7 @@ export function IDEInterface() {
 
   const addTab = (
     <Tooltip label="Add tab">
-      <UnStyledButton
-        type="button"
-        className="wizard-tab-add"
-        onClick={handleAddTab}
-        aria-label="Add tab"
-      >
+      <UnStyledButton type="button" className="wizard-tab-add" onClick={handleAddTab} aria-label="Add tab">
         <PlusIcon aria-hidden="true" />
       </UnStyledButton>
     </Tooltip>
@@ -330,10 +277,7 @@ export function IDEInterface() {
                   onClick={handleRefetchSchema}
                   aria-label="Re-fetch GraphQL schema"
                 >
-                  <ReloadIcon
-                    className={schemaContext.isFetching ? 'wizard-spin' : ''}
-                    aria-hidden="true"
-                  />
+                  <ReloadIcon className={schemaContext.isFetching ? 'wizard-spin' : ''} aria-hidden="true" />
                 </UnStyledButton>
               </Tooltip>
             )}
@@ -368,31 +312,16 @@ export function IDEInterface() {
               minWidth: '200px',
             }}
           >
-            <div className="wizard-plugin">
-              {PluginContent ? <PluginContent /> : null}
-            </div>
+            <div className="wizard-plugin">{PluginContent ? <PluginContent /> : null}</div>
           </div>
-          {pluginContext?.visiblePlugin && (
-            <div
-              className="wizard-horizontal-drag-bar"
-              ref={pluginResize.dragBarRef}
-            />
-          )}
+          {pluginContext?.visiblePlugin && <div className="wizard-horizontal-drag-bar" ref={pluginResize.dragBarRef} />}
           <Paper ref={pluginResize.secondRef} elevation={3} className="wizard-sessions">
             <div className="wizard-session-header">
-              <Tabs
-                values={editorContext.tabs}
-                onReorder={handleReorder}
-                aria-label="Select active operation"
-              >
+              <Tabs values={editorContext.tabs} onReorder={handleReorder} aria-label="Select active operation">
                 {editorContext.tabs.length > 1 && (
                   <>
                     {editorContext.tabs.map((tab, index) => (
-                      <Tab
-                        key={tab.id}
-                        value={tab}
-                        isActive={index === editorContext.activeTabIndex}
-                      >
+                      <Tab key={tab.id} value={tab} isActive={index === editorContext.activeTabIndex}>
                         <Tab.Button
                           aria-controls="wizard-session"
                           id={`wizard-session-tab-${index}`}
@@ -430,26 +359,13 @@ export function IDEInterface() {
             >
               <div ref={editorResize.firstRef}>
                 <Paper
-                  className={`wizard-editors${
-                    editorContext.tabs.length === 1 ? ' full-height' : ''
-                  }`}
+                  className={`wizard-editors${editorContext.tabs.length === 1 ? ' full-height' : ''}`}
                   elevation={3}
                 >
                   <div ref={editorToolsResize.firstRef}>
-                    <section
-                      className="wizard-query-editor"
-                      aria-label="Query Editor"
-                    >
-                      <QueryEditor
-                        editorTheme="wizard"
-                        keyMap="sublime"
-                        onClickReference={onClickReference}
-                      />
-                      <div
-                        className="wizard-toolbar"
-                        role="toolbar"
-                        aria-label="Editor Commands"
-                      >
+                    <section className="wizard-query-editor" aria-label="Query Editor">
+                      <QueryEditor editorTheme="wizard" keyMap="sublime" onClickReference={onClickReference} />
+                      <div className="wizard-toolbar" role="toolbar" aria-label="Editor Commands">
                         <ExecuteButton />
                         {toolbar}
                       </div>
@@ -463,8 +379,7 @@ export function IDEInterface() {
                           <UnStyledButton
                             type="button"
                             className={
-                              activeSecondaryEditor === 'variables' &&
-                              editorToolsResize.hiddenElement !== 'second'
+                              activeSecondaryEditor === 'variables' && editorToolsResize.hiddenElement !== 'second'
                                 ? 'active'
                                 : ''
                             }
@@ -478,8 +393,7 @@ export function IDEInterface() {
                           <UnStyledButton
                             type="button"
                             className={
-                              activeSecondaryEditor === 'headers' &&
-                              editorToolsResize.hiddenElement !== 'second'
+                              activeSecondaryEditor === 'headers' && editorToolsResize.hiddenElement !== 'second'
                                 ? 'active'
                                 : ''
                             }
@@ -492,31 +406,21 @@ export function IDEInterface() {
 
                         <Tooltip
                           label={
-                            editorToolsResize.hiddenElement === 'second'
-                              ? 'Show editor tools'
-                              : 'Hide editor tools'
+                            editorToolsResize.hiddenElement === 'second' ? 'Show editor tools' : 'Hide editor tools'
                           }
                         >
                           <UnStyledButton
                             type="button"
                             onClick={toggleEditorTools}
                             aria-label={
-                              editorToolsResize.hiddenElement === 'second'
-                                ? 'Show editor tools'
-                                : 'Hide editor tools'
+                              editorToolsResize.hiddenElement === 'second' ? 'Show editor tools' : 'Hide editor tools'
                             }
                             className="wizard-toggle-editor-tools"
                           >
                             {editorToolsResize.hiddenElement === 'second' ? (
-                              <ChevronUpIcon
-                                className="wizard-chevron-icon"
-                                aria-hidden="true"
-                              />
+                              <ChevronUpIcon className="wizard-chevron-icon" aria-hidden="true" />
                             ) : (
-                              <ChevronDownIcon
-                                className="wizard-chevron-icon"
-                                aria-hidden="true"
-                              />
+                              <ChevronDownIcon className="wizard-chevron-icon" aria-hidden="true" />
                             )}
                           </UnStyledButton>
                         </Tooltip>
@@ -528,11 +432,7 @@ export function IDEInterface() {
                     <div ref={editorToolsResize.secondRef}>
                       <section
                         className="wizard-editor-tool"
-                        aria-label={
-                          activeSecondaryEditor === 'variables'
-                            ? 'Variables'
-                            : 'Headers'
-                        }
+                        aria-label={activeSecondaryEditor === 'variables' ? 'Variables' : 'Headers'}
                       >
                         {isVariablesEditorEnabled && (
                           <VariableEditor
@@ -555,58 +455,38 @@ export function IDEInterface() {
                 </Paper>
               </div>
 
-              <div
-                className="wizard-horizontal-drag-bar"
-                ref={editorResize.dragBarRef}
-              />
+              <div className="wizard-horizontal-drag-bar" ref={editorResize.dragBarRef} />
 
               <div ref={editorResize.secondRef}>
                 <div className="wizard-response">
                   {executionContext.isFetching ? <Spinner /> : null}
-                  <ResponseEditor
-                    editorTheme="wizard"
-                    keyMap="sublime"
-                  />
+                  <ResponseEditor editorTheme="wizard" keyMap="sublime" />
                   {footer}
                 </div>
               </div>
             </div>
           </Paper>
         </div>
-        <Dialog
-          open={showDialog === 'short-keys'}
-          onOpenChange={handleOpenShortKeysDialog}
-        >
+        <Dialog open={showDialog === 'short-keys'} onOpenChange={handleOpenShortKeysDialog}>
           <div className="wizard-dialog-header">
-            <Dialog.Title className="wizard-dialog-title">
-              Short Keys
-            </Dialog.Title>
+            <Dialog.Title className="wizard-dialog-title">Short Keys</Dialog.Title>
             <Dialog.Close />
           </div>
           <div className="wizard-dialog-section">
             <ShortKeys keyMap="sublime" />
           </div>
         </Dialog>
-        <Dialog
-          open={showDialog === 'settings'}
-          onOpenChange={handleOpenSettingsDialog}
-        >
+        <Dialog open={showDialog === 'settings'} onOpenChange={handleOpenSettingsDialog}>
           <div className="wizard-dialog-header">
-            <Dialog.Title className="wizard-dialog-title">
-              Settings
-            </Dialog.Title>
+            <Dialog.Title className="wizard-dialog-title">Settings</Dialog.Title>
             <Dialog.Close />
           </div>
           <div className="wizard-dialog-section">
             <div>
-              <div className="wizard-dialog-section-title">
-                Persist headers
-              </div>
+              <div className="wizard-dialog-section-title">Persist headers</div>
               <div className="wizard-dialog-section-caption">
                 Save headers upon reloading.{' '}
-                <span className="wizard-warning-text">
-                  Only enable if you trust this device.
-                </span>
+                <span className="wizard-warning-text">Only enable if you trust this device.</span>
               </div>
             </div>
             <ButtonGroup>
@@ -632,16 +512,10 @@ export function IDEInterface() {
           <div className="wizard-dialog-section">
             <div>
               <div className="wizard-dialog-section-title">Theme</div>
-              <div className="wizard-dialog-section-caption">
-                Adjust how the interface looks like.
-              </div>
+              <div className="wizard-dialog-section-caption">Adjust how the interface looks like.</div>
             </div>
             <ButtonGroup>
-              <Button
-                type="button"
-                className={theme === null ? 'active' : ''}
-                onClick={handleChangeTheme}
-              >
+              <Button type="button" className={theme === null ? 'active' : ''} onClick={handleChangeTheme}>
                 System
               </Button>
               <Button
@@ -665,12 +539,8 @@ export function IDEInterface() {
           {storageContext ? (
             <div className="wizard-dialog-section">
               <div>
-                <div className="wizard-dialog-section-title">
-                  Clear storage
-                </div>
-                <div className="wizard-dialog-section-caption">
-                  Remove all locally stored data and start fresh.
-                </div>
+                <div className="wizard-dialog-section-title">Clear storage</div>
+                <div className="wizard-dialog-section-caption">Remove all locally stored data and start fresh.</div>
               </div>
               <Button
                 type="button"
@@ -692,21 +562,14 @@ export function IDEInterface() {
 }
 
 const modifier =
-  typeof window !== 'undefined' &&
-  window.navigator.platform.toLowerCase().indexOf('mac') === 0
-    ? 'Cmd'
-    : 'Ctrl';
+  typeof window !== 'undefined' && window.navigator.platform.toLowerCase().indexOf('mac') === 0 ? 'Cmd' : 'Ctrl';
 
 const SHORT_KEYS = Object.entries({
   'Search in editor': [modifier, 'F'],
   'Search in documentation': [modifier, 'K'],
   'Execute query': [modifier, 'Enter'],
   'Prettify editors': ['Ctrl', 'Shift', 'P'],
-  'Merge fragments definitions into operation definition': [
-    'Ctrl',
-    'Shift',
-    'M',
-  ],
+  'Merge fragments definitions into operation definition': ['Ctrl', 'Shift', 'M'],
   'Copy query': ['Ctrl', 'Shift', 'C'],
   'Re-fetch schema using introspection': ['Ctrl', 'Shift', 'R'],
 });
@@ -716,38 +579,33 @@ function ShortKeys({ keyMap }: { keyMap: string }): ReactElement {
     <div>
       <table className="wizard-table">
         <thead>
-        <tr>
-          <th>Short Key</th>
-          <th>Function</th>
-        </tr>
+          <tr>
+            <th>Short Key</th>
+            <th>Function</th>
+          </tr>
         </thead>
         <tbody>
-        {SHORT_KEYS.map(([title, keys]) => (
-          <tr key={title}>
-            <td>
-              {keys.map((key, index, array) => (
-                <Fragment key={key}>
-                  <code className="wizard-key">{key}</code>
-                  {index !== array.length - 1 && ' + '}
-                </Fragment>
-              ))}
-            </td>
-            <td>{title}</td>
-          </tr>
-        ))}
+          {SHORT_KEYS.map(([title, keys]) => (
+            <tr key={title}>
+              <td>
+                {keys.map((key, index, array) => (
+                  <Fragment key={key}>
+                    <code className="wizard-key">{key}</code>
+                    {index !== array.length - 1 && ' + '}
+                  </Fragment>
+                ))}
+              </td>
+              <td>{title}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <p>
         The editors use{' '}
-        <a
-          href="https://codemirror.net/5/doc/manual.html#keymaps"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">
           CodeMirror Key Maps
         </a>{' '}
-        that add more short keys. This instance of Graph<em>i</em>QL uses{' '}
-        <code>{keyMap}</code>.
+        that add more short keys. This instance of Graph<em>i</em>QL uses <code>{keyMap}</code>.
       </p>
     </div>
   );
@@ -758,12 +616,7 @@ function IDELogo<TProps>(props: PropsWithChildren<TProps>) {
   return (
     <div className="wizard-logo">
       {props.children || (
-        <a
-          className="wizard-logo-link"
-          href="https://github.com/graphql/graphiql"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a className="wizard-logo-link" href="https://github.com/graphql/graphiql" target="_blank" rel="noreferrer">
           Graph
           <em>i</em>
           QL
@@ -792,4 +645,3 @@ function IDEFooter<TProps>(props: PropsWithChildren<TProps>) {
 }
 
 IDEFooter.displayName = 'IDEFooter';
-

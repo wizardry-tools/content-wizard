@@ -13,13 +13,10 @@ import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
 import { CodeMirrorEditor } from './types';
-import {useIsGraphQL} from "src/providers";
-import {Query} from "src/components/Query";
+import { useIsGraphQL } from 'src/providers';
+import { Query } from 'src/components/Query';
 
-export function useSynchronizeValue(
-  editor: CodeMirrorEditor | null,
-value: Query | string | undefined,
-) {
+export function useSynchronizeValue(editor: CodeMirrorEditor | null, value: Query | string | undefined) {
   useEffect(() => {
     if (editor) {
       if (typeof value === 'string' && value !== editor.getValue()) {
@@ -69,10 +66,7 @@ export function useChangeHandler(
       updateActiveTabValues({ [tabProperty]: value });
     });
 
-    const handleChange = (
-      editorInstance: CodeMirrorEditor,
-      changeObj: EditorChange | undefined,
-    ) => {
+    const handleChange = (editorInstance: CodeMirrorEditor, changeObj: EditorChange | undefined) => {
       // When we signal a change manually without actually changing anything
       // we don't want to invoke the callback.
       if (!changeObj) {
@@ -86,14 +80,7 @@ export function useChangeHandler(
     };
     editor.on('change', handleChange);
     return () => editor.off('change', handleChange);
-  }, [
-    callback,
-    editor,
-    storage,
-    storageKey,
-    tabProperty,
-    updateActiveTabValues,
-  ]);
+  }, [callback, editor, storage, storageKey, tabProperty, updateActiveTabValues]);
 }
 
 export function useCompletion(
@@ -109,11 +96,8 @@ export function useCompletion(
       return;
     }
 
-    const handleCompletion = (
-      instance: CodeMirrorEditor,
-      changeObj?: EditorChange,
-    ) => {
-      onHasCompletion(instance, changeObj, schema, explorer, plugin, type => {
+    const handleCompletion = (instance: CodeMirrorEditor, changeObj?: EditorChange) => {
+      onHasCompletion(instance, changeObj, schema, explorer, plugin, (type) => {
         callback?.({ kind: 'Type', type, schema: schema || undefined });
       });
     };
@@ -133,11 +117,7 @@ export function useCompletion(
 
 type EmptyCallback = () => void;
 
-export function useKeyMap(
-  editor: CodeMirrorEditor | null,
-  keys: string[],
-  callback: EmptyCallback | undefined,
-) {
+export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callback: EmptyCallback | undefined) {
   useEffect(() => {
     if (!editor) {
       return;
@@ -227,11 +207,7 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
     if (variableEditor) {
       const variableEditorContent = variableEditor.getValue();
       try {
-        const prettifiedVariableEditorContent = JSON.stringify(
-          JSON.parse(variableEditorContent),
-          null,
-          2,
-        );
+        const prettifiedVariableEditorContent = JSON.stringify(JSON.parse(variableEditorContent), null, 2);
         if (prettifiedVariableEditorContent !== variableEditorContent) {
           variableEditor.setValue(prettifiedVariableEditorContent);
         }
@@ -244,11 +220,7 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
       const headerEditorContent = headerEditor.getValue();
 
       try {
-        const prettifiedHeaderEditorContent = JSON.stringify(
-          JSON.parse(headerEditorContent),
-          null,
-          2,
-        );
+        const prettifiedHeaderEditorContent = JSON.stringify(JSON.parse(headerEditorContent), null, 2);
         if (prettifiedHeaderEditorContent !== headerEditorContent) {
           headerEditor.setValue(prettifiedHeaderEditorContent);
         }
@@ -281,10 +253,7 @@ export type UseAutoCompleteLeafsArgs = {
   caller?: Function;
 };
 
-export function useAutoCompleteLeafs({
-  getDefaultFieldNames,
-  caller,
-}: UseAutoCompleteLeafsArgs = {}) {
+export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}) {
   const { schema } = useSchemaContext({
     nonNull: true,
     caller: caller || useAutoCompleteLeafs,
@@ -299,11 +268,7 @@ export function useAutoCompleteLeafs({
     }
 
     const query = queryEditor.getValue();
-    const { insertions, result } = fillLeafs(
-      schema,
-      query,
-      getDefaultFieldNames,
-    );
+    const { insertions, result } = fillLeafs(schema, query, getDefaultFieldNames);
     if (insertions && insertions.length > 0) {
       queryEditor.operation(() => {
         const cursor = queryEditor.getCursor();
@@ -356,10 +321,7 @@ export const useEditorState = (editor: 'query' | 'variable' | 'header') => {
     valueString = editorValue;
   }
 
-  const handleEditorValue = useCallback(
-    (value: string) => editorInstance?.setValue(value),
-    [editorInstance],
-  );
+  const handleEditorValue = useCallback((value: string) => editorInstance?.setValue(value), [editorInstance]);
   return useMemo<[string, (val: string) => void]>(
     () => [valueString, handleEditorValue],
     [valueString, handleEditorValue],
@@ -369,30 +331,21 @@ export const useEditorState = (editor: 'query' | 'variable' | 'header') => {
 /**
  * useState-like hook for current tab operations editor state
  */
-export const useOperationsEditorState = (): [
-  operations: string,
-  setOperations: (content: string) => void,
-] => {
+export const useOperationsEditorState = (): [operations: string, setOperations: (content: string) => void] => {
   return useEditorState('query');
 };
 
 /**
  * useState-like hook for current tab variables editor state
  */
-export const useVariablesEditorState = (): [
-  variables: string,
-  setVariables: (content: string) => void,
-] => {
+export const useVariablesEditorState = (): [variables: string, setVariables: (content: string) => void] => {
   return useEditorState('variable');
 };
 
 /**
  * useState-like hook for current tab variables editor state
  */
-export const useHeadersEditorState = (): [
-  headers: string,
-  setHeaders: (content: string) => void,
-] => {
+export const useHeadersEditorState = (): [headers: string, setHeaders: (content: string) => void] => {
   return useEditorState('header');
 };
 
@@ -413,10 +366,9 @@ export const useHeadersEditorState = (): [
  *   useOptimisticState(useOperationsEditorState());
  * ```
  */
-export function useOptimisticState([
-  upstreamState,
-  upstreamSetState,
-]: ReturnType<typeof useEditorState>): ReturnType<typeof useEditorState> {
+export function useOptimisticState([upstreamState, upstreamSetState]: ReturnType<typeof useEditorState>): ReturnType<
+  typeof useEditorState
+> {
   const lastStateRef = useRef({
     /** The last thing that we sent upstream; we're expecting this back */
     pending: null as string | null,
@@ -454,10 +406,7 @@ export function useOptimisticState([
   const setState = useCallback(
     (newState: string) => {
       setOperationsText(newState);
-      if (
-        lastStateRef.current.pending === null &&
-        lastStateRef.current.last !== newState
-      ) {
+      if (lastStateRef.current.pending === null && lastStateRef.current.last !== newState) {
         // No pending updates and change has occurred... send it upstream
         lastStateRef.current.pending = newState;
         upstreamSetState(newState);

@@ -13,16 +13,14 @@ export type CreateLocalStorageOptions = {
 /**
  * generate a custom local storage adapter for GraphiQL `storage` prop.
  */
-export function createLocalStorage({
-                                     namespace,
-                                   }: CreateLocalStorageOptions): WizardStorage {
+export function createLocalStorage({ namespace }: CreateLocalStorageOptions): WizardStorage {
   const storageKeyPrefix = `${namespace}:`;
   const getStorageKey = (key: string) => `${storageKeyPrefix}${key}`;
 
-  return  {
+  return {
     setItem: (key, value) => localStorage.setItem(getStorageKey(key), value),
-    getItem: key => localStorage.getItem(getStorageKey(key)),
-    removeItem: key => localStorage.removeItem(getStorageKey(key)),
+    getItem: (key) => localStorage.getItem(getStorageKey(key)),
+    removeItem: (key) => localStorage.removeItem(getStorageKey(key)),
     get length() {
       let keys = 0;
       for (const key in window.localStorage) {

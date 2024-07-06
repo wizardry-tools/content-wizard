@@ -1,15 +1,7 @@
 import { DocumentNode, visit } from 'graphql';
 import { meros } from 'meros';
-import {
-  Client,
-  ClientOptions,
-  ExecutionResult,
-  createClient as createClientType,
-} from 'graphql-ws';
-import {
-  isAsyncIterable,
-  makeAsyncIterableIteratorFromSink,
-} from '@n1ru4l/push-pull-async-iterable-iterator';
+import { Client, ClientOptions, ExecutionResult, createClient as createClientType } from 'graphql-ws';
+import { isAsyncIterable, makeAsyncIterableIteratorFromSink } from '@n1ru4l/push-pull-async-iterable-iterator';
 
 import type {
   Fetcher,
@@ -17,13 +9,10 @@ import type {
   FetcherOpts,
   ExecutionResultPayload,
   CreateFetcherOptions,
-} from "@graphiql/toolkit/src/create-fetcher/types";
-import { Observable } from "@graphiql/toolkit";
-import {
-  CustomCreateFetcherOptions,
-  getCsrfToken,
-} from "./index";
-import {FetcherReturnType} from "@graphiql/toolkit/src/create-fetcher/types";
+} from '@graphiql/toolkit/src/create-fetcher/types';
+import { Observable } from '@graphiql/toolkit';
+import { CustomCreateFetcherOptions, getCsrfToken } from './index';
+import { FetcherReturnType } from '@graphiql/toolkit/src/create-fetcher/types';
 
 // environment variable for configuring the headless client
 const {
@@ -40,17 +29,16 @@ const {
 
 // Get authorization based on environment variables
 // authorization is not needed when connecting to Publish environments
-export const setAuthorization = (): [string|undefined,string|undefined] | string | undefined => {
-  if (REACT_APP_AUTH_METHOD === "basic") {
+export const setAuthorization = (): [string | undefined, string | undefined] | string | undefined => {
+  if (REACT_APP_AUTH_METHOD === 'basic') {
     return [REACT_APP_BASIC_AUTH_USER, REACT_APP_BASIC_AUTH_PASS];
-  } else if (REACT_APP_AUTH_METHOD === "dev-token") {
+  } else if (REACT_APP_AUTH_METHOD === 'dev-token') {
     return REACT_APP_DEV_TOKEN;
   } else {
     // no authentication set
     return;
   }
 };
-
 
 const errorHasCode = (err: unknown): err is { code: string } => {
   return typeof err === 'object' && err !== null && 'code' in err;
@@ -63,10 +51,7 @@ const errorHasCode = (err: unknown): err is { code: string } => {
  * @param name the operation name to lookup
  * @returns {boolean}
  */
-export const isSubscriptionWithName = (
-  document: DocumentNode,
-  name: string | undefined,
-): boolean => {
+export const isSubscriptionWithName = (document: DocumentNode, name: string | undefined): boolean => {
   let isSubscription = false;
   visit(document, {
     OperationDefinition(node) {
@@ -86,13 +71,13 @@ const getRequestInit = async (options: CustomCreateFetcherOptions, fetcherOpts?:
       'Content-Type': 'application/json',
       credentials: 'same-origin',
       'CSRF-Token': token,
-      'Authorization': (setAuthorization() || '') as string,
-      "Accept": "application/json",
+      Authorization: (setAuthorization() || '') as string,
+      Accept: 'application/json',
       ...options.headers,
       ...fetcherOpts?.headers,
     },
-  }
-}
+  };
+};
 
 /**
  * This GET fetcher isn't used by GraphQL, because GraphQL needs POST.
@@ -105,32 +90,29 @@ const getRequestInit = async (options: CustomCreateFetcherOptions, fetcherOpts?:
  */
 export const createGetFetcher =
   (options: CustomCreateFetcherOptions, httpFetch: typeof fetch): Fetcher =>
-    async (_fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
-      const init:RequestInit = await getRequestInit(options, fetcherOpts);
-      const data = await httpFetch(options.url, init);
-      const json = await data.json();
-      if (options.onResults && typeof options.onResults === 'function') {
-        options.onResults(json);
-      }
-      return json;
-    };
+  async (_fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
+    const init: RequestInit = await getRequestInit(options, fetcherOpts);
+    const data = await httpFetch(options.url, init);
+    const json = await data.json();
+    if (options.onResults && typeof options.onResults === 'function') {
+      options.onResults(json);
+    }
+    return json;
+  };
 
-export type SimpleFetcher = (
-  opts?: FetcherOpts,
-) => FetcherReturnType;
+export type SimpleFetcher = (opts?: FetcherOpts) => FetcherReturnType;
 
 export const createSimpleGetFetcher =
   (options: CustomCreateFetcherOptions, httpFetch: typeof fetch): SimpleFetcher =>
-    async (fetcherOpts?: FetcherOpts) => {
-
-      const init:RequestInit = await getRequestInit(options, fetcherOpts);
-      const data = await httpFetch(options.url, init);
-      const json = await data.json();
-      if (options.onResults && typeof options.onResults === 'function') {
-        options.onResults(json);
-      }
-      return json;
-    };
+  async (fetcherOpts?: FetcherOpts) => {
+    const init: RequestInit = await getRequestInit(options, fetcherOpts);
+    const data = await httpFetch(options.url, init);
+    const json = await data.json();
+    if (options.onResults && typeof options.onResults === 'function') {
+      options.onResults(json);
+    }
+    return json;
+  };
 
 /**
  * create a simple HTTP/S fetcher using a fetch implementation where
@@ -143,33 +125,30 @@ export const createSimpleGetFetcher =
  */
 export const createSimplePostFetcher =
   (options: CustomCreateFetcherOptions, httpFetch: typeof fetch): Fetcher =>
-    async (fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
+  async (fetcherParams: FetcherParams, fetcherOpts?: FetcherOpts) => {
     const token = await getCsrfToken();
-    const init:RequestInit = {
+    const init: RequestInit = {
       method: 'POST',
       body: JSON.stringify(fetcherParams),
       headers: {
         'Content-Type': 'application/json',
         credentials: 'same-origin',
         'CSRF-Token': token,
-        'Authorization': (setAuthorization() || '') as string,
-        "Accept": "application/json",
+        Authorization: (setAuthorization() || '') as string,
+        Accept: 'application/json',
         ...options.headers,
         ...fetcherOpts?.headers,
       },
     };
     const data = await httpFetch(options.url, init);
-      const json = await data.json();
-      if (options.onResults && typeof options.onResults === 'function') {
-        options.onResults(json);
-      }
-      return json;
-    };
+    const json = await data.json();
+    if (options.onResults && typeof options.onResults === 'function') {
+      options.onResults(json);
+    }
+    return json;
+  };
 
-export const createWebsocketsFetcherFromUrl = (
-  url: string,
-  connectionParams?: ClientOptions['connectionParams'],
-) => {
+export const createWebsocketsFetcherFromUrl = (url: string, connectionParams?: ClientOptions['connectionParams']) => {
   let wsClient;
   try {
     const { createClient } = require('graphql-ws') as {
@@ -199,26 +178,19 @@ export const createWebsocketsFetcherFromUrl = (
  * @param wsClient {Client}
  * @returns {Fetcher}
  */
-export const createWebsocketsFetcherFromClient =
-  (wsClient: Client) => (graphQLParams: FetcherParams) =>
-    makeAsyncIterableIteratorFromSink<ExecutionResult>(sink =>
-      wsClient.subscribe(graphQLParams, {
-        ...sink,
-        error(err) {
-          if (err instanceof CloseEvent) {
-            sink.error(
-              new Error(
-                `Socket closed with event ${err.code} ${
-                  err.reason || ''
-                }`.trim(),
-              ),
-            );
-          } else {
-            sink.error(err);
-          }
-        },
-      }),
-    );
+export const createWebsocketsFetcherFromClient = (wsClient: Client) => (graphQLParams: FetcherParams) =>
+  makeAsyncIterableIteratorFromSink<ExecutionResult>((sink) =>
+    wsClient.subscribe(graphQLParams, {
+      ...sink,
+      error(err) {
+        if (err instanceof CloseEvent) {
+          sink.error(new Error(`Socket closed with event ${err.code} ${err.reason || ''}`.trim()));
+        } else {
+          sink.error(err);
+        }
+      },
+    }),
+  );
 
 /**
  * Allow legacy websockets protocol client, but no definitions for it,
@@ -228,14 +200,13 @@ export const createWebsocketsFetcherFromClient =
  * @returns
  */
 export const createLegacyWebsocketsFetcher =
-  (legacyWsClient: { request: (params: FetcherParams) => unknown }) =>
-    (graphQLParams: FetcherParams) => {
-      const observable = legacyWsClient.request(graphQLParams);
-      return makeAsyncIterableIteratorFromSink<ExecutionResult>(
-        // @ts-ignore
-        sink => observable.subscribe(sink).unsubscribe,
-      );
-    };
+  (legacyWsClient: { request: (params: FetcherParams) => unknown }) => (graphQLParams: FetcherParams) => {
+    const observable = legacyWsClient.request(graphQLParams);
+    return makeAsyncIterableIteratorFromSink<ExecutionResult>(
+      // @ts-ignore
+      (sink) => observable.subscribe(sink).unsubscribe,
+    );
+  };
 /**
  * create a fetcher with the `IncrementalDelivery` HTTP/S spec for
  * `@stream` and `@defer` support using `fetch-multipart-graphql`
@@ -247,7 +218,26 @@ export const createLegacyWebsocketsFetcher =
 export const createMultipartFetcher = (
   options: CreateFetcherOptions,
   httpFetch: typeof fetch,
-): (graphQLParams: FetcherParams, fetcherOpts?: FetcherOpts) => AsyncGenerator<Promise<any> | (string | { data?: any; errors?: Array<any>; hasNext: boolean } | { data?: any; errors?: any[]; path: (string | number)[]; hasNext: boolean })[], any, Promise<ExecutionResult<Record<string, unknown>, Record<string, unknown>> | Observable<ExecutionResult<Record<string, unknown>, Record<string, unknown>>> | AsyncIterable<ExecutionResult>> & ExecutionResult<Record<string, unknown>, Record<string, unknown>> & Observable<ExecutionResult<Record<string, unknown>, Record<string, unknown>>> & AsyncIterable<ExecutionResult>> =>
+): ((
+  graphQLParams: FetcherParams,
+  fetcherOpts?: FetcherOpts,
+) => AsyncGenerator<
+  | Promise<any>
+  | (
+      | string
+      | { data?: any; errors?: Array<any>; hasNext: boolean }
+      | { data?: any; errors?: any[]; path: (string | number)[]; hasNext: boolean }
+    )[],
+  any,
+  Promise<
+    | ExecutionResult<Record<string, unknown>, Record<string, unknown>>
+    | Observable<ExecutionResult<Record<string, unknown>, Record<string, unknown>>>
+    | AsyncIterable<ExecutionResult>
+  > &
+    ExecutionResult<Record<string, unknown>, Record<string, unknown>> &
+    Observable<ExecutionResult<Record<string, unknown>, Record<string, unknown>>> &
+    AsyncIterable<ExecutionResult>
+>) =>
   async function* (graphQLParams: FetcherParams, fetcherOpts?: FetcherOpts) {
     const token = await getCsrfToken();
     const response = await httpFetch(options.url, {
@@ -258,13 +248,13 @@ export const createMultipartFetcher = (
         accept: 'application/json, multipart/mixed',
         credentials: 'same-origin',
         'CSRF-Token': token,
-        'Authorization': (setAuthorization() || '') as string,
+        Authorization: (setAuthorization() || '') as string,
         ...options.headers,
         // allow user-defined headers to override
         // the static provided headers
         ...fetcherOpts?.headers,
       },
-    }).then(r =>
+    }).then((r) =>
       meros<Extract<ExecutionResultPayload, { hasNext: boolean }>>(r, {
         multiple: true,
       }),
@@ -276,15 +266,11 @@ export const createMultipartFetcher = (
     }
 
     for await (const chunk of response) {
-      if (chunk.some(part => !part.json)) {
-        const message = chunk.map(
-          part => `Headers::\n${part.headers}\n\nBody::\n${part.body}`,
-        );
-        throw new Error(
-          `Expected multipart chunks to be of json type. got:\n${message}`,
-        );
+      if (chunk.some((part) => !part.json)) {
+        const message = chunk.map((part) => `Headers::\n${part.headers}\n\nBody::\n${part.body}`);
+        throw new Error(`Expected multipart chunks to be of json type. got:\n${message}`);
       }
-      yield chunk.map(part => part.body);
+      yield chunk.map((part) => part.body);
     }
   };
 
@@ -294,10 +280,7 @@ export const createMultipartFetcher = (
  * @param fetcherOpts {FetcherOpts | undefined}
  * @returns
  */
-export const getWsFetcher = (
-  options: CreateFetcherOptions,
-  fetcherOpts: FetcherOpts | undefined,
-) => {
+export const getWsFetcher = (options: CreateFetcherOptions, fetcherOpts: FetcherOpts | undefined) => {
   if (options.wsClient) {
     return createWebsocketsFetcherFromClient(options.wsClient);
   }
@@ -313,17 +296,13 @@ export const getWsFetcher = (
   }
 };
 
-
-
-
-
 /**
  * Does what the name says, extracts the name of a file/endpoint from a URL.
  * @param path
  */
 export function getFileName(path: string): string | undefined {
-  if (!path || typeof path === "undefined") {
-    return "";
+  if (!path || typeof path === 'undefined') {
+    return '';
   }
   return path.split('\\').pop()?.split('/').pop();
 }

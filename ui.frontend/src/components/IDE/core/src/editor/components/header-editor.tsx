@@ -29,7 +29,5 @@ export function HeaderEditor({ isHidden, ...hookArgs }: HeaderEditorProps) {
     }
   }, [headerEditor, isHidden]);
 
-  return (
-    <div className={clsx('wizard-editor', isHidden && 'hidden')} ref={ref} />
-  );
+  return <div className={clsx('wizard-editor', isHidden && 'hidden')} ref={ref} />;
 }

@@ -2,9 +2,7 @@ import { GraphQLNamedType, GraphQLType } from 'graphql';
 
 import { ExplorerContextType, ExplorerNavStackItem } from '../../context';
 
-export function mockExplorerContextValue(
-  navStackItem: ExplorerNavStackItem,
-): ExplorerContextType {
+export function mockExplorerContextValue(navStackItem: ExplorerNavStackItem): ExplorerContextType {
   return {
     explorerNavStack: [navStackItem],
     pop() {},
@@ -17,8 +15,6 @@ export function unwrapType(type: GraphQLType): GraphQLNamedType {
   return 'ofType' in type ? unwrapType(type.ofType) : type;
 }
 
-describe("Empty test file", ()=>{
-  it("Shouldn't do anything",()=>{
-
-  });
+describe('Empty test file', () => {
+  it("Shouldn't do anything", () => {});
 });

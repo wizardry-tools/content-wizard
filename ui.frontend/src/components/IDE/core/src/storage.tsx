@@ -1,13 +1,12 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
 import { createContextHook, createNullableContext } from './utility/context';
-import {WizardStorageAPI, WizardStorage } from "./storage-api";
-import {useAlertDispatcher} from "src/providers";
+import { WizardStorageAPI, WizardStorage } from './storage-api';
+import { useAlertDispatcher } from 'src/providers';
 
 export type StorageContextType = WizardStorageAPI;
 
-export const StorageContext =
-  createNullableContext<StorageContextType>('StorageContext');
+export const StorageContext = createNullableContext<StorageContextType>('StorageContext');
 
 export type StorageContextProviderProps = {
   children: ReactNode;
@@ -33,11 +32,7 @@ export function StorageContextProvider(props: StorageContextProviderProps) {
     }
   }, [alertDispatcher, props.storage]);
 
-  return (
-    <StorageContext.Provider value={storage}>
-      {props.children}
-    </StorageContext.Provider>
-  );
+  return <StorageContext.Provider value={storage}>{props.children}</StorageContext.Provider>;
 }
 
 export const useStorageContext = createContextHook(StorageContext);

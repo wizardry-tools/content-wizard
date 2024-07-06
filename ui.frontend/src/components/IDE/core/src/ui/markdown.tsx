@@ -17,11 +17,7 @@ export const MarkdownContent = forwardRef<
   <div
     {...props}
     ref={ref}
-    className={clsx(
-      `wizard-markdown-${type}`,
-      onlyShowFirstChild && 'wizard-markdown-preview',
-      props.className,
-    )}
+    className={clsx(`wizard-markdown-${type}`, onlyShowFirstChild && 'wizard-markdown-preview', props.className)}
     dangerouslySetInnerHTML={{ __html: markdown.render(children) }}
   />
 ));
