@@ -21,11 +21,12 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
 }));
 
 export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => {
-  const { name, label, value } = { ...field };
-  console.log("SimpleDatePicker render() value: ", value)
-  const { lowerBound = null, upperBound = null } = { ...(value as DateRange) };
-  console.log("SimpleDatePicker render() lowerBound: ", lowerBound);
-  console.log("SimpleDatePicker render() upperBound: ", upperBound);
+  const { name, label } = { ...field };
+  const value = field.value as DateRange;
+  const [lowerBound, setLowerBound] = useState(value?.lowerBound ? dayjs(value.lowerBound) : null);
+  const [upperBound, setUpperBound] = useState(value?.upperBound ? dayjs(value.upperBound) : null);
+
+  // these two states add an elevation effect to the fields when focused. More noticeable on light-mode.
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
 
@@ -33,16 +34,33 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
     if (!dateTime) {
       return;
     }
+    setLowerBound(dateTime);
     const updatedfield: FieldConfig = {
       ...field,
       value: {
-        ...(value as DateRange),
+        ...value,
         lowerBound: dateTime,
       },
     };
     onChange(updatedfield);
   };
   const memoizedLowerDateChange = useCallback(handleLowerDateChange, [field, onChange, value]);
+
+  const handleUpperDateChange = (dateTime: DayTime) => {
+    if (!dateTime) {
+      return;
+    }
+    setUpperBound(dateTime);
+    const updatedfield: FieldConfig = {
+      ...field,
+      value: {
+        ...value,
+        upperBound: dateTime,
+      },
+    };
+    onChange(updatedfield);
+  };
+  const memoizedUpperDateChange = useCallback(handleUpperDateChange, [field, onChange, value]);
 
   const onStartFocus = useCallback(() => {
     setStartFocused((prevState) => !prevState);
@@ -52,30 +70,15 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
     setEndFocused((prevState) => !prevState);
   }, []);
 
-  const handleUpperDateChange = (dateTime: DayTime) => {
-    if (!dateTime) {
-      return;
-    }
-    const updatedfield: FieldConfig = {
-      ...field,
-      value: {
-        ...(value as DateRange),
-        upperBound: dateTime,
-      },
-    };
-    onChange(updatedfield);
-  };
-  const memoizedUpperDateChange = useCallback(handleUpperDateChange, [field, onChange, value]);
-
   // Note: both the Paper and the slotted Textfield need to be full width for each DateTimePicker
   return (
     <FormGrid item key={name}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack direction={{ md: 'row', xs: 'column' }} spacing={1} justifyContent="space-between">
+        <Stack direction={{ lg: 'row', xs: 'column' }} spacing={1} justifyContent="space-between">
           <Paper elevation={startFocused ? 4 : 1} className="query-builder-field">
             <DateTimePicker
               name={`${name}.lowerBound`}
-              value={lowerBound ? dayjs(lowerBound) : undefined}
+              value={lowerBound}
               slots={{
                 openPickerButton: StyledButton,
                 day: StyledDay,
@@ -97,7 +100,7 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
           <Paper elevation={endFocused ? 4 : 1} className="query-builder-field">
             <DateTimePicker
               name={`${name}.upperBound`}
-              value={upperBound ? dayjs(upperBound) : undefined}
+              value={upperBound}
               slots={{
                 openPickerButton: StyledButton,
                 day: StyledDay,

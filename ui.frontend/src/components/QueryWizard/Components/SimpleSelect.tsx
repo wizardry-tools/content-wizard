@@ -6,6 +6,8 @@ import { SimpleInputProps } from './SimpleInput';
 
 export const SimpleSelect = memo(({ onChange, field, disabled }: SimpleInputProps) => {
   const { name, label, value, required, options } = { ...field };
+
+  // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
   const [focused, setFocused] = useState(false);
 
   const handleChange = (e: { target: { value: InputValue } }) => {
