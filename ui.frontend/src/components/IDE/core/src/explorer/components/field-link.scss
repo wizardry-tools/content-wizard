@@ -1,6 +1,7 @@
 a.wizard-doc-explorer-field-name {
   color: hsl(var(--color-info));
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

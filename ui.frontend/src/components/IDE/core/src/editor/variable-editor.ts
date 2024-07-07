@@ -2,12 +2,7 @@ import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import { useEffect, useRef } from 'react';
 
 import { useExecutionContext } from '../execution';
-import {
-  commonKeys,
-  DEFAULT_EDITOR_THEME,
-  DEFAULT_KEY_MAP,
-  importCodeMirror,
-} from './common';
+import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
 import {
   useChangeHandler,
@@ -43,11 +38,10 @@ export function useVariableEditor(
   }: UseVariableEditorArgs = {},
   caller?: Function,
 ) {
-  const { initialVariables, variableEditor, setVariableEditor } =
-    useEditorContext({
-      nonNull: true,
-      caller: caller || useVariableEditor,
-    });
+  const { initialVariables, variableEditor, setVariableEditor } = useEditorContext({
+    nonNull: true,
+    caller: caller || useVariableEditor,
+  });
   const executionContext = useExecutionContext();
   const merge = useMergeQuery({ caller: caller || useVariableEditor });
   const prettify = usePrettifyEditors({ caller: caller || useVariableEditor });
@@ -61,7 +55,7 @@ export function useVariableEditor(
       import('codemirror-graphql/esm/variables/hint'),
       import('codemirror-graphql/esm/variables/lint'),
       import('codemirror-graphql/esm/variables/mode'),
-    ]).then(CodeMirror => {
+    ]).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;
@@ -134,13 +128,7 @@ export function useVariableEditor(
 
   useSynchronizeOption(variableEditor, 'keyMap', keyMap);
 
-  useChangeHandler(
-    variableEditor,
-    onEdit,
-    STORAGE_KEY,
-    'variables',
-    useVariableEditor,
-  );
+  useChangeHandler(variableEditor, onEdit, STORAGE_KEY, 'variables', useVariableEditor);
 
   useCompletion(variableEditor, onClickReference || null, useVariableEditor);
 

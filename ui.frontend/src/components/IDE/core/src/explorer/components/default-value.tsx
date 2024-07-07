@@ -29,9 +29,7 @@ export function DefaultValue({ field }: DefaultValueProps) {
   return (
     <>
       {' = '}
-      <span className="wizard-doc-explorer-default-value">
-        {printDefault(ast)}
-      </span>
+      <span className="wizard-doc-explorer-default-value">{printDefault(ast)}</span>
     </>
   );
 }

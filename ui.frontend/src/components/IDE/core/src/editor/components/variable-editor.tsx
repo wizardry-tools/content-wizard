@@ -31,7 +31,5 @@ export function VariableEditor({ isHidden, ...hookArgs }: VariableEditorProps) {
     }
   }, [variableEditor, isHidden]);
 
-  return (
-    <div className={clsx('wizard-editor', isHidden && 'hidden')} ref={ref} />
-  );
+  return <div className={clsx('wizard-editor', isHidden && 'hidden')} ref={ref} />;
 }

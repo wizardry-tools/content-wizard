@@ -14,12 +14,7 @@ export function TooltipRoot({
     <T.Root>
       <T.Trigger asChild>{children}</T.Trigger>
       <T.Portal>
-        <T.Content
-          className="wizard-tooltip"
-          align={align}
-          side={side}
-          sideOffset={sideOffset}
-        >
+        <T.Content className="wizard-tooltip" align={align} side={side} sideOffset={sideOffset}>
           {label}
         </T.Content>
       </T.Portal>

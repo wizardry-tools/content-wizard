@@ -2,12 +2,11 @@
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
 
-
 /**
  * This is a Custom Codemirror mode for XPATH parsing originally based on the OOTB "Properties" mode
  */
 export interface PropertiesState {
-  position: "predicate" | "quote" | "comment" | "path" | "string" | "function" | "def";
+  position: 'predicate' | 'quote' | 'comment' | 'path' | 'string' | 'function' | 'def';
   nextMultiline: boolean;
   inMultiline: boolean;
   afterSection: boolean;
@@ -18,7 +17,8 @@ export interface PropertiesState {
  * @param str
  */
 function set(str: string) {
-  let obj:any = {}, words = str.split(" ");
+  let obj: any = {},
+    words = str.split(' ');
   for (let i = 0; i < words.length; ++i) obj[words[i]] = true;
   return obj;
 }
@@ -27,11 +27,10 @@ const pathMatch: any = /^[\w\-/:]*\/\//;
 const functionMatch: any = /^[\w:]+\(/;
 const variableMatch: any = /^[\w]+:?[\w]+[,*=\s\])}]?/;
 
-const atoms = set("or and like order by");
+const atoms = set('or and like order by');
 
-
-(()=> {
-  CodeMirror.defineMode("xpath", function () {
+(() => {
+  CodeMirror.defineMode('xpath', function () {
     return {
       token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
         var sol = stream.sol() || state.afterSection;
@@ -40,63 +39,61 @@ const atoms = set("or and like order by");
         state.afterSection = false;
 
         if (sol) {
-          while (stream.eatSpace()) {
-          }
+          while (stream.eatSpace()) {}
         }
 
         var ch = stream.next();
 
         // process sol checks before processing non-sol checks
-        if (sol && ch === "/" && stream.match(pathMatch, false)) {
+        if (sol && ch === '/' && stream.match(pathMatch, false)) {
           // found the path of the XPATH
-          state.position = "path";
+          state.position = 'path';
           stream.match(pathMatch, true);
-          return  "predicate";
-        } else if (sol && (ch === "#" || ch === "!" || ch === ";")) {
+          return 'predicate';
+        } else if (sol && (ch === '#' || ch === '!' || ch === ';')) {
           // comments
-          state.position = "comment";
+          state.position = 'comment';
           stream.skipToEnd();
-          return "comment";
-        } else if (ch === "(") {
+          return 'comment';
+        } else if (ch === '(') {
           // prevents wrapped statements from including "(" in tokens.
           return null;
         } else if (stream.match(functionMatch, false)) {
           // function name "def"
-          state.position = "function";
-          stream.skipTo("(");
-          return "def" // return the function's name, don't process the function parentheses yet.
-        } else if (ch === "*") {
+          state.position = 'function';
+          stream.skipTo('(');
+          return 'def'; // return the function's name, don't process the function parentheses yet.
+        } else if (ch === '*') {
           // wildcard character
-          return "atom";
-        } else if (ch === "@" && stream.match(variableMatch, false)) {
+          return 'atom';
+        } else if (ch === '@' && stream.match(variableMatch, false)) {
           // property name
-          stream.eat("@")
+          stream.eat('@');
           stream.eatWhile(/[\w:]/);
-          return "keyword";
+          return 'keyword';
         } else if (ch === "'" && stream.match(/^.*'/)) {
           stream.skipTo("'");
-          return "string";
+          return 'string';
         } else if (ch === '"' && stream.match(/^.*"/)) {
           stream.skipTo('"');
-          return "string";
-        }  else {
+          return 'string';
+        } else {
           // keyword check
           stream.eatWhile(/^[_\w\d]/);
           let word = stream.current().toLowerCase().trim();
-          if (atoms.hasOwnProperty(word)) return "atom";
+          if (atoms.hasOwnProperty(word)) return 'atom';
           return null;
         }
       },
 
       startState: function () {
         return {
-          position: "path",       // Current position, "def", "quote" or "comment"
-          nextMultiline: false,  // Is the next line multiline value
-          inMultiline: false,    // Is the current line a multiline value
-          afterSection: false    // Did we just open a section
+          position: 'path', // Current position, "def", "quote" or "comment"
+          nextMultiline: false, // Is the next line multiline value
+          inMultiline: false, // Is the current line a multiline value
+          afterSection: false, // Did we just open a section
         };
-      }
-
+      },
     };
   });
-})()
+})();

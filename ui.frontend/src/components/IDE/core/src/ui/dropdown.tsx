@@ -13,17 +13,11 @@ import {
 
 import './dropdown.scss';
 
-const Button = forwardRef<HTMLButtonElement, ComponentProps<'button'>>(
-  (props, ref) => (
-    <Trigger asChild>
-      <button
-        {...props}
-        ref={ref}
-        className={clsx('wizard-un-styled', props.className)}
-      />
-    </Trigger>
-  ),
-);
+const Button = forwardRef<HTMLButtonElement, ComponentProps<'button'>>((props, ref) => (
+  <Trigger asChild>
+    <button {...props} ref={ref} className={clsx('wizard-un-styled', props.className)} />
+  </Trigger>
+));
 Button.displayName = 'DropdownMenuButton';
 
 function Content({

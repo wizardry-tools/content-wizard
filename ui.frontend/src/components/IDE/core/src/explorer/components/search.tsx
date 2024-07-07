@@ -7,16 +7,9 @@ import {
   isInterfaceType,
   isObjectType,
 } from 'graphql';
-import {
-  FocusEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { FocusEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Combobox } from '@headlessui/react';
-import { MagnifyingGlassIcon } from '../../../../../../icons';
+import { MagnifyingGlassIcon } from 'src/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';
 
@@ -61,16 +54,12 @@ export function Search() {
 
   const onSelect = useCallback(
     (def: TypeMatch | FieldMatch) => {
-      push(
-        'field' in def
-          ? { name: def.field.name, def: def.field }
-          : { name: def.type.name, def: def.type },
-      );
+      push('field' in def ? { name: def.field.name, def: def.field } : { name: def.type.name, def: def.type });
     },
     [push],
   );
   const isFocused = useRef(false);
-  const handleFocus: FocusEventHandler = useCallback(e => {
+  const handleFocus: FocusEventHandler = useCallback((e) => {
     isFocused.current = e.type === 'focus';
   }, []);
 
@@ -102,7 +91,7 @@ export function Search() {
           autoComplete="off"
           onFocus={handleFocus}
           onBlur={handleFocus}
-          onChange={event => setSearchValue(event.target.value)}
+          onChange={(event) => setSearchValue(event.target.value)}
           placeholder="&#x2318; K"
           ref={inputRef}
           value={searchValue}
@@ -113,45 +102,25 @@ export function Search() {
       {/* display on focus */}
       {isFocused.current && (
         <Combobox.Options data-cy="doc-explorer-list">
-          {results.within.length +
-            results.types.length +
-            results.fields.length ===
-          0 ? (
-            <li className="wizard-doc-explorer-search-empty">
-              No results found
-            </li>
+          {results.within.length + results.types.length + results.fields.length === 0 ? (
+            <li className="wizard-doc-explorer-search-empty">No results found</li>
           ) : (
             results.within.map((result, i) => (
-              <Combobox.Option
-                key={`within-${i}`}
-                value={result}
-                data-cy="doc-explorer-option"
-              >
+              <Combobox.Option key={`within-${i}`} value={result} data-cy="doc-explorer-option">
                 <Field field={result.field} argument={result.argument} />
               </Combobox.Option>
             ))
           )}
-          {results.within.length > 0 &&
-          results.types.length + results.fields.length > 0 ? (
-            <div className="wizard-doc-explorer-search-divider">
-              Other results
-            </div>
+          {results.within.length > 0 && results.types.length + results.fields.length > 0 ? (
+            <div className="wizard-doc-explorer-search-divider">Other results</div>
           ) : null}
           {results.types.map((result, i) => (
-            <Combobox.Option
-              key={`type-${i}`}
-              value={result}
-              data-cy="doc-explorer-option"
-            >
+            <Combobox.Option key={`type-${i}`} value={result} data-cy="doc-explorer-option">
               <Type type={result.type} />
             </Combobox.Option>
           ))}
           {results.fields.map((result, i) => (
-            <Combobox.Option
-              key={`field-${i}`}
-              value={result}
-              data-cy="doc-explorer-option"
-            >
+            <Combobox.Option key={`field-${i}`} value={result} data-cy="doc-explorer-option">
               <Type type={result.type} />.
               <Field field={result.field} argument={result.argument} />
             </Combobox.Option>
@@ -205,16 +174,11 @@ export function useSearchResults(caller?: Function) {
 
       // Move the within type name to be the first searched.
       if (withinType) {
-        typeNames = typeNames.filter(n => n !== withinType.name);
+        typeNames = typeNames.filter((n) => n !== withinType.name);
         typeNames.unshift(withinType.name);
       }
       for (const typeName of typeNames) {
-        if (
-          matches.within.length +
-            matches.types.length +
-            matches.fields.length >=
-          100
-        ) {
+        if (matches.within.length + matches.types.length + matches.fields.length >= 100) {
           break;
         }
 
@@ -223,11 +187,7 @@ export function useSearchResults(caller?: Function) {
           matches.types.push({ type });
         }
 
-        if (
-          !isObjectType(type) &&
-          !isInterfaceType(type) &&
-          !isInputObjectType(type)
-        ) {
+        if (!isObjectType(type) && !isInterfaceType(type) && !isInputObjectType(type)) {
           continue;
         }
 
@@ -238,9 +198,7 @@ export function useSearchResults(caller?: Function) {
 
           if (!isMatch(fieldName, searchValue)) {
             if ('args' in field) {
-              matchingArgs = field.args.filter(arg =>
-                isMatch(arg.name, searchValue),
-              );
+              matchingArgs = field.args.filter((arg) => isMatch(arg.name, searchValue));
               if (matchingArgs.length === 0) {
                 continue;
               }
@@ -250,9 +208,7 @@ export function useSearchResults(caller?: Function) {
           }
 
           matches[withinType === type ? 'within' : 'fields'].push(
-            ...(matchingArgs
-              ? matchingArgs.map(argument => ({ type, field, argument }))
-              : [{ type, field }]),
+            ...(matchingArgs ? matchingArgs.map((argument) => ({ type, field, argument })) : [{ type, field }]),
           );
         }
       }
@@ -265,7 +221,7 @@ export function useSearchResults(caller?: Function) {
 
 function isMatch(sourceText: string, searchValue: string): boolean {
   try {
-    const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, ch => '\\' + ch);
+    const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, (ch) => '\\' + ch);
     return sourceText.search(new RegExp(escaped, 'i')) !== -1;
   } catch {
     return sourceText.toLowerCase().includes(searchValue.toLowerCase());
@@ -275,9 +231,7 @@ function isMatch(sourceText: string, searchValue: string): boolean {
 type TypeProps = { type: GraphQLNamedType };
 
 function Type(props: TypeProps) {
-  return (
-    <span className="wizard-doc-explorer-search-type">{props.type.name}</span>
-  );
+  return <span className="wizard-doc-explorer-search-type">{props.type.name}</span>;
 }
 
 type FieldProps = {
@@ -291,12 +245,8 @@ function Field({ field, argument }: FieldProps) {
       <span className="wizard-doc-explorer-search-field">{field.name}</span>
       {argument ? (
         <>
-          (
-          <span className="wizard-doc-explorer-search-argument">
-            {argument.name}
-          </span>
-          :{' '}
-          {renderType(argument.type, namedType => (
+          (<span className="wizard-doc-explorer-search-argument">{argument.name}</span>:{' '}
+          {renderType(argument.type, (namedType) => (
             <Type type={namedType} />
           ))}
           )

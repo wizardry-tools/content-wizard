@@ -9,11 +9,13 @@
         }
       }
     ],
-    "@babel/react",
+    "@babel/preset-react",
+    "@babel/preset-flow",
     "@babel/typescript"
   ],
   "plugins": [
-    "@emotion"
+    "@emotion",
+    ["@babel/plugin-proposal-decorators", { "legacy" : true }]
   ],
   "env": {
     "test": {

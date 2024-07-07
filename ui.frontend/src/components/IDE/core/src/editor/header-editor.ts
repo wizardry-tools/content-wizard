@@ -1,20 +1,9 @@
 import { useEffect, useRef } from 'react';
 
 import { useExecutionContext } from '../execution';
-import {
-  commonKeys,
-  DEFAULT_EDITOR_THEME,
-  DEFAULT_KEY_MAP,
-  importCodeMirror,
-} from './common';
+import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
-import {
-  useChangeHandler,
-  useKeyMap,
-  useMergeQuery,
-  usePrettifyEditors,
-  useSynchronizeOption,
-} from './hooks';
+import { useChangeHandler, useKeyMap, useMergeQuery, usePrettifyEditors, useSynchronizeOption } from './hooks';
 import { WriteableEditorProps } from './types';
 
 export type UseHeaderEditorArgs = WriteableEditorProps & {
@@ -26,20 +15,10 @@ export type UseHeaderEditorArgs = WriteableEditorProps & {
 };
 
 export function useHeaderEditor(
-  {
-    editorTheme = DEFAULT_EDITOR_THEME,
-    keyMap = DEFAULT_KEY_MAP,
-    onEdit,
-    readOnly = false,
-  }: UseHeaderEditorArgs = {},
+  { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, onEdit, readOnly = false }: UseHeaderEditorArgs = {},
   caller?: Function,
 ) {
-  const {
-    initialHeaders,
-    headerEditor,
-    setHeaderEditor,
-    shouldPersistHeaders,
-  } = useEditorContext({
+  const { initialHeaders, headerEditor, setHeaderEditor, shouldPersistHeaders } = useEditorContext({
     nonNull: true,
     caller: caller || useHeaderEditor,
   });
@@ -54,7 +33,7 @@ export function useHeaderEditor(
     void importCodeMirror([
       // @ts-expect-error
       import('codemirror/mode/javascript/javascript'),
-    ]).then(CodeMirror => {
+    ]).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;
@@ -114,13 +93,7 @@ export function useHeaderEditor(
 
   useSynchronizeOption(headerEditor, 'keyMap', keyMap);
 
-  useChangeHandler(
-    headerEditor,
-    onEdit,
-    shouldPersistHeaders ? STORAGE_KEY : null,
-    'headers',
-    useHeaderEditor,
-  );
+  useChangeHandler(headerEditor, onEdit, shouldPersistHeaders ? STORAGE_KEY : null, 'headers', useHeaderEditor);
 
   useKeyMap(headerEditor, ['Cmd-Enter', 'Ctrl-Enter'], executionContext?.run);
   useKeyMap(headerEditor, ['Shift-Ctrl-P'], prettify);

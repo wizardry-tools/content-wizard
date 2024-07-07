@@ -1,0 +1,180 @@
+/* a very simple box-model reset, intentionally does not include pseudo elements */
+.wizard-container * {
+  box-sizing: border-box;
+  font-variant-ligatures: none;
+}
+
+.wizard-container,
+.CodeMirror-info,
+.CodeMirror-lint-tooltip,
+.wizard-dialog,
+.wizard-dialog-overlay,
+.wizard-tooltip,
+.wizard-response,
+.wizard-builder,
+[data-radix-popper-content-wrapper] {
+  /* Colors */
+  --color-primary: 0, 0%, 94%;
+  --color-secondary: 210, 79%, 46%;
+  --color-tertiary: 338, 100%, 67%;
+  --color-quarternary: 282, 100%, 42%;
+  --color-info: 208, 100%, 46%;
+  --color-success: 158, 60%, 42%;
+  --color-warning: 36, 100%, 41%;
+  --color-error: 13, 93%, 58%;
+  --color-neutral: 219, 28%, 32%;
+  --color-base: 219, 28%, 100%;
+
+  // additional colors
+  --intelli-orange: 27, 75%, 43%;
+  --intelli-purple: 279, 57%, 47%;
+  --intelli-blue: 206, 69%, 46%;
+  --intelli-yellow: 42, 100%, 68%;
+  --intelli-green: 98, 33%, 39%;
+  --intelli-light-grey: 211, 19%, 60%;
+  --intelli-dark-grey: 0, 0%, 30%;
+
+  /* Color alpha values */
+  --alpha-secondary: 0.76;
+  --alpha-tertiary: 0.5;
+  --alpha-background-heavy: 0.15;
+  --alpha-background-medium: 0.1;
+  --alpha-background-light: 0.07;
+
+  /* Font */
+  --font-family: 'Roboto', sans-serif;
+  --font-family-mono: 'Fira Code', monospace;
+  --font-size-hint: calc(12rem / 16);
+  --font-size-inline-code: calc(13rem / 16);
+  --font-size-body: calc(15rem / 16);
+  --font-size-h4: calc(18rem / 16);
+  --font-size-h3: calc(22rem / 16);
+  --font-size-h2: calc(29rem / 16);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --line-height: 1.5;
+
+  /* Spacing */
+  --px-2: 2px;
+  --px-4: 4px;
+  --px-6: 6px;
+  --px-8: 8px;
+  --px-10: 10px;
+  --px-12: 12px;
+  --px-16: 16px;
+  --px-20: 20px;
+  --px-24: 24px;
+
+  /* Border radius */
+  --border-radius-2: 2px;
+  --border-radius-4: 4px;
+  --border-radius-8: 8px;
+  --border-radius-12: 12px;
+
+  /* Popover styles (tooltip, dialog, etc) */
+  --popover-box-shadow: 0px 6px 20px rgba(59, 76, 106, 0.13),
+    0px 1.34018px 4.46726px rgba(59, 76, 106, 0.0774939),
+    0px 0.399006px 1.33002px rgba(59, 76, 106, 0.0525061);
+  --popover-border: none;
+
+  /* Layout */
+  --sidebar-width: 60px;
+  --toolbar-width: 40px;
+  --session-header-height: 51px;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.wizard-light) .wizard-container,
+  body:not(.wizard-light) .CodeMirror-info,
+  body:not(.wizard-light) .CodeMirror-lint-tooltip,
+  body:not(.wizard-light) .wizard-dialog,
+  body:not(.wizard-light) .wizard-dialog-overlay,
+  body:not(.wizard-light) .wizard-tooltip,
+  body:not(.wizard-light) .wizard-response,
+  body:not(.wizard-light) .wizard-builder,
+  body:not(.wizard-light) [data-radix-popper-content-wrapper] {
+    --color-primary: 0, 0%, 94%;
+    --color-secondary: 207, 90%, 54%;
+    --color-tertiary: 338, 100%, 67%;
+    --color-info: 208, 100%, 72%;
+    --color-success: 158, 100%, 42%;
+    --color-warning: 30, 100%, 80%;
+    --color-error: 13, 100%, 58%;
+    --color-neutral: 219, 29%, 78%;
+    --color-base: 0, 0%, 7%;
+
+    --intelli-orange: 27, 61%, 50%;
+    --intelli-purple: 279, 23%, 56%;
+    --intelli-blue: 206, 38%, 57%;
+    --intelli-yellow: 37, 100%, 71%;
+    --intelli-green: 98, 21%, 44%;
+    --intelli-light-grey: 211, 20%, 72%;
+    --intelli-dark-grey: 0, 0%, 50%;
+
+    --popover-box-shadow: none;
+    --popover-border: 1px solid hsl(var(--color-neutral));
+  }
+}
+
+body.wizard-dark .wizard-container,
+body.wizard-dark .CodeMirror-info,
+body.wizard-dark .CodeMirror-lint-tooltip,
+body.wizard-dark .wizard-dialog,
+body.wizard-dark .wizard-dialog-overlay,
+body.wizard-dark .wizard-tooltip,
+body.wizard-dark .wizard-response,
+body.wizard-dark .wizard-builder,
+body.wizard-dark [data-radix-popper-content-wrapper] {
+  --color-primary: 0, 0%, 94%;
+  --color-secondary: 207, 90%, 54%;
+  --color-tertiary: 338, 100%, 67%;
+  --color-info: 208, 100%, 72%;
+  --color-success: 158, 100%, 42%;
+  --color-warning: 30, 100%, 80%;
+  --color-error: 13, 100%, 58%;
+  --color-neutral: 219, 29%, 78%;
+  --color-base: 0, 0%, 7%;
+
+  --intelli-orange: 27, 61%, 50%;
+  --intelli-purple: 279, 23%, 56%;
+  --intelli-blue: 206, 38%, 57%;
+  --intelli-yellow: 37, 100%, 71%;
+  --intelli-green: 98, 21%, 44%;
+  --intelli-light-grey: 211, 20%, 72%;
+  --intelli-dark-grey: 0, 0%, 50%;
+
+  --popover-box-shadow: none;
+  --popover-border: 1px solid hsl(var(--color-neutral));
+}
+
+.wizard-container,
+.CodeMirror-info,
+.CodeMirror-lint-tooltip,
+.wizard-dialog {
+  &,
+  &:is(button) {
+    color: hsla(var(--color-neutral), 1);
+    font-family: var(--font-family);
+    font-size: var(--font-size-body);
+    font-weight: var(----font-weight-regular);
+    line-height: var(--line-height);
+  }
+
+  & input {
+    color: hsla(var(--color-neutral), 1);
+    font-family: var(--font-family);
+    font-size: var(--font-size-caption);
+
+    &::placeholder {
+      color: hsla(var(--color-neutral), var(--alpha-secondary));
+    }
+  }
+
+  & a {
+    color: hsl(var(--color-primary));
+
+    &:focus {
+      outline: hsl(var(--color-primary)) auto 1px;
+    }
+  }
+}

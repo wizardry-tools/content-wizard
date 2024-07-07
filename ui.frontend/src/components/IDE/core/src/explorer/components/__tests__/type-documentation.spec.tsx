@@ -40,12 +40,8 @@ function TypeDocumentationWithContext(props: { type: GraphQLNamedType }) {
 
 describe('TypeDocumentation', () => {
   it('renders a top-level query object type', () => {
-    const { container } = render(
-      <TypeDocumentationWithContext type={ExampleQuery} />,
-    );
-    const description = container.querySelectorAll(
-      '.wizard-markdown-description',
-    );
+    const { container } = render(<TypeDocumentationWithContext type={ExampleQuery} />);
+    const description = container.querySelectorAll('.wizard-markdown-description');
     expect(description).toHaveLength(1);
     expect(description[0]).toHaveTextContent('Query description\nSecond line', {
       normalizeWhitespace: false,
@@ -54,15 +50,11 @@ describe('TypeDocumentation', () => {
     const cats = container.querySelectorAll('.wizard-doc-explorer-item');
     expect(cats[0]).toHaveTextContent('string: String');
     expect(cats[1]).toHaveTextContent('union: exampleUnion');
-    expect(cats[2]).toHaveTextContent(
-      'fieldWithArgs(stringArg: String): String',
-    );
+    expect(cats[2]).toHaveTextContent('fieldWithArgs(stringArg: String): String');
   });
 
   it('renders deprecated fields when you click to see them', () => {
-    const { container, getByText } = render(
-      <TypeDocumentationWithContext type={ExampleQuery} />,
-    );
+    const { container, getByText } = render(<TypeDocumentationWithContext type={ExampleQuery} />);
     let cats = container.querySelectorAll('.wizard-doc-explorer-item');
     expect(cats).toHaveLength(3);
 
@@ -70,51 +62,33 @@ describe('TypeDocumentation', () => {
 
     cats = container.querySelectorAll('.wizard-doc-explorer-item');
     expect(cats).toHaveLength(4);
-    expect(
-      container.querySelectorAll('.wizard-doc-explorer-field-name')[3],
-    ).toHaveTextContent('deprecatedField');
-    expect(
-      container.querySelector('.wizard-markdown-deprecation'),
-    ).toHaveTextContent('example deprecation reason');
+    expect(container.querySelectorAll('.wizard-doc-explorer-field-name')[3]).toHaveTextContent('deprecatedField');
+    expect(container.querySelector('.wizard-markdown-deprecation')).toHaveTextContent('example deprecation reason');
   });
 
   it('renders a Union type', () => {
-    const { container } = render(
-      <TypeDocumentationWithContext type={ExampleUnion} />,
-    );
-    const title = container.querySelector(
-      '.wizard-doc-explorer-section-title',
-    );
+    const { container } = render(<TypeDocumentationWithContext type={ExampleUnion} />);
+    const title = container.querySelector('.wizard-doc-explorer-section-title');
     title?.childNodes[0].remove();
     expect(title).toHaveTextContent('Possible Types');
   });
 
   it('renders an Enum type', () => {
-    const { container } = render(
-      <TypeDocumentationWithContext type={ExampleEnum} />,
-    );
-    const title = container.querySelector(
-      '.wizard-doc-explorer-section-title',
-    );
+    const { container } = render(<TypeDocumentationWithContext type={ExampleEnum} />);
+    const title = container.querySelector('.wizard-doc-explorer-section-title');
     title?.childNodes[0].remove();
     expect(title).toHaveTextContent('Enum Values');
-    const enums = container.querySelectorAll(
-      '.wizard-doc-explorer-enum-value',
-    );
+    const enums = container.querySelectorAll('.wizard-doc-explorer-enum-value');
     expect(enums[0]).toHaveTextContent('value1');
     expect(enums[1]).toHaveTextContent('value2');
   });
 
   it('shows deprecated enum values on click', () => {
-    const { getByText, container } = render(
-      <TypeDocumentationWithContext type={ExampleEnum} />,
-    );
+    const { getByText, container } = render(<TypeDocumentationWithContext type={ExampleEnum} />);
     const showBtn = getByText('Show Deprecated Values');
     expect(showBtn).toBeInTheDocument();
 
-    const title = container.querySelector(
-      '.wizard-doc-explorer-section-title',
-    );
+    const title = container.querySelector('.wizard-doc-explorer-section-title');
     title?.childNodes[0].remove();
     expect(title).toHaveTextContent('Enum Values');
 
@@ -125,18 +99,14 @@ describe('TypeDocumentation', () => {
     fireEvent.click(showBtn);
     expect(showBtn).not.toBeInTheDocument();
 
-    const deprecatedTitle = container.querySelectorAll(
-      '.wizard-doc-explorer-section-title',
-    )[1];
+    const deprecatedTitle = container.querySelectorAll('.wizard-doc-explorer-section-title')[1];
     deprecatedTitle.childNodes[0].remove();
     expect(deprecatedTitle).toHaveTextContent('Deprecated Enum Values');
 
     enums = container.querySelectorAll('.wizard-doc-explorer-enum-value');
     expect(enums).toHaveLength(3);
     expect(enums[2]).toHaveTextContent('value3');
-    expect(
-      container.querySelector('.wizard-markdown-deprecation'),
-    ).toHaveTextContent('Only two are needed');
+    expect(container.querySelector('.wizard-markdown-deprecation')).toHaveTextContent('Only two are needed');
   });
 });
 

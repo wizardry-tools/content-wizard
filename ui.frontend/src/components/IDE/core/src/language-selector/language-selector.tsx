@@ -1,68 +1,115 @@
-import FormGrid from "../../../../QueryWizard/FormElements/FormGrid";
+import { FormGrid } from 'src/components/QueryWizard/Components';
 import {
-  API,
+  defaultAdvancedQueries,
   QueryLanguage,
   QueryLanguageKey,
-  QueryLanguageLookup,
-  Statement
-} from "../../../../QueryWizard/types/QueryTypes";
-import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
-import {defaultAdvancedQueries} from "../../../../QueryWizard/defaults";
-import GraphQLSelect from "./GraphQLSelect";
-import {useQuery, useQueryDispatch} from "../../../../QueryWizard/providers/QueryProvider";
+  QueryLanguageLabels,
+  Statement,
+} from 'src/components/Query';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { useQuery, useQueryDispatch } from 'src/providers';
+import { memo, useCallback } from 'react';
+import './language-selector.scss';
+import { APISelector } from './APISelector';
+import { API, useAPIContext } from '../api';
+import { PersistedQuerySelector } from './PersistedQuerySelector';
+import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 
-import "./language-selector.scss";
+/**
+ * This is a custom Plugin for the Query IDE.
+ * It's built similar to the DocExplorer and History Plugins.
+ * It provides the IDE with the choice of 5 AEM supported languages.
+ * When the user selects the GraphQL Language, the APISelect component
+ * will render additional options for GraphQL.
+ *
+ * The {LanguageSelector} will unmount when the Plugin view is collapsed.
+ * @constructor
+ */
+export function LanguageSelector() {
+  console.log('LanguageSelector Render()');
 
-export default function LanguageSelector() {
+  const { language, api } = useQuery();
 
-  const {language} = useQuery();
   const queryDispatch = useQueryDispatch();
+  const { APIs } = useAPIContext({
+    nonNull: true,
+    caller: LanguageSelector,
+  });
 
-  function handleStatementChange (statement: Statement) {
-    queryDispatch({
-      type: 'statementChange',
-      statement
-    });
-  }
+  const handleStatementChange = useCallback(
+    (statement: Statement) => {
+      queryDispatch({
+        type: 'statementChange',
+        statement,
+      });
+    },
+    [queryDispatch],
+  );
 
-  function handleLanguageChange (language: QueryLanguageKey) {
-    // reset the entire query on language change
-    queryDispatch({
-      ...(defaultAdvancedQueries[language]),
-      type: 'replaceQuery',
-    });
-  }
+  const handleLanguageChange = useCallback(
+    (language: QueryLanguageKey) => {
+      // reset the entire query on language change
+      queryDispatch({
+        ...defaultAdvancedQueries[language],
+        type: 'replaceQuery',
+      });
+    },
+    [queryDispatch],
+  );
 
-  function handleAPIChange (api: API) {
-    queryDispatch({
-      type: 'apiChange',
-      api
-    });
-  }
+  const handleAPIChange = useCallback(
+    (newAPI: API) => {
+      queryDispatch({
+        type: 'apiChange',
+        api: newAPI,
+      });
+    },
+    [queryDispatch],
+  );
 
-  const onTypeChange = (e: {target: {value: string}}) => {
-    const selectedLanguage = e.target.value as typeof language;
-    handleLanguageChange(selectedLanguage);
-  }
+  const onAPIChange = useCallback(
+    (event: SelectChangeEvent) => {
+      console.log('LanguageSelector onAPIChange()');
+      const selectedEndpoint = event.target.value;
+      console.log('LanguageSelector.onAPIChange() endpoint: ', selectedEndpoint);
+      // API was selected
+      let foundAPI = APIs.find((api) => {
+        return api.endpoint === selectedEndpoint;
+      });
+      if (foundAPI) {
+        handleAPIChange(foundAPI);
+      }
+    },
+    [APIs, handleAPIChange],
+  );
 
-  const onStatementChange = (e: {target: {value: string}}) => {
-    const statement = e.target.value;
-    handleStatementChange(statement);
-  }
+  const onLanguageChange = useCallback(
+    (event: SelectChangeEvent) => {
+      console.log('LanguageSelector onAPIChange()');
+      const selectedLanguage = event.target.value as typeof language;
+      handleLanguageChange(selectedLanguage);
+    },
+    [handleLanguageChange],
+  );
 
-  const queryLanguageSelector = () => {
-    const items = [];
-    for (const key in QueryLanguage) {
-      const lang = QueryLanguage[key as QueryLanguageKey];
-      items.push(
-        <MenuItem key={key} value={key} >{lang}</MenuItem>
-      )
-    }
+  const LanguageSelectorHeader = memo(() => (
+    <div className="wizard-language-selector-header">
+      <div className="wizard-language-selector-header-content">
+        <div className="wizard-language-selector-title">Language Selector</div>
+      </div>
+    </div>
+  ));
 
+  /**
+   * This is a render function for the actual Dropdown field.
+   */
+  const QueryLanguageSelector = memo(() => {
     return (
-      <>
+      <FormGrid item xs={12} md={12}>
         <FormControl variant="filled" color="secondary" className="wizard-language-selector">
-          <InputLabel id="query-language-label" required>Query Language</InputLabel>
+          <InputLabel id="query-language-label" required>
+            Query Language
+          </InputLabel>
           <Select
             labelId="query-language-label"
             id="query-language"
@@ -70,48 +117,38 @@ export default function LanguageSelector() {
             value={language}
             label="Query Language"
             color="secondary"
-            onChange={onTypeChange}
+            onChange={onLanguageChange}
             required
           >
-            {items}
+            {Object.values(QueryLanguage).map((lang) => (
+              <MenuItem key={QueryLanguage[lang]} value={QueryLanguage[lang]}>
+                {QueryLanguageLabels[lang]}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
-      </>
+      </FormGrid>
     );
-  }
+  });
 
-  const graphQLSelect = (
-    <>
+  const GraphQLForm = () => {
+    return (
       <FormGrid item xs={12} md={6}>
-        <GraphQLSelect
-          onApiChange={handleAPIChange}
-          onPersistedQuerySelect={onStatementChange}
-        />
+        <APISelector endpoint={api?.endpoint} APIs={APIs} onAPIChange={onAPIChange} />
+        {api && <PersistedQuerySelector api={api} onStatementChange={handleStatementChange} />}
       </FormGrid>
-    </>
-  );
+    );
+  };
 
-
+  /**
+   * This is the render block for the "Plugin Container"
+   */
   return (
-    <section
-      className="wizard-language-selector"
-      aria-label="Language Selector"
-    >
-      <div className="wizard-language-selector-header">
-        <div className="wizard-language-selector-header-content">
-          <div className="wizard-language-selector-title">
-            Language Selector
-          </div>
-        </div>
-      </div>
+    <section className="wizard-language-selector" aria-label="Language Selector">
+      <LanguageSelectorHeader />
       <div className="wizard-language-selector-content">
-
-      <FormGrid item xs={12} md={12}>
-        {queryLanguageSelector()}
-      </FormGrid>
-      {language === QueryLanguageLookup[QueryLanguage.GraphQL] && (
-        graphQLSelect
-      )}
+        <QueryLanguageSelector />
+        {language === QueryLanguage.GraphQL && <GraphQLForm />}
       </div>
     </section>
   );

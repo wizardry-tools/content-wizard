@@ -22,13 +22,7 @@ const ToolbarMenuRoot = ({
 } & DropdownMenuProps) => (
   <DropdownMenu {...props}>
     <Tooltip label={label}>
-      <DropdownMenu.Button
-        className={clsx(
-          'wizard-un-styled wizard-toolbar-menu',
-          props.className,
-        )}
-        aria-label={label}
-      >
+      <DropdownMenu.Button className={clsx('wizard-un-styled wizard-toolbar-menu', props.className)} aria-label={label}>
         {button}
       </DropdownMenu.Button>
     </Tooltip>

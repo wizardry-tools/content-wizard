@@ -8,15 +8,9 @@ export function createNullableContext<T>(name: string): Context<T | null> {
 
 export function createContextHook<T>(context: Context<T | null>) {
   function useGivenContext(options: { nonNull: true; caller?: Function }): T;
-  function useGivenContext(options: {
-    nonNull?: boolean;
-    caller?: Function;
-  }): T | null;
+  function useGivenContext(options: { nonNull?: boolean; caller?: Function }): T | null;
   function useGivenContext(): T | null;
-  function useGivenContext(options?: {
-    nonNull?: boolean;
-    caller?: Function;
-  }): T | null {
+  function useGivenContext(options?: { nonNull?: boolean; caller?: Function }): T | null {
     const value = useContext(context);
     if (value === null && options?.nonNull) {
       throw new Error(

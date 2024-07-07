@@ -11,7 +11,7 @@ import {
   ImplementsIcon,
   RootTypeIcon,
   TypeIcon,
-} from '../../../../../../icons';
+} from 'src/icons';
 
 import './section.scss';
 
@@ -45,9 +45,7 @@ export function ExplorerSection(props: ExplorerSectionProps) {
         <Icon />
         {props.title}
       </div>
-      <div className="wizard-doc-explorer-section-content">
-        {props.children}
-      </div>
+      <div className="wizard-doc-explorer-section-content">{props.children}</div>
     </div>
   );
 }

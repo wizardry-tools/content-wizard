@@ -10,9 +10,5 @@ type DirectiveProps = {
 };
 
 export function Directive({ directive }: DirectiveProps) {
-  return (
-    <span className="wizard-doc-explorer-directive">
-      @{directive.name.value}
-    </span>
-  );
+  return <span className="wizard-doc-explorer-directive">@{directive.name.value}</span>;
 }

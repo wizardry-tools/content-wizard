@@ -1,0 +1,10 @@
+$min-app-width: 400px;
+$global-nav-height: 2.5rem;
+$wrapper-height: calc(100vh - #{$global-nav-height});
+$header-height: 3.125rem;
+$bottom-gutter-height: 2.5rem;
+$content-height: calc(#{$wrapper-height} - #{$header-height});
+$builder-height: calc(#{$content-height} - #{$bottom-gutter-height});
+$builder-bg-color: rgba(59, 75, 104, 0.1);
+$builder-context-height: calc(#{$builder-height} - 4rem);
+$button-hover-bg-color: hsla(338, 100%, 67%, 0.9);

@@ -40,17 +40,11 @@ export function Argument({ arg, showDefaultValue, inline }: ArgumentProps) {
   return (
     <div className="wizard-doc-explorer-argument">
       {definition}
-      {arg.description ? (
-        <MarkdownContent type="description">{arg.description}</MarkdownContent>
-      ) : null}
+      {arg.description ? <MarkdownContent type="description">{arg.description}</MarkdownContent> : null}
       {arg.deprecationReason ? (
         <div className="wizard-doc-explorer-argument-deprecation">
-          <div className="wizard-doc-explorer-argument-deprecation-label">
-            Deprecated
-          </div>
-          <MarkdownContent type="deprecation">
-            {arg.deprecationReason}
-          </MarkdownContent>
+          <div className="wizard-doc-explorer-argument-deprecation-label">Deprecated</div>
+          <MarkdownContent type="deprecation">{arg.deprecationReason}</MarkdownContent>
         </div>
       ) : null}
     </div>

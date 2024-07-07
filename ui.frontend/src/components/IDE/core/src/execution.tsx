@@ -1,17 +1,5 @@
-import {
-  Fetcher,
-  formatError,
-  formatResult,
-  isAsyncIterable,
-  isObservable,
-  Unsubscribable,
-} from '@graphiql/toolkit';
-import {
-  ExecutionResult,
-  FragmentDefinitionNode,
-  GraphQLError,
-  print,
-} from 'graphql';
+import { Fetcher, formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
+import { ExecutionResult, FragmentDefinitionNode, GraphQLError, print } from 'graphql';
 import { getFragmentDependenciesForAST } from 'graphql-language-service';
 import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 import setValue from 'set-value';
@@ -20,6 +8,7 @@ import { useAutoCompleteLeafs, useEditorContext } from './editor';
 import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
+import { useQuery } from 'src/providers';
 
 export type ExecutionContextType = {
   /**
@@ -48,13 +37,9 @@ export type ExecutionContextType = {
   stop(): void;
 };
 
-export const ExecutionContext =
-  createNullableContext<ExecutionContextType>('ExecutionContext');
+export const ExecutionContext = createNullableContext<ExecutionContextType>('ExecutionContext');
 
-export type ExecutionContextProviderProps = Pick<
-  UseAutoCompleteLeafsArgs,
-  'getDefaultFieldNames'
-> & {
+export type ExecutionContextProviderProps = Pick<UseAutoCompleteLeafsArgs, 'getDefaultFieldNames'> & {
   children: ReactNode;
   /**
    * A function which accepts GraphQL HTTP parameters and returns a `Promise`,
@@ -80,19 +65,11 @@ export function ExecutionContextProvider({
   operationName,
 }: ExecutionContextProviderProps) {
   if (!fetcher) {
-    throw new TypeError(
-      'The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.',
-    );
+    throw new TypeError('The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.');
   }
 
-  const {
-    externalFragments,
-    headerEditor,
-    queryEditor,
-    responseEditor,
-    variableEditor,
-    updateActiveTabValues,
-  } = useEditorContext({ nonNull: true, caller: ExecutionContextProvider });
+  const { externalFragments, headerEditor, queryEditor, responseEditor, variableEditor, updateActiveTabValues } =
+    useEditorContext({ nonNull: true, caller: ExecutionContextProvider });
   const history = useHistoryContext();
   const autoCompleteLeafs = useAutoCompleteLeafs({
     getDefaultFieldNames,
@@ -101,6 +78,9 @@ export function ExecutionContextProvider({
   const [isFetching, setIsFetching] = useState(false);
   const [subscription, setSubscription] = useState<Unsubscribable | null>(null);
   const queryIdRef = useRef(0);
+  // capture these values from the current wizard Query,
+  // don't capture statement, as it's already captured directly from the editor in the run callback
+  const { language } = useQuery();
 
   const stop = useCallback(() => {
     subscription?.unsubscribe();
@@ -160,17 +140,10 @@ export function ExecutionContextProvider({
 
     if (externalFragments) {
       const fragmentDependencies = queryEditor.documentAST
-        ? getFragmentDependenciesForAST(
-            queryEditor.documentAST,
-            externalFragments,
-          )
+        ? getFragmentDependenciesForAST(queryEditor.documentAST, externalFragments)
         : [];
       if (fragmentDependencies.length > 0) {
-        query +=
-          '\n' +
-          fragmentDependencies
-            .map((node: FragmentDefinitionNode) => print(node))
-            .join('\n');
+        query += '\n' + fragmentDependencies.map((node: FragmentDefinitionNode) => print(node)).join('\n');
       }
     }
 
@@ -181,6 +154,7 @@ export function ExecutionContextProvider({
 
     history?.addToHistory({
       query,
+      language,
       variables: variablesString,
       headers: headersString,
       operationName: opName,
@@ -196,12 +170,7 @@ export function ExecutionContextProvider({
         }
 
         let maybeMultipart = Array.isArray(result) ? result : false;
-        if (
-          !maybeMultipart &&
-          typeof result === 'object' &&
-          result !== null &&
-          'hasNext' in result
-        ) {
+        if (!maybeMultipart && typeof result === 'object' && result !== null && 'hasNext' in result) {
           maybeMultipart = [result];
         }
 
@@ -272,6 +241,7 @@ export function ExecutionContextProvider({
       setSubscription(null);
     }
   }, [
+    language,
     autoCompleteLeafs,
     externalFragments,
     fetcher,
@@ -298,11 +268,7 @@ export function ExecutionContextProvider({
     [isFetching, isSubscribed, operationName, run, stop],
   );
 
-  return (
-    <ExecutionContext.Provider value={value}>
-      {children}
-    </ExecutionContext.Provider>
-  );
+  return <ExecutionContext.Provider value={value}>{children}</ExecutionContext.Provider>;
 }
 
 export const useExecutionContext = createContextHook(ExecutionContext);
@@ -320,14 +286,9 @@ function tryParseJsonObject({
   try {
     parsed = json && json.trim() !== '' ? JSON.parse(json) : undefined;
   } catch (error) {
-    throw new Error(
-      `${errorMessageParse}: ${
-        error instanceof Error ? error.message : error
-      }.`,
-    );
+    throw new Error(`${errorMessageParse}: ${error instanceof Error ? error.message : error}.`);
   }
-  const isObject =
-    typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed);
+  const isObject = typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed);
   if (parsed !== undefined && !isObject) {
     throw new Error(errorMessageType);
   }
@@ -351,10 +312,7 @@ type IncrementalResult = {
  * @param incrementalResult The incremental result that will be merged into the
  * complete execution result.
  */
-function mergeIncrementalResult(
-  executionResult: ExecutionResult,
-  incrementalResult: IncrementalResult,
-): void {
+function mergeIncrementalResult(executionResult: ExecutionResult, incrementalResult: IncrementalResult): void {
   const path = ['data', ...(incrementalResult.path ?? [])];
 
   if (incrementalResult.items) {
@@ -374,9 +332,7 @@ function mergeIncrementalResult(
 
   if (incrementalResult.errors) {
     executionResult.errors ||= [];
-    (executionResult.errors as GraphQLError[]).push(
-      ...incrementalResult.errors,
-    );
+    (executionResult.errors as GraphQLError[]).push(...incrementalResult.errors);
   }
 
   if (incrementalResult.extensions) {

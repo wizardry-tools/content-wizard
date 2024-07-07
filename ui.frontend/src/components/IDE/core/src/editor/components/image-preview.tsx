@@ -30,7 +30,7 @@ export function ImagePreview(props: ImagePreviewProps) {
     }
 
     fetch(src, { method: 'HEAD' })
-      .then(response => {
+      .then((response) => {
         setMime(response.headers.get('Content-Type'));
       })
       .catch(() => {
@@ -46,6 +46,9 @@ export function ImagePreview(props: ImagePreviewProps) {
       </div>
     ) : null;
 
+  if (!src) {
+    return null;
+  }
   return (
     <div>
       <img
@@ -57,6 +60,7 @@ export function ImagePreview(props: ImagePreviewProps) {
         }}
         ref={ref}
         src={src}
+        alt="Dynamic Preview, no description available."
       />
       {dims}
     </div>
@@ -65,7 +69,7 @@ export function ImagePreview(props: ImagePreviewProps) {
 
 ImagePreview.shouldRender = function shouldRender(token: Token) {
   const url = tokenToURL(token);
-  return url ? isImageURL(url) : false;
+  return url ? isImageURL(url as URL) : false;
 };
 
 function tokenToURL(token: Token) {

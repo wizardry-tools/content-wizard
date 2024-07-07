@@ -1,20 +1,6 @@
-import {
-  DocumentNode,
-  FragmentDefinitionNode,
-  OperationDefinitionNode,
-  parse,
-  ValidationRule,
-  visit,
-} from 'graphql';
+import { DocumentNode, FragmentDefinitionNode, OperationDefinitionNode, parse, ValidationRule, visit } from 'graphql';
 import { VariableToType } from 'graphql-language-service';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
@@ -37,6 +23,8 @@ import {
 } from './tabs';
 import { CodeMirrorEditor } from './types';
 import { STORAGE_KEY as STORAGE_KEY_VARIABLES } from './variable-editor';
+import { useQuery, useQueryDispatch } from 'src/providers';
+import { defaultAdvancedQueries, Query } from 'src/components/Query';
 
 export type CodeMirrorEditorWithOperationFacts = CodeMirrorEditor & {
   documentAST: DocumentNode | null;
@@ -74,9 +62,7 @@ export type EditorContextType = TabsState & {
    * @param partialTab A partial tab state object that will override the
    * current values. The properties `id`, `hash` and `title` cannot be changed.
    */
-  updateActiveTabValues(
-    partialTab: Partial<Omit<TabState, 'id' | 'hash' | 'title'>>,
-  ): void;
+  updateActiveTabValues(partialTab: Partial<Omit<TabState, 'id' | 'hash' | 'title'>>): void;
 
   /**
    * The CodeMirror editor instance for the headers editor.
@@ -135,7 +121,7 @@ export type EditorContextType = TabsState & {
    * The contents of the query editor when initially rendering the provider
    * component.
    */
-  initialQuery: string;
+  initialQuery: Query;
   /**
    * The contents of the response editor when initially rendering the provider
    * component.
@@ -174,8 +160,7 @@ export type EditorContextType = TabsState & {
   setShouldPersistHeaders(persist: boolean): void;
 };
 
-export const EditorContext =
-  createNullableContext<EditorContextType>('EditorContext');
+export const EditorContext = createNullableContext<EditorContextType>('EditorContext');
 
 export type EditorContextProviderProps = {
   children: ReactNode;
@@ -241,7 +226,7 @@ export type EditorContextProviderProps = {
    * that the editor contents can be changed in between these updates by typing
    * in the editor.
    */
-  query?: string;
+  query?: Query;
   /**
    * This prop can be used to set the contents of the response editor. Every
    * time this prop changes, the contents of the response editor are replaced.
@@ -284,29 +269,20 @@ export type EditorContextProviderProps = {
 
 export function EditorContextProvider(props: EditorContextProviderProps) {
   const storage = useStorageContext();
-  const [headerEditor, setHeaderEditor] = useState<CodeMirrorEditor | null>(
-    null,
-  );
-  const [queryEditor, setQueryEditor] =
-    useState<CodeMirrorEditorWithOperationFacts | null>(null);
-  const [responseEditor, setResponseEditor] = useState<CodeMirrorEditor | null>(
-    null,
-  );
-  const [wizardStatementEditor, setWizardStatementEditor] = useState<CodeMirrorEditor | null>(
-    null,
-  );
-  const [variableEditor, setVariableEditor] = useState<CodeMirrorEditor | null>(
-    null,
-  );
+  const queryObj = useQuery();
+  const queryDispatcher = useQueryDispatch();
+  const [headerEditor, setHeaderEditor] = useState<CodeMirrorEditor | null>(null);
+  const [queryEditor, setQueryEditor] = useState<CodeMirrorEditorWithOperationFacts | null>(null);
+  const [responseEditor, setResponseEditor] = useState<CodeMirrorEditor | null>(null);
+  const [wizardStatementEditor, setWizardStatementEditor] = useState<CodeMirrorEditor | null>(null);
+  const [variableEditor, setVariableEditor] = useState<CodeMirrorEditor | null>(null);
 
-  const [shouldPersistHeaders, setShouldPersistHeadersInternal] = useState(
-    () => {
-      const isStored = storage?.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
-      return props.shouldPersistHeaders !== false && isStored
-        ? storage?.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
-        : Boolean(props.shouldPersistHeaders);
-    },
-  );
+  const [shouldPersistHeaders, setShouldPersistHeadersInternal] = useState(() => {
+    const isStored = storage?.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
+    return props.shouldPersistHeaders !== false && isStored
+      ? storage?.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
+      : Boolean(props.shouldPersistHeaders);
+  });
 
   useSynchronizeValue(headerEditor, props.headers);
   useSynchronizeValue(queryEditor, props.query);
@@ -322,9 +298,8 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   // We store this in state but never update it. By passing a function we only
   // need to compute it lazily during the initial render.
   const [initialState] = useState(() => {
-    const query = props.query ?? storage?.get(STORAGE_KEY_QUERY) ?? null;
-    const variables =
-      props.variables ?? storage?.get(STORAGE_KEY_VARIABLES) ?? null;
+    const query = props.query ?? (JSON.parse(storage?.get(STORAGE_KEY_QUERY) || '') as Query) ?? null;
+    const variables = props.variables ?? storage?.get(STORAGE_KEY_VARIABLES) ?? null;
     const headers = props.headers ?? storage?.get(STORAGE_KEY_HEADERS) ?? null;
     const response = props.response ?? '';
     const wizardStatement = props.wizardStatement ?? '';
@@ -334,7 +309,6 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       variables,
       headers,
       defaultTabs: props.defaultTabs,
-      defaultQuery: props.defaultQuery || DEFAULT_QUERY,
       defaultHeaders: props.defaultHeaders,
       storage,
       shouldPersistHeaders,
@@ -342,10 +316,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     storeTabs(tabState);
 
     return {
-      query:
-        query ??
-        (tabState.activeTabIndex === 0 ? tabState.tabs[0].query : null) ??
-        '',
+      query: query ?? (tabState.activeTabIndex === 0 ? tabState.tabs[0].query : null) ?? null,
       variables: variables ?? '',
       headers: headers ?? props.defaultHeaders ?? '',
       response,
@@ -385,10 +356,11 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     queryEditor,
     variableEditor,
     headerEditor,
-    responseEditor
+    responseEditor,
+    query: queryObj,
   });
   const setEditorValues = useSetEditorValues({
-    queryEditor,
+    queryDispatcher,
     variableEditor,
     headerEditor,
     responseEditor,
@@ -396,11 +368,12 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   const { onTabChange, defaultHeaders, children } = props;
 
   const addTab = useCallback<EditorContextType['addTab']>(() => {
-    setTabState(current => {
+    setTabState((current) => {
       // Make sure the current tab stores the latest values
       const updatedValues = synchronizeActiveTabValues(current);
+      const newQuery = defaultAdvancedQueries[queryObj.language];
       const updated = {
-        tabs: [...updatedValues.tabs, createTab({ headers: defaultHeaders })],
+        tabs: [...updatedValues.tabs, createTab({ query: newQuery, headers: defaultHeaders })],
         activeTabIndex: updatedValues.tabs.length,
       };
       storeTabs(updated);
@@ -408,17 +381,11 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       onTabChange?.(updated);
       return updated;
     });
-  }, [
-    defaultHeaders,
-    onTabChange,
-    setEditorValues,
-    storeTabs,
-    synchronizeActiveTabValues,
-  ]);
+  }, [queryObj.language, defaultHeaders, onTabChange, setEditorValues, storeTabs, synchronizeActiveTabValues]);
 
   const changeTab = useCallback<EditorContextType['changeTab']>(
-    index => {
-      setTabState(current => {
+    (index) => {
+      setTabState((current) => {
         const updated = {
           ...current,
           activeTabIndex: index,
@@ -433,8 +400,8 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   );
 
   const moveTab = useCallback<EditorContextType['moveTab']>(
-    newOrder => {
-      setTabState(current => {
+    (newOrder) => {
+      setTabState((current) => {
         const activeTab = current.tabs[current.activeTabIndex];
         const updated = {
           tabs: newOrder,
@@ -450,8 +417,8 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   );
 
   const closeTab = useCallback<EditorContextType['closeTab']>(
-    index => {
-      setTabState(current => {
+    (index) => {
+      setTabState((current) => {
         const updated = {
           tabs: current.tabs.filter((_tab, i) => index !== i),
           activeTabIndex: Math.max(current.activeTabIndex - 1, 0),
@@ -465,11 +432,9 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     [onTabChange, setEditorValues, storeTabs],
   );
 
-  const updateActiveTabValues = useCallback<
-    EditorContextType['updateActiveTabValues']
-  >(
-    partialTab => {
-      setTabState(current => {
+  const updateActiveTabValues = useCallback<EditorContextType['updateActiveTabValues']>(
+    (partialTab) => {
+      setTabState((current) => {
         const updated = setPropertiesInActiveTab(current, partialTab);
         storeTabs(updated);
         onTabChange?.(updated);
@@ -481,7 +446,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 
   const { onEditOperationName } = props;
   const setOperationName = useCallback<EditorContextType['setOperationName']>(
-    operationName => {
+    (operationName) => {
       if (!queryEditor) {
         return;
       }
@@ -513,10 +478,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     return map;
   }, [props.externalFragments]);
 
-  const validationRules = useMemo(
-    () => props.validationRules || [],
-    [props.validationRules],
-  );
+  const validationRules = useMemo(() => props.validationRules || [], [props.validationRules]);
 
   const value = useMemo<EditorContextType>(
     () => ({
@@ -577,9 +539,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     ],
   );
 
-  return (
-    <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
-  );
+  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
 }
 
 export const useEditorContext = createContextHook(EditorContext);

@@ -4,6 +4,7 @@ import { useExplorerContext } from '../context';
 import { renderType } from './utils';
 
 import './type-link.scss';
+import { Link } from '@mui/material';
 
 type TypeLinkProps = {
   /**
@@ -19,16 +20,15 @@ export function TypeLink(props: TypeLinkProps) {
     return null;
   }
 
-  return renderType(props.type, namedType => (
-    <a
+  return renderType(props.type, (namedType) => (
+    <Link
       className="wizard-doc-explorer-type-name"
-      onClick={event => {
+      onClick={(event) => {
         event.preventDefault();
         push({ name: namedType.name, def: namedType });
       }}
-      href="#"
     >
       {namedType.name}
-    </a>
+    </Link>
   ));
 }

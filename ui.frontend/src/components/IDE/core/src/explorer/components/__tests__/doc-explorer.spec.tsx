@@ -83,9 +83,7 @@ describe('DocExplorer', () => {
     );
     const error = container.querySelectorAll('.wizard-doc-explorer-error');
     expect(error).toHaveLength(0);
-    expect(
-      container.querySelector('.wizard-markdown-description'),
-    ).toHaveTextContent('GraphQL Schema for testing');
+    expect(container.querySelector('.wizard-markdown-description')).toHaveTextContent('GraphQL Schema for testing');
   });
   it('renders correctly with schema error', () => {
     const { rerender, container } = render(
