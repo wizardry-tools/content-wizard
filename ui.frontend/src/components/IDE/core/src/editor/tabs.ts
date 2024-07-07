@@ -4,7 +4,7 @@ import { Dispatch, useCallback, useMemo } from 'react';
 import debounce from '../utility/debounce';
 import { CodeMirrorEditorWithOperationFacts } from './context';
 import { CodeMirrorEditor } from './types';
-import { defaultAdvancedQueries, Query, QueryAction, QueryLanguage } from 'src/components/Query';
+import { defaultAdvancedQueries, Query, QueryAction, QueryLanguageLabels } from 'src/components/Query';
 
 export type TabDefinition = {
   /**
@@ -118,7 +118,7 @@ export function getDefaultTabState({
         parsed.tabs.push({
           id: guid(),
           hash: expectedHash,
-          title: query.label || operationName || query.language || DEFAULT_TITLE,
+          title: query.label || operationName || QueryLanguageLabels[query.language] || DEFAULT_TITLE,
           query,
           variables,
           headers,
@@ -296,7 +296,7 @@ export function createTab({ query, variables = null, headers = null }: TabDefini
     title:
       query.label ||
       (query?.statement && fuzzyExtractOperationName(query.statement)) ||
-      QueryLanguage[query.language] ||
+      QueryLanguageLabels[query.language] ||
       DEFAULT_TITLE,
     query,
     variables,
@@ -324,7 +324,7 @@ export function setPropertiesInActiveTab(
           newTab.query?.label ||
           newTab.operationName ||
           (newTab.query?.statement ? fuzzyExtractOperationName(newTab.query.statement) : undefined) ||
-          QueryLanguage[newTab.query.language] ||
+          QueryLanguageLabels[newTab.query.language] ||
           DEFAULT_TITLE,
       };
     }),

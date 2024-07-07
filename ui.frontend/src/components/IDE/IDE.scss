@@ -1,13 +1,3 @@
-/*
-possibly a new color pallete:
-#FF7618 - AEM logo orange
-#ff182f - deep red
-#eb1000 - adobe red
-
-
- */
-
-
 /* a very simple box-model reset, intentionally does not include pseudo elements */
 .wizard-container * {
   box-sizing: border-box;
@@ -24,11 +14,8 @@ possibly a new color pallete:
 .wizard-builder,
 [data-radix-popper-content-wrapper] {
   /* Colors */
-  //--color-primary: 320, 95%, 43%;
   --color-primary: 0, 0%, 94%;
-  //--color-secondary: 242, 51%, 61%;
   --color-secondary: 210, 79%, 46%;
-  //--color-tertiary: 188, 100%, 36%;
   --color-tertiary: 338, 100%, 67%;
   --color-quarternary: 282, 100%, 42%;
   --color-info: 208, 100%, 46%;
@@ -38,8 +25,7 @@ possibly a new color pallete:
   --color-neutral: 219, 28%, 32%;
   --color-base: 219, 28%, 100%;
 
-  // I'm not digging the App theme colors as text... importing professional colors...
-  // adjusted to be darker on light mode
+  // additional colors
   --intelli-orange: 27, 75%, 43%;
   --intelli-purple: 279, 57%, 47%;
   --intelli-blue: 206, 69%, 46%;

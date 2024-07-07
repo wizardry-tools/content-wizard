@@ -1,5 +1,8 @@
+/**
+ * All icons must be added to this module.
+ * Exposed via 'src/icons'
+ */
 import { ComponentProps, FC } from 'react';
-
 import { ReactComponent as _ArgumentIcon } from './argument.svg';
 import { ReactComponent as _ChevronDownIcon } from './chevron-down.svg';
 import { ReactComponent as _ChevronLeftIcon } from './chevron-left.svg';

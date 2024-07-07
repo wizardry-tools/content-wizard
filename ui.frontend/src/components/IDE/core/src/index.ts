@@ -1,4 +1,4 @@
-import '../../root.scss';
+import '../../IDE.scss';
 
 export {
   EditorContext,

@@ -1,3 +1,8 @@
+/**
+ * This module is intended to contain Provider components and context hooks for the Content Wizard.
+ * Components that provider deep context and dispatch features.
+ * Exposed via 'src/providers'
+ */
 export * from './AlertProvider';
 export * from './ContentWizardProvider';
 export * from './IDEProvider';
