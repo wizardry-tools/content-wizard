@@ -3,13 +3,11 @@ import { Box } from '@mui/material';
 import { GlobalNav } from '../GlobalNav';
 import { useCallback, useMemo, useState } from 'react';
 import { Bar, Views } from './index';
-
 import { Results } from 'src/components/Results';
 import { Fetcher } from '@graphiql/toolkit/src/create-fetcher/types';
 import { createGraphQLFetcher, createMultiLanguageFetcher, CustomCreateFetcherOptions } from 'src/utility';
-
-import './ContentWizard.scss';
 import { buildQueryString, Query, QueryLanguage } from 'src/components/Query';
+import './ContentWizard.scss';
 
 export function ContentWizard() {
   return (

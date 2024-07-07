@@ -42,6 +42,13 @@
   padding: 0;
 }
 
+.wizard-builder pre.CodeMirror-line,
+.wizard-builder pre.CodeMirror-line-like {
+  word-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+
 /* No border between gutter and editor */
 .wizard-container .CodeMirror-gutters,
 .wizard-response .CodeMirror-gutters,
