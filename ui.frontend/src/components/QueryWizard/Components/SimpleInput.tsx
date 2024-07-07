@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useCallback, useRef, useState } from 'react';
+import {ChangeEvent, memo, useCallback, useRef, useState} from 'react';
 import { FormGrid } from './FormGrid';
 import { Paper, TextField } from '@mui/material';
 import { Field, FieldConfig, InputValue } from './fields';
@@ -7,9 +7,10 @@ export type SimpleInputProps = {
   onChange: (field: FieldConfig) => void;
   defaultValue: InputValue;
   field: FieldConfig;
+  disabled: boolean;
 };
 
-export const SimpleInput = memo(({ onChange, field, defaultValue }: SimpleInputProps) => {
+export const SimpleInput = memo(({ onChange, field, defaultValue, disabled }: SimpleInputProps) => {
   const [value, setValue] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
   const { name, label, required } = Field(field);
@@ -46,6 +47,7 @@ export const SimpleInput = memo(({ onChange, field, defaultValue }: SimpleInputP
           onFocus={onFocus}
           onBlur={onFocus}
           onChange={memoizedHandleChange}
+          disabled={disabled}
           required={required}
         />
       </Paper>

@@ -22,7 +22,10 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
 
 export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => {
   const { name, label, value } = { ...field };
-  const { lowerBound, upperBound } = { ...(value as DateRange) };
+  console.log("SimpleDatePicker render() value: ", value)
+  const { lowerBound = null, upperBound = null } = { ...(value as DateRange) };
+  console.log("SimpleDatePicker render() lowerBound: ", lowerBound);
+  console.log("SimpleDatePicker render() upperBound: ", upperBound);
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
 
@@ -72,7 +75,7 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
           <Paper elevation={startFocused ? 4 : 1} className="query-builder-field">
             <DateTimePicker
               name={`${name}.lowerBound`}
-              value={dayjs(lowerBound)}
+              value={lowerBound ? dayjs(lowerBound) : undefined}
               slots={{
                 openPickerButton: StyledButton,
                 day: StyledDay,
@@ -94,7 +97,7 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
           <Paper elevation={endFocused ? 4 : 1} className="query-builder-field">
             <DateTimePicker
               name={`${name}.upperBound`}
-              value={dayjs(upperBound)}
+              value={upperBound ? dayjs(upperBound) : undefined}
               slots={{
                 openPickerButton: StyledButton,
                 day: StyledDay,

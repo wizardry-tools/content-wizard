@@ -4,7 +4,7 @@ import { memo, useCallback, useState } from 'react';
 import { FieldConfig, InputValue } from './fields';
 import { SimpleInputProps } from './SimpleInput';
 
-export const SimpleSelect = memo(({ onChange, field }: SimpleInputProps) => {
+export const SimpleSelect = memo(({ onChange, field, disabled }: SimpleInputProps) => {
   const { name, label, value, required, options } = { ...field };
   const [focused, setFocused] = useState(false);
 
@@ -58,6 +58,7 @@ export const SimpleSelect = memo(({ onChange, field }: SimpleInputProps) => {
             onFocus={onFocus}
             onBlur={onFocus}
             required={required}
+            disabled={disabled}
           >
             {menuItems()}
           </Select>
