@@ -1,6 +1,6 @@
 import { WizardStorageAPI } from '../../storage-api';
 import { createTab, fuzzyExtractOperationName, getDefaultTabState, clearHeadersFromTabs, STORAGE_KEY } from '../tabs';
-import { defaultAdvancedQueries, QueryLanguage } from 'src/components/Query';
+import { defaultAdvancedQueries, QueryLanguageLabels } from 'src/components/Query';
 
 describe('createTab', () => {
   it('creates with language title', () => {
@@ -10,7 +10,7 @@ describe('createTab', () => {
       expect.objectContaining({
         id: expect.any(String),
         hash: expect.any(String),
-        title: QueryLanguage.JCR_SQL2,
+        title: QueryLanguageLabels.JCR_SQL2,
       }),
     );
   });
