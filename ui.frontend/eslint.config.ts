@@ -9,8 +9,16 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  ...eslintPluginPrettierRecommended,
-  ...reactRecommended,
+  {
+    ...eslintPluginPrettierRecommended
+  },
+  {
+    files:['**/*.{ts,tsx}'],
+    ...reactRecommended,
+    languageOptions: {
+      ...reactRecommended.languageOptions,
+    }
+  },
   {
     plugins: {
       "@typescript-eslint": tseslint.plugin,
