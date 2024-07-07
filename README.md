@@ -285,14 +285,6 @@ To build all the modules and deploy the `all` package to a local instance of AEM
 
     mvn clean install -PautoInstallSinglePackage
 
-Or to deploy it to a publish instance, run
-
-    mvn clean install -PautoInstallSinglePackagePublish
-
-Or alternatively
-
-    mvn clean install -PautoInstallSinglePackage -Daem.port=4503
-
 
 Or to deploy only a single content package, run in the sub-module directory (i.e `ui.apps`)
 
