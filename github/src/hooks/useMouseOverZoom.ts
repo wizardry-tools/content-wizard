@@ -35,7 +35,7 @@ export function useMouseOverZoom(
       width,
       height,
     };
-  }, [radius, x, y, enablePreview]);
+  }, [x, radius, y, zoomFactor, rect]);
   // move the cursor to the mouse position
   useEffect(() => {
     if (!enablePreview) {
@@ -49,7 +49,7 @@ export function useMouseOverZoom(
       cursor.current.style.height = `${height}px`;
       cursor.current.style.display = isActive ? "block" : "none";
     }
-  }, [zoomBounds, isActive, cursor.current, enablePreview]);
+  }, [zoomBounds, isActive, enablePreview, cursor]);
   // draw the zoomed image on the canvas
   useEffect(() => {
     if (!enablePreview) {
@@ -93,9 +93,10 @@ export function useMouseOverZoom(
   }, [
     zoomBounds,
     isActive,
-    source.current,
-    target.current,
-    highResImage.current,
     scale,
+    enablePreview,
+    source,
+    target,
+    highResImage,
   ]);
 }

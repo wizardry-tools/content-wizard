@@ -24,10 +24,11 @@ export function useMouse(
     if (!enablePreview) {
       return;
     }
-    if (ref?.current) {
+    const refElement = ref.current;
+    if (refElement) {
       const handleMouseMove = (e: MouseEvent) => {
         // get mouse position relative to ref
-        const rect = ref?.current?.getBoundingClientRect();
+        const rect = refElement.getBoundingClientRect();
         console.log("rect: ", rect);
         if (rect) {
           const x = e.clientX - rect.left;
@@ -49,13 +50,13 @@ export function useMouse(
           rect: emptyRect,
         });
       };
-      ref?.current.addEventListener("mousemove", handleMouseMove);
-      ref?.current.addEventListener("mouseout", handleMouseOut);
+      refElement.addEventListener("mousemove", handleMouseMove);
+      refElement.addEventListener("mouseout", handleMouseOut);
       return () => {
-        ref?.current?.removeEventListener("mousemove", handleMouseMove);
-        ref?.current?.removeEventListener("mouseout", handleMouseOut);
+        refElement.removeEventListener("mousemove", handleMouseMove);
+        refElement.removeEventListener("mouseout", handleMouseOut);
       };
     }
-  }, [ref?.current]);
+  }, [enablePreview, ref]);
   return mouse;
 }
