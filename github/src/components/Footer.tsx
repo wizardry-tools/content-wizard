@@ -1,16 +1,16 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import {GitHub} from "@mui/icons-material";
-import {IconButton} from "@mui/material";
-import {useScrollToId} from "../utils/scroll";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import { GitHub } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import { useScrollToId } from "../utils/scroll";
 
 function Copyright() {
   return (
-    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      {'Copyright © '}
+    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+      {"Copyright © "}
       <Link href="https://wizardry-tools.com/">Content Wizard&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
@@ -22,52 +22,68 @@ export default function Footer() {
   return (
     <Container
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         gap: { xs: 4, sm: 8 },
         py: { xs: 8, sm: 10 },
-        textAlign: { sm: 'center', md: 'left' },
+        textAlign: { sm: "center", md: "left" },
       }}
     >
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-between",
         }}
       >
         <Box
           sx={{
-            display: { xs: 'flex', sm: 'flex' },
+            display: { xs: "flex", sm: "flex" },
             justifyContent: "flex-end",
-            flexDirection: 'column',
+            flexDirection: "column",
             gap: 1,
           }}
         >
-          <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+          <Typography variant="body2" sx={{ fontWeight: "medium" }}>
             Content Wizard
           </Typography>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('features')}>
+          <Link
+            color="text.secondary"
+            variant="body2"
+            onClick={() => scrollToSection.scroll("features")}
+          >
             Features
           </Link>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('highlights')}>
+          <Link
+            color="text.secondary"
+            variant="body2"
+            onClick={() => scrollToSection.scroll("highlights")}
+          >
             Highlights
           </Link>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('installation')}>
+          <Link
+            color="text.secondary"
+            variant="body2"
+            onClick={() => scrollToSection.scroll("installation")}
+          >
             Installation
           </Link>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('faw')}>
+          <Link
+            color="text.secondary"
+            variant="body2"
+            onClick={() => scrollToSection.scroll("faw")}
+          >
             FAQ
           </Link>
         </Box>
         <Box
           sx={{
-            display: 'flex',
+            display: "flex",
             justifyContent: "flex-end",
-            alignItems: 'flex-end',
-            flexDirection: 'row',
+            alignItems: "flex-end",
+            flexDirection: "row",
             gap: 1,
           }}
         >
@@ -75,9 +91,9 @@ export default function Footer() {
         </Box>
         <Box
           sx={{
-            display: 'flex',
+            display: "flex",
             justifyContent: "flex-end",
-            flexDirection: 'row',
+            flexDirection: "row",
             gap: 1,
           }}
         >
@@ -88,12 +104,12 @@ export default function Footer() {
             aria-label="Github"
             title="Get the code on Github!"
             sx={{
-              height: '5rem',
-              width: '5rem',
-              margin: 'auto'
+              height: "5rem",
+              width: "5rem",
+              margin: "auto",
             }}
           >
-            <GitHub sx={{height: '3rem', width: '3rem'}}/>
+            <GitHub sx={{ height: "3rem", width: "3rem" }} />
           </IconButton>
         </Box>
       </Box>

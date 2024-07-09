@@ -1,27 +1,24 @@
-
-
-
 interface ScrollToIdProps {
-  scrollToOptions?: ScrollToOptions,
-  scrollIntoViewOptions?: ScrollIntoViewOptions,
-  hook?: (callbackValue: any)=>void,
-  hookProps?: any,
-  offset?: number,
+  scrollToOptions?: ScrollToOptions;
+  scrollIntoViewOptions?: ScrollIntoViewOptions;
+  hook?: (callbackValue: any) => void;
+  hookProps?: any;
+  offset?: number;
 }
 
 export const useScrollToId = (props?: ScrollToIdProps) => {
   const {
     scrollToOptions = {
-      behavior: 'smooth'
+      behavior: "smooth",
     } as ScrollToOptions,
     scrollIntoViewOptions = {
-      behavior: 'smooth',
-      inline: 'start',
-      block: 'end'
+      behavior: "smooth",
+      inline: "start",
+      block: "end",
     } as ScrollIntoViewOptions,
-    hook = ()=>{},
+    hook = () => {},
     offset = 128,
-    hookProps
+    hookProps,
   } = props || {};
 
   const scroll = (id: string) => {
@@ -37,5 +34,5 @@ export const useScrollToId = (props?: ScrollToIdProps) => {
     }
   };
 
-  return {scroll};
-}
+  return { scroll };
+};

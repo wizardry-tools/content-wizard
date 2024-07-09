@@ -4,21 +4,28 @@ $copy-icon-background-color-dark: hsla(0, 0%, 30%, 0.5);
 $copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
 
 .markdown-container {
-
   .fade-in {
     animation: fadeIn 350ms;
   }
   @keyframes fadeIn {
-    0% { opacity: 0;}
-    100% { opacity: 1;}
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 
   .fade-out {
     animation: fadeOut 350ms;
   }
   @keyframes fadeOut {
-    0% { opacity: 1;}
-    100% { opacity: 0;}
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 
   .markdown-paper {
@@ -30,7 +37,6 @@ $copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
     max-width: 95vw;
     overflow: hidden;
 
-
     pre {
       margin-left: 0.5rem;
       margin-right: 0.5rem;
@@ -41,7 +47,6 @@ $copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
         //width: 100%;
         //overflow: auto;
       }
-
     }
 
     .code-copy-wrapper {
@@ -53,14 +58,14 @@ $copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
       float: right;
       margin-bottom: -3.5rem;
       margin-left: -3.5rem;
-      right: .25rem;
+      right: 0.25rem;
       line-height: 1rem;
       max-height: 3rem;
 
       svg {
         display: inline-block;
         fill: none;
-        margin: .75rem;
+        margin: 0.75rem;
       }
 
       .clipboard-fab {
@@ -189,7 +194,6 @@ $copy-icon-background-color-light: hsla(0, 0%, 30%, 0.1);
   }
 
   &.light {
-
     .markdown-paper {
       background: $background-color-light;
 

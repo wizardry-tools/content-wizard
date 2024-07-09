@@ -1,16 +1,15 @@
-import {Box} from "@mui/material";
-import {useEffect, useState} from "react";
+import { Box } from "@mui/material";
+import { useEffect, useState } from "react";
 import MarkdownContainer from "./MarkdownContainer";
 
 export const InstallationGuide = () => {
+  const [content, setContent] = useState("");
 
-  const [content, setContent] = useState('');
-
-  useEffect(()=>{
-    fetch('/docs/Installation.md')
-      .then(res => res.text())
-      .then(res => setContent(res))
-      .catch(err => console.log(err));
+  useEffect(() => {
+    fetch("/docs/Installation.md")
+      .then((res) => res.text())
+      .then((res) => setContent(res))
+      .catch((err) => console.log(err));
   });
 
   return (
@@ -21,9 +20,7 @@ export const InstallationGuide = () => {
         pb: { xs: 8, sm: 16 },
       }}
     >
-      <MarkdownContainer>
-        {content}
-      </MarkdownContainer>
+      <MarkdownContainer>{content}</MarkdownContainer>
     </Box>
-  )
-}
+  );
+};
