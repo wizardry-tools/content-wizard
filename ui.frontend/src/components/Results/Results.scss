@@ -1,0 +1,35 @@
+@use "../../vars" as *;
+
+/* RESULT HANDLER */
+.result-handler {
+  background-color: $builder-bg-color !important;
+}
+
+/* RESULT EXPLORER */
+#result-explorer-modal {
+
+  .MuiDialog-paper {
+    max-width: 900px;
+  }
+}
+
+body.wizard-light #result-explorer-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-light;
+  }
+  button {
+    color: $button-color-light;
+  }
+}
+
+
+body:not(.wizard-light) #result-explorer-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-dark;
+  }
+}
+body.wizard-dark #result-explorer-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-dark;
+  }
+}

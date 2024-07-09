@@ -10,10 +10,15 @@ import {
   TablePagination,
   Paper,
   Link,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle, Button, Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { TablePaginationActions } from './TablePaginationActions';
 import { useResults } from 'src/providers';
+import {ResultExplorer} from "./ResultExplorer/ResultExplorer";
 
 const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: 'bold',
@@ -23,6 +28,8 @@ export const ResultTable = () => {
   const rows = useResults();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openExplorer, setOpenExplorer] = useState(false);
+  const [explorerPath, setExplorerPath] = useState('');
   const keys = useMemo(() => Object.keys((rows && rows[0]) || {}), [rows]);
 
   const handleChangePage = (_event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -34,16 +41,31 @@ export const ResultTable = () => {
     setPage(0);
   };
 
+  const handleOpenExplorer = () => setOpenExplorer(true);
+  const handleCloseExplorer = () => setOpenExplorer(false);
+
   const buildLink = ({ value }: { value: string }): ReactNode => {
-    let href = value.includes('jcr:content') ? `${value}.5.json` : `/editor.html${value}.html`;
     return (
-      <Link href={href} color="secondary" target="_blank">
+      <Link
+        color="secondary"
+        onClick={()=>{
+          setExplorerPath(value);
+          handleOpenExplorer();
+        }}
+        sx={{
+          textDecoration: 'none',
+          cursor: 'pointer',
+          '&:hover': {
+            textDecoration: 'underline'
+          }
+        }}
+      >
         {value}
       </Link>
     );
   };
 
-  const getTableHead = () => {
+  const ResultTableHead = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
@@ -66,7 +88,7 @@ export const ResultTable = () => {
     );
   };
 
-  const getTableBody = () => {
+  const ResultTableBody = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
@@ -102,7 +124,7 @@ export const ResultTable = () => {
     return <TableBody>{tableRows}</TableBody>;
   };
 
-  const getTableFooter = () => {
+  const ResultTableFooter = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
@@ -134,17 +156,43 @@ export const ResultTable = () => {
     );
   };
 
+  const ResultExplorerModal = () => {
+    return (
+      <Dialog
+        id="result-explorer-modal"
+        open={openExplorer}
+        onClose={handleCloseExplorer}
+        aria-labelledby="result-explorer-modal-title"
+      >
+        <DialogTitle id="result-explorer-modal-title">
+          Result Explorer [{explorerPath}]
+        </DialogTitle>
+        <DialogContent>
+          <ResultExplorer
+            path={explorerPath}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus color={"primary"} onClick={handleCloseExplorer}>
+            <Typography>Close</Typography>
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
   return (
-    <>
+    <div className="result-table">
       {rows && typeof rows !== 'string' && (
         <TableContainer component={Paper} elevation={5}>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="query results table">
-            {getTableHead()}
-            {getTableBody()}
-            {getTableFooter()}
+            <ResultTableHead/>
+            <ResultTableBody/>
+            <ResultTableFooter/>
           </Table>
         </TableContainer>
       )}
-    </>
+      <ResultExplorerModal/>
+    </div>
   );
 };

@@ -8,3 +8,6 @@ $builder-height: calc(#{$content-height} - #{$bottom-gutter-height});
 $builder-bg-color: rgba(59, 75, 104, 0.1);
 $builder-context-height: calc(#{$builder-height} - 4rem);
 $button-hover-bg-color: hsla(338, 100%, 67%, 0.9);
+$solid-paper-background-light: hsla(118, 0%, 92%, 1);
+$solid-paper-background-dark: hsla(118, 0%, 0%, 1);
+$button-color-light: hsla(118, 0%, 0%, 0.7);
