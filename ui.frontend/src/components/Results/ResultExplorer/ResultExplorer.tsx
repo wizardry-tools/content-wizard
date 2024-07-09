@@ -108,7 +108,6 @@ export const ResultExplorer = (props: ResultExplorerProps) => {
           left: '50%',
           right: '50%',
           display: 'none',
-          zIndex: 1200,
           '&.show': {
             display: 'block'
           }
@@ -117,7 +116,12 @@ export const ResultExplorer = (props: ResultExplorerProps) => {
         <CircularProgress/>
       </Box>
       <Stack
-        className={`result-explorer-stack`}
+        className={`result-explorer-stack ${!data ? 'hide' : 'show'}`}
+        sx={{
+          '&.hide': {
+            display: 'none'
+          }
+        }}
       >{ExplorerWindow}</Stack>
     </div>
   );
