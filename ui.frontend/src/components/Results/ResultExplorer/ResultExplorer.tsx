@@ -6,7 +6,7 @@ import {Tooltip, ResultExplorerEditor} from "src/components/IDE/core/src";
 import * as prettier from "prettier";
 import prettierPluginBabel from "prettier/plugins/babel";
 import prettierPluginEstree from "prettier/plugins/estree";
-
+import { JsonValue } from "ast-compare";
 
 
 export type ResultExplorerProps = {
@@ -16,15 +16,17 @@ export type ResultData = string
 export const ResultExplorer = (props: ResultExplorerProps) => {
   const {path} = props;
   const [data, setData] = useState<ResultData>('');
+  const [resultAst, setResultAst] = useState<JsonValue | null>(null);
   const [isFetching, setIsFetching] = useState(false);
   const alertDispatcher = useAlertDispatcher();
 
   const loadData = useCallback(() => {
+    const url = `${path}.-1.json`;
     async function fetchData (): Promise<ResultData> {
       setIsFetching(true);
       if (path) {
         try {
-          let response = await fetch(`${path}.-1.json`, DYNAMIC_HEADERS);
+          let response = await fetch(url, DYNAMIC_HEADERS);
           if (response.ok) {
             return await response.json();
           }
@@ -43,9 +45,13 @@ export const ResultExplorer = (props: ResultExplorerProps) => {
       .then((responseData)=>{
         if (responseData) {
           const json = JSON.stringify(responseData, null, ' ');
+          //const ast = parse(json, {loc: false});
+          //console.log("ast: ", ast);
+          setResultAst(responseData);
           prettier.format(json, {parser: 'json', plugins: [prettierPluginBabel, prettierPluginEstree]})
             .then((formattedJson)=>{
               setData(formattedJson);
+
             })
             .catch((error)=>{
               console.error(error);
@@ -92,12 +98,14 @@ export const ResultExplorer = (props: ResultExplorerProps) => {
                 keyMap="sublime"
                 className="result-explorer-data"
                 data={data}
+                resultAst={resultAst}
+                path={path}
               />
             </Stack>
           </Tooltip.Provider>
         </Paper>
       );
-  }, [data]);
+  }, [data,resultAst]);
 
   return (
     <div className="result-explorer">
