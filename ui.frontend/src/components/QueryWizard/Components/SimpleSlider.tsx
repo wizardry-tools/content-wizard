@@ -12,7 +12,8 @@ type SimpleSliderProps = SimpleInputProps & {
 
 export const SimpleSlider = memo(
   ({ min = -1, max = 1000, step = 10, defaultValue, onChange, field }: SimpleSliderProps) => {
-    const [value, setValue] = useState(defaultValue);
+    const initialValue = useRef(defaultValue);
+    const [value, setValue] = useState(initialValue.current);
     const { name, label } = { ...field };
 
     const timerRef = useRef<ReturnType<typeof setTimeout>>();

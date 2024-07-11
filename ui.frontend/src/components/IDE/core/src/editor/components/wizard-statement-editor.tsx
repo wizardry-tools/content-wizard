@@ -10,6 +10,8 @@ import { ToolbarButton } from '../../toolbar';
 import { CopyIcon } from 'src/icons';
 import { useCopyQuery } from '../hooks';
 
+import './wizard-statement-editor.scss';
+
 export function WizardStatementEditor(props: UseWizardStatementEditorArgs) {
   const { className = '' } = { ...props };
   const copy = useCopyQuery();

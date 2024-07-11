@@ -4,6 +4,11 @@
   font-variant-ligatures: none;
 }
 
+[data-radix-popper-content-wrapper] {
+  // Force the tooltip poppers to render higher than @mui dialogs
+  z-index: 1400 !important;
+}
+
 .wizard-container,
 .CodeMirror-info,
 .CodeMirror-lint-tooltip,
@@ -11,6 +16,7 @@
 .wizard-dialog-overlay,
 .wizard-tooltip,
 .wizard-response,
+.result-explorer,
 .wizard-builder,
 [data-radix-popper-content-wrapper] {
   /* Colors */
@@ -92,6 +98,7 @@
   body:not(.wizard-light) .wizard-tooltip,
   body:not(.wizard-light) .wizard-response,
   body:not(.wizard-light) .wizard-builder,
+  body:not(.wizard-light) .result-explorer,
   body:not(.wizard-light) [data-radix-popper-content-wrapper] {
     --color-primary: 0, 0%, 94%;
     --color-secondary: 207, 90%, 54%;
@@ -124,6 +131,7 @@ body.wizard-dark .wizard-dialog-overlay,
 body.wizard-dark .wizard-tooltip,
 body.wizard-dark .wizard-response,
 body.wizard-dark .wizard-builder,
+body.wizard-dark .result-explorer,
 body.wizard-dark [data-radix-popper-content-wrapper] {
   --color-primary: 0, 0%, 94%;
   --color-secondary: 207, 90%, 54%;

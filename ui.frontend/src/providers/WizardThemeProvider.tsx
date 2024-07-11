@@ -36,7 +36,8 @@ function getSystemTheme(mode: PaletteMode = DARK): Theme {
 }
 
 function buildMuiTheme(theme: Theme): MuiTheme {
-  return createTheme({
+  // main theme setup
+  const muiTheme = createTheme({
     palette: {
       mode: theme ?? LIGHT, // light is our default for Mui
       ...(theme === DARK
@@ -82,6 +83,18 @@ function buildMuiTheme(theme: Theme): MuiTheme {
           fontSize: '0.8rem',
         },
       },
+    },
+  });
+
+  // augmented color setup
+  return createTheme(muiTheme, {
+    palette: {
+      tertiary: muiTheme.palette.augmentColor({
+        color: {
+          main: '#FF5794',
+        },
+        name: 'tertiary',
+      }),
     },
   });
 }

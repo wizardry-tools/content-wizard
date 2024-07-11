@@ -1,6 +1,6 @@
 import { formatError } from '@graphiql/toolkit';
 import type { Position, Token } from 'codemirror';
-import { ComponentType, useEffect, useRef } from 'react';
+import { ComponentType, useEffect, useRef, JSX } from 'react';
 import ReactDOM from 'react-dom';
 import { useSchemaContext } from '../schema';
 

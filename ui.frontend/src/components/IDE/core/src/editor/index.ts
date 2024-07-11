@@ -4,6 +4,7 @@ export {
   QueryEditor,
   ResponseEditor,
   WizardStatementEditor,
+  ResultExplorerEditor,
   VariableEditor,
 } from './components';
 export { EditorContext, EditorContextProvider, useEditorContext } from './context';
@@ -23,6 +24,7 @@ export { useQueryEditor } from './query-editor';
 export { useResponseEditor } from './response-editor';
 export { useVariableEditor } from './variable-editor';
 export { useWizardStatementEditor } from './wizard-statement-editor';
+export { useResultExplorerEditor } from './result-explorer-editor';
 
 export type { EditorContextType, EditorContextProviderProps } from './context';
 export type { UseHeaderEditorArgs } from './header-editor';

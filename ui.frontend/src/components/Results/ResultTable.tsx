@@ -1,4 +1,4 @@
-import { useState, useMemo, MouseEvent, ChangeEvent, ReactNode } from 'react';
+import { useState, useMemo, MouseEvent, ChangeEvent, ReactNode, useCallback } from 'react';
 import {
   Table,
   TableContainer,
@@ -14,6 +14,7 @@ import {
 import { styled } from '@mui/system';
 import { TablePaginationActions } from './TablePaginationActions';
 import { useResults } from 'src/providers';
+import { ResultExplorerModal } from './ResultExplorer';
 
 const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: 'bold',
@@ -23,6 +24,8 @@ export const ResultTable = () => {
   const rows = useResults();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openExplorer, setOpenExplorer] = useState(false);
+  const [explorerPath, setExplorerPath] = useState('');
   const keys = useMemo(() => Object.keys((rows && rows[0]) || {}), [rows]);
 
   const handleChangePage = (_event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -34,20 +37,38 @@ export const ResultTable = () => {
     setPage(0);
   };
 
-  const buildLink = ({ value }: { value: string }): ReactNode => {
-    let href = value.includes('jcr:content') ? `${value}.5.json` : `/editor.html${value}.html`;
-    return (
-      <Link href={href} color="secondary" target="_blank">
-        {value}
-      </Link>
-    );
-  };
+  const handleOpenExplorer = useCallback(() => setOpenExplorer(true), []);
+  const handleCloseExplorer = useCallback(() => setOpenExplorer(false), []);
 
-  const getTableHead = () => {
+  const buildLink = useCallback(
+    ({ value }: { value: string }): ReactNode => {
+      return (
+        <Link
+          color="secondary"
+          onClick={() => {
+            setExplorerPath(value);
+            handleOpenExplorer();
+          }}
+          sx={{
+            textDecoration: 'none',
+            cursor: 'pointer',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          {value}
+        </Link>
+      );
+    },
+    [handleOpenExplorer],
+  );
+
+  const ResultTableHead = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
-    const cells: React.ReactNode[] = [];
+    const cells: ReactNode[] = [];
     keys.forEach((key, index) => {
       cells.push(
         index === 0 ? (
@@ -66,13 +87,13 @@ export const ResultTable = () => {
     );
   };
 
-  const getTableBody = () => {
+  const ResultTableBody = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
     const tableRows = (rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
       (row) => {
-        const cells: React.ReactNode[] = [];
+        const cells: ReactNode[] = [];
         keys.forEach((key, index) => {
           let value = row[key];
           if (key === 'path') {
@@ -102,7 +123,7 @@ export const ResultTable = () => {
     return <TableBody>{tableRows}</TableBody>;
   };
 
-  const getTableFooter = () => {
+  const ResultTableFooter = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
@@ -135,16 +156,19 @@ export const ResultTable = () => {
   };
 
   return (
-    <>
+    <div className="result-table">
       {rows && typeof rows !== 'string' && (
         <TableContainer component={Paper} elevation={5}>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="query results table">
-            {getTableHead()}
-            {getTableBody()}
-            {getTableFooter()}
+            <ResultTableHead />
+            <ResultTableBody />
+            <ResultTableFooter />
           </Table>
         </TableContainer>
       )}
-    </>
+      {explorerPath && (
+        <ResultExplorerModal open={openExplorer} closeHandler={handleCloseExplorer} path={explorerPath} />
+      )}
+    </div>
   );
 };

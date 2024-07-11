@@ -138,7 +138,9 @@ export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callb
 
 export type UseCopyQueryArgs = {
   /**
-   * This is only meant to be used internally in `@graphiql/react`.
+   * This is how context is tracked when there are multiple instance of context existing at the same time.
+   * It ensures the correct context is being applied based on the caller's own context.
+   * If one is not supplied, a new Context will be created and used, assigning it to the function being called.
    */
   caller?: Function;
   /**
@@ -164,6 +166,22 @@ export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
 
     onCopyQuery?.(query);
   }, [queryEditor, onCopyQuery]);
+}
+
+export type UseCopyResultArgs = Omit<UseCopyQueryArgs, 'onCopyQuery'>;
+
+export function useCopyResult({ caller }: UseCopyResultArgs = {}) {
+  const { resultExplorerEditor } = useEditorContext({
+    nonNull: true,
+    caller: caller || useCopyResult,
+  });
+  return useCallback(() => {
+    if (!resultExplorerEditor) {
+      return;
+    }
+    const result = resultExplorerEditor.getValue();
+    copyToClipboard(result);
+  }, [resultExplorerEditor]);
 }
 
 type UseMergeQueryArgs = {

@@ -7,10 +7,14 @@ export type SimpleInputProps = {
   onChange: (field: FieldConfig) => void;
   defaultValue: InputValue;
   field: FieldConfig;
+  disabled: boolean;
 };
 
-export const SimpleInput = memo(({ onChange, field, defaultValue }: SimpleInputProps) => {
-  const [value, setValue] = useState(defaultValue);
+export const SimpleInput = memo(({ onChange, field, defaultValue, disabled }: SimpleInputProps) => {
+  const initialValue = useRef(defaultValue);
+  const [value, setValue] = useState(initialValue.current);
+
+  // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
   const [focused, setFocused] = useState(false);
   const { name, label, required } = Field(field);
 
@@ -46,6 +50,7 @@ export const SimpleInput = memo(({ onChange, field, defaultValue }: SimpleInputP
           onFocus={onFocus}
           onBlur={onFocus}
           onChange={memoizedHandleChange}
+          disabled={disabled}
           required={required}
         />
       </Paper>

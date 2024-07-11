@@ -1,0 +1,50 @@
+@use "../../vars" as *;
+
+/* RESULT HANDLER */
+.result-handler {
+  background-color: $builder-bg-color !important;
+}
+
+/* RESULT EXPLORER */
+#result-explorer-modal {
+
+  #result-explorer-modal-title {
+    margin-right: 3rem;
+  }
+
+  .MuiDialog-paper {
+    max-width: 900px;
+  }
+
+  .result-explorer-modal-actions {
+    justify-content: space-between;
+    padding: 1.5rem;
+    flex-direction: row;
+
+    .result-explorer-modal-close {
+      margin-right: 0;
+      margin-left: auto;
+    }
+  }
+}
+
+body.wizard-light #result-explorer-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-light;
+  }
+  button {
+    color: $button-color-light;
+  }
+}
+
+
+body:not(.wizard-light) #result-explorer-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-dark;
+  }
+}
+body.wizard-dark #result-explorer-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-dark;
+  }
+}

@@ -83,6 +83,10 @@ export type EditorContextType = TabsState & {
    */
   wizardStatementEditor: CodeMirrorEditor | null;
   /**
+   * The CodeMirror editor instance for the result explorer editor.
+   */
+  resultExplorerEditor: CodeMirrorEditor | null;
+  /**
    * The CodeMirror editor instance for the variables editor.
    */
   variableEditor: CodeMirrorEditor | null;
@@ -102,6 +106,10 @@ export type EditorContextType = TabsState & {
    * Set the CodeMirror editor instance for the wizard statement editor.
    */
   setWizardStatementEditor(newEditor: CodeMirrorEditor): void;
+  /**
+   * Set the CodeMirror editor instance for the result explorer editor.
+   */
+  setResultExplorerEditor(newEditor: CodeMirrorEditor): void;
   /**
    * Set the CodeMirror editor instance for the variables editor.
    */
@@ -133,6 +141,11 @@ export type EditorContextType = TabsState & {
    * component.
    */
   initialWizardStatement: string;
+  /**
+   * The contents of the result explorer editor when initially rendering the provider
+   * component.
+   */
+  initialResultExplorer: string;
   /**
    * The contents of the variables editor when initially rendering the provider
    * component.
@@ -242,6 +255,11 @@ export type EditorContextProviderProps = {
    */
   wizardStatement?: string;
   /**
+   * This prop can be used to set the contents of the result explorer editor. Every
+   * time this prop changes, the contents of the result explorer editor are replaced.
+   */
+  resultExplorer?: string;
+  /**
    * This prop toggles if the contents of the headers editor are persisted in
    * storage.
    * @default false
@@ -275,6 +293,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   const [queryEditor, setQueryEditor] = useState<CodeMirrorEditorWithOperationFacts | null>(null);
   const [responseEditor, setResponseEditor] = useState<CodeMirrorEditor | null>(null);
   const [wizardStatementEditor, setWizardStatementEditor] = useState<CodeMirrorEditor | null>(null);
+  const [resultExplorerEditor, setResultExplorerEditor] = useState<CodeMirrorEditor | null>(null);
   const [variableEditor, setVariableEditor] = useState<CodeMirrorEditor | null>(null);
 
   const [shouldPersistHeaders, setShouldPersistHeadersInternal] = useState(() => {
@@ -284,10 +303,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       : Boolean(props.shouldPersistHeaders);
   });
 
+  // only use useSynchronizeValue for IDE editor views
   useSynchronizeValue(headerEditor, props.headers);
   useSynchronizeValue(queryEditor, props.query);
   useSynchronizeValue(responseEditor, props.response);
-  //useSynchronizeValue(wizardStatementEditor, props.wizardStatement);
   useSynchronizeValue(variableEditor, props.variables);
 
   const storeTabs = useStoreTabs({
@@ -303,6 +322,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     const headers = props.headers ?? storage?.get(STORAGE_KEY_HEADERS) ?? null;
     const response = props.response ?? '';
     const wizardStatement = props.wizardStatement ?? '';
+    const resultExplorer = props.resultExplorer ?? '';
 
     const tabState = getDefaultTabState({
       query,
@@ -320,7 +340,8 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       variables: variables ?? '',
       headers: headers ?? props.defaultHeaders ?? '',
       response,
-      wizardStatement: wizardStatement,
+      wizardStatement,
+      resultExplorer,
       tabState,
     };
   });
@@ -491,13 +512,15 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       headerEditor,
       queryEditor,
       responseEditor,
-      wizardStatementEditor: wizardStatementEditor,
+      wizardStatementEditor,
+      resultExplorerEditor,
       variableEditor,
       setHeaderEditor,
       setQueryEditor,
       setResponseEditor,
       setVariableEditor,
-      setWizardStatementEditor: setWizardStatementEditor,
+      setWizardStatementEditor,
+      setResultExplorerEditor,
 
       setOperationName,
 
@@ -506,6 +529,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       initialHeaders: initialState.headers,
       initialResponse: initialState.response,
       initialWizardStatement: initialState.wizardStatement,
+      initialResultExplorer: initialState.resultExplorer,
 
       externalFragments,
       validationRules,
@@ -520,20 +544,16 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       moveTab,
       closeTab,
       updateActiveTabValues,
-
       headerEditor,
       queryEditor,
       responseEditor,
       wizardStatementEditor,
+      resultExplorerEditor,
       variableEditor,
-
       setOperationName,
-
       initialState,
-
       externalFragments,
       validationRules,
-
       shouldPersistHeaders,
       setShouldPersistHeaders,
     ],

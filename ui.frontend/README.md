@@ -30,6 +30,8 @@ If you are getting errors related to CORS, you might want to configure AEM as fo
    - Supported Headers: Authorization
    - Allowed Methods: OPTIONS
 
+Note: If you intend on running the local server, you'll want to change the proxy to match your own AEM address.
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.

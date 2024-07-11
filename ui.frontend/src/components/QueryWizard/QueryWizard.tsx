@@ -61,11 +61,20 @@ export function QueryWizard({ onTabPanelSelect }: QueryWizardProps) {
       const drawerID = `accordion-drawer--${category}`;
       const summary = fieldCategories[category];
       const drawerContents = accordionFields.map((field) => {
-        if (field.isDisabled && field.isDisabled(fields)) {
+        if (!field.render) {
           return null;
         }
+        const disabled = field.isDisabled && typeof field.isDisabled === 'function' ? field.isDisabled(fields) : false;
         const Component: ElementType = field.fieldType as ElementType;
-        return <Component onChange={memoizedHandleChange} key={field.name} defaultValue={field.value} field={field} />;
+        return (
+          <Component
+            onChange={memoizedHandleChange}
+            key={field.name}
+            defaultValue={field.value}
+            field={field}
+            disabled={disabled}
+          />
+        );
       });
       return (
         <AccordionTab key={drawerID} expanded={expanded === drawerID} onChange={handleAccordionChange(drawerID)}>
@@ -119,7 +128,17 @@ export function QueryWizard({ onTabPanelSelect }: QueryWizardProps) {
   return (
     <Paper className="wizard-builder">
       <Stack className="main-stack" direction="row" useFlexGap>
-        <Stack className="statement-stack">{StatementWindow}</Stack>
+        <Stack
+          className="statement-stack"
+          sx={(theme) => ({
+            maxWidth: '100%',
+            [theme.breakpoints.up('md')]: {
+              maxWidth: '50%',
+            },
+          })}
+        >
+          {StatementWindow}
+        </Stack>
         <Stack className="accordion-stack">{Accordion()}</Stack>
         <Stack className="query-button-stack" sx={buttonStackStyles} justifyContent="flex-start">
           <QueryHandler onResults={onTabPanelSelect} />

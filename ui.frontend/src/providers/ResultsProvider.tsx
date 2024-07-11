@@ -1,6 +1,6 @@
 import { useState, createContext, useContext, PropsWithChildren, Dispatch } from 'react';
 import { Results } from 'src/components/Results';
-import { useAlertDispatcher } from './AlertProvider';
+import { useAlertDispatcher } from './WizardAlertProvider';
 
 const ResultsContext = createContext<Results>([] as Results);
 const ResultsDispatchContext = createContext<Dispatch<Results>>(null!);

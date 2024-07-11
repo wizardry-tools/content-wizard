@@ -3,7 +3,7 @@ import { FormGrid } from './FormGrid';
 import { ChangeEvent, memo, useCallback } from 'react';
 import { SimpleInputProps } from './SimpleInput';
 
-export const SimpleCheckbox = memo(({ onChange, field }: SimpleInputProps) => {
+export const SimpleCheckbox = memo(({ onChange, field, disabled }: SimpleInputProps) => {
   const { name, label, value, checkboxValue = true, required } = { ...field };
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +29,7 @@ export const SimpleCheckbox = memo(({ onChange, field }: SimpleInputProps) => {
               color="secondary"
               onChange={memoizedHandleChange}
               required={required}
+              disabled={disabled}
             />
           }
         />

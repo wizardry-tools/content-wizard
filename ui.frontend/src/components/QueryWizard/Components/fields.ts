@@ -77,6 +77,7 @@ export interface FieldConfig {
   onChange?: onChangeCallback;
   readonly options?: typeof ContentTypes | typeof TargetTypes;
   category: FieldCategoryType;
+  render?: boolean; // Dictates that the Field should not render
 }
 export type FieldConfigAction = Pick<FieldConfig, 'name'> &
   Pick<FieldConfig, 'value'> & {
@@ -84,9 +85,10 @@ export type FieldConfigAction = Pick<FieldConfig, 'name'> &
   };
 
 export const Field = (field: FieldConfig) => {
+  const render = field.render ?? true;
   const isDisabled = (fields: FieldsConfig): boolean => {
     return field.isDisabled ? field.isDisabled(fields) : false;
   };
-  return { ...field, isDisabled };
+  return { ...field, isDisabled, render };
 };
 export type FieldsConfig = Record<FieldConfigNameKey, FieldConfig>;

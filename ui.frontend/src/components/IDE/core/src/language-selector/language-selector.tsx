@@ -26,10 +26,7 @@ import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
  * @constructor
  */
 export function LanguageSelector() {
-  console.log('LanguageSelector Render()');
-
   const { language, api } = useQuery();
-
   const queryDispatch = useQueryDispatch();
   const { APIs } = useAPIContext({
     nonNull: true,
@@ -69,9 +66,7 @@ export function LanguageSelector() {
 
   const onAPIChange = useCallback(
     (event: SelectChangeEvent) => {
-      console.log('LanguageSelector onAPIChange()');
       const selectedEndpoint = event.target.value;
-      console.log('LanguageSelector.onAPIChange() endpoint: ', selectedEndpoint);
       // API was selected
       let foundAPI = APIs.find((api) => {
         return api.endpoint === selectedEndpoint;
@@ -85,7 +80,6 @@ export function LanguageSelector() {
 
   const onLanguageChange = useCallback(
     (event: SelectChangeEvent) => {
-      console.log('LanguageSelector onAPIChange()');
       const selectedLanguage = event.target.value as typeof language;
       handleLanguageChange(selectedLanguage);
     },

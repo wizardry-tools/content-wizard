@@ -9,14 +9,16 @@
 
 /* Override font settings */
 .wizard-container .CodeMirror,
-.wizard-statement-editor-codemirror .CodeMirror {
+.wizard-statement-editor-codemirror .CodeMirror,
+.result-explorer-editor-codemirror .CodeMirror {
   font-family: var(--font-family-mono);
   font-weight: bolder;
 }
 
 .wizard-response .CodeMirror,
 .wizard-builder .CodeMirror,
-.wizard-statement .CodeMirror {
+.wizard-statement .CodeMirror,
+.result-explorer .CodeMirror{
   height: 100%;
   border-radius: calc(var(--border-radius-8));
 }
@@ -29,7 +31,9 @@
 .wizard-builder .CodeMirror,
 .wizard-builder .CodeMirror-gutters,
 .wizard-statement .CodeMirror,
-.wizard-statement .CodeMirror-gutters {
+.wizard-statement .CodeMirror-gutters,
+.result-explorer .CodeMirror,
+.result-explorer .CodeMirror-gutters{
   background: none;
   background-color: var(--editor-background, hsl(var(--color-base)));
 }
@@ -38,15 +42,24 @@
 .wizard-container .CodeMirror-linenumber,
 .wizard-response .CodeMirror-linenumber,
 .wizard-builder .CodeMirror-linenumber,
-.wizard-statement .CodeMirror-linenumber {
+.wizard-statement .CodeMirror-linenumber,
+.result-explorer .CodeMirror-linenumber {
   padding: 0;
+}
+
+.wizard-builder pre.CodeMirror-line,
+.wizard-builder pre.CodeMirror-line-like {
+  word-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: normal;
 }
 
 /* No border between gutter and editor */
 .wizard-container .CodeMirror-gutters,
 .wizard-response .CodeMirror-gutters,
 .wizard-builder .CodeMirror-gutters,
-.wizard-statement .CodeMirror-gutters {
+.wizard-statement .CodeMirror-gutters,
+.result-explorer .CodeMirror-gutters {
   border: none;
 }
 
