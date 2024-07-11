@@ -1,4 +1,4 @@
-import {ChangeEvent, memo, useCallback, useRef, useState} from 'react';
+import { ChangeEvent, memo, useCallback, useRef, useState } from 'react';
 import { FormGrid } from './FormGrid';
 import { Paper, TextField } from '@mui/material';
 import { Field, FieldConfig, InputValue } from './fields';
@@ -11,7 +11,8 @@ export type SimpleInputProps = {
 };
 
 export const SimpleInput = memo(({ onChange, field, defaultValue, disabled }: SimpleInputProps) => {
-  const [value, setValue] = useState(defaultValue);
+  const initialValue = useRef(defaultValue);
+  const [value, setValue] = useState(initialValue.current);
 
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
   const [focused, setFocused] = useState(false);

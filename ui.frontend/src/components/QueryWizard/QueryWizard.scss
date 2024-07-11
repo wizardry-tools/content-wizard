@@ -14,7 +14,7 @@
 
     .accordion-stack {
       display: inline-flex;
-      flex-shrink: 4;
+      flex-shrink: 2;
       flex-grow: 1;
       padding: 2rem;
 
@@ -30,8 +30,7 @@
       }
     }
 
-    //.statement-with-button-stack {
-    //flex-grow: 1;
+
     .statement-stack {
       display: inline-flex;
       flex-grow: 1;
@@ -48,7 +47,6 @@
         }
       }
     }
-    //}
 
 
     .query-button-stack {

@@ -1,16 +1,14 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
-import {useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue} from './hooks';
-import {CodeMirrorEditor, CommonEditorProps} from './types';
-import {EditorChange} from "codemirror";
-import {useEditorContext} from "./context";
+import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
+import { CodeMirrorEditor, CommonEditorProps } from './types';
+import { useEditorContext } from './context';
 
 export type UseResultExplorerEditorArgs = CommonEditorProps & {
   className?: string;
-  data?:string;
+  data?: string;
 };
-
 
 /**
  * This is the Editor used for the Result Explorer.
@@ -22,13 +20,9 @@ export type UseResultExplorerEditorArgs = CommonEditorProps & {
  * @param caller
  */
 export function useResultExplorerEditor(
-  {
-    keyMap = DEFAULT_KEY_MAP,
-    data = '',
-  }: UseResultExplorerEditorArgs = {},
+  { keyMap = DEFAULT_KEY_MAP, data = '' }: UseResultExplorerEditorArgs = {},
   caller?: Function,
 ) {
-
   const [editor, setEditor] = useState<CodeMirrorEditor | null>(null);
   const copy = useCopyResult({ caller: caller || useResultExplorerEditor });
   const ref = useRef<HTMLDivElement>(null);
@@ -71,7 +65,7 @@ export function useResultExplorerEditor(
       const newEditor = CodeMirror(container, {
         value: data,
         lineWrapping: true,
-        readOnly: false,
+        readOnly: true, // making this read-only until we're able to submit changes, branch experiment/result-editor
         lineNumbers: true,
         theme: 'wizard',
         mode: 'application/json',
@@ -79,6 +73,8 @@ export function useResultExplorerEditor(
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
         // @ts-expect-error
         info: true,
+        inputStyle: 'contenteditable',
+        electricChars: true,
         extraKeys: commonKeys,
       });
       setEditor(newEditor);
@@ -89,30 +85,6 @@ export function useResultExplorerEditor(
       isActive = false;
     };
   }, [data, editor, setResultExplorerEditor]);
-
-  useEffect(()=>{
-    if (!editor) {
-      return;
-    }
-    const handleChange = (editorInstance: CodeMirrorEditor, changeObj: EditorChange | undefined) => {
-      // When we signal a change manually without actually changing anything
-      // we don't want to invoke the callback.
-      if (!changeObj) {
-        return;
-      }
-
-      const newValue = editorInstance.getValue();
-      //setValue(newValue);
-      // we aren't doing anything with the edited values yet,
-      // but the goal would be to submit the change to AEM as a POST,
-      // so that the changes are persisted. This would require a lot of testing and possibly a user override.
-      console.log("editorChange: ", newValue);
-    };
-    editor.on('change', handleChange);
-    return () => {
-      editor.off('change', handleChange);
-    }
-  },[editor]);
 
   useKeyMap(editor, ['Shift-Ctrl-C'], copy);
   useSynchronizeOption(editor, 'keyMap', keyMap);

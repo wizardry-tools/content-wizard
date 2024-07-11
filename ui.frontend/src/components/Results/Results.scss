@@ -8,8 +8,23 @@
 /* RESULT EXPLORER */
 #result-explorer-modal {
 
+  #result-explorer-modal-title {
+    margin-right: 3rem;
+  }
+
   .MuiDialog-paper {
     max-width: 900px;
+  }
+
+  .result-explorer-modal-actions {
+    justify-content: space-between;
+    padding: 1.5rem;
+    flex-direction: row;
+
+    .result-explorer-modal-close {
+      margin-right: 0;
+      margin-left: auto;
+    }
   }
 }
 

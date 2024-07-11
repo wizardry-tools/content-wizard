@@ -175,7 +175,7 @@ export function useCopyResult({ caller }: UseCopyResultArgs = {}) {
     nonNull: true,
     caller: caller || useCopyResult,
   });
-  return useCallback(()=>{
+  return useCallback(() => {
     if (!resultExplorerEditor) {
       return;
     }

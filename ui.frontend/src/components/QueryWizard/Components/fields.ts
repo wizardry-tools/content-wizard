@@ -89,6 +89,6 @@ export const Field = (field: FieldConfig) => {
   const isDisabled = (fields: FieldsConfig): boolean => {
     return field.isDisabled ? field.isDisabled(fields) : false;
   };
-  return { ...field, isDisabled, render};
+  return { ...field, isDisabled, render };
 };
 export type FieldsConfig = Record<FieldConfigNameKey, FieldConfig>;

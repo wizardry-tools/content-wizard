@@ -11,7 +11,9 @@
 
       .wizard-statement-editor-toolbar {
         display: inline-flex;
+        padding: 2px;
         flex-grow: 0;
+        flex-shrink: 0;
         min-width: 0;
         height: 100%;
       }

@@ -1,4 +1,4 @@
-import { useState, useMemo, MouseEvent, ChangeEvent, ReactNode } from 'react';
+import { useState, useMemo, MouseEvent, ChangeEvent, ReactNode, useCallback } from 'react';
 import {
   Table,
   TableContainer,
@@ -10,15 +10,11 @@ import {
   TablePagination,
   Paper,
   Link,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle, Button, Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { TablePaginationActions } from './TablePaginationActions';
 import { useResults } from 'src/providers';
-import {ResultExplorer} from "./ResultExplorer/ResultExplorer";
+import { ResultExplorerModal } from './ResultExplorer';
 
 const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: 'bold',
@@ -41,35 +37,38 @@ export const ResultTable = () => {
     setPage(0);
   };
 
-  const handleOpenExplorer = () => setOpenExplorer(true);
-  const handleCloseExplorer = () => setOpenExplorer(false);
+  const handleOpenExplorer = useCallback(() => setOpenExplorer(true), []);
+  const handleCloseExplorer = useCallback(() => setOpenExplorer(false), []);
 
-  const buildLink = ({ value }: { value: string }): ReactNode => {
-    return (
-      <Link
-        color="secondary"
-        onClick={()=>{
-          setExplorerPath(value);
-          handleOpenExplorer();
-        }}
-        sx={{
-          textDecoration: 'none',
-          cursor: 'pointer',
-          '&:hover': {
-            textDecoration: 'underline'
-          }
-        }}
-      >
-        {value}
-      </Link>
-    );
-  };
+  const buildLink = useCallback(
+    ({ value }: { value: string }): ReactNode => {
+      return (
+        <Link
+          color="secondary"
+          onClick={() => {
+            setExplorerPath(value);
+            handleOpenExplorer();
+          }}
+          sx={{
+            textDecoration: 'none',
+            cursor: 'pointer',
+            '&:hover': {
+              textDecoration: 'underline',
+            },
+          }}
+        >
+          {value}
+        </Link>
+      );
+    },
+    [handleOpenExplorer],
+  );
 
   const ResultTableHead = () => {
     if (!rows || typeof rows === 'string') {
       return null;
     }
-    const cells: React.ReactNode[] = [];
+    const cells: ReactNode[] = [];
     keys.forEach((key, index) => {
       cells.push(
         index === 0 ? (
@@ -94,7 +93,7 @@ export const ResultTable = () => {
     }
     const tableRows = (rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
       (row) => {
-        const cells: React.ReactNode[] = [];
+        const cells: ReactNode[] = [];
         keys.forEach((key, index) => {
           let value = row[key];
           if (key === 'path') {
@@ -156,43 +155,20 @@ export const ResultTable = () => {
     );
   };
 
-  const ResultExplorerModal = () => {
-    return (
-      <Dialog
-        id="result-explorer-modal"
-        open={openExplorer}
-        onClose={handleCloseExplorer}
-        aria-labelledby="result-explorer-modal-title"
-      >
-        <DialogTitle id="result-explorer-modal-title">
-          Result Explorer [{explorerPath}]
-        </DialogTitle>
-        <DialogContent>
-          <ResultExplorer
-            path={explorerPath}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus color={"primary"} onClick={handleCloseExplorer}>
-            <Typography>Close</Typography>
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
   return (
     <div className="result-table">
       {rows && typeof rows !== 'string' && (
         <TableContainer component={Paper} elevation={5}>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="query results table">
-            <ResultTableHead/>
-            <ResultTableBody/>
-            <ResultTableFooter/>
+            <ResultTableHead />
+            <ResultTableBody />
+            <ResultTableFooter />
           </Table>
         </TableContainer>
       )}
-      <ResultExplorerModal/>
+      {explorerPath && (
+        <ResultExplorerModal open={openExplorer} closeHandler={handleCloseExplorer} path={explorerPath} />
+      )}
     </div>
   );
 };
