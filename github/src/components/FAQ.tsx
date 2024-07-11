@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import toolsNavigation from "../images/aem-tools-navigation.png";
+import toolsNavigation from "../images/aem-tools-navigation.webp";
 import { styled } from "@mui/material/styles";
 
 const StyledImage = styled("img")(({ theme }) => ({

@@ -20,7 +20,7 @@ You need to list the Content Wizard "All" module's zip as a dependency within yo
 <dependency>
     <groupId>com.wizardry-tools</groupId>
     <artifactId>content-wizard.all</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <type>zip</type>
 </dependency>
 ```
