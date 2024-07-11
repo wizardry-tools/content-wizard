@@ -50,7 +50,6 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
         return defaultResult;
       }
 
-      console.log('calling fetcher fetchData()');
       fetchData()
         .then((responseData) => {
           if (responseData) {

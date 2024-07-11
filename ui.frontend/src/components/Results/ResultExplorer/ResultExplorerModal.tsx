@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ResultExplorer } from './ResultExplorer';
 import { useFetcher } from './fetcher';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import {escapeColon, escapeUrl} from "../../../utility";
+import { escapeColon, escapeUrl } from '../../../utility';
 
 type ResultExplorerModalProps = {
   open: boolean;
@@ -39,16 +39,13 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
   useEffect(() => {
     if (!contentPath || !isAsset || !fetcher || fetching.current) {
       // all the reasons not to fetch
-      console.log('isCF refusing to fetch');
       return;
     }
     const resultHandler = (response: any) => {
-      console.log('isCF: response', response);
       if (response.hasOwnProperty(CF_PROP)) {
         setIsCF(response[CF_PROP]);
       }
     };
-    console.log('fetching cf status');
     fetcher.loadData({
       path: `${contentPath}${CONTENT_NODE}/${CF_PROP}`,
       resultHandler,
@@ -144,5 +141,3 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
     </Dialog>
   );
 };
-
-

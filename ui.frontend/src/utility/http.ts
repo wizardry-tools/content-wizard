@@ -82,11 +82,10 @@ export const queryToParams = (statement: string) => {
   return o;
 };
 
-
 export const escapeColon = (path: string) => {
   return path.replace(':', '%3A');
-}
+};
 
 export const escapeUrl = (path: string) => {
   return encodeURIComponent(path);
-}
+};

@@ -11,9 +11,7 @@ export function ResultsProvider({ children }: PropsWithChildren) {
 
   const updateResults = (results: Results) => {
     setResults(results);
-    console.log("Results: ", results);
     if (!results || results.length < 1) {
-      console.log("no results");
       alertDispatcher({
         message: 'No results were found.',
         severity: 'warning',

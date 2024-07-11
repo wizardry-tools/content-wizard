@@ -15,7 +15,6 @@ export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   useEffect(() => {
     if (data || !fetcher || fetching.current) {
       // all the reasons not to fetch
-      console.log('loadData, refusing to fetch');
       return;
     }
     fetcher.loadData({ path, resultHandler: setData });
