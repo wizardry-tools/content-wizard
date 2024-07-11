@@ -1,5 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Theme, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 import { ResultExplorer } from './ResultExplorer';
 import { useFetcher } from './fetcher';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -61,6 +64,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           <>
             <Button
               autoFocus
+              startIcon={<EditIcon/>}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -70,6 +74,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
             </Button>
             <Button
               autoFocus
+              startIcon={<InfoIcon/>}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -83,6 +88,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           ((isCF && (
             <Button
               autoFocus
+              startIcon={<EditIcon/>}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -93,6 +99,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           )) || (
             <Button
               autoFocus
+              startIcon={<InfoIcon/>}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -103,6 +110,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           ))}
         <Button
           autoFocus
+          startIcon={<EngineeringIcon/>}
           variant="contained"
           color={'secondary'}
           target="_blank"

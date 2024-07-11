@@ -12,9 +12,11 @@ import {
   Link,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import exportFromJSON from 'export-from-json'
 import { TablePaginationActions } from './TablePaginationActions';
-import { useResults } from 'src/providers';
+import {useAlertDispatcher, useResults} from 'src/providers';
 import { ResultExplorerModal } from './ResultExplorer';
+
 
 const TableHeadCell = styled(TableCell)(() => ({
   fontWeight: 'bold',
@@ -22,6 +24,7 @@ const TableHeadCell = styled(TableCell)(() => ({
 
 export const ResultTable = () => {
   const rows = useResults();
+  const alertDispatcher = useAlertDispatcher();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openExplorer, setOpenExplorer] = useState(false);
@@ -39,6 +42,24 @@ export const ResultTable = () => {
 
   const handleOpenExplorer = useCallback(() => setOpenExplorer(true), []);
   const handleCloseExplorer = useCallback(() => setOpenExplorer(false), []);
+
+  const handleExport = useCallback(()=>{
+    const fileName = 'Content-Wizard-Results'
+    const exportType = exportFromJSON.types.csv;
+    if (rows) {
+      exportFromJSON({
+        data: rows,
+        exportType,
+        fileName,
+        withBOM: true
+      });
+    } else {
+      alertDispatcher({
+        message: 'No Results to export. How did you even press this button?',
+        severity: 'warning'
+      });
+    }
+  },[rows,alertDispatcher]);
 
   const buildLink = useCallback(
     ({ value }: { value: string }): ReactNode => {
@@ -133,11 +154,13 @@ export const ResultTable = () => {
         <TableRow>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-            colSpan={3}
             count={rows.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            sx={{ borderBottom: 'none' }}
+            sx={{
+              borderBottom: 'none',
+              width: '100%'
+            }}
             slotProps={{
               select: {
                 inputProps: {
@@ -148,7 +171,9 @@ export const ResultTable = () => {
             }}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
+            ActionsComponent={(props) => (
+              <TablePaginationActions {...props} handleExport={handleExport}/>
+            )}
           />
         </TableRow>
       </TableFooter>
