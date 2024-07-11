@@ -32,7 +32,8 @@
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts|tsx|json)\""
   },
   "eslintConfig": {
     "extends": [

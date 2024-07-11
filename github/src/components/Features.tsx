@@ -1,4 +1,4 @@
-import { useRef, useState, MouseEvent, useMemo } from "react";
+import { useRef, useState, MouseEvent, useMemo, useEffect } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   Container,
   Grid,
   Stack,
+  SvgIcon,
   Typography,
   useMediaQuery,
   useTheme,
@@ -15,6 +16,7 @@ import { styled } from "@mui/material/styles";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import TranslateIcon from "@mui/icons-material/Translate";
+import ConstructionIcon from "@mui/icons-material/Construction";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import qwTargetingLight from "../images/qw/qw-targeting-light.webp";
@@ -29,42 +31,46 @@ import qwTranslationLight from "../images/qw/qw-translation-light.webp";
 import qwTranslationDark from "../images/qw/qw-translation-dark.webp";
 import { useMouseOverZoom } from "../hooks";
 import { isDark } from "../utils/getTheme";
+import * as React from "react";
 
 const items = [
   {
     icon: <FindInPageIcon />,
     title: "Targeting Rules",
     description:
-      "These are the standard QueryBuilder rules for what kind of content you are looking for and where.",
+      "Standard and required query rules that tell AEM where you want to look, what you want to find, and how max results to return.",
     imageLight: qwTargetingLight,
     imageDark: qwTargetingDark,
   },
   {
     icon: <ManageAccountsIcon />,
     title: "Authoring Rules",
-    description: "These are rules focused on standard Authoring activity.",
+    description:
+      "Rules that filter the targeted results based on recorded authoring activity, such as filtering based on the user who authored or the date on which the activity took place.",
     imageLight: qwAuthoringLight,
     imageDark: qwAuthoringDark,
   },
   {
     icon: <PublishedWithChangesIcon />,
     title: "Replication Rules",
-    description: "These are rules focused on Replication activity.",
+    description:
+      "Similar to the Authoring Rules, except these rules are focused around Replication status and events",
     imageLight: qwReplicationLight,
     imageDark: qwReplicationDark,
   },
   {
     icon: <AccountTreeIcon />,
-    title: "MSM Rules",
+    title: "MSM(Multi Site Manager) Rules",
     description:
-      'These are rules focused on Replication activity. "Is Blueprint" does not provide additional options',
+      "With the MSM Rules, you will be able to filter the results based on MSM status and activity. Find your content that has been suspended, rolled out, or has local deletions.",
     imageLight: qwMsmLight,
     imageDark: qwMsmDark,
   },
   {
     icon: <TranslateIcon />,
     title: "Translation Rules",
-    description: "These are rules focused on Translated content.",
+    description:
+      "Use Translation based rules to filter results based on if they are a Language Copy, what language they have, and whether or not the Translation has been approved the in AEM.",
     imageLight: qwTranslationLight,
     imageDark: qwTranslationDark,
   },
@@ -109,13 +115,16 @@ const StyledCanvas = styled("canvas")(({ theme }) => ({
   },
 }));
 
-const StyledImage = styled("img")(() => ({
+const StyledImage = styled("img")(({ theme }) => ({
   width: "100%",
   height: "100%",
   objectFit: "contain",
   backgroundSize: "contain",
   backgroundRepease: "no-repeat",
   cursor: "crosshair",
+  [theme.breakpoints.down("md")]: {
+    cursor: "default",
+  },
 }));
 
 const ZoomCursor = styled("div")(({ theme }) => ({
@@ -138,7 +147,10 @@ export default function Features() {
   const highResImage = useRef<HTMLImageElement | null>(null);
   const source = useRef<HTMLImageElement | null>(null);
   const target = useRef<HTMLCanvasElement | null>(null);
+  const targetContainer = useRef<HTMLDivElement | null>(null);
   const cursor = useRef<HTMLDivElement | null>(null);
+
+  const canvasDimensions = useRef({ width: 0, height: 0 });
 
   const enablePreview = useMediaQuery(theme.breakpoints.up("md"));
   const selectedFeature = items[selectedItemIndex];
@@ -162,41 +174,126 @@ export default function Features() {
     setHoverImage(false);
   };
 
-  useMouseOverZoom(highResImage, source, target, cursor, enablePreview);
+  useEffect(() => {
+    const element = targetContainer.current;
+    if (element) {
+      const updateDimensions = () => {
+        canvasDimensions.current = {
+          width: element.offsetWidth,
+          height: element.offsetHeight,
+        };
+      };
+
+      // Initial dimensions
+      updateDimensions();
+
+      // Update dimensions on window resize
+      window.addEventListener("resize", updateDimensions);
+
+      // Clean up event listener
+      return () => {
+        window.removeEventListener("resize", updateDimensions);
+      };
+    }
+  }, []);
+
+  useMouseOverZoom(
+    highResImage,
+    source,
+    target,
+    cursor,
+    enablePreview,
+    canvasDimensions,
+  );
+
+  const RulesSubHeading = () => {
+    return (
+      <div>
+        <Typography component="h3" variant="h5" sx={{ color: "text.primary" }}>
+          Query Wizard Rules
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{ color: "text.secondary", mb: { xs: 2, sm: 4 } }}
+        >
+          Explore the different rules and filters that the Query Wizard offers.
+        </Typography>
+      </div>
+    );
+  };
 
   return (
-    <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
-      <Grid container spacing={6}>
+    <Container id="features" sx={{ pb: { xs: 4, sm: 8 } }}>
+      <Grid
+        container
+        spacing={6}
+        sx={{ width: "100%", marginLeft: 0, marginTop: 0 }}
+      >
+        <Stack
+          spacing={2}
+          useFlexGap
+          flexGrow={1}
+          flexShrink={1}
+          sx={{
+            alignItems: "center",
+            width: { xs: "100%", sm: "70%" },
+            marginTop: 0,
+            paddingBottom: 4,
+          }}
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: "center",
+              fontSize: "clamp(2rem, 10vw, 2.5rem)",
+            }}
+          >
+            <SvgIcon
+              component={ConstructionIcon}
+              className="results-icon"
+              inheritViewBox
+              sx={{
+                fontSize: "2rem",
+                mr: 2,
+              }}
+            />
+            Core&nbsp;
+            <Typography
+              component="span"
+              variant="h3"
+              sx={(theme) => ({
+                fontSize: "inherit",
+                color: "primary.main",
+                ...theme.applyStyles("dark", {
+                  color: "primary.light",
+                }),
+              })}
+            >
+              Features
+            </Typography>
+          </Typography>
+        </Stack>
         <Grid
           item
           xs={12}
           md={6}
+          sx={{
+            paddingLeft: "0 !important",
+          }}
           className="feature-grid"
           display="flex"
           flexDirection="column"
           position="relative"
+          ref={targetContainer}
         >
-          <div>
-            <Typography
-              component="h2"
-              variant="h4"
-              sx={{ color: "text.primary" }}
-            >
-              Query Wizard Rules
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ color: "text.secondary", mb: { xs: 2, sm: 4 } }}
-            >
-              These are the various QueryBuilder rules supported within the
-              Query Wizard.
-            </Typography>
-          </div>
           <Grid
             container
             item
             sx={{ gap: 1, display: { xs: "auto", sm: "none" } }}
           >
+            <RulesSubHeading />
             {items.map(({ title }, index) => (
               <Chip
                 key={index}
@@ -297,8 +394,8 @@ export default function Features() {
                     width: "100%",
                     display: "flex",
                     textAlign: "left",
-                    flexDirection: { xs: "column", md: "row" },
-                    alignItems: { md: "center" },
+                    flexDirection: "row",
+                    alignItems: "center",
                     gap: 2.5,
                   }}
                 >
@@ -309,6 +406,7 @@ export default function Features() {
                         ...theme.applyStyles("dark", {
                           color: "grey.600",
                         }),
+                        [theme.breakpoints.down("md")]: {},
                       }),
                       selectedItemIndex === index && {
                         color: "primary.main",
@@ -340,14 +438,18 @@ export default function Features() {
         <Grid
           item
           className="image-grid"
+          flexDirection={"column"}
           xs={12}
           md={6}
           sx={{
             display: { xs: "none", sm: "flex" },
             width: "100%",
             height: "100%",
+            paddingLeft: { sm: "0 !important", md: "3rem !important" },
+            paddingTop: "3rem",
           }}
         >
+          <RulesSubHeading />
           <Card
             variant="outlined"
             className="image-card"
@@ -369,27 +471,6 @@ export default function Features() {
               ref={source}
             />
             <ZoomCursor ref={cursor} className="" />
-            {/*<Box
-              className="image-container"
-              ref={imageHoverSource}
-              sx={(theme) => ({
-                m: 'auto',
-                width: '100%',
-                height: 500,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundImage: 'var(--items-image-light)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--items-image-dark)'
-                })
-              })}
-              style={
-                {
-                  '--items-image-light': `url("${items[selectedItemIndex].imageLight}")`,
-                  '--items-image-dark': `url("${items[selectedItemIndex].imageDark}")`,
-                } as any
-              }
-            />*/}
           </Card>
         </Grid>
       </Grid>

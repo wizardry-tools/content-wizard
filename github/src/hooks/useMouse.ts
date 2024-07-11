@@ -29,11 +29,9 @@ export function useMouse(
       const handleMouseMove = (e: MouseEvent) => {
         // get mouse position relative to ref
         const rect = refElement.getBoundingClientRect();
-        console.log("rect: ", rect);
         if (rect) {
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
-          console.log("{x,y}: ", { x, y });
           setMouse({
             x: x >= 0 ? x : 0,
             y: y >= 0 ? y : 0,

@@ -5,25 +5,26 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import AutoFixHighRoundedIcon from "@mui/icons-material/AutoFixHighRounded";
 import ConstructionRoundedIcon from "@mui/icons-material/ConstructionRounded";
 import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import HighlightIcon from "@mui/icons-material/Highlight";
+import { ReactComponent as CopyIcon } from "../icons/copy.svg";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
+import { SvgIcon } from "@mui/material";
 
 const items = [
   {
     icon: <SettingsSuggestRoundedIcon />,
     title: "Persisted Settings",
     description:
-      "The Query IDE supports persisted settings and can remember your Dark/Light mode preference along with previous Query Statements and GraphQL Headers/Variables",
+      "The Query IDE supports persisted settings and can remember your Dark/Light mode preference along with previous Query Statements and GraphQL Headers/Variables.",
   },
   {
     icon: <ConstructionRoundedIcon />,
     title: "Build Queries with Ease",
     description:
-      "Whether you're new to AEM or an experienced Developer, the Content Wizard's tools enable you to build Powerful Query Statements that are native to AEM's OOTB Query Languages",
+      "Whether you're new to AEM or an experienced Developer, the Content Wizard's tools enable you to build Powerful Query Statements that are native to AEM's OOTB Query Languages.",
   },
   {
     icon: <ThumbUpAltRoundedIcon />,
@@ -32,16 +33,16 @@ const items = [
       "Seamlessly navigate between Content Wizard's different views. Swap between Query Wizard and Query IDE when building QueryBuilder statements.",
   },
   {
-    icon: <AutoFixHighRoundedIcon />,
-    title: "Export Queries",
+    icon: <SvgIcon component={CopyIcon} sx={{ fill: "none" }} />,
+    title: "Export Queries and Results",
     description:
-      "Convenient Copy functionality exists for the Query Wizard and Query IDE, so that you can easily copy the current Query Statement to your device's clipboard.",
+      "Convenient Copy functionality exists for the Query Wizard, Query IDE, and Results, so that you can easily copy the current Query Statement or Results to your device's clipboard.",
   },
   {
     icon: <HighlightIcon />,
     title: "Syntax Highlighting",
     description:
-      "Each supported language features Syntax Highlighting that is tuned to the Dark/Light mode themes",
+      "Each supported language features Syntax Highlighting that is tuned to the Dark/Light mode themes.",
   },
   {
     icon: <QueryStatsRoundedIcon />,
@@ -89,7 +90,8 @@ export default function Highlights() {
               color: theme.palette.mode === "dark" ? "grey.400" : "grey.800",
             })}
           >
-            Explore why Content Wizard can help your Developers and Authors.
+            Explore why Content Wizard can help your Developers and Authors find
+            AEM content issues without wasting time browsing for them.
           </Typography>
         </Box>
         <Grid container spacing={2.5}>

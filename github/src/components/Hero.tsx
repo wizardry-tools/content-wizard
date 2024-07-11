@@ -11,6 +11,8 @@ import ideGraphqlDark from "../images/ide/ide-graphql-dark.webp";
 import ideGraphqlLight from "../images/ide/ide-graphql-light.webp";
 import resultsImageDark from "../images/results/results-dark.webp";
 import resultsImageLight from "../images/results/results-light.webp";
+import resultsExplorerImageDark from "../images/results/result-explorer-dark.webp";
+import resultsExplorerImageLight from "../images/results/result-explorer-light.webp";
 import { ReactComponent as LogoIcon } from "../wizard-logo.svg";
 import { ReactComponent as WandIcon } from "../icons/magic-wand.svg";
 import { ReactComponent as CodeIcon } from "../icons/programming-code.svg";
@@ -380,6 +382,35 @@ export default function Hero() {
           id="image"
           sx={{
             backgroundImage: `url(${isDarkMode ? resultsImageDark : resultsImageLight})`,
+          }}
+        />
+        <Stack
+          spacing={2}
+          useFlexGap
+          flexGrow={1}
+          flexShrink={1}
+          sx={{
+            alignItems: "center",
+            width: { xs: "100%", sm: "70%" },
+            marginTop: theme.spacing(4),
+          }}
+        >
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "text.secondary",
+              width: { sm: "100%", md: "80%" },
+            }}
+          >
+            Explore the JSON of each result. Easily review or copy the JSON of
+            an individual result, along with convenient links to open the
+            content in AEM.
+          </Typography>
+        </Stack>
+        <StyledBox
+          id="image"
+          sx={{
+            backgroundImage: `url(${isDarkMode ? resultsExplorerImageDark : resultsExplorerImageLight})`,
           }}
         />
       </Container>
