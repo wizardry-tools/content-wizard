@@ -3,7 +3,7 @@
  * Components that provider deep context and dispatch features.
  * Exposed via 'src/providers'
  */
-export * from './AlertProvider';
+export * from './WizardAlertProvider';
 export * from './ContentWizardProvider';
 export * from './IDEProvider';
 export * from './QueryProvider';
