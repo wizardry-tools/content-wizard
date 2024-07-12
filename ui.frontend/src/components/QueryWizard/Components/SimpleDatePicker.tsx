@@ -4,9 +4,10 @@ import { styled } from '@mui/material/styles';
 import { LocalizationProvider, DateTimePicker, PickersDay } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { FormGrid } from './FormGrid';
-import { memo, useCallback, useState } from 'react';
-import { DateRange, DayTime, FieldConfig } from './fields';
+import { useCallback, useRef, useState } from 'react';
+import { DateRange, DayTime } from './fields';
 import { SimpleInputProps } from './SimpleInput';
+import { useFieldDispatcher, useLogger } from 'src/providers';
 
 const StyledButton = styled(IconButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -20,7 +21,11 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
   },
 }));
 
-export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => {
+export const SimpleDatePicker = ({ field }: SimpleInputProps) => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `SimpleDatePicker[${++renderCount.current}] render()` });
+  const fieldDispatcher = useFieldDispatcher();
   const { name, label } = { ...field };
   const value = field.value as DateRange;
   const [lowerBound, setLowerBound] = useState(value?.lowerBound ? dayjs(value.lowerBound) : null);
@@ -30,37 +35,43 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
 
-  const handleLowerDateChange = (dateTime: DayTime) => {
-    if (!dateTime) {
-      return;
-    }
-    setLowerBound(dateTime);
-    const updatedfield: FieldConfig = {
-      ...field,
-      value: {
-        ...value,
-        lowerBound: dateTime,
-      },
-    };
-    onChange(updatedfield);
-  };
-  const memoizedLowerDateChange = useCallback(handleLowerDateChange, [field, onChange, value]);
+  const handleLowerDateChange = useCallback(
+    (dateTime: DayTime) => {
+      if (!dateTime) {
+        return;
+      }
+      setLowerBound(dateTime);
+      fieldDispatcher({
+        name,
+        value: {
+          ...value,
+          lowerBound: dateTime,
+        },
+        type: 'UPDATE_VALUE',
+        caller: SimpleDatePicker,
+      });
+    },
+    [fieldDispatcher, name, value],
+  );
 
-  const handleUpperDateChange = (dateTime: DayTime) => {
-    if (!dateTime) {
-      return;
-    }
-    setUpperBound(dateTime);
-    const updatedfield: FieldConfig = {
-      ...field,
-      value: {
-        ...value,
-        upperBound: dateTime,
-      },
-    };
-    onChange(updatedfield);
-  };
-  const memoizedUpperDateChange = useCallback(handleUpperDateChange, [field, onChange, value]);
+  const handleUpperDateChange = useCallback(
+    (dateTime: DayTime) => {
+      if (!dateTime) {
+        return;
+      }
+      setUpperBound(dateTime);
+      fieldDispatcher({
+        name,
+        value: {
+          ...value,
+          upperBound: dateTime,
+        },
+        type: 'UPDATE_VALUE',
+        caller: SimpleDatePicker,
+      });
+    },
+    [fieldDispatcher, name, value],
+  );
 
   const onStartFocus = useCallback(() => {
     setStartFocused((prevState) => !prevState);
@@ -94,7 +105,7 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
                   className: 'query-builder-field',
                 },
               }}
-              onChange={memoizedLowerDateChange}
+              onChange={handleLowerDateChange}
             />
           </Paper>
           <Paper elevation={endFocused ? 4 : 1} className="query-builder-field">
@@ -116,11 +127,11 @@ export const SimpleDatePicker = memo(({ onChange, field }: SimpleInputProps) => 
                   onBlur: onEndFocus,
                 },
               }}
-              onChange={memoizedUpperDateChange}
+              onChange={handleUpperDateChange}
             />
           </Paper>
         </Stack>
       </LocalizationProvider>
     </FormGrid>
   );
-});
+};

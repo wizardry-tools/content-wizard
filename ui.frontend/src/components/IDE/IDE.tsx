@@ -1,4 +1,12 @@
-import React, { Fragment, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
+import React, {
+  Fragment,
+  MouseEventHandler,
+  PropsWithChildren,
+  ReactElement,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 import {
   Button,
   ButtonGroup,
@@ -24,7 +32,7 @@ import {
   useStorageContext,
   VariableEditor,
 } from './core/src';
-import { useIsGraphQL, useIDETheme, useThemeDispatch } from 'src/providers';
+import { useIsGraphQL, useIDETheme, useThemeDispatch, useLogger } from 'src/providers';
 import Paper from '@mui/material/Paper';
 import {
   ChevronDownIcon,
@@ -73,6 +81,9 @@ export type IDEToolbarConfig = {
  */
 
 export function IDE() {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `IDE[${++renderCount.current}] render()` });
   return <IDEInterface />;
 }
 
@@ -82,6 +93,9 @@ IDE.Toolbar = IDEToolbar;
 IDE.Footer = IDEFooter;
 
 export function IDEInterface() {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `IDEInterface[${++renderCount.current}] render()` });
   const isGraphQL = useIsGraphQL();
   const isVariablesEditorEnabled = isGraphQL ?? true;
   const isHeadersEditorEnabled = isGraphQL ?? true;
@@ -273,11 +287,11 @@ export function IDEInterface() {
               <Tooltip label="Re-fetch GraphQL schema">
                 <UnStyledButton
                   type="button"
-                  disabled={schemaContext.isFetching}
+                  disabled={!!schemaContext.isFetching.current}
                   onClick={handleRefetchSchema}
                   aria-label="Re-fetch GraphQL schema"
                 >
-                  <ReloadIcon className={schemaContext.isFetching ? 'wizard-spin' : ''} aria-hidden="true" />
+                  <ReloadIcon className={schemaContext.isFetching.current ? 'wizard-spin' : ''} aria-hidden="true" />
                 </UnStyledButton>
               </Tooltip>
             )}

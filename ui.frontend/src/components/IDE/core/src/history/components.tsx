@@ -8,7 +8,7 @@ import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
 
 import './style.scss';
-import { useQueryDispatch } from 'src/providers';
+import { useQueryDispatcher } from 'src/providers';
 import { defaultAdvancedQueries, QueryLanguageKey } from 'src/components/Query';
 
 export function History() {
@@ -88,7 +88,7 @@ type QueryHistoryItemProps = {
 };
 
 export function HistoryItem(props: QueryHistoryItemProps) {
-  const queryDispatcher = useQueryDispatch();
+  const queryDispatcher = useQueryDispatcher();
   const { editLabel, toggleFavorite, deleteFromHistory, setActive } = useHistoryContext({
     nonNull: true,
     caller: HistoryItem,
@@ -135,6 +135,7 @@ export function HistoryItem(props: QueryHistoryItemProps) {
       statement: query,
       label,
       type: 'replaceQuery',
+      caller: HistoryItem,
     });
     // queryEditor?.setValue(query?.statement ?? '');
     variableEditor?.setValue(variables ?? '');

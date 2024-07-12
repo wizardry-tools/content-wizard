@@ -1,8 +1,9 @@
 import { createContextHook, createNullableContext } from './utility/context';
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
-import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { buildGraphQLURL, endpoints, Statement } from 'src/components/Query';
 import { createAPIFetcher } from 'src/utility';
+import { useLogger } from '../../../../providers';
 
 export type API = {
   endpoint: string;
@@ -23,7 +24,6 @@ export type PersistedQuery = {
   data: PersistedQueryData;
 };
 
-// /graphql/list.json => GraphQLListResponseConfig[]
 export type GraphQLEndpointConfig = {
   configurationName: string;
   queries: PersistedQuery[];
@@ -45,10 +45,6 @@ export type APIContextType = {
    */
   fetchError: string | null;
   /**
-   * If there currently is an API request in-flight.
-   */
-  isFetching: boolean;
-  /**
    * When the APIContextProvider is rendered, it fetches all available APIs that
    * are configured in AEM for GraphQL.
    */
@@ -69,6 +65,9 @@ export const APIContext = createNullableContext<APIContextType>('APIContext');
 export type APIContextProviderProps = PropsWithChildren;
 
 export function APIContextProvider(props: APIContextProviderProps) {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `APIContextProvider[${++renderCount.current}] render()` });
   const { children } = props;
   const apiFetcher = useMemo(
     () =>
@@ -78,16 +77,20 @@ export function APIContextProvider(props: APIContextProviderProps) {
     [],
   );
   const [APIs, setAPIs] = useState([] as API[]);
-  const [isFetching, setIsFetching] = useState(false);
+  const isFetching = useRef(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const loadAPIs = useCallback(() => {
+    if (isFetching.current) {
+      // avoid parallel request
+      return;
+    }
     async function fetchAPIs(): Promise<GraphQLEndpointConfig[]> {
       const fetch = fetcherReturnToPromise(apiFetcher({}));
       if (!isPromise(fetch)) {
         setFetchError('Fetcher did not return a Promise for API request');
       }
-      setIsFetching(true);
+      isFetching.current = true;
       setFetchError(null);
       let result = await fetch;
 
@@ -99,7 +102,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
         );
       }
 
-      setIsFetching(false);
+      isFetching.current = false;
 
       if (typeof result !== 'string') {
         return result as GraphQLEndpointConfig[];
@@ -122,7 +125,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
       })
       .catch((error) => {
         setFetchError(formatError(error));
-        setIsFetching(false);
+        isFetching.current = false;
       });
   }, [apiFetcher]);
 
@@ -143,11 +146,10 @@ export function APIContextProvider(props: APIContextProviderProps) {
   const value = useMemo(
     () => ({
       fetchError,
-      isFetching,
       APIs,
       getPersistedQueries,
     }),
-    [fetchError, isFetching, APIs, getPersistedQueries],
+    [fetchError, APIs, getPersistedQueries],
   );
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;

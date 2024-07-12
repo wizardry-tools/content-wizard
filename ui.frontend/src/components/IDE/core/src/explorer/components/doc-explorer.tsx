@@ -27,7 +27,7 @@ export function DocExplorer() {
     content = <div className="wizard-doc-explorer-error">Error fetching schema</div>;
   } else if (validationErrors.length > 0) {
     content = <div className="wizard-doc-explorer-error">Schema is invalid: {validationErrors[0].message}</div>;
-  } else if (isFetching) {
+  } else if (isFetching.current) {
     // Schema is undefined when it is being loaded via introspection.
     content = <Spinner />;
   } else if (!schema) {

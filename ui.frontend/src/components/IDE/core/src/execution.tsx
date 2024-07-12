@@ -1,4 +1,4 @@
-import { Fetcher, formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
+import { formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
 import { ExecutionResult, FragmentDefinitionNode, GraphQLError, print } from 'graphql';
 import { getFragmentDependenciesForAST } from 'graphql-language-service';
 import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
@@ -8,7 +8,7 @@ import { useAutoCompleteLeafs, useEditorContext } from './editor';
 import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useQuery } from 'src/providers';
+import { useFetcher, useLogger, useQuery } from 'src/providers';
 
 export type ExecutionContextType = {
   /**
@@ -42,28 +42,20 @@ export const ExecutionContext = createNullableContext<ExecutionContextType>('Exe
 export type ExecutionContextProviderProps = Pick<UseAutoCompleteLeafsArgs, 'getDefaultFieldNames'> & {
   children: ReactNode;
   /**
-   * A function which accepts GraphQL HTTP parameters and returns a `Promise`,
-   * `Observable` or `AsyncIterable` that returns the GraphQL response in
-   * parsed JSON format.
-   *
-   * We suggest using the `createGraphiQLFetcher` utility from `@graphiql/toolkit`
-   * to create these fetcher functions.
-   *
-   * @see {@link https://graphiql-test.netlify.app/typedoc/modules/graphiql_toolkit.html#creategraphiqlfetcher-2|`createGraphiQLFetcher`}
-   */
-  fetcher: Fetcher;
-  /**
    * This prop sets the operation name that is passed with a GraphQL request.
    */
   operationName?: string;
 };
 
 export function ExecutionContextProvider({
-  fetcher,
   getDefaultFieldNames,
   children,
   operationName,
 }: ExecutionContextProviderProps) {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `ExecutionContextProvider[${++renderCount.current}] render()` });
+  const fetcher = useFetcher();
   if (!fetcher) {
     throw new TypeError('The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.');
   }

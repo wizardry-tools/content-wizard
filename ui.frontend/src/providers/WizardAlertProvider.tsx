@@ -1,12 +1,23 @@
-import { createContext, Dispatch, MouseEvent, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  Dispatch,
+  MouseEvent,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Alert, AlertColor, AlertProps } from '@mui/material';
+import { useLogger } from './LoggingProvider';
 
 export type WizardAlertProps = AlertProps & {
   message?: string;
   severity?: AlertColor;
   alertTimeout?: number;
+  caller?: Function;
 };
-
 const WizardAlertContext = createContext<WizardAlertProps>(null!);
 const WizardAlertDispatcher = createContext<Dispatch<WizardAlertProps>>(null!);
 
@@ -20,17 +31,24 @@ export type WizardAlertProviderProps = WizardAlertProps & PropsWithChildren;
  * @constructor
  */
 export function WizardAlertProvider({ children }: WizardAlertProviderProps) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `WizardAlertProvider[${++renderCount.current}] render()` });
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState<AlertColor>('info');
 
-  const handleAlertDispatch = (alert: WizardAlertProps) => {
-    if (alert.message !== null && typeof alert.message !== 'undefined') {
-      setMessage(alert.message);
-    }
-    if (alert.severity) {
-      setSeverity(alert.severity);
-    }
-  };
+  const handleAlertDispatch = useCallback(
+    (alert: WizardAlertProps) => {
+      logger.debug({ message: 'WizardAlertProvider Alert Dispatcher called: ', args: alert.caller || 'Anonymous' });
+      if (alert.message !== null && typeof alert.message !== 'undefined') {
+        setMessage(alert.message);
+      }
+      if (alert.severity) {
+        setSeverity(alert.severity);
+      }
+    },
+    [logger],
+  );
 
   return (
     <WizardAlertContext.Provider value={{ message, severity }}>
@@ -52,6 +70,9 @@ export function useAlertDispatcher() {
  * @constructor
  */
 export const WizardAlert = () => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `WizardAlert[${++renderCount.current}] render()` });
   const { message, severity, alertTimeout = 5000 } = useAlertContext();
   const alertDispatcher = useAlertDispatcher();
   const [show, setShow] = useState(false);
@@ -67,22 +88,26 @@ export const WizardAlert = () => {
   const handleOff = (_event: MouseEvent) => {
     setShow(false);
     setHover(false);
-    alertDispatcher({ message: '' });
+    if (message) {
+      alertDispatcher({ message: '', caller: WizardAlert });
+    }
   };
 
   useEffect(() => {
     if (message) {
       setShow(true);
-    }
-    function onTimeout() {
-      setShow(false);
-      alertDispatcher({ message: '' });
-    }
-    const timeoutId = setTimeout(onTimeout, alertTimeout);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
+      function onTimeout() {
+        setShow(false);
+        alertDispatcher({ message: '', caller: WizardAlert });
+      }
+
+      const timeoutId = setTimeout(onTimeout, alertTimeout);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
   }, [alertDispatcher, alertTimeout, message]);
 
   return (

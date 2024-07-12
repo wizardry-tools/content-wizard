@@ -1,10 +1,11 @@
 import { WizardStorageAPI } from '../storage-api';
-import { Dispatch, useCallback, useMemo } from 'react';
+import { Dispatch, useCallback, useMemo, useRef } from 'react';
 
 import debounce from '../utility/debounce';
 import { CodeMirrorEditorWithOperationFacts } from './context';
 import { CodeMirrorEditor } from './types';
 import { defaultAdvancedQueries, Query, QueryAction, QueryLanguageLabels } from 'src/components/Query';
+import { useLogger } from '../../../../../providers';
 
 export type TabDefinition = {
   /**
@@ -261,6 +262,9 @@ export function useSetEditorValues({
   headerEditor: CodeMirrorEditor | null;
   responseEditor: CodeMirrorEditor | null;
 }) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `tabs.useSetEditorValues[${++renderCount.current}] render()` });
   return useCallback(
     ({
       query,
@@ -274,10 +278,12 @@ export function useSetEditorValues({
       response: string | null;
     }) => {
       // use queryDispatcher instead to broadcast query changes and let the queryEditor read from useQuery
+      logger.debug({ message: `tabs.useSetEditorValues[${renderCount.current}] queryDispatch()` });
       if (queryDispatcher) {
         queryDispatcher({
           ...query,
           type: 'replaceQuery',
+          caller: useSetEditorValues,
         });
       }
       //queryEditor?.setValue(query.statement ?? '');
@@ -285,7 +291,7 @@ export function useSetEditorValues({
       headerEditor?.setValue(headers ?? '');
       responseEditor?.setValue(response ?? '');
     },
-    [queryDispatcher, headerEditor, responseEditor, variableEditor],
+    [logger, queryDispatcher, headerEditor, responseEditor, variableEditor],
   );
 }
 

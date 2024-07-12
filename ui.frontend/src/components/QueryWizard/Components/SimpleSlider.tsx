@@ -1,8 +1,9 @@
 import { Slider, InputLabel, Tooltip } from '@mui/material';
 import { FormGrid } from './FormGrid';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { NumberValue } from './fields';
 import { SimpleInputProps } from './SimpleInput';
+import { useFieldDispatcher, useLogger } from 'src/providers';
 
 type SimpleSliderProps = SimpleInputProps & {
   min: number;
@@ -10,78 +11,79 @@ type SimpleSliderProps = SimpleInputProps & {
   step: number;
 };
 
-export const SimpleSlider = memo(
-  ({ min = -1, max = 1000, step = 10, defaultValue, onChange, field }: SimpleSliderProps) => {
-    const initialValue = useRef(defaultValue);
-    const [value, setValue] = useState(initialValue.current);
-    const { name, label } = { ...field };
+export const SimpleSlider = ({ min = -1, max = 1000, step = 10, defaultValue, field }: SimpleSliderProps) => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `SimpleSlider[${++renderCount.current}] render()` });
+  const fieldDispatcher = useFieldDispatcher();
+  const initialValue = useRef(defaultValue);
+  const [value, setValue] = useState(initialValue.current);
+  const { name, label } = { ...field };
 
-    const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const handleChange = useCallback((_event: Event, value: NumberValue) => {
+    if (value) {
+      setValue(value);
+    }
+  }, []);
 
-    const debouncedHandleChange = useCallback(
-      (value: NumberValue) => {
-        clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => {
-          onChange({
-            ...field,
-            value,
-          }); // update parent config
-        }, 250);
-      },
-      [field, onChange],
-    );
+  useEffect(() => {
+    function onTimeout() {
+      fieldDispatcher({
+        name: name,
+        value: value,
+        type: 'UPDATE_VALUE',
+        caller: SimpleSlider,
+      });
+    }
+    let timeoutId = setTimeout(onTimeout, 100);
 
-    const handleChange = (_event: Event, value: NumberValue) => {
-      if (value) {
-        setValue(value);
-        debouncedHandleChange(value);
-      }
+    return () => {
+      clearTimeout(timeoutId);
     };
-    const memoizedHandleChange = useCallback(handleChange, [debouncedHandleChange]);
+  }, [fieldDispatcher, name, value]);
 
-    const marks = useMemo(() => {
-      const items = [
-        {
-          value: min,
-        },
-      ];
-      // defines lower scaled values
-      items.push(
-        ...[...Array(step)].map((_, i) => {
-          const value = i * step;
-          return { value };
-        }),
-      );
-
-      // defines higher scaled values
-      items.push(
-        ...[...Array(step)].map((_, i) => {
-          const value = (i + 1) * step * step;
-          return { value };
-        }),
-      );
-      return items;
-    }, [min, step]);
-
-    return (
-      <FormGrid item>
-        {label && (
-          <Tooltip title={'-1 enables unlimited results'}>
-            <InputLabel id={`${name}-label`}>{label}</InputLabel>
-          </Tooltip>
-        )}
-        <Slider
-          id={name}
-          value={value as NumberValue} // force number type
-          min={min}
-          max={max}
-          marks={marks}
-          color="secondary"
-          step={null} // required explicit null prop
-          valueLabelDisplay="auto"
-          onChange={memoizedHandleChange}
-        />
-      </FormGrid>
+  const marks = useMemo(() => {
+    const items = [
+      {
+        value: min,
+      },
+    ];
+    // defines lower scaled values
+    items.push(
+      ...[...Array(step)].map((_, i) => {
+        const value = i * step;
+        return { value };
+      }),
     );
-  },
-);
+
+    // defines higher scaled values
+    items.push(
+      ...[...Array(step)].map((_, i) => {
+        const value = (i + 1) * step * step;
+        return { value };
+      }),
+    );
+    return items;
+  }, [min, step]);
+
+  return (
+    <FormGrid item>
+      {label && (
+        <Tooltip title={'-1 enables unlimited results'}>
+          <InputLabel id={`${name}-label`}>{label}</InputLabel>
+        </Tooltip>
+      )}
+      <Slider
+        id={name}
+        value={value as NumberValue} // force number type
+        min={min}
+        max={max}
+        marks={marks}
+        color="secondary"
+        step={null} // required explicit null prop
+        valueLabelDisplay="auto"
+        onChange={handleChange}
+      />
+    </FormGrid>
+  );
+};

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
-import { useCopyQuery, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
+import { useCopyQuery, useKeyMap, useSynchronizeOption } from './hooks';
 import { CodeMirrorType, CommonEditorProps } from './types';
 import { useQuery } from 'src/providers';
 import { QueryLanguage } from 'src/components/Query';
@@ -33,7 +33,7 @@ export function useWizardStatementEditor(
   // initialWizardStatement reloads codemirror if modified, so we're using a Ref instead
   const getInitialQueryStatement = useRef(getStatement(language, statement));
 
-  // used for synching the editor
+  // used for syncing the editor
   const {
     initialWizardStatement = getInitialQueryStatement.current,
     wizardStatementEditor,
@@ -48,9 +48,6 @@ export function useWizardStatementEditor(
   const codeMirrorRef = useRef<CodeMirrorType>();
 
   useEffect(() => {
-    if (wizardStatementEditor) {
-      return;
-    }
     let isActive = true;
     let addons = [
       import('codemirror/addon/fold/foldgutter'),
@@ -95,11 +92,11 @@ export function useWizardStatementEditor(
     return () => {
       isActive = false;
     };
-  }, [setWizardStatementEditor, wizardStatementEditor, initialWizardStatement]);
+  }, [setWizardStatementEditor, initialWizardStatement]);
 
   useKeyMap(wizardStatementEditor, ['Shift-Ctrl-C'], copy);
   useSynchronizeOption(wizardStatementEditor, 'keyMap', keyMap);
-  useSynchronizeValue(wizardStatementEditor, getStatement(language, statement));
+  //useSynchronizeValue(wizardStatementEditor, getStatement(language, statement));
 
   return ref;
 }

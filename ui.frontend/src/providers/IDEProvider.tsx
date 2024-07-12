@@ -1,95 +1,29 @@
 import {
   EditorContextProvider,
-  EditorContextProviderProps,
   ExecutionContextProvider,
-  ExecutionContextProviderProps,
   ExplorerContextProvider,
-  ExplorerContextProviderProps,
   HistoryContextProvider,
-  HistoryContextProviderProps,
   PluginContextProvider,
-  PluginContextProviderProps,
   SchemaContextProvider,
-  SchemaContextProviderProps,
 } from 'src/components/IDE/core/src';
-import { useIsGraphQL } from './QueryProvider';
 import { APIContextProvider } from 'src/components/IDE/core/src';
+import { PropsWithChildren, useRef } from 'react';
+import { useLogger } from './LoggingProvider';
 
-export type IDEProviderProps = EditorContextProviderProps &
-  ExecutionContextProviderProps &
-  ExplorerContextProviderProps &
-  HistoryContextProviderProps &
-  PluginContextProviderProps &
-  SchemaContextProviderProps;
+export type IDEProviderProps = PropsWithChildren;
 
-export function IDEProvider({
-  children,
-  dangerouslyAssumeSchemaIsValid,
-  defaultQuery,
-  defaultHeaders,
-  defaultTabs,
-  externalFragments,
-  fetcher,
-  getDefaultFieldNames,
-  headers,
-  inputValueDeprecation,
-  introspectionQueryName,
-  maxHistoryLength,
-  onEditOperationName,
-  onSchemaChange,
-  onTabChange,
-  onTogglePluginVisibility,
-  operationName,
-  plugins,
-  query, //TODO: Make this a Query object instead of a string
-  response,
-  schema,
-  schemaDescription,
-  shouldPersistHeaders,
-  validationRules,
-  variables,
-  visiblePlugin,
-}: IDEProviderProps) {
-  const isGraphQL = useIsGraphQL();
+export function IDEProvider({ children }: IDEProviderProps) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `IDEProvider[${++renderCount.current}] render()` });
   return (
-    <HistoryContextProvider maxHistoryLength={maxHistoryLength}>
-      <EditorContextProvider
-        defaultQuery={defaultQuery}
-        defaultHeaders={defaultHeaders}
-        defaultTabs={defaultTabs}
-        externalFragments={externalFragments}
-        headers={headers}
-        onEditOperationName={onEditOperationName}
-        onTabChange={onTabChange}
-        query={query}
-        response={response}
-        shouldPersistHeaders={shouldPersistHeaders}
-        validationRules={validationRules}
-        variables={variables}
-      >
+    <HistoryContextProvider>
+      <EditorContextProvider>
         <APIContextProvider>
-          <SchemaContextProvider
-            dangerouslyAssumeSchemaIsValid={dangerouslyAssumeSchemaIsValid}
-            fetcher={fetcher}
-            inputValueDeprecation={inputValueDeprecation}
-            introspectionQueryName={introspectionQueryName}
-            onSchemaChange={onSchemaChange}
-            schema={isGraphQL ? schema : null}
-            schemaDescription={schemaDescription}
-          >
-            <ExecutionContextProvider
-              getDefaultFieldNames={getDefaultFieldNames}
-              fetcher={fetcher}
-              operationName={operationName}
-            >
+          <SchemaContextProvider>
+            <ExecutionContextProvider>
               <ExplorerContextProvider>
-                <PluginContextProvider
-                  onTogglePluginVisibility={onTogglePluginVisibility}
-                  plugins={plugins}
-                  visiblePlugin={visiblePlugin}
-                >
-                  {children}
-                </PluginContextProvider>
+                <PluginContextProvider>{children}</PluginContextProvider>
               </ExplorerContextProvider>
             </ExecutionContextProvider>
           </SchemaContextProvider>

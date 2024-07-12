@@ -7,8 +7,8 @@ import {
   Statement,
 } from 'src/components/Query';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { useQuery, useQueryDispatch } from 'src/providers';
-import { memo, useCallback } from 'react';
+import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
+import { memo, useCallback, useRef } from 'react';
 import './language-selector.scss';
 import { APISelector } from './APISelector';
 import { API, useAPIContext } from '../api';
@@ -25,9 +25,12 @@ import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
  * The {LanguageSelector} will unmount when the Plugin view is collapsed.
  * @constructor
  */
-export function LanguageSelector() {
+export const LanguageSelector = () => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `LanguageSelector[${++renderCount.current}] render()` });
   const { language, api } = useQuery();
-  const queryDispatch = useQueryDispatch();
+  const queryDispatcher = useQueryDispatcher();
   const { APIs } = useAPIContext({
     nonNull: true,
     caller: LanguageSelector,
@@ -35,33 +38,39 @@ export function LanguageSelector() {
 
   const handleStatementChange = useCallback(
     (statement: Statement) => {
-      queryDispatch({
+      logger.debug({ message: `LanguageSelector[${renderCount.current}] statementChange()` });
+      queryDispatcher({
         type: 'statementChange',
         statement,
+        caller: LanguageSelector,
       });
     },
-    [queryDispatch],
+    [logger, queryDispatcher],
   );
 
   const handleLanguageChange = useCallback(
     (language: QueryLanguageKey) => {
       // reset the entire query on language change
-      queryDispatch({
+      logger.debug({ message: `LanguageSelector[${renderCount.current}] replaceQuery()` });
+      queryDispatcher({
         ...defaultAdvancedQueries[language],
         type: 'replaceQuery',
+        caller: LanguageSelector,
       });
     },
-    [queryDispatch],
+    [logger, queryDispatcher],
   );
 
   const handleAPIChange = useCallback(
     (newAPI: API) => {
-      queryDispatch({
+      logger.debug({ message: `LanguageSelector[${renderCount.current}] apiChange()` });
+      queryDispatcher({
         type: 'apiChange',
         api: newAPI,
+        caller: LanguageSelector,
       });
     },
-    [queryDispatch],
+    [logger, queryDispatcher],
   );
 
   const onAPIChange = useCallback(
@@ -146,4 +155,4 @@ export function LanguageSelector() {
       </div>
     </section>
   );
-}
+};

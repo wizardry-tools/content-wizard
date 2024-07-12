@@ -1,14 +1,15 @@
 import { QueryButton } from 'src/components/QueryWizard/Components';
 import { QueryLanguage } from './QueryType';
-import { useQuery, useQueryDispatch, useQueryRunner, useResultsDispatch } from 'src/providers';
+import { useLogger, useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatch } from 'src/providers';
 
 type QueryHandlerProps = {
   onResults: (index: number) => void;
 };
 
 export function QueryHandler({ onResults }: QueryHandlerProps) {
+  const logger = useLogger();
   const query = useQuery();
-  const queryDispatch = useQueryDispatch();
+  const queryDispatcher = useQueryDispatcher();
   const resultsDispatch = useResultsDispatch();
   const queryRunner = useQueryRunner();
 
@@ -17,25 +18,33 @@ export function QueryHandler({ onResults }: QueryHandlerProps) {
   };
 
   const doQuery = () => {
-    queryDispatch({
+    queryDispatcher({
       type: 'statusChange',
       status: 'running',
+      caller: QueryHandler,
     });
     // do we need to wait????
-    queryRunner(query).then((queryResponse) => {
+    queryRunner({ query, caller: QueryHandler }).then((queryResponse) => {
       if (queryResponse.results) {
-        resultsDispatch(queryResponse.results);
+        resultsDispatch({
+          results: queryResponse.results,
+          caller: QueryHandler,
+        });
         if (queryResponse.results.length > 0) {
           // switch to results tab
           onResults(2);
         }
       } else {
-        resultsDispatch([]);
-        console.debug(`No Results for query: ${queryResponse.status}`, query);
+        resultsDispatch({
+          results: [],
+          caller: QueryHandler,
+        });
+        logger.debug({ message: `No Results for query: ${queryResponse.status}`, query });
       }
-      queryDispatch({
+      queryDispatcher({
         type: 'statusChange',
         status: 'complete',
+        caller: QueryHandler,
       });
     });
   };

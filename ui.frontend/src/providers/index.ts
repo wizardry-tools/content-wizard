@@ -8,5 +8,8 @@ export * from './ContentWizardProvider';
 export * from './IDEProvider';
 export * from './QueryProvider';
 export * from './ResultsProvider';
+export * from './FetcherProvider';
+export * from './FieldsProvider';
 export * from './WizardThemeProvider';
+export * from './LoggingProvider';
 export * from './AppProvider';

@@ -82,6 +82,7 @@ export interface FieldConfig {
 export type FieldConfigAction = Pick<FieldConfig, 'name'> &
   Pick<FieldConfig, 'value'> & {
     type: 'UPDATE_VALUE';
+    caller?: Function;
   };
 
 export const Field = (field: FieldConfig) => {

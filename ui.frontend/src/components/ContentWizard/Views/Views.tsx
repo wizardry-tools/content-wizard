@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { IDE } from 'src/components/IDE';
 import Box from '@mui/material/Box';
 import { QueryWizard } from 'src/components/QueryWizard';
+import { useLogger } from '../../../providers';
 
 export type ViewsProps = {
   tabValue: number;
@@ -12,6 +13,8 @@ export type ViewsProps = {
 };
 
 export function Views({ tabValue, onTabPanelSelect }: ViewsProps) {
+  const logger = useLogger();
+  logger.debug({ message: 'ContentWizard/Views render()' });
   const theme = useTheme();
 
   return (

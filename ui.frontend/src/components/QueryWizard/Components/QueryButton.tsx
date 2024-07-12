@@ -1,6 +1,6 @@
 import { Fab, SvgIcon, Typography } from '@mui/material';
 import { RunIcon } from 'src/icons';
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useAlertContext } from 'src/providers';
 
 interface QueryButtonProps {
@@ -12,8 +12,7 @@ interface QueryButtonProps {
 export const QueryButton = ({ isRunning = false, disabled = false, onClick = () => {} }: QueryButtonProps) => {
   const alert = useAlertContext();
   const [hover, setHover] = useState(false);
-
-  const timer = useRef<number | null>(null);
+  const [open, setOpen] = useState(false);
 
   const buttonText = () => {
     return `${!isRunning ? 'Run ' : ''}Query ${isRunning ? 'Running' : ''}`;
@@ -21,24 +20,31 @@ export const QueryButton = ({ isRunning = false, disabled = false, onClick = () 
 
   const mouseEnter = (_e: MouseEvent) => {
     setHover(true);
-    if (timer.current) {
-      window.clearTimeout(timer.current);
-    }
   };
 
   const mouseLeave = (_e: MouseEvent) => {
-    if (timer.current) {
-      window.clearTimeout(timer.current);
-    }
-    timer.current = window.setTimeout(() => {
-      setHover(false);
-    }, 500);
+    setHover(false);
   };
+
+  useEffect(() => {
+    if (hover) {
+      setOpen(true);
+      return;
+    }
+    function onTimeout() {
+      setOpen(false);
+    }
+    const timeoutId = setTimeout(onTimeout, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [hover]);
 
   return (
     <Fab
       name="run-query"
-      className={`query-handler-button ${hover ? 'query-button-hover' : 'query-button-hide'}`}
+      className={`query-handler-button ${open ? 'query-button-hover' : 'query-button-hide'}`}
       variant="extended"
       color="secondary"
       onClick={onClick}
@@ -49,9 +55,9 @@ export const QueryButton = ({ isRunning = false, disabled = false, onClick = () 
       <SvgIcon
         component={RunIcon}
         inheritViewBox
-        className={`query-button-icon ${hover ? 'query-button-hover' : 'query-button-hide'}`}
+        className={`query-button-icon ${open ? 'query-button-hover' : 'query-button-hide'}`}
       />
-      <Typography className={`${hover ? 'query-button-hover' : 'query-button-hide'}`}>{buttonText()}</Typography>
+      <Typography className={`${open ? 'query-button-hover' : 'query-button-hide'}`}>{buttonText()}</Typography>
     </Fab>
   );
 };

@@ -13,19 +13,31 @@ import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
 import { CodeMirrorEditor } from './types';
-import { useIsGraphQL } from 'src/providers';
+import { useIsGraphQL, useLogger } from 'src/providers';
 import { Query } from 'src/components/Query';
 
-export function useSynchronizeValue(editor: CodeMirrorEditor | null, value: Query | string | undefined) {
+/**
+ * This method synchronizes values across editors.
+ * Pass a null value to avoid a synchronization.
+ * @param editor
+ * @param value
+ */
+export function useSynchronizeValue(editor: CodeMirrorEditor | null, value: Query | string | undefined | null) {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `useSynchronizeValue[${++renderCount.current}]()` });
   useEffect(() => {
-    if (editor) {
+    logger.debug({ message: `useSynchronizeValue[${renderCount.current}].useEffect()`, args: !!editor && !!value });
+    if (editor && value) {
       if (typeof value === 'string' && value !== editor.getValue()) {
         editor.setValue(value);
       } else if (typeof value !== 'string' && typeof value !== 'undefined' && value.statement !== editor.getValue()) {
         editor.setValue(value.statement);
       }
+    } else {
+      logger.debug({ message: `useSynchronizeValue[${renderCount.current}].useEffect() SKIPPING SYNC` });
     }
-  }, [editor, value]);
+  }, [editor, logger, value]);
 }
 
 export function useSynchronizeOption<K extends keyof EditorConfiguration>(

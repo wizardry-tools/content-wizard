@@ -1,23 +1,38 @@
-import { useState, createContext, useContext, PropsWithChildren, Dispatch } from 'react';
+import { useState, createContext, useContext, PropsWithChildren, Dispatch, useCallback, useRef } from 'react';
 import { Results } from 'src/components/Results';
 import { useAlertDispatcher } from './WizardAlertProvider';
+import { useLogger } from './LoggingProvider';
+
+export type ResultsDispatchProps = {
+  results: Results;
+  caller: Function;
+};
 
 const ResultsContext = createContext<Results>([] as Results);
-const ResultsDispatchContext = createContext<Dispatch<Results>>(null!);
+const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProps>>(null!);
 
 export function ResultsProvider({ children }: PropsWithChildren) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `ResultsProvider[${++renderCount.current}] render()` });
   const [results, setResults] = useState([] as Results);
   const alertDispatcher = useAlertDispatcher();
 
-  const updateResults = (results: Results) => {
-    setResults(results);
-    if (!results || results.length < 1) {
-      alertDispatcher({
-        message: 'No results were found.',
-        severity: 'warning',
-      });
-    }
-  };
+  const updateResults = useCallback(
+    ({ results, caller }: ResultsDispatchProps) => {
+      logger.debug({ message: `ResultsProvider[${renderCount.current}] results dispatcher called by `, caller });
+      if (!results || results.length < 1) {
+        alertDispatcher({
+          message: 'No results were found.',
+          severity: 'warning',
+          caller: ResultsProvider,
+        });
+      } else {
+        setResults(results);
+      }
+    },
+    [alertDispatcher, logger],
+  );
 
   return (
     <ResultsContext.Provider value={results}>

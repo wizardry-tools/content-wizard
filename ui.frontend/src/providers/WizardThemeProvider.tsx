@@ -7,6 +7,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { PaletteMode, ThemeProvider as MuiThemeProvider } from '@mui/material';
@@ -16,6 +17,7 @@ import { createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
 import { WizardStorageAPI } from 'src/components/IDE/core/src/storage-api';
+import { useLogger } from './LoggingProvider';
 
 /**
  * The value `null` semantically means that the user does not explicitly choose
@@ -104,6 +106,9 @@ const IDEThemeContext = createContext<Theme>(null!);
 type NullablePaletteMode = PaletteMode | null;
 
 export function WizardThemeProvider(props: PropsWithChildren) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `WizardThemeProvider[${++renderCount.current}] render()` });
   /**
    * Load the Storage Context first
    */

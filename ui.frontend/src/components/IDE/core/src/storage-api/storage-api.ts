@@ -132,6 +132,7 @@ export class WizardStorageAPI {
           this.alertDispatcher({
             message: errMessage + error.message,
             severity: 'error',
+            caller: WizardStorageAPI,
           });
         }
       } else {

@@ -16,6 +16,9 @@ export * from './SimpleDatePicker';
 export * from './SimpleCheckbox';
 export * from './SimpleSelect';
 export * from './SimpleSlider';
+export * from './StatementWindow';
+export * from './Tab';
+export * from './Accordion';
 
 export const FieldTypes: { [key: string]: ElementType } = {
   SimpleInput,
@@ -25,7 +28,11 @@ export const FieldTypes: { [key: string]: ElementType } = {
   SimpleSlider,
 };
 
-export const fields: FieldsConfig = {
+/**
+ * Monolithic configuration object that helps us define the QueryWizard fields and
+ * any relevant logic to support building QueryBuilder predicates from them.
+ */
+export const defaultFields: FieldsConfig = {
   path: Field({
     name: 'path',
     label: 'Content Path',
@@ -252,4 +259,20 @@ export const fields: FieldsConfig = {
     value: 100,
     category: fieldCategoryTypes.targeting,
   }),
+};
+
+export const targetingFields = () => {
+  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.targeting);
+};
+export const authoringFields = () => {
+  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.authoring);
+};
+export const replicationFields = () => {
+  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.replication);
+};
+export const msmFields = () => {
+  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.msm);
+};
+export const translationFields = () => {
+  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.translation);
 };

@@ -25,10 +25,12 @@ function makeSchema(fieldName = 'field') {
   });
 }
 
+const isFetchingNotRef = { current: false };
+const isFetchingRef = { current: true };
 const defaultSchemaContext: SchemaContextType = {
   fetchError: null,
   introspect() {},
-  isFetching: false,
+  isFetching: isFetchingNotRef,
   schema: makeSchema(),
   validationErrors: [],
 };
@@ -36,7 +38,7 @@ const defaultSchemaContext: SchemaContextType = {
 const withErrorSchemaContext: SchemaContextType = {
   fetchError: 'Error fetching schema',
   introspect() {},
-  isFetching: false,
+  isFetching: isFetchingNotRef,
   schema: new GraphQLSchema({ description: 'GraphQL Schema for testing' }),
   validationErrors: [],
 };
@@ -55,7 +57,7 @@ describe('DocExplorer', () => {
       <SchemaContext.Provider
         value={{
           ...defaultSchemaContext,
-          isFetching: true,
+          isFetching: isFetchingRef,
           schema: undefined,
         }}
       >

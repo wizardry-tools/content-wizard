@@ -64,7 +64,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           <>
             <Button
               autoFocus
-              startIcon={<EditIcon/>}
+              startIcon={<EditIcon />}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -74,7 +74,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
             </Button>
             <Button
               autoFocus
-              startIcon={<InfoIcon/>}
+              startIcon={<InfoIcon />}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -88,7 +88,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           ((isCF && (
             <Button
               autoFocus
-              startIcon={<EditIcon/>}
+              startIcon={<EditIcon />}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -99,7 +99,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           )) || (
             <Button
               autoFocus
-              startIcon={<InfoIcon/>}
+              startIcon={<InfoIcon />}
               variant="contained"
               color={'secondary'}
               target="_blank"
@@ -110,7 +110,7 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           ))}
         <Button
           autoFocus
-          startIcon={<EngineeringIcon/>}
+          startIcon={<EngineeringIcon />}
           variant="contained"
           color={'secondary'}
           target="_blank"

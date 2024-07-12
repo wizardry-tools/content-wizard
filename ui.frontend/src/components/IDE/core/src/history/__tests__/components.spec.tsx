@@ -4,7 +4,7 @@ import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
 import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
-import { useQueryDispatch } from 'src/providers';
+import { useQueryDispatcher } from 'src/providers';
 
 jest.mock('../../editor', () => {
   const mockedSetQueryEditor = jest.fn();
@@ -23,7 +23,7 @@ jest.mock('../../editor', () => {
 jest.mock('src/providers', () => {
   const mockQueryDispatcher = jest.fn(() => {});
   return {
-    useQueryDispatch() {
+    useQueryDispatcher() {
       return mockQueryDispatcher;
     },
   };
@@ -76,7 +76,7 @@ describe('HistoryItem', () => {
   const mockedSetQueryEditor = useEditorContext()?.queryEditor?.setValue as jest.Mock;
   const mockedSetVariableEditor = useEditorContext()?.variableEditor?.setValue as jest.Mock;
   const mockedSetHeaderEditor = useEditorContext()?.headerEditor?.setValue as jest.Mock;
-  const mockedQueryDispatcher = useQueryDispatch() as jest.Mock;
+  const mockedQueryDispatcher = useQueryDispatcher() as jest.Mock;
   beforeEach(() => {
     mockedSetQueryEditor.mockClear();
     mockedSetVariableEditor.mockClear();

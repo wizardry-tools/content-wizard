@@ -1,15 +1,14 @@
-import { ContentWizardProvider, useResultsDispatch, useQuery, IDEProvider } from 'src/providers';
+import { ContentWizardProvider, IDEProvider, useLogger } from 'src/providers';
 import { Box } from '@mui/material';
 import { GlobalNav } from '../GlobalNav';
-import { useCallback, useMemo, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Bar, Views } from './index';
-import { Results } from 'src/components/Results';
-import { Fetcher } from '@graphiql/toolkit/src/create-fetcher/types';
-import { createGraphQLFetcher, createMultiLanguageFetcher, CustomCreateFetcherOptions } from 'src/utility';
-import { buildQueryString, Query, QueryLanguage } from 'src/components/Query';
 import './ContentWizard.scss';
 
 export function ContentWizard() {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `ContentWizard[${++renderCount.current}] render()` });
   return (
     <ContentWizardProvider>
       <ContentWizardInterface />
@@ -18,8 +17,9 @@ export function ContentWizard() {
 }
 
 function ContentWizardInterface() {
-  const resultsDispatch = useResultsDispatch();
-  const query = useQuery();
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `ContentWizardInterface[${++renderCount.current}] render()` });
 
   const [tabValue, setTabValue] = useState(0);
   const onTabSelect = (_event: any, value: any) => {
@@ -28,22 +28,13 @@ function ContentWizardInterface() {
   const onTabPanelSelect = (index: number) => {
     setTabValue(index);
   };
-  const onResults = useCallback(
-    (data: any) => {
-      const results: Results = data.hits || data.results || JSON.stringify(data);
-      resultsDispatch(results);
-    },
-    [resultsDispatch],
-  );
-
-  const fetcher: Fetcher = useMemo(() => createQueryFetcher(query, onResults), [query, onResults]);
 
   /*
     IDEProvider can't be included in the ContentWizardProvider, since ContentWizardProvider contains the
     initialization of other Providers that IDEProvider relies on.
    */
   return (
-    <IDEProvider fetcher={fetcher} query={query} shouldPersistHeaders={true}>
+    <IDEProvider>
       <Box className="content-wizard-main">
         <GlobalNav pageTitle="Content Wizard" />
         <Box className="content-wizard-content-wrapper">
@@ -53,20 +44,4 @@ function ContentWizardInterface() {
       </Box>
     </IDEProvider>
   );
-}
-
-function createQueryFetcher(query: Query, onResults: (data: any) => void): Fetcher {
-  // only append queryString if it's not GraphQL
-  let options: CustomCreateFetcherOptions = {
-    url: query.url + (query.language !== QueryLanguage.GraphQL ? buildQueryString(query) : ''),
-    onResults: onResults,
-  };
-  switch (query.language) {
-    case QueryLanguage.GraphQL: {
-      return createGraphQLFetcher(options);
-    }
-    default: {
-      return createMultiLanguageFetcher(options);
-    }
-  }
 }
