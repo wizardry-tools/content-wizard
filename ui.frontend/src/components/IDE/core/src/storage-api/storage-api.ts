@@ -37,6 +37,7 @@ export type WizardStorage = {
   length: number;
 };
 
+
 function isQuotaError(storage: WizardStorage, e: unknown) {
   return (
     e instanceof DOMException &&
@@ -54,7 +55,100 @@ function isQuotaError(storage: WizardStorage, e: unknown) {
   );
 }
 
-export class WizardStorageAPI {
+export type WizardStorageAPIProps = {
+  storage?: WizardStorage | null;
+  alertDispatcher?: Dispatch<WizardAlertProps> | Function;
+}
+export const useWizardStorageAPI = (props: WizardStorageAPIProps) => {
+  const alertDispatcher = props.alertDispatcher || ((obj:any)=>console.error(obj));
+  let storage = props.storage;
+  if (!storage && typeof window !== 'undefined') {
+    storage = {
+      getItem: window.localStorage.getItem.bind(window.localStorage),
+      setItem: window.localStorage.setItem.bind(window.localStorage),
+      removeItem: window.localStorage.removeItem.bind(window.localStorage),
+
+      get length() {
+        let keys = 0;
+        for (const key in window.localStorage) {
+          if (key.indexOf(`${STORAGE_NAMESPACE}:`) === 0) {
+            keys += 1;
+          }
+        }
+        return keys;
+      },
+
+      clear() {
+        // We only want to clear the namespaced items
+        for (const key in window.localStorage) {
+          if (key.indexOf(`${STORAGE_NAMESPACE}:`) === 0) {
+            window.localStorage.removeItem(key);
+          }
+        }
+      },
+    };
+  }
+
+  function get(name: string): string | null {
+    if (!storage) {
+      return null;
+    }
+
+    const key = `${STORAGE_NAMESPACE}:${name}`;
+    const value = storage.getItem(key);
+    // Clean up any inadvertently saved null/undefined values.
+    if (value === 'null' || value === 'undefined') {
+      storage.removeItem(key);
+      return null;
+    }
+    return value || null;
+  }
+
+  function set(name: string, value: string): { isQuotaError: boolean; error: Error | null } {
+    let quotaError = false;
+    let error: Error | null = null;
+
+    if (storage) {
+      const key = `${STORAGE_NAMESPACE}:${name}`;
+      if (value) {
+        try {
+          storage.setItem(key, value);
+        } catch (e) {
+          error = e instanceof Error ? e : new Error(`${e}`);
+          quotaError = isQuotaError(storage, e);
+          const errMessage = quotaError ? 'Local Storage is out of Space. 5MB max: ' : 'An error occurred: ';
+          alertDispatcher({
+            message: errMessage + error.message,
+            severity: 'error',
+            caller: useWizardStorageAPI,
+          });
+        }
+      } else {
+        // Clean up by removing the item if there's no value to set
+        storage.removeItem(key);
+      }
+    }
+
+    return { isQuotaError: quotaError, error };
+  }
+
+  function clear() {
+    if (storage) {
+      storage.clear();
+    }
+  }
+
+  return {
+    storage,
+    get,
+    set,
+    clear
+  }
+}
+
+export type WizardStorageAPI = ReturnType<typeof useWizardStorageAPI>
+
+/*export class WizardStorageAPI {
   storage: WizardStorage | null;
   alertDispatcher: Dispatch<WizardAlertProps>;
 
@@ -150,5 +244,5 @@ export class WizardStorageAPI {
     }
   }
 }
-
+*/
 const STORAGE_NAMESPACE = 'content-wizard';

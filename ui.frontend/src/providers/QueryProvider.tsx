@@ -20,7 +20,7 @@ import {
   QueryResponse,
   Statement,
 } from 'src/components/Query';
-import { API } from 'src/components/IDE/core/src';
+import {API, useStorageContext} from 'src/components/IDE/core/src';
 import { useLogger } from './LoggingProvider';
 
 export type QueryRunnerProps = {
@@ -43,6 +43,7 @@ const defaultSimpleQuery: Query = {
 
 export function QueryProvider({ children }: PropsWithChildren) {
   const logger = useLogger();
+  useStorageContext();
   const renderCount = useRef(0);
   logger.debug({ message: `QueryProvider[${++renderCount.current}] render()` });
   const [query, queryDispatcher] = useReducer(queryReducer, defaultSimpleQuery);

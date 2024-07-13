@@ -1,9 +1,10 @@
-import { WizardHistoryStore, WizardStoreItem, WizardStorageAPI } from '../storage-api';
-import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
+import {useWizardHistoryStore, WizardStoreItem, useWizardStorageAPI} from '../storage-api';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
 import { QueryLanguageKey, Statement } from 'src/components/Query';
+import {useAlertDispatcher} from "src/providers";
 
 export type HistoryContextType = {
   /**
@@ -92,29 +93,29 @@ export type HistoryContextProviderProps = {
  */
 export function HistoryContextProvider(props: HistoryContextProviderProps) {
   const storage = useStorageContext();
-  const historyStore = useRef(
-    new WizardHistoryStore(
-      // Fall back to a noop storage when the StorageContext is empty
-      storage || new WizardStorageAPI(null),
-      props.maxHistoryLength || DEFAULT_HISTORY_LENGTH,
-    ),
-  );
-  const [items, setItems] = useState(historyStore.current?.queries || []);
+  const alertDispatcher = useAlertDispatcher();
+  const storageAPI = useWizardStorageAPI({alertDispatcher});
+  const historyStore = useWizardHistoryStore({
+    // Fall back to a noop storage when the StorageContext is empty
+    storage: storage || storageAPI,
+    maxSize: props.maxHistoryLength || DEFAULT_HISTORY_LENGTH,
+  });
+  const [items, setItems] = useState(historyStore?.queries || []);
 
   const addToHistory: HistoryContextType['addToHistory'] = useCallback((operation: WizardStoreItem) => {
-    historyStore.current?.updateHistory(operation);
-    setItems(historyStore.current.queries);
-  }, []);
+    historyStore?.updateHistory(operation);
+    setItems(historyStore.queries);
+  }, [historyStore]);
 
   const editLabel: HistoryContextType['editLabel'] = useCallback((operation: WizardStoreItem, index?: number) => {
-    historyStore.current.editLabel(operation, index);
-    setItems(historyStore.current.queries);
-  }, []);
+    historyStore.editLabel(operation, index);
+    setItems(historyStore.queries);
+  }, [historyStore]);
 
   const toggleFavorite: HistoryContextType['toggleFavorite'] = useCallback((operation: WizardStoreItem) => {
-    historyStore.current.toggleFavorite(operation);
-    setItems(historyStore.current.queries);
-  }, []);
+    historyStore.toggleFavorite(operation);
+    setItems(historyStore.queries);
+  }, [historyStore]);
 
   const setActive: HistoryContextType['setActive'] = useCallback((item: WizardStoreItem) => {
     return item;
@@ -122,10 +123,10 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
 
   const deleteFromHistory: HistoryContextType['deleteFromHistory'] = useCallback(
     (item: WizardStoreItem, clearFavorites = false) => {
-      historyStore.current.deleteHistory(item, clearFavorites);
-      setItems(historyStore.current.queries);
+      historyStore.deleteHistory(item, clearFavorites);
+      setItems(historyStore.queries);
     },
-    [],
+    [historyStore],
   );
 
   const value = useMemo<HistoryContextType>(

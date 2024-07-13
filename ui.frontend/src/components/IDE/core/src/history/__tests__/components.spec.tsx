@@ -22,10 +22,14 @@ jest.mock('../../editor', () => {
 });
 jest.mock('src/providers', () => {
   const mockQueryDispatcher = jest.fn(() => {});
+  const mockAlertDispatcher = jest.fn( () => {});
   return {
     useQueryDispatcher() {
       return mockQueryDispatcher;
     },
+    useAlertDispatcher() {
+      return mockAlertDispatcher;
+    }
   };
 });
 
