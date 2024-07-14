@@ -6,11 +6,40 @@ export function createNullableContext<T>(name: string): Context<T | null> {
   return context;
 }
 
+export function createNonNullableContext<T>(name: string): Context<T> {
+  const context = createContext<T>(null!);
+  context.displayName = name;
+  return context;
+}
+
 export function createContextHook<T>(context: Context<T | null>) {
   function useGivenContext(options: { nonNull: true; caller?: Function }): T;
   function useGivenContext(options: { nonNull?: boolean; caller?: Function }): T | null;
   function useGivenContext(): T | null;
   function useGivenContext(options?: { nonNull?: boolean; caller?: Function }): T | null {
+    const value = useContext(context);
+    if (value === null && options?.nonNull) {
+      throw new Error(
+        `Tried to use \`${
+          options.caller?.name || useGivenContext.caller.name
+        }\` without the necessary context. Make sure to render the \`${
+          context.displayName
+        }Provider\` component higher up the tree.`,
+      );
+    }
+    return value;
+  }
+  Object.defineProperty(useGivenContext, 'name', {
+    value: `use${context.displayName}`,
+  });
+  return useGivenContext;
+}
+
+export function createNonNullableContextHook<T>(context: Context<T>) {
+  function useGivenContext(options: { nonNull: true; caller?: Function }): T;
+  function useGivenContext(options: { nonNull?: boolean; caller?: Function }): T;
+  function useGivenContext(): T;
+  function useGivenContext(options?: { nonNull?: boolean; caller?: Function }): T {
     const value = useContext(context);
     if (value === null && options?.nonNull) {
       throw new Error(

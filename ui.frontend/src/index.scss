@@ -31,6 +31,7 @@ body {
   &.hide {
     height: 0;
     opacity: 0;
+    padding: 0;
   }
 
   &.show {
@@ -41,6 +42,10 @@ body {
 
   .MuiAlert-message {
     overflow: hidden;
+  }
+
+  &.hide .MuiAlert-icon {
+    display: none;
   }
 
 }

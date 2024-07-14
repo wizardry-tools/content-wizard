@@ -47,7 +47,6 @@ export {
 } from './explorer';
 export { History, HistoryContext, HistoryContextProvider, useHistoryContext } from './history';
 export { DOC_EXPLORER_PLUGIN, HISTORY_PLUGIN, PluginContext, PluginContextProvider, usePluginContext } from './plugin';
-export { GraphiQLProvider } from './provider';
 export { SchemaContext, SchemaContextProvider, useSchemaContext } from './schema';
 export { StorageContext, StorageContextProvider, useStorageContext } from './storage';
 export { useTheme } from './theme';
@@ -79,7 +78,6 @@ export type {
 } from './explorer';
 export type { HistoryContextProviderProps, HistoryContextType } from './history';
 export type { GraphiQLPlugin, PluginContextType, PluginContextProviderProps } from './plugin';
-export type { GraphiQLProviderProps } from './provider';
 export type { SchemaContextProviderProps, SchemaContextType } from './schema';
 export type { StorageContextProviderProps, StorageContextType } from './storage';
 export type { Theme } from './theme';

@@ -1,41 +1,45 @@
-import { ChangeEvent, memo, useCallback, useRef, useState } from 'react';
+import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { FormGrid } from './FormGrid';
 import { Paper, TextField } from '@mui/material';
 import { Field, FieldConfig, InputValue } from './fields';
+import { useFieldDispatcher, useLogger } from 'src/providers';
 
 export type SimpleInputProps = {
-  onChange: (field: FieldConfig) => void;
   defaultValue: InputValue;
   field: FieldConfig;
   disabled: boolean;
 };
 
-export const SimpleInput = memo(({ onChange, field, defaultValue, disabled }: SimpleInputProps) => {
-  const initialValue = useRef(defaultValue);
-  const [value, setValue] = useState(initialValue.current);
-
+export const SimpleInput = memo(({ field, defaultValue, disabled }: SimpleInputProps) => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `SimpleInput[${++renderCount.current}] render()` });
+  const [value, setValue] = useState(defaultValue);
+  const { name, label, required } = Field(field);
+  const fieldDispatcher = useFieldDispatcher();
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
   const [focused, setFocused] = useState(false);
-  const { name, label, required } = Field(field);
 
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
-
-  const debouncedHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value); //update this component
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      onChange({
-        ...field,
-        value: e.target.value,
-      }); // update parent config
-    }, 500);
-  };
-
-  const onFocus = useCallback(() => {
-    setFocused((prevState) => !prevState);
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
   }, []);
 
-  const memoizedHandleChange = useCallback(debouncedHandleChange, [field, onChange]);
+  useEffect(() => {
+    function onTimeout() {
+      fieldDispatcher({
+        name,
+        value,
+        type: 'UPDATE_VALUE',
+        caller: SimpleInput,
+      });
+    }
+
+    let timeoutId = setTimeout(onTimeout, 250);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [fieldDispatcher, name, value]);
 
   return (
     <FormGrid item key={name}>
@@ -47,9 +51,9 @@ export const SimpleInput = memo(({ onChange, field, defaultValue, disabled }: Si
           value={value}
           color="secondary"
           className="query-builder-field"
-          onFocus={onFocus}
-          onBlur={onFocus}
-          onChange={memoizedHandleChange}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onChange={handleChange}
           disabled={disabled}
           required={required}
         />

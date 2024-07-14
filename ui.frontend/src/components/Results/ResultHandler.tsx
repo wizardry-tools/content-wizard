@@ -1,4 +1,4 @@
-import { ResultTable } from './ResultTable';
+import { ResultTable } from './ResultTable/ResultTable';
 import { Paper, TextField } from '@mui/material';
 import { FormGrid } from 'src/components/QueryWizard/Components';
 import { QueryLanguage } from 'src/components/Query';

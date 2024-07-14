@@ -50,6 +50,7 @@ export type Query = {
 };
 export type QueryAction = Partial<Query> & {
   type: string;
+  caller?: Function;
 };
 
 export type QueryResponse = {

@@ -1,10 +1,11 @@
 import { WizardStorageAPI } from '../storage-api';
-import { Dispatch, useCallback, useMemo } from 'react';
+import { Dispatch, useCallback, useMemo, useRef } from 'react';
 
 import debounce from '../utility/debounce';
 import { CodeMirrorEditorWithOperationFacts } from './context';
 import { CodeMirrorEditor } from './types';
-import { defaultAdvancedQueries, Query, QueryAction, QueryLanguageLabels } from 'src/components/Query';
+import { defaultAdvancedQueries, isQueryValid, Query, QueryAction, QueryLanguageLabels } from 'src/components/Query';
+import { useLogger } from 'src/providers';
 
 export type TabDefinition = {
   /**
@@ -127,7 +128,6 @@ export function getDefaultTabState({
         });
         parsed.activeTabIndex = parsed.tabs.length - 1;
       }
-
       return parsed;
     }
     throw new Error('Storage for tabs is invalid');
@@ -188,7 +188,7 @@ function hasStringOrNullKey(obj: Record<string, any>, key: string) {
 }
 
 function hasQueryOrNullKey(obj: Record<string, any>, key: string) {
-  return key in obj && typeof obj[key] === 'object' && obj[key] !== null && !!(obj[key] as Query);
+  return key in obj && typeof obj[key] === 'object' && obj[key] !== null && isQueryValid(obj[key] as Query);
 }
 
 export function useSynchronizeActiveTabValues({
@@ -204,8 +204,12 @@ export function useSynchronizeActiveTabValues({
   responseEditor: CodeMirrorEditor | null;
   query: Query;
 }) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `useSynchronizeActiveTabValues[${++renderCount.current}] render()` });
   return useCallback<(state: TabsState) => TabsState>(
     (state) => {
+      logger.debug({ message: `useSynchronizeActiveTabValues[${++renderCount.current}] callback()` });
       const variables = variableEditor?.getValue() ?? null;
       const headers = headerEditor?.getValue() ?? null;
       const operationName = queryEditor?.operationName ?? null;
@@ -218,7 +222,7 @@ export function useSynchronizeActiveTabValues({
         operationName,
       });
     },
-    [queryEditor, variableEditor, headerEditor, responseEditor, query],
+    [logger, queryEditor, variableEditor, headerEditor, responseEditor, query],
   );
 }
 
@@ -235,6 +239,9 @@ export function useStoreTabs({
   storage: WizardStorageAPI | null;
   shouldPersistHeaders?: boolean;
 }) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `useStoreTabs[${++renderCount.current}] render()` });
   const store = useMemo(
     () =>
       debounce(500, (value: string) => {
@@ -244,9 +251,10 @@ export function useStoreTabs({
   );
   return useCallback(
     (currentState: TabsState) => {
+      logger.debug({ message: `useStoreTabs[${++renderCount.current}] store()` });
       store(serializeTabState(currentState, shouldPersistHeaders));
     },
-    [shouldPersistHeaders, store],
+    [logger, shouldPersistHeaders, store],
   );
 }
 
@@ -261,6 +269,9 @@ export function useSetEditorValues({
   headerEditor: CodeMirrorEditor | null;
   responseEditor: CodeMirrorEditor | null;
 }) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `tabs.useSetEditorValues[${++renderCount.current}] render()` });
   return useCallback(
     ({
       query,
@@ -274,10 +285,12 @@ export function useSetEditorValues({
       response: string | null;
     }) => {
       // use queryDispatcher instead to broadcast query changes and let the queryEditor read from useQuery
+      logger.debug({ message: `tabs.useSetEditorValues[${renderCount.current}] queryDispatch()` });
       if (queryDispatcher) {
         queryDispatcher({
           ...query,
           type: 'replaceQuery',
+          caller: useSetEditorValues,
         });
       }
       //queryEditor?.setValue(query.statement ?? '');
@@ -285,7 +298,7 @@ export function useSetEditorValues({
       headerEditor?.setValue(headers ?? '');
       responseEditor?.setValue(response ?? '');
     },
-    [queryDispatcher, headerEditor, responseEditor, variableEditor],
+    [logger, queryDispatcher, headerEditor, responseEditor, variableEditor],
   );
 }
 

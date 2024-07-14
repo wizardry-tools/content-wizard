@@ -4,9 +4,9 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useReducer,
+  useRef,
 } from 'react';
 import { DYNAMIC_HEADERS, getParams } from 'src/utility';
 import {
@@ -20,29 +20,23 @@ import {
   QueryResponse,
   Statement,
 } from 'src/components/Query';
-import { useStorageContext, API } from 'src/components/IDE/core/src';
+import { API, useStorageContext } from 'src/components/IDE/core/src';
+import { useLogger } from './LoggingProvider';
+import { defaultFields } from '../components/QueryWizard/Components';
+import { generateQuery } from './FieldsProvider';
 
-import {
-  DateRange,
-  FieldConfigAction,
-  FieldConfigNameKey,
-  fields as defaultFields,
-  FieldsConfig,
-  InputValue,
-  PredicateConfig,
-  predicates,
-  predicateTypes,
-} from 'src/components/QueryWizard/Components';
+export type QueryRunnerProps = {
+  query: Query;
+  caller: Function;
+};
 
 const QueryContext = createContext<Query>(null!);
 const QueryDispatchContext = createContext<Dispatch<QueryAction>>(null!);
-const FieldsConfigContext = createContext<FieldsConfig>(null!);
-const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);
-const QueryRunnerContext = createContext<(query: Query) => Promise<QueryResponse>>(null!);
+const QueryRunnerContext = createContext<(props: QueryRunnerProps) => Promise<QueryResponse>>(null!);
 const IsGraphQLContext = createContext<boolean>(false);
 
 const defaultSimpleQuery: Query = {
-  statement: '', // build inside provider init
+  statement: generateQuery(defaultFields), // build inside provider init
   language: QueryLanguage.QueryBuilder,
   url: endpoints.queryBuilderPath,
   status: '',
@@ -51,13 +45,10 @@ const defaultSimpleQuery: Query = {
 
 export function QueryProvider({ children }: PropsWithChildren) {
   useStorageContext();
-  //const predicateService = useMemo(()=>new PredicateService(defaultQueryFilters),[]);
-
-  const [fields, configDispatch] = useReducer(fieldConfigReducer, defaultFields);
-  const [query, queryDispatch] = useReducer(queryReducer, {
-    ...defaultSimpleQuery,
-    statement: generateQuery(fields),
-  });
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `QueryProvider[${++renderCount.current}] render()` });
+  const [query, queryDispatcher] = useReducer(queryReducer, defaultSimpleQuery);
 
   /**
    * This boolean will toggle features on/off for the IDE,
@@ -65,17 +56,9 @@ export function QueryProvider({ children }: PropsWithChildren) {
    */
   const isGraphQL = useMemo(() => query.language === (QueryLanguage.GraphQL as QueryLanguageKey), [query.language]);
 
-  const rebuildQuery = useCallback(() => {
-    const statement = generateQuery(fields);
-    queryDispatch({
-      ...defaultSimpleQuery,
-      statement: statement,
-      type: 'replaceQuery',
-    });
-  }, [fields]);
-
   const queryRunner = useCallback(
-    async (query: Query): Promise<QueryResponse> => {
+    async ({ query, caller }: QueryRunnerProps): Promise<QueryResponse> => {
+      logger.debug({ message: `QueryProvider[${renderCount.current}] queryRunner()`, caller });
       const url = query.url + buildQueryString(query);
       // prechecks
       if (!url) {
@@ -113,20 +96,14 @@ export function QueryProvider({ children }: PropsWithChildren) {
         query,
       };
     },
-    [isGraphQL],
+    [isGraphQL, logger],
   );
-
-  useEffect(rebuildQuery, [fields, rebuildQuery]);
 
   return (
     <QueryContext.Provider value={query}>
       <IsGraphQLContext.Provider value={isGraphQL}>
-        <QueryDispatchContext.Provider value={queryDispatch}>
-          <FieldsConfigContext.Provider value={fields}>
-            <FieldConfigDispatchContext.Provider value={configDispatch}>
-              <QueryRunnerContext.Provider value={queryRunner}>{children}</QueryRunnerContext.Provider>
-            </FieldConfigDispatchContext.Provider>
-          </FieldsConfigContext.Provider>
+        <QueryDispatchContext.Provider value={queryDispatcher}>
+          <QueryRunnerContext.Provider value={queryRunner}>{children}</QueryRunnerContext.Provider>
         </QueryDispatchContext.Provider>
       </IsGraphQLContext.Provider>
     </QueryContext.Provider>
@@ -137,16 +114,8 @@ export function useQuery() {
   return useContext(QueryContext);
 }
 
-export function useQueryDispatch() {
+export function useQueryDispatcher() {
   return useContext(QueryDispatchContext);
-}
-
-export function useFields() {
-  return useContext(FieldsConfigContext);
-}
-
-export function useFieldDispatch() {
-  return useContext(FieldConfigDispatchContext);
 }
 
 export function useQueryRunner() {
@@ -202,125 +171,3 @@ function queryReducer(query: Query, action: QueryAction): Query {
     }
   }
 }
-
-/**
- * QueryFilter Actions???
- * 1. Update field
- * @param fields
- * @param action
- */
-function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigAction): FieldsConfig {
-  switch (action.type) {
-    case 'UPDATE_VALUE': {
-      const key = action.name as FieldConfigNameKey;
-      const oldField = fields[key];
-      const updatedField = {
-        ...oldField,
-        value: action.value,
-      };
-      return {
-        ...fields,
-        [key]: updatedField,
-      };
-    }
-    default: {
-      throw Error(`Unknown Query Filter Action ${action.type}`);
-    }
-  }
-}
-
-/**
- * This method takes an InputValue, a PredicateConfig, the entire FieldsConfig,
- * with an optional index, and produces a single QueryBuilder Predicate Statement.
- * @param value
- * @param predicate
- * @param fields
- * @param index
- */
-function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, fields: FieldsConfig, index?: number) {
-  const dateRange = value as DateRange;
-  const { rawInject, property, configInject, operation } = { ...predicate };
-
-  // 1_, 2_, ...
-  let prefix = index ? `${index}_` : '';
-
-  if (rawInject && value) {
-    const injected = rawInject(value, prefix);
-    if (injected) {
-      return injected;
-    }
-  }
-
-  if (dateRange.upperBound || dateRange.lowerBound) {
-    prefix = `${prefix}daterange.`;
-  }
-
-  let predicateString = '';
-
-  // initial property definition required before appending a value statement
-  if (configInject && predicate.useConfig) {
-    predicateString += `${prefix}property=${configInject(fields)}\n`;
-  } else if (property) {
-    predicateString += `${prefix}property=${property}\n`;
-  }
-
-  if (!predicateString) {
-    // predicateString didn't populate above, need to exit with empty string
-    return '';
-  }
-  // different types of value statements.
-  if ((property || predicate.useConfig) && value && !(dateRange.upperBound || dateRange.lowerBound)) {
-    // don't render value if dateRange is populated.
-    predicateString += `${prefix}property.value=${value}\n`;
-  }
-  if ((property || predicate.useConfig) && value && operation) {
-    //need value for checkbox true/false operations
-    predicateString += `${prefix}property.operation=${operation}\n`;
-  }
-
-  if (dateRange?.lowerBound) {
-    predicateString += `${prefix}lowerBound=${dateRange.lowerBound.format()}\n`;
-  }
-  if (dateRange?.upperBound) {
-    predicateString += `${prefix}upperBound=${dateRange.upperBound.format()}\n`;
-  }
-  return predicateString;
-}
-
-/**
- * This method takes a FieldsConfig and loops through it, checking the
- * validity of the field's value and predicate requirements, and provides
- * a full QueryBuilder Query Statement.
- * @param fields
- */
-const generateQuery = (fields: FieldsConfig): string => {
-  let propCounter = 1;
-  return Object.values(fields)
-    .map((field) => {
-      const value = field.value;
-      const predicate = predicates[field.name];
-      // check validity of the predicate against the corresponding field value
-      // also don't process disabled fields
-      if ((!field.isDisabled || !field.isDisabled(fields)) && predicate.isValid && predicate.isValid(value)) {
-        if (predicate.raw) {
-          // if raw, nothing to build, return the raw statement
-          return predicate.raw;
-        }
-        // property strings, configInject functions, and operation strings require predicate statements to have an indexed prefix
-        if (predicate.property || predicate.configInject || predicate.operation) {
-          const predicateStatement = buildPredicateStatement(value, predicate, fields, propCounter);
-          if (predicateStatement && predicate.type === predicateTypes.property) {
-            // only increment if a statement was returned.
-            propCounter++;
-          }
-          return predicateStatement;
-        } else {
-          return buildPredicateStatement(value, predicate, fields);
-        }
-      } else {
-      }
-      return '';
-    })
-    .filter((statement) => !!statement && statement !== '')
-    .join('');
-};

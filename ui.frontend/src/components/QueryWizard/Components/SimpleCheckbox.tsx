@@ -1,19 +1,30 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { FormGrid } from './FormGrid';
-import { ChangeEvent, memo, useCallback } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import { SimpleInputProps } from './SimpleInput';
+import { useFieldDispatcher, useLogger } from 'src/providers';
 
-export const SimpleCheckbox = memo(({ onChange, field, disabled }: SimpleInputProps) => {
-  const { name, label, value, checkboxValue = true, required } = { ...field };
+export const SimpleCheckbox = ({ field, disabled }: SimpleInputProps) => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `SimpleCheckbox[${++renderCount.current}] render()` });
+  const { name, label, checkboxValue = true, required } = { ...field };
+  const [value, setValue] = useState('');
+  const fieldDispatcher = useFieldDispatcher();
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      ...field,
-      value: e.target.checked ? e.target.value : '',
-    });
-  };
-
-  const memoizedHandleChange = useCallback(handleCheckboxChange, [field, onChange]);
+  const handleCheckboxChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.checked ? e.target.value : '';
+      setValue(value);
+      fieldDispatcher({
+        name,
+        value,
+        type: 'UPDATE_VALUE',
+        caller: SimpleCheckbox,
+      });
+    },
+    [fieldDispatcher, name],
+  );
 
   if (name) {
     return (
@@ -27,7 +38,7 @@ export const SimpleCheckbox = memo(({ onChange, field, disabled }: SimpleInputPr
               value={checkboxValue}
               checked={!!value}
               color="secondary"
-              onChange={memoizedHandleChange}
+              onChange={handleCheckboxChange}
               required={required}
               disabled={disabled}
             />
@@ -37,4 +48,4 @@ export const SimpleCheckbox = memo(({ onChange, field, disabled }: SimpleInputPr
     );
   }
   return null;
-});
+};

@@ -1,7 +1,7 @@
 import { MutableRefObject, useCallback } from 'react';
-import { DYNAMIC_HEADERS } from '../../../utility';
+import { DYNAMIC_HEADERS } from 'src/utility';
 import { ResultData } from './ResultExplorer';
-import { useAlertDispatcher } from '../../../providers';
+import { useAlertDispatcher } from 'src/providers';
 
 export type FetcherProps = {
   fetching: MutableRefObject<boolean>;
@@ -44,6 +44,7 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
             alertDispatcher({
               message: `Error: could not load data for the result ${path}`,
               severity: 'error',
+              caller: useFetcher,
             });
           }
         }
@@ -68,6 +69,7 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
           alertDispatcher({
             message: `Error: exception occurred while fetching data for ${path}`,
             severity: 'error',
+            caller: useFetcher,
           });
           resultHandler(defaultResult);
         })

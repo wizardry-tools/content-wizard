@@ -24,7 +24,7 @@ import {
 } from './hooks';
 import { CodeMirrorEditor, CodeMirrorType, WriteableEditorProps } from './types';
 import { normalizeWhitespace } from './whitespace';
-import { useIsGraphQL, useQuery, useQueryDispatch } from 'src/providers';
+import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from 'src/providers';
 import { QueryLanguage } from 'src/components/Query';
 
 export type UseQueryEditorArgs = WriteableEditorProps &
@@ -54,6 +54,9 @@ export function useQueryEditor(
   }: UseQueryEditorArgs = {},
   caller?: Function,
 ) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `useQueryEditor[${++renderCount.current}] render()` });
   const { schema } = useSchemaContext({
     nonNull: true,
     caller: caller || useQueryEditor,
@@ -83,7 +86,7 @@ export function useQueryEditor(
   const prettify = usePrettifyEditors({ caller: caller || useQueryEditor });
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorRef = useRef<CodeMirrorType>();
-  const queryDisptacher = useQueryDispatch();
+  const queryDispatcher = useQueryDispatcher();
   const isGraphQL = useIsGraphQL();
 
   const onClickReferenceRef = useRef<NonNullable<UseQueryEditorArgs['onClickReference']>>(() => {});
@@ -172,7 +175,7 @@ export function useQueryEditor(
 
       // @ts-ignore
       const newEditor = CodeMirror(container, {
-        value: initialQuery.statement || queryObjStatement.current || '',
+        value: initialQuery?.statement || queryObjStatement.current || '',
         lineNumbers: true,
         tabSize: 2,
         foldGutter: true,
@@ -358,9 +361,10 @@ export function useQueryEditor(
         query,
         operationName: operationFacts?.operationName ?? null,
       });
-      queryDisptacher({
+      queryDispatcher({
         statement: query.statement,
         type: 'statementChange',
+        caller: useQueryEditor,
       });
     }) as (editorInstance: CodeMirrorEditor) => void;
 
@@ -377,7 +381,7 @@ export function useQueryEditor(
     storage,
     variableEditor,
     updateActiveTabValues,
-    queryDisptacher,
+    queryDispatcher,
     queryObj,
   ]);
 

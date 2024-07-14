@@ -1,6 +1,6 @@
 {
   "name": "content-wizard",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
@@ -31,6 +31,7 @@
     "copy-to-clipboard": "^3.3.3",
     "custom-event-polyfill": "^1.0.7",
     "dayjs": "^1.11.11",
+    "export-from-json": "^1.7.4",
     "framer-motion": "^11.2.10",
     "graphql-language-service": "^5.2.1",
     "graphql-ws": "^5.16.0",

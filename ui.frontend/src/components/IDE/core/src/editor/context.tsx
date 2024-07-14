@@ -23,7 +23,7 @@ import {
 } from './tabs';
 import { CodeMirrorEditor } from './types';
 import { STORAGE_KEY as STORAGE_KEY_VARIABLES } from './variable-editor';
-import { useQuery, useQueryDispatch } from 'src/providers';
+import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
 import { defaultAdvancedQueries, Query } from 'src/components/Query';
 
 export type CodeMirrorEditorWithOperationFacts = CodeMirrorEditor & {
@@ -129,7 +129,7 @@ export type EditorContextType = TabsState & {
    * The contents of the query editor when initially rendering the provider
    * component.
    */
-  initialQuery: Query;
+  initialQuery: Query | null;
   /**
    * The contents of the response editor when initially rendering the provider
    * component.
@@ -141,11 +141,6 @@ export type EditorContextType = TabsState & {
    * component.
    */
   initialWizardStatement: string;
-  /**
-   * The contents of the result explorer editor when initially rendering the provider
-   * component.
-   */
-  initialResultExplorer: string;
   /**
    * The contents of the variables editor when initially rendering the provider
    * component.
@@ -234,13 +229,6 @@ export type EditorContextProviderProps = {
    */
   onTabChange?(tabState: TabsState): void;
   /**
-   * This prop can be used to set the contents of the query editor. Every time
-   * this prop changes, the contents of the query editor are replaced. Note
-   * that the editor contents can be changed in between these updates by typing
-   * in the editor.
-   */
-  query?: Query;
-  /**
    * This prop can be used to set the contents of the response editor. Every
    * time this prop changes, the contents of the response editor are replaced.
    * Note that the editor contents can change in between these updates by
@@ -254,11 +242,6 @@ export type EditorContextProviderProps = {
    * executing queries that will show a response.
    */
   wizardStatement?: string;
-  /**
-   * This prop can be used to set the contents of the result explorer editor. Every
-   * time this prop changes, the contents of the result explorer editor are replaced.
-   */
-  resultExplorer?: string;
   /**
    * This prop toggles if the contents of the headers editor are persisted in
    * storage.
@@ -286,9 +269,12 @@ export type EditorContextProviderProps = {
 };
 
 export function EditorContextProvider(props: EditorContextProviderProps) {
+  const renderCount = useRef(0);
+  const logger = useLogger();
+  logger.debug({ message: `EditorContextProvider[${++renderCount.current}] render()` });
   const storage = useStorageContext();
   const queryObj = useQuery();
-  const queryDispatcher = useQueryDispatch();
+  const queryDispatcher = useQueryDispatcher();
   const [headerEditor, setHeaderEditor] = useState<CodeMirrorEditor | null>(null);
   const [queryEditor, setQueryEditor] = useState<CodeMirrorEditorWithOperationFacts | null>(null);
   const [responseEditor, setResponseEditor] = useState<CodeMirrorEditor | null>(null);
@@ -303,11 +289,11 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       : Boolean(props.shouldPersistHeaders);
   });
 
-  // only use useSynchronizeValue for IDE editor views
   useSynchronizeValue(headerEditor, props.headers);
-  useSynchronizeValue(queryEditor, props.query);
+  useSynchronizeValue(queryEditor, queryObj);
   useSynchronizeValue(responseEditor, props.response);
   useSynchronizeValue(variableEditor, props.variables);
+  useSynchronizeValue(wizardStatementEditor, queryObj);
 
   const storeTabs = useStoreTabs({
     storage,
@@ -317,12 +303,14 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   // We store this in state but never update it. By passing a function we only
   // need to compute it lazily during the initial render.
   const [initialState] = useState(() => {
-    const query = props.query ?? (JSON.parse(storage?.get(STORAGE_KEY_QUERY) || '') as Query) ?? null;
+    const storedQuery = JSON.parse(storage?.get(STORAGE_KEY_QUERY) || '{}') as Query;
+
+    // TODO: Add move IDE providers into src/providers and add support for QueryWizard fieldsConfig storage.
+    const query = queryObj ?? storedQuery ?? null;
     const variables = props.variables ?? storage?.get(STORAGE_KEY_VARIABLES) ?? null;
     const headers = props.headers ?? storage?.get(STORAGE_KEY_HEADERS) ?? null;
     const response = props.response ?? '';
     const wizardStatement = props.wizardStatement ?? '';
-    const resultExplorer = props.resultExplorer ?? '';
 
     const tabState = getDefaultTabState({
       query,
@@ -341,7 +329,6 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       headers: headers ?? props.defaultHeaders ?? '',
       response,
       wizardStatement,
-      resultExplorer,
       tabState,
     };
   });
@@ -521,19 +508,14 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       setVariableEditor,
       setWizardStatementEditor,
       setResultExplorerEditor,
-
       setOperationName,
-
       initialQuery: initialState.query,
       initialVariables: initialState.variables,
       initialHeaders: initialState.headers,
       initialResponse: initialState.response,
       initialWizardStatement: initialState.wizardStatement,
-      initialResultExplorer: initialState.resultExplorer,
-
       externalFragments,
       validationRules,
-
       shouldPersistHeaders,
       setShouldPersistHeaders,
     }),
@@ -565,36 +547,3 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 export const useEditorContext = createContextHook(EditorContext);
 
 const PERSIST_HEADERS_STORAGE_KEY = 'shouldPersistHeaders';
-
-export const DEFAULT_QUERY = `# Welcome to GraphiQL
-#
-# GraphiQL is an in-browser tool for writing, validating, and
-# testing GraphQL queries.
-#
-# Type queries into this side of the screen, and you will see intelligent
-# typeaheads aware of the current GraphQL type schema and live syntax and
-# validation errors highlighted within the text.
-#
-# GraphQL queries typically start with a "{" character. Lines that start
-# with a # are ignored.
-#
-# An example GraphQL query might look like:
-#
-#     {
-#       field(arg: "value") {
-#         subField
-#       }
-#     }
-#
-# Keyboard shortcuts:
-#
-#   Prettify query:  Shift-Ctrl-P (or press the prettify button)
-#
-#  Merge fragments:  Shift-Ctrl-M (or press the merge button)
-#
-#        Run Query:  Ctrl-Enter (or press the play button)
-#
-#    Auto Complete:  Ctrl-Space (or just start typing)
-#
-
-`;
