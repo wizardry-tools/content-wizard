@@ -209,6 +209,7 @@ export function useSynchronizeActiveTabValues({
   logger.debug({ message: `useSynchronizeActiveTabValues[${++renderCount.current}] render()` });
   return useCallback<(state: TabsState) => TabsState>(
     (state) => {
+      logger.debug({ message: `useSynchronizeActiveTabValues[${++renderCount.current}] callback()` });
       const variables = variableEditor?.getValue() ?? null;
       const headers = headerEditor?.getValue() ?? null;
       const operationName = queryEditor?.operationName ?? null;
@@ -221,7 +222,7 @@ export function useSynchronizeActiveTabValues({
         operationName,
       });
     },
-    [queryEditor, variableEditor, headerEditor, responseEditor, query],
+    [logger, queryEditor, variableEditor, headerEditor, responseEditor, query],
   );
 }
 
@@ -250,9 +251,10 @@ export function useStoreTabs({
   );
   return useCallback(
     (currentState: TabsState) => {
+      logger.debug({ message: `useStoreTabs[${++renderCount.current}] store()` });
       store(serializeTabState(currentState, shouldPersistHeaders));
     },
-    [shouldPersistHeaders, store],
+    [logger, shouldPersistHeaders, store],
   );
 }
 

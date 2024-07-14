@@ -2,11 +2,19 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { Statement } from 'src/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { API } from '../api';
+import { API } from '../../api';
 import { useLogger } from 'src/providers';
 
-type PersistedQuerySelectorProps = {
+export type PersistedQuerySelectorProps = {
+  /**
+   * This is the AEM GraphQL API that has been selected.
+   */
   api: API;
+  /**
+   * This callback will be called after a Persisted Query has been selected.
+   * A string containing a Query statement will be passed to the callback.
+   * @param statement string
+   */
   onStatementChange: (statement: Statement) => void;
 };
 export const PersistedQuerySelector = memo(({ api, onStatementChange }: PersistedQuerySelectorProps) => {
@@ -32,9 +40,8 @@ export const PersistedQuerySelector = memo(({ api, onStatementChange }: Persiste
   );
 
   const persistedQueryMenuItems = useMemo(() => {
-    return persistedQueries
-      ? persistedQueries.map((option, index) => {
-          // /we-retail/AllStores
+    return persistedQueries?.map((option, index) => {
+          //example:  /we-retail/AllStores
           const parts = option.path.shortForm.split('/');
           const name = parts[2] || parts[1];
           return (
@@ -43,27 +50,22 @@ export const PersistedQuerySelector = memo(({ api, onStatementChange }: Persiste
             </MenuItem>
           );
         })
-      : null;
   }, [persistedQueries]);
 
-  if (api.endpoint && api.persistedQueries?.length > 0) {
-    return (
-      <FormControl variant="filled" color="secondary" className="wizard-language-selector-persisted-query-selector">
-        <InputLabel id={'persisted-query-select-label'}>Load Persisted Query</InputLabel>
-        <Select
-          labelId={'persisted-query-select-label'}
-          id={'persisted-query-select'}
-          name={'persisted-query-select'}
-          label={'Persisted Queries'}
-          color="secondary"
-          value={selectedQuery}
-          onChange={onChange}
-        >
-          {persistedQueryMenuItems}
-        </Select>
-      </FormControl>
-    );
-  } else {
-    return null;
-  }
+  return (
+    <FormControl variant="filled" color="secondary" className="wizard-language-selector-persisted-query-selector">
+      <InputLabel id={'persisted-query-select-label'}>Load Persisted Query</InputLabel>
+      <Select
+        labelId={'persisted-query-select-label'}
+        id={'persisted-query-select'}
+        name={'persisted-query-select'}
+        label={'Persisted Queries'}
+        color="secondary"
+        value={selectedQuery}
+        onChange={onChange}
+      >
+        {persistedQueryMenuItems}
+      </Select>
+    </FormControl>
+  );
 });

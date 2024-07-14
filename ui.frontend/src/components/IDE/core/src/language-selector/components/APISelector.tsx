@@ -1,10 +1,10 @@
 import { memo, useMemo, useRef } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { API } from '../api';
+import { API } from '../../api';
 import { useLogger } from 'src/providers';
 
-type APISelectorProps = {
+export type APISelectorProps = {
   /**
    * The list of APIs available to select from
    */
@@ -30,13 +30,11 @@ export const APISelector = memo((props: APISelectorProps) => {
   const { APIs, endpoint = '', onAPIChange = () => {} } = props;
 
   const menuItems = useMemo(() => {
-    return APIs?.length
-      ? APIs.map((api, index) => (
+    return APIs.map((api, index) => (
           <MenuItem key={index} value={api.endpoint}>
             {api.endpoint}
           </MenuItem>
         ))
-      : null;
   }, [APIs]);
 
   return (

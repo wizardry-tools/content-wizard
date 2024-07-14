@@ -1,19 +1,17 @@
-import { FormGrid } from 'src/components/QueryWizard/Components';
 import {
   defaultAdvancedQueries,
   QueryLanguage,
   QueryLanguageKey,
-  QueryLanguageLabels,
   Statement,
 } from 'src/components/Query';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
-import { memo, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import './language-selector.scss';
-import { APISelector } from './APISelector';
 import { API, useAPIContext } from '../api';
-import { PersistedQuerySelector } from './PersistedQuerySelector';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import {GraphQLSelector} from "./components/GraphQLSelector";
+import {QueryLanguageSelector} from "./components/QueryLanguageSelector";
+import {LanguageSelectorHeader} from "./components/LanguageSelectorHeader";
 
 /**
  * This is a custom Plugin for the Query IDE.
@@ -95,54 +93,6 @@ export const LanguageSelector = () => {
     [handleLanguageChange],
   );
 
-  const LanguageSelectorHeader = memo(() => (
-    <div className="wizard-language-selector-header">
-      <div className="wizard-language-selector-header-content">
-        <div className="wizard-language-selector-title">Language Selector</div>
-      </div>
-    </div>
-  ));
-
-  /**
-   * This is a render function for the actual Dropdown field.
-   */
-  const QueryLanguageSelector = memo(() => {
-    return (
-      <FormGrid item xs={12} md={12}>
-        <FormControl variant="filled" color="secondary" className="wizard-language-selector">
-          <InputLabel id="query-language-label" required>
-            Query Language
-          </InputLabel>
-          <Select
-            labelId="query-language-label"
-            id="query-language"
-            name="queryLanguage"
-            value={language}
-            label="Query Language"
-            color="secondary"
-            onChange={onLanguageChange}
-            required
-          >
-            {Object.values(QueryLanguage).map((lang) => (
-              <MenuItem key={QueryLanguage[lang]} value={QueryLanguage[lang]}>
-                {QueryLanguageLabels[lang]}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </FormGrid>
-    );
-  });
-
-  const GraphQLForm = () => {
-    return (
-      <FormGrid item xs={12} md={6}>
-        <APISelector endpoint={api?.endpoint} APIs={APIs} onAPIChange={onAPIChange} />
-        {api && <PersistedQuerySelector api={api} onStatementChange={handleStatementChange} />}
-      </FormGrid>
-    );
-  };
-
   /**
    * This is the render block for the "Plugin Container"
    */
@@ -150,8 +100,10 @@ export const LanguageSelector = () => {
     <section className="wizard-language-selector" aria-label="Language Selector">
       <LanguageSelectorHeader />
       <div className="wizard-language-selector-content">
-        <QueryLanguageSelector />
-        {language === QueryLanguage.GraphQL && <GraphQLForm />}
+        <QueryLanguageSelector language={language} onLanguageChange={onLanguageChange} />
+        {language === QueryLanguage.GraphQL && (
+          <GraphQLSelector APIs={APIs} onAPIChange={onAPIChange} api={api} onStatementChange={handleStatementChange} />
+        )}
       </div>
     </section>
   );
