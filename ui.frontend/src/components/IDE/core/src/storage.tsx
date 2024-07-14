@@ -1,8 +1,8 @@
 import { ReactNode, useRef } from 'react';
 
 import { createContextHook, createNullableContext } from './utility/context';
-import {WizardStorageAPI, WizardStorage, useWizardStorageAPI} from './storage-api';
-import {useAlertDispatcher, useLogger} from 'src/providers';
+import { WizardStorageAPI, WizardStorage, useWizardStorageAPI } from './storage-api';
+import { useAlertDispatcher, useLogger } from 'src/providers';
 
 export type StorageContextType = WizardStorageAPI;
 
@@ -24,7 +24,7 @@ export function StorageContextProvider(props: StorageContextProviderProps) {
   const logger = useLogger();
   logger.debug({ message: `StorageContextProvider[${++renderCount.current}] render()` });
   const alertDispatcher = useAlertDispatcher();
-  const storage = useWizardStorageAPI({...props, alertDispatcher});
+  const storage = useWizardStorageAPI({ ...props, alertDispatcher });
 
   return <StorageContext.Provider value={storage}>{props.children}</StorageContext.Provider>;
 }

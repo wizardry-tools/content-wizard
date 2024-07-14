@@ -1,5 +1,5 @@
-import {WizardStorageAPI} from './storage-api';
-import {QueryLanguageKey, Statement} from 'src/components/Query';
+import { WizardStorageAPI } from './storage-api';
+import { QueryLanguageKey, Statement } from 'src/components/Query';
 
 export type WizardStoreItem = {
   query?: Statement;
@@ -13,7 +13,7 @@ export type WizardStoreItem = {
 };
 export type WizardStoreItemAction = WizardStoreItem & {
   type: string;
-}
+};
 
 const compareStoreItem = (storeItem: WizardStoreItem, item: WizardStoreItem): boolean => {
   return (
@@ -21,28 +21,27 @@ const compareStoreItem = (storeItem: WizardStoreItem, item: WizardStoreItem): bo
     storeItem.language === item.language &&
     storeItem.variables === item.variables &&
     storeItem.headers === item.headers &&
-    storeItem.operationName === item.operationName &&
-    storeItem.label === item.label
+    storeItem.operationName === item.operationName
   );
 };
 
 export type WizardStoreProps = {
-  key: string,
-  storage: WizardStorageAPI,
-  maxSize?: number | null,
-}
+  key: string;
+  storage: WizardStorageAPI;
+  maxSize?: number | null;
+};
 
 export type WizardStore = {
-  length: ()=>number;
-  contains: (item: WizardStoreItem)=>boolean;
-  edit: (item: WizardStoreItem, index?:number)=>void;
-  remove: (item: WizardStoreItem)=>void;
-  push: (item: WizardStoreItem)=>void;
-  fetchRecent: ()=>WizardStoreItem|undefined;
-  fetchAll: ()=>WizardStoreItem[];
-  save: ()=>void;
-  getItems: ()=>WizardStoreItem[];
-}
+  length: () => number;
+  contains: (item: WizardStoreItem) => boolean;
+  edit: (item: WizardStoreItem, index?: number) => void;
+  remove: (item: WizardStoreItem) => void;
+  push: (item: WizardStoreItem) => void;
+  fetchRecent: () => WizardStoreItem | undefined;
+  fetchAll: () => WizardStoreItem[];
+  save: () => void;
+  getItems: () => WizardStoreItem[];
+};
 
 /**
  * This is refactored from a HistoryStore class
@@ -51,9 +50,8 @@ export type WizardStore = {
  * @param maxSize
  * @constructor
  */
-export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps): WizardStore => {
-
-  let items:WizardStoreItem[] = fetchAll();
+export const useWizardStore = ({ key, storage, maxSize = null }: WizardStoreProps): WizardStore => {
+  let items: WizardStoreItem[] = fetchAll();
 
   // define fetchAll first, so that it can be used for initial items.
   function fetchAll() {
@@ -64,7 +62,7 @@ export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps):
     return [];
   }
 
-  function length(){
+  function length() {
     return items.length;
   }
 
@@ -76,12 +74,16 @@ export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps):
     return items.at(-1);
   }
 
-  function save () {
+  function save() {
     storage.set(key, JSON.stringify({ [key]: items }));
   }
 
-  function itemsReduce(items: WizardStoreItem[], action: WizardStoreItemAction, index?: number | undefined): WizardStoreItem[] | null {
-    const {type, ...item} = action
+  function itemsReduce(
+    items: WizardStoreItem[],
+    action: WizardStoreItemAction,
+    index?: number | undefined,
+  ): WizardStoreItem[] | null {
+    const { type, ...item } = action;
     const itemIndex = items.findIndex((x) => compareStoreItem(x, item));
     switch (type) {
       case 'edit': {
@@ -123,7 +125,7 @@ export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps):
             break; // We don't know what happened in this case, so just bailing out
           }
         }
-        return null;// return null to avoid save
+        return null; // return null to avoid save
       }
       default: {
         throw Error(`Unknown Query Action ${action.type}`);
@@ -131,32 +133,30 @@ export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps):
     }
   }
 
-  function edit(item: WizardStoreItem, index?:number) {
-    const updatedItems = itemsReduce(
-      items,
-      {...item, type: 'edit'}, index);
+  function edit(item: WizardStoreItem, index?: number) {
+    const updatedItems = itemsReduce(items, { ...item, type: 'edit' }, index);
     if (updatedItems) {
-      items = updatedItems
+      items = updatedItems;
       save();
     }
   }
   function remove(item: WizardStoreItem) {
     const updatedItems = itemsReduce(items, {
       ...item,
-      type: 'remove'
+      type: 'remove',
     });
     if (updatedItems) {
-      items = updatedItems
+      items = updatedItems;
       save();
     }
   }
   function push(item: WizardStoreItem) {
     const updatedItems = itemsReduce(items, {
       ...item,
-      type: 'push'
+      type: 'push',
     });
     if (updatedItems) {
-      items = updatedItems
+      items = updatedItems;
       save();
     }
   }
@@ -164,7 +164,6 @@ export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps):
   function getItems() {
     return items;
   }
-
 
   return {
     length,
@@ -175,10 +174,9 @@ export const useWizardStore = ({key, storage, maxSize = null}:WizardStoreProps):
     fetchRecent,
     fetchAll,
     save,
-    getItems
-  }
-}
-
+    getItems,
+  };
+};
 
 /*
 export class WizStore {

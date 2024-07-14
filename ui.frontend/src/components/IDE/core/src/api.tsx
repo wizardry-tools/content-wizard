@@ -3,7 +3,7 @@ import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@g
 import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { buildGraphQLURL, endpoints, Statement } from 'src/components/Query';
 import { createAPIFetcher } from 'src/utility';
-import { useLogger } from '../../../../providers';
+import { useLogger } from 'src/providers';
 
 export type API = {
   endpoint: string;

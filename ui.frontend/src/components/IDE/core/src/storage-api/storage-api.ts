@@ -37,7 +37,6 @@ export type WizardStorage = {
   length: number;
 };
 
-
 function isQuotaError(storage: WizardStorage, e: unknown) {
   return (
     e instanceof DOMException &&
@@ -58,9 +57,9 @@ function isQuotaError(storage: WizardStorage, e: unknown) {
 export type WizardStorageAPIProps = {
   storage?: WizardStorage | null;
   alertDispatcher?: Dispatch<WizardAlertProps> | Function;
-}
+};
 export const useWizardStorageAPI = (props: WizardStorageAPIProps) => {
-  const alertDispatcher = props.alertDispatcher || ((obj:any)=>console.error(obj));
+  const alertDispatcher = props.alertDispatcher || ((obj: any) => console.error(obj));
   let storage = props.storage;
   if (!storage && typeof window !== 'undefined') {
     storage = {
@@ -142,107 +141,10 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps) => {
     storage,
     get,
     set,
-    clear
-  }
-}
+    clear,
+  };
+};
 
-export type WizardStorageAPI = ReturnType<typeof useWizardStorageAPI>
+export type WizardStorageAPI = ReturnType<typeof useWizardStorageAPI>;
 
-/*export class WizardStorageAPI {
-  storage: WizardStorage | null;
-  alertDispatcher: Dispatch<WizardAlertProps>;
-
-  constructor(storage?: WizardStorage | null, alertDispatcher?: Dispatch<WizardAlertProps>) {
-    if (alertDispatcher) {
-      this.alertDispatcher = alertDispatcher;
-    } else {
-      this.alertDispatcher = (obj: any) => {
-        console.error(obj);
-      };
-    }
-    if (storage) {
-      this.storage = storage;
-    } else if (storage === null) {
-      // Passing `null` creates a noop storage
-      this.storage = null;
-    } else if (typeof window === 'undefined') {
-      this.storage = null;
-    } else {
-      this.storage = {
-        getItem: window.localStorage.getItem.bind(window.localStorage),
-        setItem: window.localStorage.setItem.bind(window.localStorage),
-        removeItem: window.localStorage.removeItem.bind(window.localStorage),
-
-        get length() {
-          let keys = 0;
-          for (const key in window.localStorage) {
-            if (key.indexOf(`${STORAGE_NAMESPACE}:`) === 0) {
-              keys += 1;
-            }
-          }
-          return keys;
-        },
-
-        clear() {
-          // We only want to clear the namespaced items
-          for (const key in window.localStorage) {
-            if (key.indexOf(`${STORAGE_NAMESPACE}:`) === 0) {
-              window.localStorage.removeItem(key);
-            }
-          }
-        },
-      };
-    }
-  }
-
-  get(name: string): string | null {
-    if (!this.storage) {
-      return null;
-    }
-
-    const key = `${STORAGE_NAMESPACE}:${name}`;
-    const value = this.storage.getItem(key);
-    // Clean up any inadvertently saved null/undefined values.
-    if (value === 'null' || value === 'undefined') {
-      this.storage.removeItem(key);
-      return null;
-    }
-    return value || null;
-  }
-
-  set(name: string, value: string): { isQuotaError: boolean; error: Error | null } {
-    let quotaError = false;
-    let error: Error | null = null;
-
-    if (this.storage) {
-      const key = `${STORAGE_NAMESPACE}:${name}`;
-      if (value) {
-        try {
-          this.storage.setItem(key, value);
-        } catch (e) {
-          error = e instanceof Error ? e : new Error(`${e}`);
-          quotaError = isQuotaError(this.storage, e);
-          const errMessage = quotaError ? 'Local Storage is out of Space. 5MB max: ' : 'An error occurred: ';
-          this.alertDispatcher({
-            message: errMessage + error.message,
-            severity: 'error',
-            caller: WizardStorageAPI,
-          });
-        }
-      } else {
-        // Clean up by removing the item if there's no value to set
-        this.storage.removeItem(key);
-      }
-    }
-
-    return { isQuotaError: quotaError, error };
-  }
-
-  clear() {
-    if (this.storage) {
-      this.storage.clear();
-    }
-  }
-}
-*/
 const STORAGE_NAMESPACE = 'content-wizard';

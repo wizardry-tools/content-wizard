@@ -1,7 +1,8 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { API } from '../api';
+import { useLogger } from '../../../../../providers';
 
 type APISelectorProps = {
   /**
@@ -23,6 +24,9 @@ type APISelectorProps = {
  * This component allows the user to select a configured GraphQL API from AEM.
  */
 export const APISelector = memo((props: APISelectorProps) => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `APISelector[${++renderCount.current}] render()` });
   const { APIs, endpoint = '', onAPIChange = () => {} } = props;
 
   const menuItems = useMemo(() => {

@@ -129,7 +129,7 @@ export type EditorContextType = TabsState & {
    * The contents of the query editor when initially rendering the provider
    * component.
    */
-  initialQuery: Query;
+  initialQuery: Query | null;
   /**
    * The contents of the response editor when initially rendering the provider
    * component.
@@ -303,7 +303,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   // We store this in state but never update it. By passing a function we only
   // need to compute it lazily during the initial render.
   const [initialState] = useState(() => {
-    const query = queryObj ?? (JSON.parse(storage?.get(STORAGE_KEY_QUERY) || '') as Query) ?? null;
+    const storedQuery = JSON.parse(storage?.get(STORAGE_KEY_QUERY) || '{}') as Query;
+
+    // TODO: Add move IDE providers into src/providers and add support for QueryWizard fieldsConfig storage.
+    const query = queryObj ?? storedQuery ?? null;
     const variables = props.variables ?? storage?.get(STORAGE_KEY_VARIABLES) ?? null;
     const headers = props.headers ?? storage?.get(STORAGE_KEY_HEADERS) ?? null;
     const response = props.response ?? '';

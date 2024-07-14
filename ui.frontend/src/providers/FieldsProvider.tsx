@@ -38,6 +38,11 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
    */
   useEffect(() => {
     logger.debug({ message: `FieldsProvider[${renderCount.current}] useEffect()` });
+    if (renderCount.current === 1) {
+      // avoid building on first render, let the QueryProvider provide default statement,
+      // so that the editors and storage are not out of sync
+      return;
+    }
     function onTimeout() {
       const statement = generateQuery(fields);
       logger.debug({ message: `FieldsProvider[${renderCount.current}] useEffect() timeout`, statement });
@@ -165,9 +170,9 @@ function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, 
  * a full QueryBuilder Query Statement.
  * @param fields
  */
-const generateQuery = (fields: FieldsConfig): string => {
+export const generateQuery = (fields: FieldsConfig): string => {
   let propCounter = 1;
-  return Object.values(fields)
+  return Object.values(fields || {})
     .map((field) => {
       const value = field.value;
       const predicate = predicates[field.name];

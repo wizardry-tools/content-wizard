@@ -20,8 +20,10 @@ import {
   QueryResponse,
   Statement,
 } from 'src/components/Query';
-import {API, useStorageContext} from 'src/components/IDE/core/src';
+import { API, useStorageContext } from 'src/components/IDE/core/src';
 import { useLogger } from './LoggingProvider';
+import { defaultFields } from '../components/QueryWizard/Components';
+import { generateQuery } from './FieldsProvider';
 
 export type QueryRunnerProps = {
   query: Query;
@@ -34,7 +36,7 @@ const QueryRunnerContext = createContext<(props: QueryRunnerProps) => Promise<Qu
 const IsGraphQLContext = createContext<boolean>(false);
 
 const defaultSimpleQuery: Query = {
-  statement: '', // build inside provider init
+  statement: generateQuery(defaultFields), // build inside provider init
   language: QueryLanguage.QueryBuilder,
   url: endpoints.queryBuilderPath,
   status: '',
@@ -42,8 +44,8 @@ const defaultSimpleQuery: Query = {
 };
 
 export function QueryProvider({ children }: PropsWithChildren) {
-  const logger = useLogger();
   useStorageContext();
+  const logger = useLogger();
   const renderCount = useRef(0);
   logger.debug({ message: `QueryProvider[${++renderCount.current}] render()` });
   const [query, queryDispatcher] = useReducer(queryReducer, defaultSimpleQuery);

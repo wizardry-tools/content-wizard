@@ -16,6 +16,7 @@ export function IDEProvider({ children }: IDEProviderProps) {
   const logger = useLogger();
   const renderCount = useRef(0);
   logger.debug({ message: `IDEProvider[${++renderCount.current}] render()` });
+
   return (
     <HistoryContextProvider>
       <EditorContextProvider>

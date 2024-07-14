@@ -8,10 +8,14 @@ import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
 
 import './style.scss';
-import { useQueryDispatcher } from 'src/providers';
-import { defaultAdvancedQueries, QueryLanguageKey } from 'src/components/Query';
+import { useLogger, useQueryDispatcher } from 'src/providers';
+import { defaultAdvancedQueries, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
 
 export function History() {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `History[${++renderCount.current}] render()` });
+
   const { items: all, deleteFromHistory } = useHistoryContext({
     nonNull: true,
   });
@@ -88,12 +92,14 @@ type QueryHistoryItemProps = {
 };
 
 export function HistoryItem(props: QueryHistoryItemProps) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `HistoryItem[${++renderCount.current}] render()` });
   const queryDispatcher = useQueryDispatcher();
   const { editLabel, toggleFavorite, deleteFromHistory, setActive } = useHistoryContext({
     nonNull: true,
     caller: HistoryItem,
   });
-  //const { headerEditor, queryEditor, variableEditor } = useEditorContext({
   const { headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
     caller: HistoryItem,
@@ -109,7 +115,9 @@ export function HistoryItem(props: QueryHistoryItemProps) {
   }, [isEditable]);
 
   const displayName =
-    props.item.label || props.item.operationName || (`${props.item.language} ` && formatQuery(props.item.query || ''));
+    props.item.label ||
+    props.item.operationName ||
+    (`${QueryLanguageLabels[props.item.language as QueryLanguageKey]} ` && formatQuery(props.item.query || ''));
 
   const handleSave = useCallback(() => {
     setIsEditable(false);
@@ -128,8 +136,8 @@ export function HistoryItem(props: QueryHistoryItemProps) {
 
   const handleHistoryItemClick: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
     const { query, language, variables, headers, label } = props.item;
-    // dispatch the query object instead
-    // TODO: Make sure that API isn't needed as well...
+    // dispatch the query object instead setting value directly to the editor
+    // TODO: Make sure that Query.API isn't needed as well...
     queryDispatcher({
       ...defaultAdvancedQueries[language as QueryLanguageKey],
       statement: query,

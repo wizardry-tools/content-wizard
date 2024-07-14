@@ -1,14 +1,14 @@
-import {useWizardStorageAPI} from '../storage-api';
+import { useWizardStorageAPI } from '../storage-api';
 import { useWizardStore } from '../store';
-import {useAlertDispatcher} from 'src/providers';
+import { useAlertDispatcher } from 'src/providers';
 
 jest.mock('src/providers', () => {
-  const mockAlertDispatcher = jest.fn( () => {});
+  const mockAlertDispatcher = jest.fn(() => {});
   return {
     useAlertDispatcher() {
       return mockAlertDispatcher;
-    }
-  }
+    },
+  };
 });
 
 class StorageMock {
@@ -22,7 +22,6 @@ class StorageMock {
 
   set(key: string, value: string) {
     this.count++;
-    console.log("this.count: ", this.count);
     if (this.shouldThrow()) {
       return {
         error: new Error('boom'),
@@ -49,8 +48,8 @@ describe('QueryStore', () => {
   describe('with no max items', () => {
     it('can push multiple items', () => {
       const mockAlertDispatcher = useAlertDispatcher();
-      const storage = useWizardStorageAPI({alertDispatcher: mockAlertDispatcher});
-      const store = useWizardStore({key: 'normal', storage, maxSize: null});
+      const storage = useWizardStorageAPI({ alertDispatcher: mockAlertDispatcher });
+      const store = useWizardStore({ key: 'normal', storage, maxSize: null });
 
       for (let i = 0; i < 100; i++) {
         store.push({ query: `item${i}` });
@@ -62,7 +61,7 @@ describe('QueryStore', () => {
     it('will fail silently on quota error', () => {
       let i = 0;
       // @ts-ignore
-      const store = useWizardStore({key: 'normal', storage: new StorageMock(() => i > 4)});
+      const store = useWizardStore({ key: 'normal', storage: new StorageMock(() => i > 4) });
 
       for (; i < 10; i++) {
         store.push({ query: `item${i}` });
@@ -77,8 +76,8 @@ describe('QueryStore', () => {
   describe('with max items', () => {
     it('can push a limited number of items', () => {
       const mockAlertDispatcher = useAlertDispatcher();
-      const storage = useWizardStorageAPI({alertDispatcher: mockAlertDispatcher});
-      const store = useWizardStore({key: 'limited', storage, maxSize: 20});
+      const storage = useWizardStorageAPI({ alertDispatcher: mockAlertDispatcher });
+      const store = useWizardStore({ key: 'limited', storage, maxSize: 20 });
 
       for (let i = 0; i < 100; i++) {
         store.push({ query: `item${i}` });

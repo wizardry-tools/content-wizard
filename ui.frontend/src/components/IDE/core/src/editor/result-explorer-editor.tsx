@@ -4,6 +4,7 @@ import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
 import { CodeMirrorEditor, CommonEditorProps } from './types';
 import { useEditorContext } from './context';
+import { useLogger } from '../../../../../providers';
 
 export type UseResultExplorerEditorArgs = CommonEditorProps & {
   className?: string;
@@ -26,6 +27,9 @@ export function useResultExplorerEditor(
   { keyMap = DEFAULT_KEY_MAP, data = '' }: UseResultExplorerEditorArgs = {},
   caller?: Function,
 ) {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `useResultExplorerEditor[${++renderCount.current}] render()` });
   const [editor, setEditor] = useState<CodeMirrorEditor | null>(null);
   const copy = useCopyResult({ caller: caller || useResultExplorerEditor });
   const ref = useRef<HTMLDivElement>(null);

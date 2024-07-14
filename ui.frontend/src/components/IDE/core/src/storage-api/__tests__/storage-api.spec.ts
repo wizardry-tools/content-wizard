@@ -1,23 +1,23 @@
 import { useWizardStorageAPI } from '../storage-api';
-import {useAlertDispatcher} from "src/providers";
+import { useAlertDispatcher } from 'src/providers';
 
 const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
 
 jest.mock('src/providers', () => {
-  const mockAlertDispatcher = jest.fn( () => {});
+  const mockAlertDispatcher = jest.fn(() => {});
   return {
     useAlertDispatcher() {
       return mockAlertDispatcher;
-    }
-  }
+    },
+  };
 });
 
 describe('WizardStorageAPI', () => {
   const mockedAlertDispatcher = useAlertDispatcher();
-  let storage = useWizardStorageAPI({alertDispatcher: mockedAlertDispatcher});
+  let storage = useWizardStorageAPI({ alertDispatcher: mockedAlertDispatcher });
 
   beforeEach(() => {
-    storage = useWizardStorageAPI({alertDispatcher: mockedAlertDispatcher});
+    storage = useWizardStorageAPI({ alertDispatcher: mockedAlertDispatcher });
   });
 
   it('returns nothing if no value set', () => {
@@ -84,12 +84,14 @@ describe('WizardStorageAPI', () => {
 
   it('returns any error while setting a value', () => {
     // @ts-ignore
-    const throwingStorage = useWizardStorageAPI({storage: {
-      setItem() {
-        throw new DOMException(ERROR_MESSAGE);
+    const throwingStorage = useWizardStorageAPI({
+      storage: {
+        setItem() {
+          throw new DOMException(ERROR_MESSAGE);
+        },
+        length: 1,
       },
-      length: 1,
-    }});
+    });
     const result = throwingStorage.set('key', 'value');
 
     expect(result.error?.message).toEqual(ERROR_MESSAGE);
@@ -98,12 +100,14 @@ describe('WizardStorageAPI', () => {
 
   it('returns isQuotaError to true if isQuotaError is thrown', () => {
     // @ts-ignore
-    const throwingStorage = useWizardStorageAPI({storage: {
-      setItem() {
-        throw new DOMException(ERROR_MESSAGE, 'QuotaExceededError');
+    const throwingStorage = useWizardStorageAPI({
+      storage: {
+        setItem() {
+          throw new DOMException(ERROR_MESSAGE, 'QuotaExceededError');
+        },
+        length: 1,
       },
-      length: 1,
-    }});
+    });
     const result = throwingStorage.set('key', 'value');
 
     expect(result.error?.message).toEqual(ERROR_MESSAGE);
