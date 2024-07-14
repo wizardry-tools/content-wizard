@@ -117,7 +117,7 @@ export function HistoryItem(props: QueryHistoryItemProps) {
   const displayName =
     props.item.label ||
     props.item.operationName ||
-    (`${QueryLanguageLabels[props.item.language as QueryLanguageKey]} ` && formatQuery(props.item.query || ''));
+    (`${QueryLanguageLabels[props.item.language as QueryLanguageKey]} ${formatQuery(props.item.query || '')}`);
 
   const handleSave = useCallback(() => {
     setIsEditable(false);
