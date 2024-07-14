@@ -89,6 +89,11 @@ describe('WizardStorageAPI', () => {
         setItem() {
           throw new DOMException(ERROR_MESSAGE);
         },
+        getItem() {
+          return null
+        },
+        clear() {},
+        removeItem() {},
         length: 1,
       },
     });
@@ -105,6 +110,11 @@ describe('WizardStorageAPI', () => {
         setItem() {
           throw new DOMException(ERROR_MESSAGE, 'QuotaExceededError');
         },
+        getItem() {
+          return null
+        },
+        clear() {},
+        removeItem() {},
         length: 1,
       },
     });

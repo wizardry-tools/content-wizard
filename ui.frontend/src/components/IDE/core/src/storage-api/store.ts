@@ -45,9 +45,9 @@ export type WizardStore = {
 
 /**
  * This is refactored from a HistoryStore class
- * @param key
- * @param storage
- * @param maxSize
+ * @param key string
+ * @param storage WizardStorageAPI
+ * @param maxSize number
  * @constructor
  */
 export const useWizardStore = ({ key, storage, maxSize = null }: WizardStoreProps): WizardStore => {

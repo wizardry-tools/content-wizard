@@ -22,6 +22,8 @@ export type LoggingProviderProps = PropsWithChildren & {
  * This is a Logging Provider that allows us to configure how logs
  * are processed throughout the app. Enables us to toggle logging
  * statements, so that we don't have to remove them from our code.
+ *
+ * Only works for Functional Components.
  * @param children
  * @param showLog
  * @param showDebug
