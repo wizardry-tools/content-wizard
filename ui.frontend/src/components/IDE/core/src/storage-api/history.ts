@@ -3,6 +3,7 @@ import { parse } from 'graphql';
 import { useWizardStore, WizardStore, WizardStoreItem } from './store';
 import { WizardStorageAPI } from './storage-api';
 import { QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
+import {useState} from "react";
 
 const MAX_QUERY_SIZE = 100000;
 
@@ -14,7 +15,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
   const { storage, maxSize } = props;
   let history: WizardStore = useWizardStore({ key: 'queries', storage, maxSize });
   let favorite: WizardStore = useWizardStore({ key: 'favorites', storage, maxSize: null });
-  let queries: WizardStoreItem[] = [...history.fetchAll(), ...favorite.fetchAll()];
+  const [queries, setQueries] = useState([...history.fetchAll(), ...favorite.fetchAll()]);
 
   function shouldSaveQuery(
     query?: Statement,
@@ -77,7 +78,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
     });
     const historyQueries = history.getItems();
     const favoriteQueries = favorite.getItems();
-    queries = historyQueries.concat(favoriteQueries);
+    setQueries(historyQueries.concat(favoriteQueries));
   };
 
   function toggleFavorite({ query, language, variables, headers, operationName, label, ...other }: WizardStoreItem) {
@@ -98,7 +99,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
       favorite.push(item);
       history.remove(item);
     }
-    queries = [...history.getItems(), ...favorite.getItems()];
+    setQueries([...history.getItems(), ...favorite.getItems()]);
   }
 
   function editLabel(
@@ -118,7 +119,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
     } else {
       history.edit(item, index);
     }
-    queries = [...history.getItems(), ...favorite.getItems()];
+    setQueries([...history.getItems(), ...favorite.getItems()]);
   }
 
   const deleteHistory = (
@@ -149,7 +150,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
       deleteFromStore(history);
     }
 
-    queries = [...history.getItems(), ...favorite.getItems()];
+    setQueries([...history.getItems(), ...favorite.getItems()]);
   };
 
   return {

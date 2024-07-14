@@ -1,10 +1,10 @@
-import { useWizardHistoryStore, WizardStoreItem, useWizardStorageAPI } from '../storage-api';
-import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
+import {useWizardHistoryStore, WizardStoreItem, WizardStorageAPI} from '../storage-api';
+import {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
 import { QueryLanguageKey, Statement } from 'src/components/Query';
-import { useAlertDispatcher, useLogger } from 'src/providers';
+import { useLogger } from 'src/providers';
 
 export type HistoryContextType = {
   /**
@@ -95,39 +95,48 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
   const logger = useLogger();
   const renderCount = useRef(0);
   logger.debug({ message: `HistoryContextProvider[${++renderCount.current}] render()` });
-  const storage = useStorageContext();
-  const alertDispatcher = useAlertDispatcher();
-  const storageAPI = useWizardStorageAPI({ alertDispatcher });
+  const storage: WizardStorageAPI = useStorageContext();
   const historyStore = useWizardHistoryStore({
     // Fall back to a noop storage when the StorageContext is empty
-    storage: storage || storageAPI,
+    storage: storage,
     maxSize: props.maxHistoryLength || DEFAULT_HISTORY_LENGTH,
   });
-  let { queries } = historyStore;
-  let [items, setItems] = useState(queries || []);
+
+  console.log(`HistoryContextProvider render historyStore.queries: `, historyStore.queries);
+
+  useEffect(()=>{
+    console.log(`HistoryContextProvider useEffect historyStore.queries change: `, historyStore.queries);
+  },[historyStore.queries]);
+
 
   const addToHistory: HistoryContextType['addToHistory'] = useCallback(
     (operation: WizardStoreItem) => {
       historyStore?.updateHistory(operation);
-      setItems(historyStore.queries);
     },
     [historyStore],
   );
 
+  /**
+   * This method handles the store operation when editing a History Item label.
+   *
+   * TODO: The History plugin logic was never paired with the Editor Tabs logic. So, when a History Item's label is
+   *  modified, the change isn't propagated to the Tabs. The only time you see a changed label appear in an
+   *  Editor Tab is when you click on the History Item after changing the label, thus creating a new Editor Tab
+   *  that contains the History Item's current label. Creating new Tabs from a History Item, and then changing
+   *  that Item's label, doesn't have any effect on already rendered tabs, even the currently active tab.
+   */
   const editLabel: HistoryContextType['editLabel'] = useCallback(
     (operation: WizardStoreItem, index?: number) => {
       historyStore.editLabel(operation, index);
-      setItems(historyStore.queries);
     },
-    [historyStore],
+    [historyStore]
   );
 
   const toggleFavorite: HistoryContextType['toggleFavorite'] = useCallback(
     (operation: WizardStoreItem) => {
       historyStore.toggleFavorite(operation);
-      setItems(historyStore.queries);
     },
-    [historyStore],
+    [historyStore]
   );
 
   const setActive: HistoryContextType['setActive'] = useCallback((item: WizardStoreItem) => {
@@ -136,23 +145,21 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
 
   const deleteFromHistory: HistoryContextType['deleteFromHistory'] = useCallback(
     (item: WizardStoreItem, clearFavorites = false) => {
-      logger.debug({ message: `HistoryContextProvider[${renderCount.current}] deleteFromHistory()` });
       historyStore.deleteHistory(item, clearFavorites);
-      setItems(historyStore.queries);
     },
-    [historyStore, logger],
+    [historyStore]
   );
 
   const value = useMemo<HistoryContextType>(
     () => ({
       addToHistory,
       editLabel,
-      items,
+      items: historyStore.queries,
       toggleFavorite,
       setActive,
       deleteFromHistory,
     }),
-    [addToHistory, editLabel, items, toggleFavorite, setActive, deleteFromHistory],
+    [addToHistory, editLabel, historyStore.queries, toggleFavorite, setActive, deleteFromHistory]
   );
 
   return <HistoryContext.Provider value={value}>{props.children}</HistoryContext.Provider>;
