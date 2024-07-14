@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { IDE } from 'src/components/IDE';
 import Box from '@mui/material/Box';
 import { QueryWizard } from 'src/components/QueryWizard';
-import { useLogger } from '../../../providers';
+import { useLogger } from 'src/providers';
 
 export type ViewsProps = {
   tabValue: number;

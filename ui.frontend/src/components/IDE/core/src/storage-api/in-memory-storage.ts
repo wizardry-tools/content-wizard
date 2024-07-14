@@ -1,5 +1,4 @@
-import {WizardStorage} from "./storage-api";
-
+import { WizardStorage } from './storage-api';
 
 export function createInMemoryStorage(): WizardStorage {
   const store: Record<string, string> = {};
@@ -21,6 +20,6 @@ export function createInMemoryStorage(): WizardStorage {
           delete store[key];
         }
       }
-    }
-  }
+    },
+  };
 }

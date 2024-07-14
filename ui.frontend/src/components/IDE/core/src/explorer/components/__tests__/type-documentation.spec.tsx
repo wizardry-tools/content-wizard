@@ -21,7 +21,7 @@ function TypeDocumentationWithContext(props: { type: GraphQLNamedType }) {
       value={{
         fetchError: null,
         introspect() {},
-        isFetching: false,
+        isFetching: { current: false },
         schema: ExampleSchema,
         validationErrors: [],
       }}

@@ -1,7 +1,7 @@
 import { MutableRefObject, useCallback } from 'react';
-import { DYNAMIC_HEADERS } from '../../../utility';
+import { DYNAMIC_HEADERS } from 'src/utility';
 import { ResultData } from './ResultExplorer';
-import { useAlertDispatcher } from '../../../providers';
+import { useAlertDispatcher } from 'src/providers';
 
 export type FetcherProps = {
   fetching: MutableRefObject<boolean>;

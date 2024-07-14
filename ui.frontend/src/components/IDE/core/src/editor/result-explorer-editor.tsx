@@ -4,7 +4,7 @@ import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
 import { CodeMirrorEditor, CommonEditorProps } from './types';
 import { useEditorContext } from './context';
-import { useLogger } from '../../../../../providers';
+import { useLogger } from 'src/providers';
 
 export type UseResultExplorerEditorArgs = CommonEditorProps & {
   className?: string;

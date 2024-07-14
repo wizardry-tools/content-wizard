@@ -3,7 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { Statement } from 'src/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { API } from '../api';
-import { useLogger } from '../../../../../providers';
+import { useLogger } from 'src/providers';
 
 type PersistedQuerySelectorProps = {
   api: API;

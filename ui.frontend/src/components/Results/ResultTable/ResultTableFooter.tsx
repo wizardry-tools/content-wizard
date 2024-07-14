@@ -1,7 +1,7 @@
 import { ChangeEvent, memo, MouseEvent } from 'react';
 import { TableFooter, TablePagination, TableRow } from '@mui/material';
 import { TablePaginationActions } from './TablePaginationActions';
-import { useLogger } from '../../../providers';
+import { useLogger } from 'src/providers';
 
 export type ResultTableFooterProps = {
   rowsLength: number;

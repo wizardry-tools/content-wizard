@@ -1,6 +1,6 @@
 // storage.test.ts
 
-import {createInMemoryStorage} from '../in-memory-storage';
+import { createInMemoryStorage } from '../in-memory-storage';
 
 describe('InMemoryStorage', () => {
   let storage: ReturnType<typeof createInMemoryStorage>;

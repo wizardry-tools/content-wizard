@@ -1,5 +1,5 @@
-import {useWizardHistoryStore, WizardStoreItem, WizardStorageAPI} from '../storage-api';
-import {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
+import { useWizardHistoryStore, WizardStoreItem, WizardStorageAPI } from '../storage-api';
+import { ReactNode, useCallback, useMemo, useRef } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
@@ -102,13 +102,6 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
     maxSize: props.maxHistoryLength || DEFAULT_HISTORY_LENGTH,
   });
 
-  console.log(`HistoryContextProvider render historyStore.queries: `, historyStore.queries);
-
-  useEffect(()=>{
-    console.log(`HistoryContextProvider useEffect historyStore.queries change: `, historyStore.queries);
-  },[historyStore.queries]);
-
-
   const addToHistory: HistoryContextType['addToHistory'] = useCallback(
     (operation: WizardStoreItem) => {
       historyStore?.updateHistory(operation);
@@ -129,14 +122,14 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
     (operation: WizardStoreItem, index?: number) => {
       historyStore.editLabel(operation, index);
     },
-    [historyStore]
+    [historyStore],
   );
 
   const toggleFavorite: HistoryContextType['toggleFavorite'] = useCallback(
     (operation: WizardStoreItem) => {
       historyStore.toggleFavorite(operation);
     },
-    [historyStore]
+    [historyStore],
   );
 
   const setActive: HistoryContextType['setActive'] = useCallback((item: WizardStoreItem) => {
@@ -147,7 +140,7 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
     (item: WizardStoreItem, clearFavorites = false) => {
       historyStore.deleteHistory(item, clearFavorites);
     },
-    [historyStore]
+    [historyStore],
   );
 
   const value = useMemo<HistoryContextType>(
@@ -159,7 +152,7 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
       setActive,
       deleteFromHistory,
     }),
-    [addToHistory, editLabel, historyStore.queries, toggleFavorite, setActive, deleteFromHistory]
+    [addToHistory, editLabel, historyStore.queries, toggleFavorite, setActive, deleteFromHistory],
   );
 
   return <HistoryContext.Provider value={value}>{props.children}</HistoryContext.Provider>;

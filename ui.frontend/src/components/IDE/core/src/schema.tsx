@@ -12,7 +12,7 @@ import { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState
 import { useEditorContext } from './editor';
 import { createContextHook, createNullableContext } from './utility/context';
 import { useAlertDispatcher, useFetcher, useLogger, useQuery } from 'src/providers';
-import { QueryLanguage } from '../../../Query';
+import { QueryLanguage } from 'src/components/Query';
 
 type MaybeGraphQLSchema = GraphQLSchema | null | undefined;
 

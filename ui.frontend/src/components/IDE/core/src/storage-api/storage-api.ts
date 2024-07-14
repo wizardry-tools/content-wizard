@@ -1,6 +1,6 @@
 import { WizardAlertProps } from 'src/providers';
 import { Dispatch } from 'react';
-import {createInMemoryStorage} from "./in-memory-storage";
+import { createInMemoryStorage } from './in-memory-storage';
 
 /**
  * This describes the attributes and methods that a store has to support in

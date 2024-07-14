@@ -3,7 +3,7 @@ import { parse } from 'graphql';
 import { useWizardStore, WizardStore, WizardStoreItem } from './store';
 import { WizardStorageAPI } from './storage-api';
 import { QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
-import {useState} from "react";
+import { useState } from 'react';
 
 const MAX_QUERY_SIZE = 100000;
 
