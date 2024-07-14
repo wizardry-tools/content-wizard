@@ -1,7 +1,7 @@
 import { formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
 import { ExecutionResult, FragmentDefinitionNode, GraphQLError, print } from 'graphql';
 import { getFragmentDependenciesForAST } from 'graphql-language-service';
-import { ReactNode, RefObject, useCallback, useMemo, useRef, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
 import setValue from 'set-value';
 
 import { useAutoCompleteLeafs, useEditorContext } from './editor';
@@ -16,7 +16,7 @@ export type ExecutionContextType = {
    * requests like subscriptions, this will be `true` while fetching the
    * first partial response and `false` while fetching subsequent batches.
    */
-  isFetching: RefObject<boolean>;
+  isFetching: boolean;
   /**
    * If there is currently a GraphQL request in-flight. For multi-part
    * requests like subscriptions, this will be `true` until the last batch

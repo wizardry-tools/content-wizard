@@ -49,7 +49,7 @@ export const PersistedQuerySelector = memo(({ api, onStatementChange }: Persiste
   if (api.endpoint && api.persistedQueries?.length > 0) {
     return (
       <FormControl variant="filled" color="secondary" className="wizard-language-selector-persisted-query-selector">
-        <InputLabel id={'persisted-query-select-label'}>Persisted Queries</InputLabel>
+        <InputLabel id={'persisted-query-select-label'}>Load Persisted Query</InputLabel>
         <Select
           labelId={'persisted-query-select-label'}
           id={'persisted-query-select'}
