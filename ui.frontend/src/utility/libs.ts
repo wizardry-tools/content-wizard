@@ -142,7 +142,7 @@ export const createSimplePostFetcher =
     };
     const data = await httpFetch(options.url, init);
     const json = await data.json();
-    if (options.onResults && typeof options.onResults === 'function') {
+    if (options.onResults && typeof options.onResults === 'function' && fetcherParams.operationName !== 'IntrospectionQuery') {
       options.onResults(json);
     }
     return json;
