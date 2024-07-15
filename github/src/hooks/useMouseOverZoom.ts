@@ -10,7 +10,7 @@ export function useMouseOverZoom(
   enablePreview = false,
   canvasDimensions: RefObject<{ width: number; height: number }>,
   //radius = 50,
-  zoomFactor = 3,
+  zoomFactor = 2, //inverse, lower number === great zoom
 ) {
   // Capture Mouse position
   const { x, y, isActive, rect } = useMouse(source, enablePreview);
@@ -73,8 +73,8 @@ export function useMouseOverZoom(
           //const targetWidth = window.outerWidth > 1152 ? 600 : window.outerWidth * 0.52;
           target.current.width = canvasWidth * scale;
           target.current.height = canvasHeight * scale;
-          target.current.style.width = `${canvasWidth * scale}px`;
-          target.current.style.height = `${canvasHeight * scale}px`;
+          target.current.style.width = `${canvasWidth}px`;
+          target.current.style.height = `${canvasHeight}px`;
           ctx.imageSmoothingEnabled = false;
           ctx.drawImage(
             highResImage.current,
@@ -84,8 +84,8 @@ export function useMouseOverZoom(
             height * imageRatio,
             0,
             0,
-            target.current.width * scale,
-            target.current.height * scale,
+            target.current.width,
+            target.current.height,
           );
         } else {
           // clear canvas
