@@ -197,7 +197,7 @@ export default function Hero() {
             }}
           >
             Search AEM Content with ease using the Content Wizard's Query
-            Wizard, a simple Form driven approach to building and executing
+            Wizard, a simple form driven approach to building and executing
             QueryBuilder statements.
           </Typography>
         </Stack>
@@ -271,8 +271,8 @@ export default function Hero() {
               width: { sm: "100%", md: "80%" },
             }}
           >
-            Create or Edit raw Query statements with the Query IDE. Supporting
-            QueryBuilder, SQL, JCR-SQL2, XPATH, and GraphQL query languages.
+            Create or edit raw Query statements with the Query IDE. Supporting
+            QueryBuilder, SQL, JCR SQL2, XPATH, and GraphQL query languages.
           </Typography>
         </Stack>
         <StyledBox
@@ -299,8 +299,8 @@ export default function Hero() {
               width: { sm: "100%", md: "80%" },
             }}
           >
-            Retaining OOTB GraphiQL functionality, the Query IDE can provide
-            rich contextual support for GraphQL using on the Document Explorer
+            Retaining out of the box GraphiQL functionality, the Query IDE can provide
+            rich contextual support for GraphQL using the Document Explorer
             plugin.
           </Typography>
         </Stack>

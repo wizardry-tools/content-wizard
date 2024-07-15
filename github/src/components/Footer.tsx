@@ -11,7 +11,7 @@ function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: "text.secondary" }}>
       {"Copyright © "}
-      <Link href="https://wizardry-tools.com/">Content Wizard&nbsp;</Link>
+      <Link href="https://wizardry-tools.com/">Content Wizard</Link>&nbsp;
       {new Date().getFullYear()}
     </Typography>
   );
