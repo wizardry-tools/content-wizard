@@ -1,19 +1,20 @@
-import * as React from "react";
-import { Link, PaletteMode, SvgIcon } from "@mui/material";
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
-import MenuItem from "@mui/material/MenuItem";
-import Drawer from "@mui/material/Drawer";
+import { useState } from "react";
+import {
+  AppBar,
+  Box,
+  Container,
+  Divider,
+  Drawer,
+  IconButton,
+  PaletteMode,
+  SvgIcon,
+  Toolbar,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ToggleColorMode from "./ToggleColorMode";
 import { ReactComponent as LogoIcon } from "../wizard-logo.svg";
-import { useScrollToId } from "../utils/scroll";
+import { ScrollLink, ScrollButton, ScrollMenuItem } from "./nav-scrollers";
 
 interface AppAppBarProps {
   mode: PaletteMode;
@@ -21,8 +22,8 @@ interface AppAppBarProps {
 }
 
 export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
-  const [open, setOpen] = React.useState(false);
-  const scrollToSection = useScrollToId({ hook: setOpen, hookProps: false });
+  const [open, setOpen] = useState(false);
+  const scrollOptions = { hook: setOpen, hookProps: false };
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -64,47 +65,47 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
           <Box
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
           >
-            <Link onClick={() => scrollToSection.scroll("hero")}>
+            <ScrollLink scrollId="hero" scrollOptions={scrollOptions}>
               <SvgIcon
                 sx={{ height: "3rem", width: "3rem", mr: 2 }}
                 component={LogoIcon}
                 inheritViewBox
               />
-            </Link>
+            </ScrollLink>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button
+              <ScrollButton
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection.scroll("features")}
+                scrollId="features"
               >
                 Features
-              </Button>
-              <Button
+              </ScrollButton>
+              <ScrollButton
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection.scroll("highlights")}
+                scrollId="highlights"
               >
                 Highlights
-              </Button>
-              <Button
+              </ScrollButton>
+              <ScrollButton
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection.scroll("installation")}
+                scrollId="installation"
               >
                 Installation
-              </Button>
-              <Button
+              </ScrollButton>
+              <ScrollButton
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection.scroll("faq")}
+                scrollId="faq"
                 sx={{ minWidth: 0 }}
               >
                 FAQ
-              </Button>
+              </ScrollButton>
             </Box>
           </Box>
           <Box
@@ -138,20 +139,14 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                   </IconButton>
                 </Box>
                 <Divider sx={{ my: 3 }} />
-                <MenuItem onClick={() => scrollToSection.scroll("features")}>
-                  Features
-                </MenuItem>
-                <MenuItem onClick={() => scrollToSection.scroll("highlights")}>
+                <ScrollMenuItem scrollId="features">Features</ScrollMenuItem>
+                <ScrollMenuItem scrollId="highlights">
                   Highlights
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection.scroll("installation")}
-                >
+                </ScrollMenuItem>
+                <ScrollMenuItem scrollId="installation">
                   Installation
-                </MenuItem>
-                <MenuItem onClick={() => scrollToSection.scroll("faq")}>
-                  FAQ
-                </MenuItem>
+                </ScrollMenuItem>
+                <ScrollMenuItem scrollId="faq">FAQ</ScrollMenuItem>
               </Box>
             </Drawer>
           </Box>

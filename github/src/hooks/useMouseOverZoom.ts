@@ -10,7 +10,7 @@ export function useMouseOverZoom(
   enablePreview = false,
   canvasDimensions: RefObject<{ width: number; height: number }>,
   //radius = 50,
-  zoomFactor = 2, //inverse, lower number === great zoom
+  zoomFactor = 2.5, //inverse, lower number === great zoom
 ) {
   // Capture Mouse position
   const { x, y, isActive, rect } = useMouse(source, enablePreview);

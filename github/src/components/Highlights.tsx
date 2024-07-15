@@ -1,17 +1,18 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import {
+  Box,
+  Card,
+  Container,
+  Grid,
+  Stack,
+  SvgIcon,
+  Typography
+} from "@mui/material";
 import ConstructionRoundedIcon from "@mui/icons-material/ConstructionRounded";
 import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import HighlightIcon from "@mui/icons-material/Highlight";
 import { ReactComponent as CopyIcon } from "../icons/copy.svg";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
-import { SvgIcon } from "@mui/material";
 
 const items = [
   {
@@ -78,7 +79,7 @@ export default function Highlights() {
         <Box
           sx={{
             width: { sm: "100%", md: "60%" },
-            textAlign: { sm: "left", md: "center" },
+            textAlign: "center",
           }}
         >
           <Typography component="h2" variant="h4">

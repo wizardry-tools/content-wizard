@@ -10,7 +10,7 @@ export const InstallationGuide = () => {
       .then((res) => res.text())
       .then((res) => setContent(res))
       .catch((err) => console.log(err));
-  });
+  }, []);
 
   return (
     <Box

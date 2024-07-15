@@ -12,6 +12,7 @@ import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
 import { InstallationGuide } from "../components/InstallationGuide";
 import getTheme from "../utils/getTheme";
+import { BuiltWith } from "../components/BuiltWith";
 
 export default function LandingPage() {
   const [mode, setMode] = React.useState<PaletteMode>("dark");
@@ -39,6 +40,8 @@ export default function LandingPage() {
         <InstallationGuide />
         <Divider />
         <FAQ />
+        <Divider />
+        <BuiltWith />
         <Divider />
         <Footer />
       </Box>
