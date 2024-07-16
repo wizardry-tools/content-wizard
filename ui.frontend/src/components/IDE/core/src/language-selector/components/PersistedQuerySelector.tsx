@@ -41,15 +41,15 @@ export const PersistedQuerySelector = memo(({ api, onStatementChange }: Persiste
 
   const persistedQueryMenuItems = useMemo(() => {
     return persistedQueries?.map((option, index) => {
-          //example:  /we-retail/AllStores
-          const parts = option.path.shortForm.split('/');
-          const name = parts[2] || parts[1];
-          return (
-            <MenuItem key={index} value={option.path.shortForm}>
-              {name}
-            </MenuItem>
-          );
-        })
+      //example:  /we-retail/AllStores
+      const parts = option.path.shortForm.split('/');
+      const name = parts[2] || parts[1];
+      return (
+        <MenuItem key={index} value={option.path.shortForm}>
+          {name}
+        </MenuItem>
+      );
+    });
   }, [persistedQueries]);
 
   return (

@@ -3,6 +3,13 @@
 /* RESULT HANDLER */
 .result-handler {
   background-color: $builder-bg-color !important;
+
+  .result-table {
+
+    .MuiPaper-root {
+      max-height: $results-table-height;
+    }
+  }
 }
 
 /* RESULT EXPLORER */

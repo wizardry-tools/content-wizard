@@ -1,16 +1,17 @@
 import { memo, ReactNode, useCallback, useMemo } from 'react';
-import { Results } from '../index';
+import { Result } from '../index';
 import { Link, TableBody, TableCell, TableRow } from '@mui/material';
 
 export type ResultTableBodyProps = {
-  rows: Results;
+  rows: Result[];
   keys: string[];
   rowsPerPage: number;
+  emptyRows: number;
   page: number;
   onClick: (value: string) => void;
 };
 export const ResultTableBody = memo((props: ResultTableBodyProps) => {
-  const { rows = [], keys, rowsPerPage, page, onClick } = props;
+  const { rows = [], keys, rowsPerPage, page, onClick, emptyRows } = props;
   const rowsToRender = useMemo(() => {
     if (!Array.isArray(rows)) {
       return [];
@@ -69,6 +70,15 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
           </TableRow>
         );
       })}
+      {emptyRows > 0 && (
+        <TableRow
+          style={{
+            height: 55 * emptyRows,
+          }}
+        >
+          <TableCell colSpan={6} />
+        </TableRow>
+      )}
     </>
   );
   return (

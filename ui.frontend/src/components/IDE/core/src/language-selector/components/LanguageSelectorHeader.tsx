@@ -1,5 +1,4 @@
-import {memo} from "react";
-
+import { memo } from 'react';
 
 export const LanguageSelectorHeader = memo(() => (
   <div className="wizard-language-selector-header">

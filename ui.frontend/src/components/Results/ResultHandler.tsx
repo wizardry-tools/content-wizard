@@ -1,6 +1,5 @@
 import { ResultTable } from './ResultTable/ResultTable';
-import { Paper, TextField } from '@mui/material';
-import { FormGrid } from 'src/components/QueryWizard/Components';
+import { Paper } from '@mui/material';
 import { QueryLanguage } from 'src/components/Query';
 import { useResults, useQuery } from 'src/providers';
 
@@ -10,23 +9,8 @@ export function ResultHandler() {
 
   const resultTable = () => {
     if (results) {
-      if (typeof results !== 'string' && query.language !== QueryLanguage.GraphQL) {
+      if (query.language !== QueryLanguage.GraphQL) {
         return <ResultTable />;
-      } else {
-        return (
-          <FormGrid item xs={12} md={12}>
-            <TextField
-              id="results"
-              name="results"
-              label="Results"
-              type="text"
-              multiline
-              variant="filled"
-              defaultValue={results as string}
-              disabled={true}
-            />
-          </FormGrid>
-        );
       }
     }
   };

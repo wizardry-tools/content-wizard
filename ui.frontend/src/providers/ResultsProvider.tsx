@@ -1,21 +1,21 @@
 import { useState, createContext, useContext, PropsWithChildren, Dispatch, useCallback, useRef } from 'react';
-import { Results } from 'src/components/Results';
+import { Result } from 'src/components/Results';
 import { useAlertDispatcher } from './WizardAlertProvider';
 import { useLogger } from './LoggingProvider';
 
 export type ResultsDispatchProps = {
-  results: Results;
+  results: Result[];
   caller: Function;
 };
 
-const ResultsContext = createContext<Results>([] as Results);
+const ResultsContext = createContext<Result[]>(null!);
 const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProps>>(null!);
 
 export function ResultsProvider({ children }: PropsWithChildren) {
   const logger = useLogger();
   const renderCount = useRef(0);
   logger.debug({ message: `ResultsProvider[${++renderCount.current}] render()` });
-  const [results, setResults] = useState([] as Results);
+  const [results, setResults] = useState([] as Result[]);
   const alertDispatcher = useAlertDispatcher();
 
   const updateResults = useCallback(

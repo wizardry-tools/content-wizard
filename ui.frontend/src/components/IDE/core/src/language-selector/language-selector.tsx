@@ -1,17 +1,12 @@
-import {
-  defaultAdvancedQueries,
-  QueryLanguage,
-  QueryLanguageKey,
-  Statement,
-} from 'src/components/Query';
+import { defaultAdvancedQueries, QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
 import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
 import { useCallback, useRef } from 'react';
 import './language-selector.scss';
 import { API, useAPIContext } from '../api';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import {GraphQLSelector} from "./components/GraphQLSelector";
-import {QueryLanguageSelector} from "./components/QueryLanguageSelector";
-import {LanguageSelectorHeader} from "./components/LanguageSelectorHeader";
+import { GraphQLSelector } from './components/GraphQLSelector';
+import { QueryLanguageSelector } from './components/QueryLanguageSelector';
+import { LanguageSelectorHeader } from './components/LanguageSelectorHeader';
 
 /**
  * This is a custom Plugin for the Query IDE.

@@ -56,8 +56,9 @@ export const TablePaginationActions = (props: WizardPaginationActionsProps) => {
       <Button
         onClick={handleExport}
         startIcon={<DownloadIcon />}
-        color={"secondary"}
-        variant={"contained"}
+        aria-label="export results"
+        color={'secondary'}
+        variant={'contained'}
         sx={{
           marginLeft: '4rem',
           marginRight: '0.25rem',
