@@ -1,37 +1,42 @@
-import { memo, MouseEvent } from 'react';
-import { Box, TableHead, TableRow, TableCell, TableSortLabel } from '@mui/material';
-import { styled } from '@mui/system';
-import { Order } from './ResultTable';
+import { MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Box, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { usePaperTheme } from 'src/utility/theme';
-
-const TableHeadCell = styled(TableCell)(() => ({
-  fontWeight: 'bold',
-}));
+import { useLogger, useResults } from 'src/providers';
+import { TableHeadCell } from './TableHeadCell';
+import { TableToolBar } from './TableToolBar';
 
 export type ResultTableHeadProps = {
-  keys: string[];
-  onRequestSort: (event: MouseEvent<unknown>, key: string) => void;
-  order: Order;
-  orderBy: string | number;
   elevation?: number;
 };
-export const ResultTableHead = memo((props: ResultTableHeadProps) => {
-  const { keys, order, orderBy, onRequestSort, elevation = 5 } = props;
-  const createSortHandler = (key: string) => (event: MouseEvent<unknown>) => {
-    onRequestSort(event, key);
-  };
+export const ResultTableHead = (props: ResultTableHeadProps) => {
+  const logger = useLogger();
+  const renderCount = useRef(0);
+  logger.debug({ message: `ResultTableHead[${++renderCount.current}] render()` });
+  const { keys, order, orderBy, setOrder, setOrderBy } = useResults();
+  const { elevation = 5 } = props;
+  const handleSortClick = useCallback(
+    (key: string) => (_event: MouseEvent<unknown>) => {
+      // if previous orderBy matches the clicked key and the previous order is asc, then the new order should be desc.
+      const isAsc = orderBy === key && order === 'asc';
+      logger.debug({ message: `ResultTableHead[${renderCount.current}] handleSortClick()`, isAsc, key, order });
+      setOrder(isAsc ? 'desc' : 'asc');
+      setOrderBy(key);
+    },
+    [logger, order, orderBy, setOrder, setOrderBy],
+  );
+
   const headerCellTheme = usePaperTheme({ elevation, styles: { position: 'sticky', top: 0 } });
 
-  return (
-    <TableHead sx={headerCellTheme}>
+  const headerRow = useMemo(() => {
+    return (
       <TableRow>
         {keys.map((key, index) => (
-          <TableHeadCell key={key} align={index === 0 ? 'left' : 'right'}>
+          <TableHeadCell key={key} align={index === 0 ? 'left' : 'right'} colSpan={key === 'path' ? 2 : 1}>
             <TableSortLabel
               active={orderBy === key}
               direction={orderBy === key ? order : 'asc'}
-              onClick={createSortHandler(key)}
+              onClick={handleSortClick(key)}
             >
               {key}
               {orderBy === key ? (
@@ -43,6 +48,13 @@ export const ResultTableHead = memo((props: ResultTableHeadProps) => {
           </TableHeadCell>
         ))}
       </TableRow>
+    );
+  }, [handleSortClick, keys, order, orderBy]);
+
+  return (
+    <TableHead sx={headerCellTheme}>
+      <TableToolBar />
+      {headerRow}
     </TableHead>
   );
-});
+};
