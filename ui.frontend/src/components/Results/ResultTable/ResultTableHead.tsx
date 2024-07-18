@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
+import { MouseEvent, useCallback, useMemo, useRef } from 'react';
 import { Box, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { usePaperTheme } from 'src/utility/theme';
