@@ -1,7 +1,7 @@
 import { FormGrid } from 'src/components/QueryWizard/Components';
 import { APISelector, APISelectorProps } from './APISelector';
 import { PersistedQuerySelector, PersistedQuerySelectorProps } from './PersistedQuerySelector';
-import { useLogger } from '../../../../../../providers';
+import { useLogger } from 'src/providers';
 import { useRef } from 'react';
 
 export type GraphQLSelectorProps = Omit<APISelectorProps, 'endpoint'> & Partial<PersistedQuerySelectorProps>;

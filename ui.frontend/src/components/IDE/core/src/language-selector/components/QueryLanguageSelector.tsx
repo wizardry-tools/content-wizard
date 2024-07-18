@@ -3,7 +3,7 @@ import { FormGrid } from 'src/components/QueryWizard/Components';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { QueryLanguage, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { useLogger } from '../../../../../../providers';
+import { useLogger } from 'src/providers';
 
 export type QueryLanguageSelectorProps = {
   language: QueryLanguageKey;
