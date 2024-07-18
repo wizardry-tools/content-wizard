@@ -1,6 +1,6 @@
 import { getParams } from 'src/utility';
 import { API } from 'src/components/IDE/core/src';
-import { Results } from 'src/components/Results';
+import { Result } from 'src/components/Results';
 
 export const endpoints: { [name: string]: string } = {
   queryBuilderPath: '/bin/querybuilder.json',
@@ -54,7 +54,7 @@ export type QueryAction = Partial<Query> & {
 };
 
 export type QueryResponse = {
-  results: Results;
+  results: Result[];
   status: string | number;
   query: Query;
 };

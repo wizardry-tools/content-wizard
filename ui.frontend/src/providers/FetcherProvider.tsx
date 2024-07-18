@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, useCallback, useContext, useMemo, use
 import { Fetcher } from '@graphiql/toolkit/src/create-fetcher/types';
 import { buildQueryString, Query, QueryLanguage } from '../components/Query';
 import { createGraphQLFetcher, createMultiLanguageFetcher, CustomCreateFetcherOptions } from '../utility';
-import { Results } from 'src/components/Results';
+import { Result } from 'src/components/Results';
 import { useResultsDispatch } from './ResultsProvider';
 import { useQuery } from './QueryProvider';
 import { useLogger } from './LoggingProvider';
@@ -21,7 +21,7 @@ export function FetcherProvider({ children }: FetcherProviderProps) {
   const onResults = useCallback(
     (data: any) => {
       logger.debug({ message: `FetcherProvider[${renderCount.current}] onResults()` });
-      const results: Results = data.hits || data.results || JSON.stringify(data);
+      const results: Result[] = data.hits || data.results || JSON.stringify(data);
       resultsDispatch({
         results,
         caller: FetcherProvider,

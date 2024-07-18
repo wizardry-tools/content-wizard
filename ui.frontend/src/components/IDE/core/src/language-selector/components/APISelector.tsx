@@ -31,10 +31,10 @@ export const APISelector = memo((props: APISelectorProps) => {
 
   const menuItems = useMemo(() => {
     return APIs.map((api, index) => (
-          <MenuItem key={index} value={api.endpoint}>
-            {api.endpoint}
-          </MenuItem>
-        ))
+      <MenuItem key={index} value={api.endpoint}>
+        {api.endpoint}
+      </MenuItem>
+    ));
   }, [APIs]);
 
   return (

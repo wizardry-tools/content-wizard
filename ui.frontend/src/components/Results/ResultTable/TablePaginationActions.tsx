@@ -1,19 +1,16 @@
 import { MouseEvent } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import DownloadIcon from '@mui/icons-material/Download';
 import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
 
-interface WizardPaginationActionsProps extends TablePaginationActionsProps {
-  handleExport: () => void;
-}
+interface WizardPaginationActionsProps extends TablePaginationActionsProps {}
 
 export const TablePaginationActions = (props: WizardPaginationActionsProps) => {
   const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange, handleExport } = props;
+  const { count, page, rowsPerPage, onPageChange } = props;
 
   const handleFirstPageButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, 0);
@@ -53,16 +50,6 @@ export const TablePaginationActions = (props: WizardPaginationActionsProps) => {
       >
         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
-      <Button
-        onClick={handleExport}
-        startIcon={<DownloadIcon />}
-        sx={{
-          marginLeft: '4rem',
-          marginRight: '0.25rem',
-        }}
-      >
-        Export Results
-      </Button>
     </Box>
   );
 };

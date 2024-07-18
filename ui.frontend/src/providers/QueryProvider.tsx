@@ -84,14 +84,14 @@ export function QueryProvider({ children }: PropsWithChildren) {
       } catch (e) {
         console.error(e);
         return {
-          results: null,
+          results: [],
           status: `ERROR occurred while fetching results: ${e}`,
           query,
         };
       }
       // default
       return {
-        results: null,
+        results: [],
         status: `Failed to fetch results`,
         query,
       };

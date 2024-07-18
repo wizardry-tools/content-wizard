@@ -1,25 +1,30 @@
 import { memo, ReactNode, useCallback, useMemo } from 'react';
-import { Results } from '../index';
 import { Link, TableBody, TableCell, TableRow } from '@mui/material';
+import { useResults } from 'src/providers';
 
 export type ResultTableBodyProps = {
-  rows: Results;
-  keys: string[];
   rowsPerPage: number;
   page: number;
   onClick: (value: string) => void;
 };
 export const ResultTableBody = memo((props: ResultTableBodyProps) => {
-  const { rows = [], keys, rowsPerPage, page, onClick } = props;
+  const { tableResults, keys } = useResults();
+  const { rowsPerPage, page, onClick } = props;
   const rowsToRender = useMemo(() => {
-    if (!Array.isArray(rows)) {
+    if (!Array.isArray(tableResults)) {
       return [];
     }
     if (rowsPerPage > 0) {
-      return rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) ?? [];
+      return tableResults?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) ?? [];
     }
-    return rows;
-  }, [page, rows, rowsPerPage]);
+    return tableResults;
+  }, [page, tableResults, rowsPerPage]);
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows = useMemo(
+    () => (page > 0 ? Math.max(0, (1 + page) * rowsPerPage - (tableResults?.length ?? 0)) : 0),
+    [tableResults?.length, page, rowsPerPage],
+  );
 
   const buildLink = useCallback(
     ({ value }: { value: string }): ReactNode => (
@@ -46,20 +51,16 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
         const cells: ReactNode[] = [];
         keys.forEach((key, index) => {
           let value = row[key];
+          let colSpan = 1;
           if (key === 'path') {
             value = buildLink({ value });
+            colSpan = 2;
           }
           // align first column to the left
           cells.push(
-            index === 0 ? (
-              <TableCell key={key} component="td" scope="row">
-                {value}
-              </TableCell>
-            ) : (
-              <TableCell key={key} align="right">
-                {value}
-              </TableCell>
-            ),
+            <TableCell key={key} component="td" scope="row" colSpan={colSpan} align={index === 0 ? 'left' : 'right'}>
+              {value}
+            </TableCell>,
           );
         });
 
@@ -69,6 +70,15 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
           </TableRow>
         );
       })}
+      {emptyRows > 0 && (
+        <TableRow
+          style={{
+            height: 55 * emptyRows,
+          }}
+        >
+          <TableCell colSpan={6} />
+        </TableRow>
+      )}
     </>
   );
   return (

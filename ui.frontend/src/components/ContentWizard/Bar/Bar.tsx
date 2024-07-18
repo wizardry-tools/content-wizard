@@ -19,7 +19,7 @@ const tabCssProps = {
 };
 
 export const Bar = ({ tabValue, onTabSelect }: QueryWizardBarProps) => {
-  const results = useResults();
+  const { results } = useResults();
 
   return (
     <AppBar className="content-wizard-bar">

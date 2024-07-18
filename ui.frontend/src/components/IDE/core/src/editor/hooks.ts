@@ -78,7 +78,10 @@ export function useChangeHandler(
       if (!storage || storageKey === null) {
         return;
       }
-      logger.debug({ message: `useChangeHandler[${renderCount.current}] useEffect() debounced storage.set`, storageKey });
+      logger.debug({
+        message: `useChangeHandler[${renderCount.current}] useEffect() debounced storage.set`,
+        storageKey,
+      });
       storage.set(storageKey, value);
     });
 
@@ -92,7 +95,7 @@ export function useChangeHandler(
       if (!changeObj) {
         return;
       }
-      logger.debug({ message: `useChangeHandler[${renderCount.current}] useEffect() handleChange`});
+      logger.debug({ message: `useChangeHandler[${renderCount.current}] useEffect() handleChange` });
       const newValue = editorInstance.getValue();
       store(newValue);
       updateTab(newValue);
