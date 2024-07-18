@@ -14,6 +14,11 @@
   * [Local Development](#local-development)
     * [M2 Setup](#m2-setup)
   * [ClientLibs](#clientlibs)
+* QuickLinks
+  * [License](/LICENSE)
+  * [Change Log](/CHANGELOG.md)
+  * [Contributing](/CONTRIBUTING.md)
+  * [Development](/DEVELOPMENT.md)
 
 <!-- toc! -->
 
