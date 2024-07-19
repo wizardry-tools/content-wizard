@@ -1,4 +1,42 @@
 
+## Content Wizard 1.1.3 - July 18, 2024
+
+- Added Sorting and Filtering capabilities to the Results Table
+- Improved the UI and scrolling experience of the Results Table
+- Improved the README and DEVELOPMENT docs
+- Additional visual improvements.
+
+## Content Wizard 1.1.2 - July 14, 2024
+
+- Refactored Storage logic again, to use TS functions instead of TS classes.
+- Fixed Query History and IDE Tab logic so that tab state and query labels are working correctly for all Query Languages.
+- Refactored Providers adding more unique providers and simplifying the existing ones, which fixed a circular rendering.
+- Refactored usage of timeouts to use the latest React best practices
+- Added Export to CSV option for the Results Table
+- Added a custom Logging framework that allows us to retain logging statements for local development and disables the statements for production builds.
+- Additional performance and visual improvements.
+
+
+## Content Wizard 1.1.1 - July 10, 2024
+
+- Fixed DatePickers logic, so that it doesn't display a date when one hasn't been picked
+- Performance improvements 
+- Implemented the Result Explorer that lets you load and review the JSON of an individual result. Also contains quick links into AEM. This expands the Results View's capabilities
+- Fixed an issue with the Alerts not displaying correctly
+- Additional performance and visual improvements.
+
+## Content Wizard 1.1.0 - July 6, 2024
+
+- Refactored Swipeable Views to use Typescript
+- Fixed eslint and babel configurations
+- Fixed prettier config and prettified all code
+- Heavily reorganized project code
+- Implemented Alert Messaging
+- Implemented statement viewer for Query Wizard
+- Refactored and extended the Storage functionality to support any Query
+- Introduced module aliases so that local module imports can have shorter paths.
+- Additional performance and visual improvements.
+
 ## Content Wizard 1.0.1 - June 29, 2024
 
 ### Maven Publishing update
