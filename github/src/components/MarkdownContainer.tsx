@@ -1,12 +1,12 @@
-import Markdown from "react-markdown";
-import rehypeReact from "rehype-react";
-import rehypeHighlight from "rehype-highlight";
-import { Container, useTheme, Link as MuiLink, Paper } from "@mui/material";
+import Markdown from 'react-markdown';
+import rehypeReact from 'rehype-react';
+import rehypeHighlight from 'rehype-highlight';
+import { Container, useTheme, Link as MuiLink, Paper } from '@mui/material';
 
-import "../styles/markdown.scss";
-import { memo, useCallback, useState, MouseEvent } from "react";
-import { useClipBoard } from "../utils/clipboard";
-import CopyFab from "./CopyFab";
+import '../styles/markdown.scss';
+import { memo, useCallback, useState, MouseEvent } from 'react';
+import { useClipBoard } from '../utils/clipboard';
+import CopyFab from './CopyFab';
 
 type MarkdownContainerProps = {
   children?: string | null | undefined;
@@ -15,7 +15,7 @@ type ComponentOverride = MarkdownContainerProps & any;
 
 const Link = memo((props: ComponentOverride) => {
   const { _node, ...rest } = props;
-  return <MuiLink {...rest} color="info.main" />;
+  return <MuiLink target="_blank" {...rest} color="info.main" />;
 });
 
 const CodeContainer = ({ children, ...other }: any) => {
@@ -76,7 +76,7 @@ const PaperPre = (props: ComponentOverride) => {
 const MarkdownContainer = ({ children }: MarkdownContainerProps) => {
   const theme = useTheme();
   return (
-    <Container className={`markdown-container ${theme.palette.mode ?? "dark"}`}>
+    <Container className={`markdown-container ${theme.palette.mode ?? 'dark'}`}>
       <Markdown
         rehypePlugins={[rehypeReact, rehypeHighlight]}
         components={

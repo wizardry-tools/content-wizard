@@ -1,4 +1,4 @@
-import { RefObject, useState, useEffect } from "react";
+import { RefObject, useState, useEffect } from 'react';
 
 const emptyRect = {
   x: 0,
@@ -10,10 +10,7 @@ const emptyRect = {
   bottom: 0,
   left: 0,
 };
-export function useMouse(
-  ref: RefObject<HTMLElement | null>,
-  enablePreview: boolean,
-) {
+export function useMouse(ref: RefObject<HTMLElement | null>, enablePreview: boolean) {
   const [mouse, setMouse] = useState<{
     x: number;
     y: number;
@@ -40,7 +37,7 @@ export function useMouse(
           });
         }
       };
-      const handleMouseOut = (e: MouseEvent) => {
+      const handleMouseOut = (_e: MouseEvent) => {
         setMouse({
           x: 0,
           y: 0,
@@ -48,11 +45,11 @@ export function useMouse(
           rect: emptyRect,
         });
       };
-      refElement.addEventListener("mousemove", handleMouseMove);
-      refElement.addEventListener("mouseout", handleMouseOut);
+      refElement.addEventListener('mousemove', handleMouseMove);
+      refElement.addEventListener('mouseout', handleMouseOut);
       return () => {
-        refElement.removeEventListener("mousemove", handleMouseMove);
-        refElement.removeEventListener("mouseout", handleMouseOut);
+        refElement.removeEventListener('mousemove', handleMouseMove);
+        refElement.removeEventListener('mouseout', handleMouseOut);
       };
     }
   }, [enablePreview, ref]);

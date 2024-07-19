@@ -1,6 +1,6 @@
-import { useScrollToId } from "../../utils/scroll";
-import { PropsWithChildren } from "react";
-import { Link } from "@mui/material";
+import { useScrollToId } from '../../utils/scroll';
+import { PropsWithChildren } from 'react';
+import { Link } from '@mui/material';
 
 export type ScrollLinkProps = PropsWithChildren & {
   scrollId: string;
@@ -10,7 +10,5 @@ export const ScrollLink = (props: ScrollLinkProps) => {
   const { scrollId, scrollOptions, children } = props;
   const scrollToSection = useScrollToId(scrollOptions);
 
-  return (
-    <Link onClick={() => scrollToSection.scroll(scrollId)}>{children}</Link>
-  );
+  return <Link onClick={() => scrollToSection.scroll(scrollId)}>{children}</Link>;
 };

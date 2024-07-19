@@ -1,6 +1,6 @@
-import { MouseEvent, useCallback, useState } from "react";
-import { Fab, Popover, SvgIcon, Tooltip, Typography } from "@mui/material";
-import { ReactComponent as CopyIcon } from "../icons/copy.svg";
+import { MouseEvent, useCallback, useState } from 'react';
+import { Fab, Popover, SvgIcon, Tooltip, Typography } from '@mui/material';
+import { ReactComponent as CopyIcon } from '../icons/copy.svg';
 
 const CopyFab = (props: any) => {
   const { hover, onClick } = props;
@@ -33,11 +33,9 @@ const CopyFab = (props: any) => {
 
   return (
     <span className={`clipboard`}>
-      <Tooltip id="clipboard-copy-tooltip" title={"Copy code snippet"}>
+      <Tooltip id="clipboard-copy-tooltip" title={'Copy code snippet'}>
         <Fab
-          className={`clipboard-fab ${
-            hover ? "show fade-in" : "hide fade-out"
-          }`}
+          className={`clipboard-fab ${hover ? 'show fade-in' : 'hide fade-out'}`}
           onClick={onFabClick}
           onMouseOver={onMouseOver}
           onMouseLeave={closePopover}
@@ -51,12 +49,12 @@ const CopyFab = (props: any) => {
         open={openSuccess}
         onClose={closePopover}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
+          vertical: 'bottom',
+          horizontal: 'center',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
+          vertical: 'top',
+          horizontal: 'center',
         }}
       >
         <Typography className="message">Code snippet copied!</Typography>

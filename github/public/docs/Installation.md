@@ -7,7 +7,7 @@ There are a few different ways to install Content Wizard. Local build and deploy
 
 This is the simplest and most direct choice, especially if your intent is to only install locally for your own development or learning needs.
 
-Head over to the [Content Wizard Releases](https://github.com/wizardry-tools/content-wizard/releases) page on [Github](https://github.com/wizardry-tools/content-wizard) and download the latest version of `content-wizard.all` zip and then directly install it on your desired AEM environment using CRX PackageManager (/crx/packmgr/index.jsp).
+Head over to the [Content Wizard Releases]({releaseUrl}) page on [Github](https://github.com/wizardry-tools/content-wizard) and download the latest version of `content-wizard.all` zip and then directly install it on your desired AEM environment using CRX PackageManager (/crx/packmgr/index.jsp).
 
 
 ## Build Integration
@@ -20,7 +20,7 @@ You need to list the Content Wizard "All" module's zip as a dependency within yo
 <dependency>
     <groupId>com.wizardry-tools</groupId>
     <artifactId>content-wizard.all</artifactId>
-    <version>1.1.3</version>
+    <version>{releaseVersion}</version>
     <type>zip</type>
 </dependency>
 ```

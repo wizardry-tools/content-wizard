@@ -1,16 +1,24 @@
 // @ts-check
 
-import eslint from '@eslint/js';
+import * as eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactRecommended from "eslint-plugin-react/configs/recommended";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import * as eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  ...eslintPluginPrettierRecommended,
-  ...reactRecommended,
+  {
+    ...eslintPluginPrettierRecommended
+  },
+  ...{
+    files:['**/*.{ts,tsx}'],
+    ...reactRecommended,
+    languageOptions: {
+      ...reactRecommended.languageOptions,
+    }
+  },
   {
     plugins: {
       "@typescript-eslint": tseslint.plugin,
@@ -23,7 +31,7 @@ export default tseslint.config(
         ecmaFeatures: {
           jsx: true,
         },
-        tsconfigDirName: import.meta.dirname,
+        tsconfigDirName: __dirname,
       }
     },
     rules: {
@@ -31,6 +39,6 @@ export default tseslint.config(
     }
   },
   {
-    files: ['**/*.js', '**/*.ts', '**/*.tsx']
+    files: ['**/*.ts', '**/*.tsx']
   }
 );

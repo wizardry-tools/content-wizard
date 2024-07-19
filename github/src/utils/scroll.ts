@@ -9,12 +9,12 @@ interface ScrollToIdProps {
 export const useScrollToId = (props?: ScrollToIdProps) => {
   const {
     scrollToOptions = {
-      behavior: "smooth",
+      behavior: 'smooth',
     } as ScrollToOptions,
     scrollIntoViewOptions = {
-      behavior: "smooth",
-      inline: "start",
-      block: "end",
+      behavior: 'smooth',
+      inline: 'start',
+      block: 'end',
     } as ScrollIntoViewOptions,
     hook = () => {},
     offset = 128,

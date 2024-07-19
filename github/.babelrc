@@ -1,0 +1,40 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "esmodules": true,
+          "node": "20"
+        }
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/preset-flow",
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    "@emotion",
+    ["@babel/plugin-proposal-decorators", { "legacy" : true }]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        [
+          "istanbul",
+          {
+            "include": [
+              "src/**.*"
+            ],
+            "exclude": [
+              "dist/**.*",
+              "node_modules/**.*",
+              "tests/**.*",
+              "public/**.*"
+            ]
+          }
+        ]
+      ]
+    }
+  }
+}

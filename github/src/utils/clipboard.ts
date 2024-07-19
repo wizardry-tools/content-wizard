@@ -1,6 +1,6 @@
-import { visit } from "unist-util-visit";
-import { useCallback, useRef } from "react";
-import copyToClipboard from "copy-to-clipboard";
+import { useCallback, useRef } from 'react';
+import copyToClipboard from 'copy-to-clipboard';
+import { visit } from 'unist-util-visit';
 
 /**
  * ClipBoard use hook
@@ -12,14 +12,10 @@ import copyToClipboard from "copy-to-clipboard";
  * captured from the supplied Node and all of it's descendants.
  */
 export const useClipBoard = () => {
-  const content = useRef("");
+  const content = useRef('');
 
   const captureContent = useCallback((node: any, index: any) => {
-    if (
-      node.value &&
-      typeof node.value !== "undefined" &&
-      typeof index === "number"
-    ) {
+    if (node.value && typeof node.value !== 'undefined' && typeof index === 'number') {
       content.current += node.value;
     }
   }, []);
@@ -28,7 +24,7 @@ export const useClipBoard = () => {
     (node: any) => {
       visit(node, captureContent);
       copyToClipboard(content.current);
-      content.current = "";
+      content.current = '';
     },
     [captureContent],
   );

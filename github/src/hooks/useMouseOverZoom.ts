@@ -1,6 +1,6 @@
-import { RefObject, useEffect, useMemo } from "react";
+import { RefObject, useEffect, useMemo } from 'react';
 
-import { useMouse } from "./useMouse";
+import { useMouse } from './useMouse';
 
 export function useMouseOverZoom(
   highResImage: RefObject<HTMLImageElement | null>,
@@ -33,10 +33,8 @@ export function useMouseOverZoom(
 
     // This will prevent the cursor from going outside the source reference element bounds
     return {
-      left:
-        left + rect.left + width <= rect.right ? (left >= 0 ? left : 0) : right,
-      top:
-        top + rect.top + height <= rect.bottom ? (top >= 0 ? top : 0) : bottom,
+      left: left + rect.left + width <= rect.right ? (left >= 0 ? left : 0) : right,
+      top: top + rect.top + height <= rect.bottom ? (top >= 0 ? top : 0) : bottom,
       width,
       height,
     };
@@ -52,7 +50,7 @@ export function useMouseOverZoom(
       cursor.current.style.top = `${top}px`;
       cursor.current.style.width = `${width}px`;
       cursor.current.style.height = `${height}px`;
-      cursor.current.style.display = isActive ? "block" : "none";
+      cursor.current.style.display = isActive ? 'block' : 'none';
     }
   }, [zoomBounds, isActive, enablePreview, cursor]);
   // draw the zoomed image on the canvas
@@ -61,12 +59,11 @@ export function useMouseOverZoom(
       return;
     }
     if (source.current && target.current && highResImage.current?.complete) {
-      const ctx = target.current.getContext("2d");
+      const ctx = target.current.getContext('2d');
       if (ctx) {
         if (isActive) {
           const { left, top, width, height } = zoomBounds;
-          const imageRatio =
-            highResImage.current.naturalWidth / source.current.width;
+          const imageRatio = highResImage.current.naturalWidth / source.current.width;
           // Clear the canvas before drawing the new zoomed portion
           ctx.clearRect(0, 0, target.current.width, target.current.height);
           // dynamic canvas width once we get below resizing threshold
@@ -93,15 +90,5 @@ export function useMouseOverZoom(
         }
       }
     }
-  }, [
-    zoomBounds,
-    isActive,
-    enablePreview,
-    source,
-    target,
-    highResImage,
-    canvasWidth,
-    scale,
-    canvasHeight,
-  ]);
+  }, [zoomBounds, isActive, enablePreview, source, target, highResImage, canvasWidth, scale, canvasHeight]);
 }
