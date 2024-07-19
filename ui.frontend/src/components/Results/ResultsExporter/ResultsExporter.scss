@@ -1,4 +1,8 @@
+@use "../../../vars" as *;
 
+.results-exporter-stack {
+  //background-color: $builder-bg-color !important;
+}
 
 .results-exporter-stack > * {
   padding: 1rem;
@@ -6,4 +10,31 @@
 
 .results-exporter-field {
   width: 100%;
+}
+
+body.wizard-light #results-exporter-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-light;
+  }
+  .results-exporter-stack {
+    //background-color: $builder-bg-color !important;
+  }
+}
+
+
+body:not(.wizard-light) #results-exporter-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-dark;
+  }
+  .results-exporter-stack {
+    background-color: #121212 !important;
+  }
+}
+body.wizard-dark #results-exporter-modal {
+  .MuiDialog-paper {
+    background-color: $solid-paper-background-dark;
+  }
+  .results-exporter-stack {
+    background-color: #121212 !important;
+  }
 }

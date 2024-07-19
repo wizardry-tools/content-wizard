@@ -15,8 +15,6 @@ import {
 import { FormGrid } from 'src/components/QueryWizard/Components';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 
-import './ResultsExporter.scss';
-
 /**
  * This component contains the export configuration and button for exporting the Results.
  * @constructor
@@ -61,7 +59,7 @@ export const ResultsExporter = () => {
 
   return (
     <div className="results-exporter">
-      <Stack className={`results-exporter-stack`} component={Paper}>
+      <Stack className={`results-exporter-stack`} component={Paper} color={'secondary'}>
         <FormGrid item>
           <FormControl>
             <Paper elevation={selectElevation}>

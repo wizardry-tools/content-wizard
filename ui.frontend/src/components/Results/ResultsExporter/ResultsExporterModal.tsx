@@ -1,7 +1,9 @@
-import { Dialog, DialogContent, DialogTitle, Fab, Theme, ThemeProvider } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton, ThemeProvider, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ResultsExporter } from './ResultsExporter';
 import { useTheme } from '@mui/material/styles';
+
+import './ResultsExporter.scss';
 
 export type ResultsExporterModalProps = {
   closeHandler: () => void;
@@ -28,23 +30,19 @@ export const ResultsExporterModal = (props: ResultsExporterModalProps) => {
         onClose={closeHandler}
         aria-labelledby="results-exporter-modal-title"
       >
-        <Fab
-          sx={(theme: Theme) => ({
-            position: 'absolute',
-            top: '1rem',
-            right: '1rem',
-            backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.light : theme.palette.primary.dark,
-            '&:hover': {
-              backgroundColor:
-                theme.palette.mode === 'light' ? theme.palette.secondary.light : theme.palette.secondary.dark,
-            },
-          })}
-          size="small"
-          className={'results-exporter-modal-close'}
-          onClick={closeHandler}
-        >
-          <CloseIcon />
-        </Fab>
+        <Tooltip title="Close Modal">
+          <IconButton
+            className={'results-exporter-modal-close'}
+            onClick={closeHandler}
+            sx={{
+              position: 'absolute',
+              top: '1rem',
+              right: '1rem',
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
         <DialogTitle id="results-exporter-modal-title">Results Exporter</DialogTitle>
         <DialogContent>
           <ResultsExporter />

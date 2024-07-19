@@ -1,4 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Theme, Typography } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
@@ -7,6 +16,8 @@ import { ResultExplorer } from './ResultExplorer';
 import { useFetcher } from './fetcher';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { escapeColon, escapeUrl } from 'src/utility';
+
+import './ResultExplorer.scss';
 
 type ResultExplorerModalProps = {
   open: boolean;
@@ -124,23 +135,19 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
 
   return (
     <Dialog id="result-explorer-modal" open={open} onClose={closeHandler} aria-labelledby="result-explorer-modal-title">
-      <Fab
-        sx={(theme: Theme) => ({
-          position: 'absolute',
-          top: '1rem',
-          right: '1rem',
-          backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.light : theme.palette.primary.dark,
-          '&:hover': {
-            backgroundColor:
-              theme.palette.mode === 'light' ? theme.palette.secondary.light : theme.palette.secondary.dark,
-          },
-        })}
-        size="small"
-        className={'result-explorer-modal-close'}
-        onClick={closeHandler}
-      >
-        <CloseIcon />
-      </Fab>
+      <Tooltip title="Close Modal">
+        <IconButton
+          className={'result-explorer-modal-close'}
+          onClick={closeHandler}
+          sx={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem',
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Tooltip>
       <DialogTitle id="result-explorer-modal-title">Result Explorer [{path}]</DialogTitle>
       <DialogContent>
         <ResultExplorer path={path} />
