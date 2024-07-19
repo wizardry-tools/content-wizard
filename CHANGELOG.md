@@ -1,4 +1,8 @@
 
+## Content Wizard 1.1.4 - July TBD, 2024
+
+- Refactored the Results exporting logic to use a Modal with a configuration form, that allows the user to specify file type, file name, and if the file name should include a timestamp.
+
 ## Content Wizard 1.1.3 - July 18, 2024
 
 - Added Sorting and Filtering capabilities to the Results Table
