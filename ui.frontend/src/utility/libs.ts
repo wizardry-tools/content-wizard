@@ -63,16 +63,29 @@ export const isSubscriptionWithName = (document: DocumentNode, name: string | un
   return isSubscription;
 };
 
-const getRequestInit = async (options: CustomCreateFetcherOptions, fetcherOpts?: FetcherOpts): Promise<RequestInit> => {
+export const getAuthorizationHeaders = async (method: string): Promise<Record<string, string>> => {
+  const authHeaders = {
+    credentials: 'same-origin',
+    Authorization: (setAuthorization() || '') as string,
+  };
+  if (method === 'GET') {
+    return authHeaders;
+  }
   const token = await getCsrfToken();
+  return {
+    ...authHeaders,
+    'CSRF-Token': token,
+  };
+};
+
+const getRequestInit = async (options: CustomCreateFetcherOptions, fetcherOpts?: FetcherOpts): Promise<RequestInit> => {
+  const authHeaders = await getAuthorizationHeaders('GET');
   return {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      credentials: 'same-origin',
-      'CSRF-Token': token,
-      Authorization: (setAuthorization() || '') as string,
       Accept: 'application/json',
+      ...authHeaders,
       ...options.headers,
       ...fetcherOpts?.headers,
     },

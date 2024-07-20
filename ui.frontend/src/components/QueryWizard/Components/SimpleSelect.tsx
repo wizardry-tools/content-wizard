@@ -9,16 +9,19 @@ export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
   const logger = useLogger();
   const renderCount = useRef(0);
   logger.debug({ message: `SimpleSelect[${++renderCount.current}] render()` });
-  const { name, label, value, required, options } = { ...field };
+  const { name, label, required, options } = field;
+  const [value, setValue] = useState(field.value);
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
   const [focused, setFocused] = useState(false);
   const fieldDispatcher = useFieldDispatcher();
 
   const handleChange = useCallback(
     (e: { target: { value: InputValue } }) => {
+      const newValue = e.target.value;
+      setValue(newValue)
       fieldDispatcher({
         name: name,
-        value: e.target.value,
+        value: newValue,
         type: 'UPDATE_VALUE',
         caller: SimpleSelect,
       });

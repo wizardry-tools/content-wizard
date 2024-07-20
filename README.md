@@ -49,11 +49,6 @@ All iterable results from executed query statements will appear on this tab in a
 
 This mode is for AEM Content Users. It allows users to pick and choose various options to help build a functional QueryBuilder statement.
 
-| Field Option   |                     |
-|----------------|---------------------|
-| Content Path   |                     |
-
-
   * Options:
     * Content Path: 
       * This is the path to the Content Tree where the Query should be performed
@@ -281,9 +276,6 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
 ## TODO FEATURES:
 
 * Add User Input sanitization.
-* Expand Results Exporting capabilities
-  * Create Content Package
-  * Send Email?
 * Add Results Management Capabilities:
   * Activate/Deactivate results
   * Run AEM Workflow against results

@@ -3,7 +3,8 @@
   "allowedpaths": [
     "/etc/wizardry.*",
     "/content/cq:graphql.*",
-    "/graphql.*"
+    "/graphql.*",
+    "/crx/packmgr.*"
   ],
   "supportedheaders": [
     "Authorization",

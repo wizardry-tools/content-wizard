@@ -15,6 +15,21 @@ import { useLogger } from './LoggingProvider';
 import exportFromJSON from 'export-from-json';
 import { ExportType } from 'export-from-json/src/types';
 
+/**
+ * This is an extension of the OOTB export-from-json types,
+ * but excludes 'txt' and 'css' as those are just JSON exports
+ * with different file extensions.
+ */
+export type AllowedExportType = Exclude<ExportType, 'txt' | 'css'>;
+export const allowedExportTypes: { [T in AllowedExportType]: T } = {
+  html: 'html',
+  json: 'json',
+  csv: 'csv',
+  xls: 'xls',
+  xml: 'xml',
+};
+export type Order = 'asc' | 'desc';
+
 export type ResultsDispatchProps = {
   results: Result[];
   caller: Function;
@@ -29,11 +44,21 @@ export type ResultsContextProps = {
   setOrder: (order: Order) => void;
   orderBy: keyof Result;
   setOrderBy: (orderBy: string) => void;
-  exportResults: (fileName?: string, exportType?: ExportType) => void;
+  exportResults: (fileName?: string, exportType?: AllowedExportType) => void;
 };
 const ResultsContext = createContext<ResultsContextProps>(null!);
 const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProps>>(null!);
 
+/**
+ * This Provider is responsible for the Results returned by Queries.
+ *
+ * It allows the sorting and filtering of the Results for the various UIs
+ * that display the Results.
+ *
+ * It also contains the logic for exporting the results as a Download.
+ * @param children
+ * @constructor
+ */
 export function ResultsProvider({ children }: PropsWithChildren) {
   const logger = useLogger();
   const renderCount = useRef(0);
@@ -84,7 +109,7 @@ export function ResultsProvider({ children }: PropsWithChildren) {
   }, [filter, orderBy, order, logger, results]);
 
   const exportResults = useCallback(
-    (fileName = 'Content-Wizard-Results', exportType = exportFromJSON.types.csv as ExportType) => {
+    (fileName = 'Content-Wizard-Results', exportType = allowedExportTypes.csv as AllowedExportType) => {
       if (results) {
         exportFromJSON({
           data: results,
@@ -134,7 +159,14 @@ export function useResultsDispatch() {
   return useContext(ResultsDispatchContext);
 }
 
-export function filterResults(results: Result[], filter: string) {
+/**
+ * This function takes a Result array, along with a filter string,
+ * and removes values from the array that don't contain the filter string.
+ * @param results Result[]
+ * @param filter string
+ * @return Result[]
+ */
+function filterResults(results: Result[], filter: string): Result[] {
   if (!filter) {
     return results;
   }
@@ -145,7 +177,14 @@ export function filterResults(results: Result[], filter: string) {
   });
 }
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+/**
+ * This method is a basic object Comparator
+ * @param a T
+ * @param b T
+ * @param orderBy keyof T
+ * @return number
+ */
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -155,8 +194,12 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-export type Order = 'asc' | 'desc';
-
+/**
+ * This method builds and returns a callback containing a descending Comparator based on the Order
+ * @param order
+ * @param orderBy
+ * @return (a: T, b: T) => number
+ */
 function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key,
@@ -166,10 +209,18 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
+/**
+ * This method is responsible for reading through an Array of Objects and sorting the Objects
+ * with the provided Comparator.
+ *
+ * Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+ * stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+ * only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+ * with exampleArray.slice().sort(exampleComparator)
+ * @param array readonly t[]
+ * @param comparator (a: T, b: T) => number
+ *
+ */
 function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number): T[] {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
