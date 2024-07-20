@@ -1,2 +1,2 @@
 export * from './ResultsExporter';
-export * from './ResultsExporterModal';
+export * from './ResultsExporterDialog';

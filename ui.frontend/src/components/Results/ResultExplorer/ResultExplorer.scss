@@ -1,9 +1,8 @@
 @use "../../../vars" as *;
 
-/* RESULT EXPLORER */
-#result-explorer-modal {
+#result-explorer-dialog {
 
-  #result-explorer-modal-title {
+  #result-explorer-dialog-title {
     margin-right: 3rem;
   }
 
@@ -11,19 +10,19 @@
     max-width: 900px;
   }
 
-  .result-explorer-modal-actions {
+  .result-explorer-dialog-actions {
     justify-content: space-between;
     padding: 1.5rem;
     flex-direction: row;
 
-    .result-explorer-modal-close {
+    .result-explorer-dialog-close {
       margin-right: 0;
       margin-left: auto;
     }
   }
 }
 
-body.wizard-light #result-explorer-modal {
+body.wizard-light #result-explorer-dialog {
   .MuiDialog-paper {
     background-color: $solid-paper-background-light;
   }
@@ -33,12 +32,12 @@ body.wizard-light #result-explorer-modal {
 }
 
 
-body:not(.wizard-light) #result-explorer-modal {
+body:not(.wizard-light) #result-explorer-dialog {
   .MuiDialog-paper {
     background-color: $solid-paper-background-dark;
   }
 }
-body.wizard-dark #result-explorer-modal {
+body.wizard-dark #result-explorer-dialog {
   .MuiDialog-paper {
     background-color: $solid-paper-background-dark;
   }

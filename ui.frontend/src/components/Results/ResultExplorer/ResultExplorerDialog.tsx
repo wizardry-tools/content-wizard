@@ -19,7 +19,7 @@ import { escapeColon, escapeUrl } from 'src/utility';
 
 import './ResultExplorer.scss';
 
-type ResultExplorerModalProps = {
+type ResultExplorerDialogProps = {
   open: boolean;
   path: string;
   closeHandler: () => void;
@@ -36,7 +36,7 @@ export const CONTENT_EDITOR = '/editor.html';
 // used by Pages and XFs
 export const PAGE_PROPERTIES_EDITOR = '/mnt/overlay/wcm/core/content/sites/properties.html?item=';
 
-export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorerModalProps) => {
+export const ResultExplorerDialog = ({ open, closeHandler, path }: ResultExplorerDialogProps) => {
   const fetching = useRef(false);
   const fetcher = useFetcher({ fetching });
 
@@ -68,9 +68,9 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
     });
   }, [contentPath, fetcher, isAsset]);
 
-  const ModalActions = () => {
+  const ResultDialogActions = () => {
     return (
-      <DialogActions className={'result-explorer-modal-actions'}>
+      <DialogActions className={'result-explorer-dialog-actions'}>
         {isPage && (
           <>
             <Button
@@ -134,10 +134,15 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
   };
 
   return (
-    <Dialog id="result-explorer-modal" open={open} onClose={closeHandler} aria-labelledby="result-explorer-modal-title">
-      <Tooltip title="Close Modal">
+    <Dialog
+      id="result-explorer-dialog"
+      open={open}
+      onClose={closeHandler}
+      aria-labelledby="result-explorer-dialog-title"
+    >
+      <Tooltip title="Close Dialog">
         <IconButton
-          className={'result-explorer-modal-close'}
+          className={'result-explorer-dialog-close'}
           onClick={closeHandler}
           sx={{
             position: 'absolute',
@@ -148,11 +153,11 @@ export const ResultExplorerModal = ({ open, closeHandler, path }: ResultExplorer
           <CloseIcon />
         </IconButton>
       </Tooltip>
-      <DialogTitle id="result-explorer-modal-title">Result Explorer [{path}]</DialogTitle>
+      <DialogTitle id="result-explorer-dialog-title">Result Explorer [{path}]</DialogTitle>
       <DialogContent>
         <ResultExplorer path={path} />
       </DialogContent>
-      <ModalActions />
+      <ResultDialogActions />
     </Dialog>
   );
 };

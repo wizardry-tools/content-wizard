@@ -4,7 +4,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { useLogger, useResults } from 'src/providers';
 import { TableHeadCell } from './TableHeadCell';
 import DownloadIcon from '@mui/icons-material/Download';
-import { ResultsExporterModal } from '../ResultsExporter';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import { ResultsExporterDialog } from '../ResultsExporter';
+import { PackageBuilderDialog } from '../PackageBuilder';
 
 export const TableToolBar = () => {
   const logger = useLogger();
@@ -15,6 +17,7 @@ export const TableToolBar = () => {
   const [filterValue, setFilterValue] = useState(filter);
   const [openFilter, setOpenFilter] = useState(false);
   const [openExporter, setOpenExporter] = useState(false);
+  const [openPackageBuilder, setOpenPackageBuilder] = useState(false);
 
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     logger.debug({ message: `TableToolBar[${renderCount.current}] handleFilterChange()` });
@@ -24,6 +27,9 @@ export const TableToolBar = () => {
 
   const handleCloseExporter = useCallback(() => setOpenExporter(false), []);
   const handleOpenExporter = useCallback(() => setOpenExporter(true), []);
+
+  const handleClosePackageBuilder = useCallback(() => setOpenPackageBuilder(false), []);
+  const handleOpenPackageBuilder = useCallback(() => setOpenPackageBuilder(true), []);
 
   useEffect(() => {
     function onTimeout() {
@@ -64,7 +70,22 @@ export const TableToolBar = () => {
               <DownloadIcon />
             </IconButton>
           </Tooltip>
-          <ResultsExporterModal closeHandler={handleCloseExporter} open={openExporter} />
+          <ResultsExporterDialog closeHandler={handleCloseExporter} open={openExporter} />
+          <Tooltip title="Build Content Package">
+            <IconButton
+              onClick={handleOpenPackageBuilder}
+              sx={{
+                width: '3rem',
+                height: '3rem',
+                position: 'absolute',
+                top: 0,
+                left: '3rem',
+              }}
+            >
+              <WidgetsIcon />
+            </IconButton>
+          </Tooltip>
+          <PackageBuilderDialog closeHandler={handleClosePackageBuilder} open={openPackageBuilder} />
           {openFilter && (
             <TextField
               id={'result-table-filter'}

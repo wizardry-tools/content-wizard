@@ -43,8 +43,8 @@ export const ResultsExporter = () => {
     setFileName(event.target.value);
   }, []);
 
-  const handleCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setIncludeTime(e.target.checked);
+  const handleCheckboxChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setIncludeTime(event.target.checked);
   }, []);
 
   const menuItems = useMemo(() => {

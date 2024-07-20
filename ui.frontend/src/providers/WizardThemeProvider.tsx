@@ -53,7 +53,7 @@ function buildMuiTheme(theme: Theme): MuiTheme {
           }
         : {
             primary: {
-              main: '#F0F0F0',
+              main: '#E0E0E0',
             },
             secondary: {
               main: blue[700],

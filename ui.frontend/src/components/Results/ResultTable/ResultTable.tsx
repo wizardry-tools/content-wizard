@@ -1,7 +1,7 @@
 import { useState, MouseEvent, ChangeEvent, useCallback, useRef, memo } from 'react';
 import { Table, TableContainer, Paper, PaperProps } from '@mui/material';
 import { useLogger } from 'src/providers';
-import { ResultExplorerModal } from '../ResultExplorer';
+import { ResultExplorerDialog } from '../ResultExplorer';
 import { ResultTableBody } from './ResultTableBody';
 import { ResultTableFooter } from './ResultTableFooter';
 import { ResultTableHead } from './ResultTableHead';
@@ -56,7 +56,7 @@ export const ResultTable = () => {
           </Table>
         </TableContainer>
         {explorerPath && (
-          <ResultExplorerModal open={openExplorer} closeHandler={handleCloseExplorer} path={explorerPath} />
+          <ResultExplorerDialog open={openExplorer} closeHandler={handleCloseExplorer} path={explorerPath} />
         )}
       </div>
     </div>

@@ -5,34 +5,34 @@ import { useTheme } from '@mui/material/styles';
 
 import './ResultsExporter.scss';
 
-export type ResultsExporterModalProps = {
+export type ResultsExporterDialogProps = {
   closeHandler: () => void;
   open: boolean;
 };
 
 /**
- * This Component represents the Modal that appears when Exporting Results.
- * This Component will contain the UI Elements scoped to the Modal,
+ * This Component represents the Dialog that appears when Exporting Results.
+ * This Component will contain the UI Elements scoped to the Dialog,
  * such as background, container, and close buttons.
  * It will contain the ResultsExporter, which has further UI elements.
  * @param props
  * @constructor
  */
-export const ResultsExporterModal = (props: ResultsExporterModalProps) => {
+export const ResultsExporterDialog = (props: ResultsExporterDialogProps) => {
   const { closeHandler, open } = props;
   const theme = useTheme();
 
   return (
     <ThemeProvider theme={theme}>
       <Dialog
-        id="results-exporter-modal"
+        id="results-exporter-dialog"
         open={open}
         onClose={closeHandler}
-        aria-labelledby="results-exporter-modal-title"
+        aria-labelledby="results-exporter-dialog-title"
       >
-        <Tooltip title="Close Modal">
+        <Tooltip title="Close Dialog">
           <IconButton
-            className={'results-exporter-modal-close'}
+            className={'results-exporter-dialog-close'}
             onClick={closeHandler}
             sx={{
               position: 'absolute',
@@ -43,7 +43,7 @@ export const ResultsExporterModal = (props: ResultsExporterModalProps) => {
             <CloseIcon />
           </IconButton>
         </Tooltip>
-        <DialogTitle id="results-exporter-modal-title">Results Exporter</DialogTitle>
+        <DialogTitle id="results-exporter-dialog-title">Results Exporter</DialogTitle>
         <DialogContent>
           <ResultsExporter />
         </DialogContent>
