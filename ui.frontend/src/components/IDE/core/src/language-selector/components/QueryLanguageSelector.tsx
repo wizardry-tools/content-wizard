@@ -1,9 +1,10 @@
-import { memo, useRef } from 'react';
+import { memo } from 'react';
 import { FormGrid } from 'src/components/QueryWizard/Components';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { QueryLanguage, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type QueryLanguageSelectorProps = {
   language: QueryLanguageKey;
@@ -14,8 +15,8 @@ export type QueryLanguageSelectorProps = {
  */
 export const QueryLanguageSelector = memo(({ language, onLanguageChange }: QueryLanguageSelectorProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `QueryLanguageSelector[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `QueryLanguageSelector[${renderCount}] render()` });
   return (
     <FormGrid item xs={12} md={12}>
       <FormControl variant="filled" color="secondary" className="wizard-language-selector">

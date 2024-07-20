@@ -1,12 +1,13 @@
 import { defaultAdvancedQueries, QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
 import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import './language-selector.scss';
 import { API, useAPIContext } from '../api';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { GraphQLSelector } from './components/GraphQLSelector';
 import { QueryLanguageSelector } from './components/QueryLanguageSelector';
 import { LanguageSelectorHeader } from './components/LanguageSelectorHeader';
+import { useRenderCount } from 'src/utility';
 
 /**
  * This is a custom Plugin for the Query IDE.
@@ -20,8 +21,8 @@ import { LanguageSelectorHeader } from './components/LanguageSelectorHeader';
  */
 export const LanguageSelector = () => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `LanguageSelector[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `LanguageSelector[${renderCount}] render()` });
   const { language, api } = useQuery();
   const queryDispatcher = useQueryDispatcher();
   const { APIs } = useAPIContext({
@@ -31,7 +32,7 @@ export const LanguageSelector = () => {
 
   const handleStatementChange = useCallback(
     (statement: Statement) => {
-      logger.debug({ message: `LanguageSelector[${renderCount.current}] statementChange()` });
+      logger.debug({ message: `LanguageSelector statementChange()` });
       queryDispatcher({
         type: 'statementChange',
         statement,
@@ -44,7 +45,7 @@ export const LanguageSelector = () => {
   const handleLanguageChange = useCallback(
     (language: QueryLanguageKey) => {
       // reset the entire query on language change
-      logger.debug({ message: `LanguageSelector[${renderCount.current}] replaceQuery()` });
+      logger.debug({ message: `LanguageSelector[] replaceQuery()` });
       queryDispatcher({
         ...defaultAdvancedQueries[language],
         type: 'replaceQuery',
@@ -56,7 +57,7 @@ export const LanguageSelector = () => {
 
   const handleAPIChange = useCallback(
     (newAPI: API) => {
-      logger.debug({ message: `LanguageSelector[${renderCount.current}] apiChange()` });
+      logger.debug({ message: `LanguageSelector apiChange()` });
       queryDispatcher({
         type: 'apiChange',
         api: newAPI,

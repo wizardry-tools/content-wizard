@@ -1,14 +1,15 @@
 import { ContentWizardProvider, IDEProvider, useLogger } from 'src/providers';
 import { Box } from '@mui/material';
 import { GlobalNav } from '../GlobalNav';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { useRenderCount } from 'src/utility';
 import { Bar, Views } from './index';
 import './ContentWizard.scss';
 
 export function ContentWizard() {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `ContentWizard[${++renderCount.current}] render()` });
+  logger.debug({ message: `ContentWizard[${renderCount}] render()` });
   return (
     <ContentWizardProvider>
       <ContentWizardInterface />
@@ -17,9 +18,9 @@ export function ContentWizard() {
 }
 
 function ContentWizardInterface() {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `ContentWizardInterface[${++renderCount.current}] render()` });
+  logger.debug({ message: `ContentWizardInterface[${renderCount}] render()` });
 
   const [tabValue, setTabValue] = useState(0);
   const onTabSelect = (_event: any, value: any) => {

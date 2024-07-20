@@ -6,11 +6,11 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { Alert, AlertColor, AlertProps } from '@mui/material';
 import { useLogger } from './LoggingProvider';
+import { useRenderCount } from 'src/utility';
 
 export type WizardAlertProps = AlertProps & {
   message?: string;
@@ -19,7 +19,7 @@ export type WizardAlertProps = AlertProps & {
   caller?: Function;
 };
 const WizardAlertContext = createContext<WizardAlertProps>(null!);
-const WizardAlertDispatcher = createContext<Dispatch<WizardAlertProps>>(null!);
+const WizardAlertDispatcher = createContext<Dispatch<WizardAlertProps>>(() => {});
 
 export type WizardAlertProviderProps = WizardAlertProps & PropsWithChildren;
 
@@ -32,14 +32,15 @@ export type WizardAlertProviderProps = WizardAlertProps & PropsWithChildren;
  */
 export function WizardAlertProvider({ children }: WizardAlertProviderProps) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `WizardAlertProvider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `WizardAlertProvider[${renderCount}] render()` });
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState<AlertColor>('info');
 
   const handleAlertDispatch = useCallback(
     (alert: WizardAlertProps) => {
       logger.debug({ message: 'WizardAlertProvider Alert Dispatcher called: ', args: alert.caller || 'Anonymous' });
+
       if (alert.message !== null && typeof alert.message !== 'undefined') {
         setMessage(alert.message);
       }
@@ -71,8 +72,8 @@ export function useAlertDispatcher() {
  */
 export const WizardAlert = () => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `WizardAlert[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `WizardAlert[${renderCount}] render()` });
   const { message, severity, alertTimeout = 5000 } = useAlertContext();
   const alertDispatcher = useAlertDispatcher();
   const [show, setShow] = useState(false);
@@ -98,6 +99,9 @@ export const WizardAlert = () => {
       setShow(true);
 
       function onTimeout() {
+        if (hover) {
+          return;
+        }
         setShow(false);
         alertDispatcher({ message: '', caller: WizardAlert });
       }
@@ -108,7 +112,7 @@ export const WizardAlert = () => {
         clearTimeout(timeoutId);
       };
     }
-  }, [alertDispatcher, alertTimeout, message]);
+  }, [alertDispatcher, alertTimeout, hover, message]);
 
   return (
     <Alert

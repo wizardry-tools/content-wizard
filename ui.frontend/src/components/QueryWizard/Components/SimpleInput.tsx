@@ -1,8 +1,9 @@
-import { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { FormGrid } from './FormGrid';
 import { Paper, TextField } from '@mui/material';
 import { Field, FieldConfig, InputValue } from './fields';
 import { useFieldDispatcher, useLogger } from 'src/providers';
+import { useDebounce, useRenderCount } from 'src/utility';
 
 export type SimpleInputProps = {
   defaultValue: InputValue;
@@ -10,11 +11,12 @@ export type SimpleInputProps = {
   disabled: boolean;
 };
 
-export const SimpleInput = memo(({ field, defaultValue, disabled }: SimpleInputProps) => {
+export const SimpleInput = ({ field, defaultValue, disabled }: SimpleInputProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `SimpleInput[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `SimpleInput[${renderCount}] render()` });
   const [value, setValue] = useState(defaultValue);
+  const debouncedValue = useDebounce(value, 250);
   const { name, label, required } = Field(field);
   const fieldDispatcher = useFieldDispatcher();
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
@@ -23,23 +25,17 @@ export const SimpleInput = memo(({ field, defaultValue, disabled }: SimpleInputP
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   }, []);
+  const handleFocus = useCallback(() => setFocused(true), []);
+  const handleBlur = useCallback(() => setFocused(false), []);
 
   useEffect(() => {
-    function onTimeout() {
-      fieldDispatcher({
-        name,
-        value,
-        type: 'UPDATE_VALUE',
-        caller: SimpleInput,
-      });
-    }
-
-    let timeoutId = setTimeout(onTimeout, 250);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [fieldDispatcher, name, value]);
+    fieldDispatcher({
+      name,
+      value: debouncedValue,
+      type: 'UPDATE_VALUE',
+      caller: SimpleInput,
+    });
+  }, [fieldDispatcher, name, debouncedValue]);
 
   return (
     <FormGrid item key={name}>
@@ -51,8 +47,8 @@ export const SimpleInput = memo(({ field, defaultValue, disabled }: SimpleInputP
           value={value}
           color="secondary"
           className="query-builder-field"
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onChange={handleChange}
           disabled={disabled}
           required={required}
@@ -60,4 +56,4 @@ export const SimpleInput = memo(({ field, defaultValue, disabled }: SimpleInputP
       </Paper>
     </FormGrid>
   );
-});
+};

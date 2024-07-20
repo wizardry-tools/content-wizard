@@ -5,6 +5,7 @@ import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } f
 import { CodeMirrorEditor, CommonEditorProps } from './types';
 import { useEditorContext } from './context';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type UseResultExplorerEditorArgs = CommonEditorProps & {
   className?: string;
@@ -28,8 +29,8 @@ export function useResultExplorerEditor(
   caller?: Function,
 ) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `useResultExplorerEditor[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `useResultExplorerEditor[${renderCount}] render()` });
   const [editor, setEditor] = useState<CodeMirrorEditor | null>(null);
   const copy = useCopyResult({ caller: caller || useResultExplorerEditor });
   const ref = useRef<HTMLDivElement>(null);

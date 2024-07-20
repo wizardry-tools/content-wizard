@@ -1,9 +1,10 @@
 import { fieldCategories, FieldConfig, FieldsConfig } from './fields';
-import { ElementType, SyntheticEvent, useMemo, useRef } from 'react';
+import { ElementType, SyntheticEvent, useMemo } from 'react';
 import { Accordion as AccordionTab, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormGrid } from './FormGrid';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type TabProps = {
   fields: FieldConfig[];
@@ -13,8 +14,8 @@ export type TabProps = {
 };
 export const Tab = (props: TabProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `Tab[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `Tab[${renderCount}] render()` });
 
   const { expanded, fields, fullConfig, onChange } = props;
 

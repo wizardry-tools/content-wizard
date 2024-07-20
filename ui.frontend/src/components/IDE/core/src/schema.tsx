@@ -13,6 +13,7 @@ import { useEditorContext } from './editor';
 import { createContextHook, createNullableContext } from './utility/context';
 import { useAlertDispatcher, useFetcher, useLogger, useQuery } from 'src/providers';
 import { QueryLanguage } from 'src/components/Query';
+import { useRenderCount } from 'src/utility';
 
 type MaybeGraphQLSchema = GraphQLSchema | null | undefined;
 
@@ -72,9 +73,9 @@ export type SchemaContextProviderProps = {
 } & IntrospectionArgs;
 
 export function SchemaContextProvider(props: SchemaContextProviderProps) {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `SchemaContextProvider[${++renderCount.current}] render()` });
+  logger.debug({ message: `SchemaContextProvider[${renderCount}] render()` });
   const fetcher = useFetcher();
   if (!fetcher) {
     throw new TypeError('The `SchemaContextProvider` component requires a `fetcher` function to be passed as prop.');
@@ -134,7 +135,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
     if (language !== QueryLanguage.GraphQL) {
       return;
     }
-    logger.debug({ message: `SchemaContextProvider[${renderCount.current}] introspect()` });
+    logger.debug({ message: `SchemaContextProvider introspect()` });
 
     async function fetchIntrospectionData() {
       const parsedHeaders = parseHeaderString(headersRef.current);
@@ -167,7 +168,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
 
       if (typeof result !== 'object' || result === null || !('data' in result)) {
         logger.debug({
-          message: `SchemaContextProvider[${renderCount.current}] introspect() first fetch empty, trying second fetch`,
+          message: `SchemaContextProvider introspect() first fetch empty, trying second fetch`,
         });
         // Try the stock introspection query first, falling back on the
         // sans-subscriptions query for services which do not yet support it.

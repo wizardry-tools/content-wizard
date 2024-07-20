@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Logger, useAlertDispatcher, useLogger, useResults } from 'src/providers';
 import { getAuthorizationHeaders } from 'src/utility';
 import { Result } from '../index';
@@ -10,6 +10,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { FormGrid } from 'src/components/QueryWizard/Components';
 
 import './PackageBuilder.scss';
+import { useRenderCount } from 'src/utility';
 
 const PACK_MGR_PATH = '/crx/packmgr';
 const DEFAULT_GROUP = 'my_packages';
@@ -92,8 +93,8 @@ export const packageRequestMap: Record<PackageManagerAction, PackageManagerReque
  */
 export const PackageBuilder = () => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `PackageBuilder[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `PackageBuilder[${renderCount}] render()` });
   const alertDispatcher = useAlertDispatcher();
   const [groups, setGroups] = useState([] as string[]);
   const [isCreating, setIsCreating] = useState(false);

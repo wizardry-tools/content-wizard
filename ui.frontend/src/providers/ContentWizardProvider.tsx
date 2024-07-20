@@ -1,15 +1,16 @@
-import { PropsWithChildren, useRef } from 'react';
+import { PropsWithChildren } from 'react';
 import { WizardThemeProvider } from './WizardThemeProvider';
 import { QueryProvider } from './QueryProvider';
 import { ResultsProvider } from './ResultsProvider';
 import { FetcherProvider } from './FetcherProvider';
 import { FieldsProvider } from './FieldsProvider';
 import { useLogger } from './LoggingProvider';
+import { useRenderCount } from 'src/utility';
 
 export function ContentWizardProvider({ children }: PropsWithChildren) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `ContentWizardProvider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `ContentWizardProvider[${renderCount}] render()` });
   return (
     <WizardThemeProvider>
       <ResultsProvider>

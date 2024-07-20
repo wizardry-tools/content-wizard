@@ -5,7 +5,6 @@ import {
   PropsWithChildren,
   Dispatch,
   useCallback,
-  useRef,
   useMemo,
   useEffect,
 } from 'react';
@@ -14,6 +13,7 @@ import { useAlertDispatcher } from './WizardAlertProvider';
 import { useLogger } from './LoggingProvider';
 import exportFromJSON from 'export-from-json';
 import { ExportType } from 'export-from-json/src/types';
+import { useRenderCount } from 'src/utility';
 
 /**
  * This is an extension of the OOTB export-from-json types,
@@ -61,8 +61,8 @@ const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProps>>(nul
  */
 export function ResultsProvider({ children }: PropsWithChildren) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `ResultsProvider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `ResultsProvider[${renderCount}] render()` });
   const alertDispatcher = useAlertDispatcher();
   // non-modified results is more or less used as a reference for rendering logic
   const [results, setResults] = useState([] as Result[]);
@@ -75,7 +75,7 @@ export function ResultsProvider({ children }: PropsWithChildren) {
 
   const updateResults = useCallback(
     ({ results, caller }: ResultsDispatchProps) => {
-      logger.debug({ message: `ResultsProvider[${renderCount.current}] results dispatcher called by `, caller });
+      logger.debug({ message: `ResultsProvider results dispatcher called by `, caller });
       if (!results || results.length < 1) {
         alertDispatcher({
           message: 'No results were found.',
@@ -98,11 +98,11 @@ export function ResultsProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     let arr = results;
     if (filter) {
-      logger.debug({ message: `ResultsProvider[${renderCount.current}] useEffect.filter()` });
+      logger.debug({ message: `ResultsProvider useEffect.filter()` });
       arr = filterResults(arr, filter);
     }
     if (orderBy) {
-      logger.debug({ message: `ResultsProvider[${renderCount.current}] useEffect.sort()` });
+      logger.debug({ message: `ResultsProvider useEffect.sort()` });
       arr = stableSort(arr, getComparator(order, orderBy));
     }
     setTableResults(arr);
@@ -155,7 +155,7 @@ export function useResults() {
   return useContext(ResultsContext);
 }
 
-export function useResultsDispatch() {
+export function useResultsDispatcher() {
   return useContext(ResultsDispatchContext);
 }
 

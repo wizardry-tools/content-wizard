@@ -1,10 +1,11 @@
 import { useWizardHistoryStore, WizardStoreItem, WizardStorageAPI } from '../storage-api';
-import { ReactNode, useCallback, useMemo, useRef } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
 import { QueryLanguageKey, Statement } from 'src/components/Query';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type HistoryContextType = {
   /**
@@ -93,8 +94,8 @@ export type HistoryContextProviderProps = {
  */
 export function HistoryContextProvider(props: HistoryContextProviderProps) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `HistoryContextProvider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `HistoryContextProvider[${renderCount}] render()` });
   const storage: WizardStorageAPI = useStorageContext();
   const historyStore = useWizardHistoryStore({
     // Fall back to a noop storage when the StorageContext is empty

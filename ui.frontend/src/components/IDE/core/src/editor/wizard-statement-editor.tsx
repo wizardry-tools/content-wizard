@@ -6,6 +6,7 @@ import { useCopyQuery, useKeyMap, useSynchronizeOption } from './hooks';
 import { CodeMirrorType, CommonEditorProps } from './types';
 import { useLogger, useQuery } from 'src/providers';
 import { QueryLanguage } from 'src/components/Query';
+import { useRenderCount } from 'src/utility';
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {
   className?: string;
@@ -29,8 +30,8 @@ export function useWizardStatementEditor(
   caller?: Function,
 ) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `useWizardStatementEditor[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `useWizardStatementEditor[${renderCount}] render()` });
   const { language, statement } = useQuery();
   // used for setting initialWizardStatement if initialWizardStatement is empty;
   // initialWizardStatement reloads codemirror if modified, so we're using a Ref instead

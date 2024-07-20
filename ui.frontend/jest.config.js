@@ -10,6 +10,7 @@ module.exports = {
     "\\.(ts|tsx)$": "ts-jest"
   },
   "transformIgnorePatterns": [
-    "/node_modules/(?!@mui)"
+    "/node_modules/(?!@mui)",
+    "/node_modules/(?!@uidotdev/usehooks)"
   ]
 }

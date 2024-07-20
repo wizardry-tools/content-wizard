@@ -1,12 +1,4 @@
-import React, {
-  Fragment,
-  MouseEventHandler,
-  PropsWithChildren,
-  ReactElement,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
+import React, { Fragment, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -46,6 +38,7 @@ import {
   SettingsIcon,
 } from 'src/icons';
 import './style.scss';
+import { useRenderCount } from 'src/utility';
 
 const majorVersion = parseInt(React.version.slice(0, 2), 10);
 
@@ -81,9 +74,9 @@ export type IDEToolbarConfig = {
  */
 
 export function IDE() {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `IDE[${++renderCount.current}] render()` });
+  logger.debug({ message: `IDE[${renderCount}] render()` });
   return <IDEInterface />;
 }
 
@@ -93,9 +86,9 @@ IDE.Toolbar = IDEToolbar;
 IDE.Footer = IDEFooter;
 
 export function IDEInterface() {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `IDEInterface[${++renderCount.current}] render()` });
+  logger.debug({ message: `IDEInterface[${renderCount}] render()` });
   const isGraphQL = useIsGraphQL();
   const isVariablesEditorEnabled = isGraphQL ?? true;
   const isHeadersEditorEnabled = isGraphQL ?? true;

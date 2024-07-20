@@ -1,9 +1,10 @@
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { Statement } from 'src/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { API } from '../../api';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type PersistedQuerySelectorProps = {
   /**
@@ -19,8 +20,8 @@ export type PersistedQuerySelectorProps = {
 };
 export const PersistedQuerySelector = memo(({ api, onStatementChange }: PersistedQuerySelectorProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `PersistedQuerySelector[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `PersistedQuerySelector[${renderCount}] render()` });
 
   const { persistedQueries } = api;
   const [selectedQuery, setSelectedQuery] = useState('');

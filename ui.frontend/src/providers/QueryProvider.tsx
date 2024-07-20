@@ -1,13 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react';
+import { createContext, Dispatch, PropsWithChildren, useCallback, useContext, useMemo, useReducer } from 'react';
 import { DYNAMIC_HEADERS, getParams } from 'src/utility';
 import {
   buildGraphQLURL,
@@ -24,6 +15,7 @@ import { API, useStorageContext } from 'src/components/IDE/core/src';
 import { useLogger } from './LoggingProvider';
 import { defaultFields } from '../components/QueryWizard/Components';
 import { generateQuery } from './FieldsProvider';
+import { useRenderCount } from 'src/utility';
 
 export type QueryRunnerProps = {
   query: Query;
@@ -46,8 +38,8 @@ const defaultSimpleQuery: Query = {
 export function QueryProvider({ children }: PropsWithChildren) {
   useStorageContext();
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `QueryProvider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `QueryProvider[${renderCount}] render()` });
   const [query, queryDispatcher] = useReducer(queryReducer, defaultSimpleQuery);
 
   /**
@@ -58,7 +50,7 @@ export function QueryProvider({ children }: PropsWithChildren) {
 
   const queryRunner = useCallback(
     async ({ query, caller }: QueryRunnerProps): Promise<QueryResponse> => {
-      logger.debug({ message: `QueryProvider[${renderCount.current}] queryRunner()`, caller });
+      logger.debug({ message: `QueryProvider queryRunner()`, caller });
       const url = query.url + buildQueryString(query);
       // prechecks
       if (!url) {

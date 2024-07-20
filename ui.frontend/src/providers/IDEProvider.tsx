@@ -7,15 +7,16 @@ import {
   SchemaContextProvider,
 } from 'src/components/IDE/core/src';
 import { APIContextProvider } from 'src/components/IDE/core/src';
-import { PropsWithChildren, useRef } from 'react';
+import { PropsWithChildren } from 'react';
 import { useLogger } from './LoggingProvider';
+import { useRenderCount } from 'src/utility';
 
 export type IDEProviderProps = PropsWithChildren;
 
 export function IDEProvider({ children }: IDEProviderProps) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `IDEProvider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `IDEProvider[${renderCount}] render()` });
 
   return (
     <HistoryContextProvider>

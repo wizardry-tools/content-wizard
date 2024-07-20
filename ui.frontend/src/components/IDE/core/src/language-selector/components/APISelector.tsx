@@ -1,8 +1,9 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useMemo } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { API } from '../../api';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type APISelectorProps = {
   /**
@@ -25,8 +26,8 @@ export type APISelectorProps = {
  */
 export const APISelector = memo((props: APISelectorProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `APISelector[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `APISelector[${renderCount}] render()` });
   const { APIs, endpoint = '', onAPIChange = () => {} } = props;
 
   const menuItems = useMemo(() => {

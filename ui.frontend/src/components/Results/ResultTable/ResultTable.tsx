@@ -1,10 +1,11 @@
-import { useState, MouseEvent, ChangeEvent, useCallback, useRef, memo } from 'react';
+import { useState, MouseEvent, ChangeEvent, useCallback, memo } from 'react';
 import { Table, TableContainer, Paper, PaperProps } from '@mui/material';
 import { useLogger } from 'src/providers';
 import { ResultExplorerDialog } from '../ResultExplorer';
 import { ResultTableBody } from './ResultTableBody';
 import { ResultTableFooter } from './ResultTableFooter';
 import { ResultTableHead } from './ResultTableHead';
+import { useRenderCount } from 'src/utility';
 
 /**
  * This is the root of the Data Table that displays the Results Data
@@ -12,8 +13,8 @@ import { ResultTableHead } from './ResultTableHead';
  */
 export const ResultTable = () => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `ResultTable[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `ResultTable[${renderCount}] render()` });
   const [page, setPage] = useState(0);
 
   const [rowsPerPage, setRowsPerPage] = useState(10);

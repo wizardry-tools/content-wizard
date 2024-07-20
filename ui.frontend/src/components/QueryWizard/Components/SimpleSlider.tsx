@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { NumberValue } from './fields';
 import { SimpleInputProps } from './SimpleInput';
 import { useFieldDispatcher, useLogger } from 'src/providers';
+import { useDebounce, useRenderCount } from 'src/utility';
 
 type SimpleSliderProps = SimpleInputProps & {
   min: number;
@@ -13,11 +14,12 @@ type SimpleSliderProps = SimpleInputProps & {
 
 export const SimpleSlider = ({ min = -1, max = 1000, step = 10, defaultValue, field }: SimpleSliderProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `SimpleSlider[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `SimpleSlider[${renderCount}] render()` });
   const fieldDispatcher = useFieldDispatcher();
   const initialValue = useRef(defaultValue);
   const [value, setValue] = useState(initialValue.current);
+  const debouncedValue = useDebounce(value, 150);
   const { name, label } = { ...field };
 
   const handleChange = useCallback((_event: Event, value: NumberValue) => {
@@ -27,20 +29,13 @@ export const SimpleSlider = ({ min = -1, max = 1000, step = 10, defaultValue, fi
   }, []);
 
   useEffect(() => {
-    function onTimeout() {
-      fieldDispatcher({
-        name: name,
-        value: value,
-        type: 'UPDATE_VALUE',
-        caller: SimpleSlider,
-      });
-    }
-    let timeoutId = setTimeout(onTimeout, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [fieldDispatcher, name, value]);
+    fieldDispatcher({
+      name: name,
+      value: debouncedValue,
+      type: 'UPDATE_VALUE',
+      caller: SimpleSlider,
+    });
+  }, [fieldDispatcher, name, debouncedValue]);
 
   const marks = useMemo(() => {
     const items = [
