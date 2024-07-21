@@ -1,9 +1,9 @@
-import { Box, Card, Container, Grid, Stack, SvgIcon, Typography } from '@mui/material';
+import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
 import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
 import QueryStatsRoundedIcon from '@mui/icons-material/QueryStatsRounded';
 import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { ReactComponent as CopyIcon } from '../icons/copy.svg';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 
 const items = [
@@ -23,13 +23,13 @@ const items = [
     icon: <ThumbUpAltRoundedIcon />,
     title: 'Great user experience',
     description:
-      "Seamlessly navigate between Content Wizard's different views. Swap between Query Wizard and Query IDE when building QueryBuilder statements.",
+      "Seamlessly navigate between Content Wizard's different views. Swap between Query Wizard and Query IDE when building QueryBuilder statements. Exposing powerful content features that are easy to use.",
   },
   {
-    icon: <SvgIcon component={CopyIcon} sx={{ fill: 'none' }} />,
-    title: 'Export Queries and Results',
+    icon: <IosShareIcon />,
+    title: 'Export Query, Results, and Content',
     description:
-      "Convenient Copy functionality exists for the Query Wizard, Query IDE, and Results, so that you can easily copy the current Query Statement or Results to your device's clipboard.",
+      'Conveniently copy query statements to clipboard, download the results as a sharable data file, extract the content of results as an AEM content package zip.',
   },
   {
     icon: <HighlightIcon />,

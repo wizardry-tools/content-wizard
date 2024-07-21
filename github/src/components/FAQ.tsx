@@ -181,6 +181,16 @@ const questionsAndAnswers: QuestionAnswer[] = [
       </>
     ),
   },
+  {
+    question: 'When I export results as XLS, why do I see a warning when opening in Excel?',
+    answer: (
+      <p>
+        This is because the tool exports 'XLS' results as an HTML table, and the metadata doesn't match what Excel
+        expects for an XLS file. The file is safe to open in Excel, and will look slightly different than a CSV file
+        opened in Excel. CSV is the default export type.
+      </p>
+    ),
+  },
 ];
 
 export default function FAQ() {

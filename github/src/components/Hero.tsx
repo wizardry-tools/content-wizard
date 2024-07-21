@@ -10,8 +10,14 @@ import ideGraphqlDark from '../images/ide/ide-graphql-dark.webp';
 import ideGraphqlLight from '../images/ide/ide-graphql-light.webp';
 import resultsImageDark from '../images/results/results-dark.webp';
 import resultsImageLight from '../images/results/results-light.webp';
-import resultsExplorerImageDark from '../images/results/result-explorer-dark.webp';
-import resultsExplorerImageLight from '../images/results/result-explorer-light.webp';
+import resultsExplorerImageDark from '../images/results/results-explorer-dark.webp';
+import resultsExplorerImageLight from '../images/results/results-explorer-light.webp';
+import resultsExporterImageDark from '../images/results/results-exporter-dark.webp';
+import resultsExporterImageLight from '../images/results/results-exporter-light.webp';
+import resultsFilterSortImageDark from '../images/results/results-filter-sort-dark.webp';
+import resultsFilterSortImageLight from '../images/results/results-filter-sort-light.webp';
+import resultsBuilderImageDark from '../images/results/results-builder-dark.webp';
+import resultsBuilderImageLight from '../images/results/results-builder-light.webp';
 import { ReactComponent as LogoIcon } from '../wizard-logo.svg';
 import { ReactComponent as WandIcon } from '../icons/magic-wand.svg';
 import { ReactComponent as CodeIcon } from '../icons/programming-code.svg';
@@ -406,6 +412,33 @@ export default function Hero() {
               width: { sm: '100%', md: '80%' },
             }}
           >
+            Sort and filter the results table, making it easier to pin-point and confirm content values.
+          </Typography>
+        </Stack>
+        <StyledBox
+          id="image"
+          sx={{
+            backgroundImage: `url(${isDarkMode ? resultsFilterSortImageDark : resultsFilterSortImageLight})`,
+          }}
+        />
+        <Stack
+          spacing={2}
+          useFlexGap
+          flexGrow={1}
+          flexShrink={1}
+          sx={{
+            alignItems: 'center',
+            width: { xs: '100%', sm: '70%' },
+            marginTop: theme.spacing(4),
+          }}
+        >
+          <Typography
+            sx={{
+              textAlign: 'center',
+              color: 'text.secondary',
+              width: { sm: '100%', md: '80%' },
+            }}
+          >
             Explore the JSON of each result. Easily review or copy the JSON of an individual result, along with
             convenient links to open the content in AEM.
           </Typography>
@@ -414,6 +447,63 @@ export default function Hero() {
           id="image"
           sx={{
             backgroundImage: `url(${isDarkMode ? resultsExplorerImageDark : resultsExplorerImageLight})`,
+          }}
+        />
+        <Stack
+          spacing={2}
+          useFlexGap
+          flexGrow={1}
+          flexShrink={1}
+          sx={{
+            alignItems: 'center',
+            width: { xs: '100%', sm: '70%' },
+            marginTop: theme.spacing(4),
+          }}
+        >
+          <Typography
+            sx={{
+              textAlign: 'center',
+              color: 'text.secondary',
+              width: { sm: '100%', md: '80%' },
+            }}
+          >
+            Export the results as CSV, JSON, XML, XSL(Excel), or HTML. <br />
+            Easily share the results with your team.
+          </Typography>
+        </Stack>
+        <StyledBox
+          id="image"
+          sx={{
+            backgroundImage: `url(${isDarkMode ? resultsExporterImageDark : resultsExporterImageLight})`,
+          }}
+        />
+        <Stack
+          spacing={2}
+          useFlexGap
+          flexGrow={1}
+          flexShrink={1}
+          sx={{
+            alignItems: 'center',
+            width: { xs: '100%', sm: '70%' },
+            marginTop: theme.spacing(4),
+          }}
+        >
+          <Typography
+            sx={{
+              textAlign: 'center',
+              color: 'text.secondary',
+              width: { sm: '100%', md: '80%' },
+            }}
+          >
+            Create, Build, and Download an AEM content package of the results. <br />
+            Easily export the content for installation into another environment. <br />
+            Also serves as a convenient way to create targeted content backups.
+          </Typography>
+        </Stack>
+        <StyledBox
+          id="image"
+          sx={{
+            backgroundImage: `url(${isDarkMode ? resultsBuilderImageDark : resultsBuilderImageLight})`,
           }}
         />
       </Container>
