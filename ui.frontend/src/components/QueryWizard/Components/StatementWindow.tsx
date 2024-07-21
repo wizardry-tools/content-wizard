@@ -1,12 +1,13 @@
-import { memo, useRef } from 'react';
+import { memo } from 'react';
 import { Paper, Stack } from '@mui/material';
 import { Tooltip, WizardStatementEditor } from 'src/components/IDE/core/src';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export const StatementWindow = memo(() => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `StatementWindow[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `StatementWindow[${renderCount}] render()` });
 
   return (
     <Paper elevation={3} className="statement-paper">

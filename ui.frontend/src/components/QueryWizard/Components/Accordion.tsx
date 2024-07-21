@@ -1,13 +1,14 @@
-import { SyntheticEvent, useCallback, useRef, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import { Tab } from './Tab';
 import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './index';
 import { Paper } from '@mui/material';
 import { useFields, useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export const Accordion = () => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `Accordion[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `Accordion[${renderCount}] render()` });
 
   const [expanded, setExpanded] = useState<string | false>(false);
   const fieldsConfig = useFields();

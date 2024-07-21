@@ -4,10 +4,11 @@ import { styled } from '@mui/material/styles';
 import { LocalizationProvider, DateTimePicker, PickersDay } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { FormGrid } from './FormGrid';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { DateRange, DayTime } from './fields';
 import { SimpleInputProps } from './SimpleInput';
 import { useFieldDispatcher, useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 const StyledButton = styled(IconButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -23,8 +24,8 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
 
 export const SimpleDatePicker = ({ field }: SimpleInputProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `SimpleDatePicker[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `SimpleDatePicker[${renderCount}] render()` });
   const fieldDispatcher = useFieldDispatcher();
   const { name, label } = { ...field };
   const value = field.value as DateRange;

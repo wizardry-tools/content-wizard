@@ -23,21 +23,15 @@ import { Query } from 'src/components/Query';
  * @param value
  */
 export function useSynchronizeValue(editor: CodeMirrorEditor | null, value: Query | string | undefined | null) {
-  const renderCount = useRef(0);
-  const logger = useLogger();
-  logger.debug({ message: `useSynchronizeValue[${++renderCount.current}] render()` });
   useEffect(() => {
-    logger.debug({ message: `useSynchronizeValue[${renderCount.current}].useEffect()`, args: !!editor && !!value });
     if (editor && value) {
       if (typeof value === 'string' && value !== editor.getValue()) {
         editor.setValue(value);
       } else if (typeof value !== 'string' && typeof value !== 'undefined' && value.statement !== editor.getValue()) {
         editor.setValue(value.statement);
       }
-    } else {
-      logger.debug({ message: `useSynchronizeValue[${renderCount.current}].useEffect() SKIPPING SYNC` });
     }
-  }, [editor, logger, value]);
+  }, [editor, value]);
 }
 
 export function useSynchronizeOption<K extends keyof EditorConfiguration>(
@@ -45,12 +39,10 @@ export function useSynchronizeOption<K extends keyof EditorConfiguration>(
   option: K,
   value: EditorConfiguration[K],
 ) {
-  const renderCount = useRef(0);
   const logger = useLogger();
-  logger.debug({ message: `useSynchronizeOption[${++renderCount.current}] render()` });
   useEffect(() => {
     if (editor) {
-      logger.debug({ message: `useSynchronizeOption[${renderCount.current}] useEffect() setOption` });
+      logger.debug({ message: `useSynchronizeOption useEffect() setOption` });
       editor.setOption(option, value);
     }
   }, [editor, logger, option, value]);
@@ -63,9 +55,7 @@ export function useChangeHandler(
   tabProperty: 'variables' | 'headers',
   caller: Function,
 ) {
-  const renderCount = useRef(0);
   const logger = useLogger();
-  logger.debug({ message: `useChangeHandler[${++renderCount.current}] render()` });
   const { updateActiveTabValues } = useEditorContext({ nonNull: true, caller });
   const storage = useStorageContext();
 
@@ -78,10 +68,6 @@ export function useChangeHandler(
       if (!storage || storageKey === null) {
         return;
       }
-      logger.debug({
-        message: `useChangeHandler[${renderCount.current}] useEffect() debounced storage.set`,
-        storageKey,
-      });
       storage.set(storageKey, value);
     });
 
@@ -95,7 +81,7 @@ export function useChangeHandler(
       if (!changeObj) {
         return;
       }
-      logger.debug({ message: `useChangeHandler[${renderCount.current}] useEffect() handleChange` });
+      logger.debug({ message: `useChangeHandler useEffect() handleChange` });
       const newValue = editorInstance.getValue();
       store(newValue);
       updateTab(newValue);

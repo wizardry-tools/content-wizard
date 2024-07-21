@@ -323,3 +323,11 @@ export function getFileName(path: string): string | undefined {
   }
   return path.split('\\').pop()?.split('/').pop();
 }
+
+/**
+ * Simple method that checks if a passed value is an Object or not.
+ * @param value
+ */
+export function isPlainObject<T>(value: T): boolean {
+  return Object.prototype.toString.call(value) === '[object Object]';
+}

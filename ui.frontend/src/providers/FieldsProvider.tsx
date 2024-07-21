@@ -13,6 +13,7 @@ import {
 import { useQueryDispatcher } from './QueryProvider';
 import { endpoints, Query, QueryLanguage } from 'src/components/Query';
 import { useLogger } from './LoggingProvider';
+import { useDebounce } from 'src/utility';
 
 const FieldsConfigContext = createContext<FieldsConfig>(null!);
 const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);
@@ -26,11 +27,13 @@ export type FieldsProviderProps = PropsWithChildren & Partial<Query>;
  * @constructor
  */
 export function FieldsProvider({ children }: FieldsProviderProps) {
+  // use a Ref instead of a hook, so that the main effect isn't running more than it should.
   const renderCount = useRef(0);
   const logger = useLogger();
   logger.debug({ message: `FieldsProvider[${++renderCount.current}] render()` });
   const queryDispatcher = useQueryDispatcher();
   const [fields, configDispatcher] = useReducer(fieldConfigReducer, defaultFields);
+  const debouncedFields = useDebounce(fields, 300);
 
   /**
    * The purpose of this useEffect is to rebuild the Query statement when the
@@ -43,27 +46,19 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
       // so that the editors and storage are not out of sync
       return;
     }
-    function onTimeout() {
-      const statement = generateQuery(fields);
-      logger.debug({ message: `FieldsProvider[${renderCount.current}] useEffect() timeout`, statement });
-      // dispatch the query with static QueryBuilder values
-      queryDispatcher({
-        statement,
-        language: QueryLanguage.QueryBuilder,
-        url: endpoints.queryBuilderPath,
-        status: '',
-        isAdvanced: false,
-        type: 'replaceQuery',
-        caller: FieldsProvider,
-      });
-    }
-
-    let timeoutId = setTimeout(onTimeout, 250);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [fields, logger, queryDispatcher]);
+    const statement = generateQuery(debouncedFields);
+    logger.debug({ message: `FieldsProvider[${renderCount.current}] useEffect() timeout`, statement });
+    // dispatch the query with static QueryBuilder values
+    queryDispatcher({
+      statement,
+      language: QueryLanguage.QueryBuilder,
+      url: endpoints.queryBuilderPath,
+      status: '',
+      isAdvanced: false,
+      type: 'replaceQuery',
+      caller: FieldsProvider,
+    });
+  }, [debouncedFields, logger, queryDispatcher]);
 
   return (
     <FieldsConfigContext.Provider value={fields}>

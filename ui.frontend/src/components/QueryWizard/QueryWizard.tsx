@@ -1,11 +1,11 @@
 import { Stack, Paper, Theme } from '@mui/material';
-import { useRef } from 'react';
 import { ViewsProps } from 'src/components/ContentWizard/Views';
 import { QueryHandler } from 'src/components/Query';
 
 import './QueryWizard.scss';
 import { useLogger } from 'src/providers';
 import { Accordion, StatementWindow } from './Components';
+import { useRenderCount } from 'src/utility';
 
 const buttonStackStyles = (_theme: Theme) => {
   return {
@@ -19,8 +19,8 @@ export type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
 
 export function QueryWizard({ onTabPanelSelect }: QueryWizardProps) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `QueryWizard[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `QueryWizard[${renderCount}] render()` });
 
   return (
     <Paper className="wizard-builder">

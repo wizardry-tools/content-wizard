@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
 import { FormGrid } from 'src/components/QueryWizard/Components';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 
@@ -61,6 +62,22 @@ export const ResultsExporter = () => {
     <div className="results-exporter">
       <Stack className={`results-exporter-stack`} component={Paper} color={'secondary'}>
         <FormGrid item>
+          <Paper elevation={inputElevation}>
+            <TextField
+              id={'results-exporter-file-name'}
+              name={'results-exporter-file-name'}
+              label={'File Name'}
+              value={fileName}
+              color={'secondary'}
+              className="results-exporter-field"
+              onFocus={() => setInputElevation(4)}
+              onBlur={() => setInputElevation(1)}
+              onChange={handleInputChange}
+              required
+            />
+          </Paper>
+        </FormGrid>
+        <FormGrid item>
           <FormControl>
             <Paper elevation={selectElevation}>
               <InputLabel id={'results-exporter-type-label'} color="secondary" required>
@@ -84,22 +101,6 @@ export const ResultsExporter = () => {
           </FormControl>
         </FormGrid>
         <FormGrid item>
-          <Paper elevation={inputElevation}>
-            <TextField
-              id={'results-exporter-file-name'}
-              name={'results-exporter-file-name'}
-              label={'File Name'}
-              value={fileName}
-              color={'secondary'}
-              className="results-exporter-field"
-              onFocus={() => setInputElevation(4)}
-              onBlur={() => setInputElevation(1)}
-              onChange={handleInputChange}
-              required
-            />
-          </Paper>
-        </FormGrid>
-        <FormGrid item>
           <FormControlLabel
             label="Include Timestamp?"
             control={
@@ -115,8 +116,14 @@ export const ResultsExporter = () => {
           />
         </FormGrid>
         <FormGrid item>
-          <Button onClick={handleExport} color={'secondary'} variant={'contained'} disabled={!type || !fileName}>
-            Export Results as {type.toUpperCase()}
+          <Button
+            onClick={handleExport}
+            color={'secondary'}
+            variant={'contained'}
+            startIcon={<DownloadIcon />}
+            disabled={!type || !fileName}
+          >
+            Download as {type.toUpperCase()}
           </Button>
         </FormGrid>
       </Stack>

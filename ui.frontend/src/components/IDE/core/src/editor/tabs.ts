@@ -1,11 +1,12 @@
 import { WizardStorageAPI } from '../storage-api';
-import { Dispatch, useCallback, useMemo, useRef } from 'react';
+import { Dispatch, useCallback, useMemo } from 'react';
 
 import debounce from '../utility/debounce';
 import { CodeMirrorEditorWithOperationFacts } from './context';
 import { CodeMirrorEditor } from './types';
 import { defaultAdvancedQueries, isQueryValid, Query, QueryAction, QueryLanguageLabels } from 'src/components/Query';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type TabDefinition = {
   /**
@@ -205,11 +206,11 @@ export function useSynchronizeActiveTabValues({
   query: Query;
 }) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `useSynchronizeActiveTabValues[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `useSynchronizeActiveTabValues[${renderCount}] render()` });
   return useCallback<(state: TabsState) => TabsState>(
     (state) => {
-      logger.debug({ message: `useSynchronizeActiveTabValues[${++renderCount.current}] callback()` });
+      logger.debug({ message: `useSynchronizeActiveTabValues callback()` });
       const variables = variableEditor?.getValue() ?? null;
       const headers = headerEditor?.getValue() ?? null;
       const operationName = queryEditor?.operationName ?? null;
@@ -240,8 +241,6 @@ export function useStoreTabs({
   shouldPersistHeaders?: boolean;
 }) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `useStoreTabs[${++renderCount.current}] render()` });
   const store = useMemo(
     () =>
       debounce(500, (value: string) => {
@@ -251,7 +250,7 @@ export function useStoreTabs({
   );
   return useCallback(
     (currentState: TabsState) => {
-      logger.debug({ message: `useStoreTabs[${++renderCount.current}] store()` });
+      logger.debug({ message: `useStoreTabs store()` });
       store(serializeTabState(currentState, shouldPersistHeaders));
     },
     [logger, shouldPersistHeaders, store],
@@ -270,8 +269,6 @@ export function useSetEditorValues({
   responseEditor: CodeMirrorEditor | null;
 }) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `tabs.useSetEditorValues[${++renderCount.current}] render()` });
   return useCallback(
     ({
       query,
@@ -285,7 +282,7 @@ export function useSetEditorValues({
       response: string | null;
     }) => {
       // use queryDispatcher instead to broadcast query changes and let the queryEditor read from useQuery
-      logger.debug({ message: `tabs.useSetEditorValues[${renderCount.current}] queryDispatch()` });
+      logger.debug({ message: `tabs.useSetEditorValues queryDispatch()` });
       if (queryDispatcher) {
         queryDispatcher({
           ...query,

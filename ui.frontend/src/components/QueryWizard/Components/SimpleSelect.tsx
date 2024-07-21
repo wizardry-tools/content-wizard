@@ -1,14 +1,15 @@
 import { FormGrid } from './FormGrid';
 import { InputLabel, Select, MenuItem, FormControl, Paper } from '@mui/material';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { InputValue } from './fields';
 import { SimpleInputProps } from './SimpleInput';
 import { useFieldDispatcher, useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `SimpleSelect[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `SimpleSelect[${renderCount}] render()` });
   const { name, label, required, options } = field;
   const [value, setValue] = useState(field.value);
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
@@ -18,7 +19,7 @@ export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
   const handleChange = useCallback(
     (e: { target: { value: InputValue } }) => {
       const newValue = e.target.value;
-      setValue(newValue)
+      setValue(newValue);
       fieldDispatcher({
         name: name,
         value: newValue,

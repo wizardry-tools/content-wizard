@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Box, IconButton, TableRow, TextField, Tooltip } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useLogger, useResults } from 'src/providers';
@@ -7,23 +7,28 @@ import DownloadIcon from '@mui/icons-material/Download';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import { ResultsExporterDialog } from '../ResultsExporter';
 import { PackageBuilderDialog } from '../PackageBuilder';
+import { useDebounce, useRenderCount } from 'src/utility';
 
 export const TableToolBar = () => {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `TableToolBar[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `TableToolBar[${renderCount}] render()` });
   const { keys, filter, setFilter } = useResults();
   const length = keys.length;
   const [filterValue, setFilterValue] = useState(filter);
+  const debouncedValue = useDebounce(filterValue, 200);
   const [openFilter, setOpenFilter] = useState(false);
   const [openExporter, setOpenExporter] = useState(false);
   const [openPackageBuilder, setOpenPackageBuilder] = useState(false);
 
-  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
-    logger.debug({ message: `TableToolBar[${renderCount.current}] handleFilterChange()` });
-    const value = event.target.value;
-    setFilterValue(value);
-  };
+  const handleFilterChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      logger.debug({ message: `TableToolBar handleFilterChange()` });
+      const value = event.target.value;
+      setFilterValue(value);
+    },
+    [logger],
+  );
 
   const handleCloseExporter = useCallback(() => setOpenExporter(false), []);
   const handleOpenExporter = useCallback(() => setOpenExporter(true), []);
@@ -32,16 +37,8 @@ export const TableToolBar = () => {
   const handleOpenPackageBuilder = useCallback(() => setOpenPackageBuilder(true), []);
 
   useEffect(() => {
-    function onTimeout() {
-      setFilter(filterValue);
-    }
-
-    let timeoutId = setTimeout(onTimeout, 200);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [filterValue, setFilter]);
+    setFilter(debouncedValue);
+  }, [debouncedValue, setFilter]);
 
   return (
     <TableRow className="result-table-toolbar">

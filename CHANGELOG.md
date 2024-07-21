@@ -1,5 +1,11 @@
+## Content Wizard 1.2.0 - July 21, 2024
 
-## Content Wizard 1.1.4 - July TBD, 2024
+- Refactored Package Builder into a Provider type. 
+- Minor UI improvements
+- Reduced Debugging logic to improve performance
+
+
+## Content Wizard 1.1.4 - July 19, 2024
 
 - Refactored the Results exporting logic to use a Dialog with a configuration form, that allows the user to specify file type, file name, and if the file name should include a timestamp.
 - Converted Dialog Close buttons into IconButtons from FABs, and cleaned up dialog styles.

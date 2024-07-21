@@ -9,6 +9,7 @@ import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
 import { useFetcher, useLogger, useQuery } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type ExecutionContextType = {
   /**
@@ -52,9 +53,9 @@ export function ExecutionContextProvider({
   children,
   operationName,
 }: ExecutionContextProviderProps) {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `ExecutionContextProvider[${++renderCount.current}] render()` });
+  logger.debug({ message: `ExecutionContextProvider[${renderCount}] render()` });
   const fetcher = useFetcher();
   if (!fetcher) {
     throw new TypeError('The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.');

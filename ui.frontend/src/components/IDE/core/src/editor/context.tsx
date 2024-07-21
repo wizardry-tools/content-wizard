@@ -25,6 +25,7 @@ import { CodeMirrorEditor } from './types';
 import { STORAGE_KEY as STORAGE_KEY_VARIABLES } from './variable-editor';
 import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
 import { defaultAdvancedQueries, Query } from 'src/components/Query';
+import { useRenderCount } from 'src/utility';
 
 export type CodeMirrorEditorWithOperationFacts = CodeMirrorEditor & {
   documentAST: DocumentNode | null;
@@ -269,9 +270,9 @@ export type EditorContextProviderProps = {
 };
 
 export function EditorContextProvider(props: EditorContextProviderProps) {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `EditorContextProvider[${++renderCount.current}] render()` });
+  logger.debug({ message: `EditorContextProvider[${renderCount}] render()` });
   const storage = useStorageContext();
   const queryObj = useQuery();
   const queryDispatcher = useQueryDispatcher();

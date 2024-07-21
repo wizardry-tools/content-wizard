@@ -43,7 +43,7 @@ export const ResultsExporterDialog = (props: ResultsExporterDialogProps) => {
             <CloseIcon />
           </IconButton>
         </Tooltip>
-        <DialogTitle id="results-exporter-dialog-title">Results Exporter</DialogTitle>
+        <DialogTitle id="results-exporter-dialog-title">Export Results</DialogTitle>
         <DialogContent>
           <ResultsExporter />
         </DialogContent>

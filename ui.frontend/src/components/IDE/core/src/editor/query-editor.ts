@@ -26,6 +26,7 @@ import { CodeMirrorEditor, CodeMirrorType, WriteableEditorProps } from './types'
 import { normalizeWhitespace } from './whitespace';
 import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from 'src/providers';
 import { QueryLanguage } from 'src/components/Query';
+import { useRenderCount } from 'src/utility';
 
 export type UseQueryEditorArgs = WriteableEditorProps &
   Pick<UseCopyQueryArgs, 'onCopyQuery'> & {
@@ -55,8 +56,8 @@ export function useQueryEditor(
   caller?: Function,
 ) {
   const logger = useLogger();
-  const renderCount = useRef(0);
-  logger.debug({ message: `useQueryEditor[${++renderCount.current}] render()` });
+  const renderCount = useRenderCount();
+  logger.debug({ message: `useQueryEditor[${renderCount}] render()` });
   const { schema } = useSchemaContext({
     nonNull: true,
     caller: caller || useQueryEditor,

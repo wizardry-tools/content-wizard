@@ -4,6 +4,7 @@ import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } 
 import { buildGraphQLURL, endpoints, Statement } from 'src/components/Query';
 import { createAPIFetcher } from 'src/utility';
 import { useLogger } from 'src/providers';
+import { useRenderCount } from 'src/utility';
 
 export type API = {
   endpoint: string;
@@ -65,9 +66,9 @@ export const APIContext = createNullableContext<APIContextType>('APIContext');
 export type APIContextProviderProps = PropsWithChildren;
 
 export function APIContextProvider(props: APIContextProviderProps) {
-  const renderCount = useRef(0);
+  const renderCount = useRenderCount();
   const logger = useLogger();
-  logger.debug({ message: `APIContextProvider[${++renderCount.current}] render()` });
+  logger.debug({ message: `APIContextProvider[${renderCount}] render()` });
   const { children } = props;
   const apiFetcher = useMemo(
     () =>
