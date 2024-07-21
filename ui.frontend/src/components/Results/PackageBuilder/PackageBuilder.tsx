@@ -108,7 +108,7 @@ export const PackageBuilder = () => {
 
   // When the packagePath is available, a packageUrl is generated
   const packageUrl = useMemo(() => {
-    //http://192.168.4.49:4502/crx/packmgr/index.jsp#/etc/packages/my_packages/Content-Wizard-Results-Content-Package.zip
+    // /crx/packmgr/index.jsp#/etc/packages/my_packages/Content-Wizard-Results-Content-Package.zip
     if (packagePath) {
       return `${PACK_MGR_PATH}/index.jsp#${packagePath}`;
     }
@@ -387,6 +387,7 @@ export const PackageBuilder = () => {
  * @param results
  */
 function buildPackageFilters(results: Result[]): string {
+  // map Result[] into PackageFilter[]
   const packageFilters: PackageFilter[] = results
     .map((result) => {
       if (result.hasOwnProperty('path')) {
@@ -407,8 +408,18 @@ function buildPackageFilters(results: Result[]): string {
         rules: [],
       };
     })
+    // filter the PackageFilter[] to remove objects without root prop
     .filter((filter) => !!filter.root);
-  return JSON.stringify(packageFilters);
+  // remove duplicate values
+  const uniquePackageFilters: PackageFilter[] = [];
+  const seenValues = new Set<string>();
+  for (const filter of packageFilters) {
+    if (!seenValues.has(filter.root)) {
+      seenValues.add(filter.root);
+      uniquePackageFilters.push(filter);
+    }
+  }
+  return JSON.stringify(uniquePackageFilters);
 }
 
 export function buildFilterPayload(

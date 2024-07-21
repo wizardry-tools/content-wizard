@@ -33,7 +33,7 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
   logger.debug({ message: `FieldsProvider[${++renderCount.current}] render()` });
   const queryDispatcher = useQueryDispatcher();
   const [fields, configDispatcher] = useReducer(fieldConfigReducer, defaultFields);
-  const debouncedFields = useDebounce(fields, 250);
+  const debouncedFields = useDebounce(fields, 300);
 
   /**
    * The purpose of this useEffect is to rebuild the Query statement when the

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-
-export function useRenderCount():number {
+export function useRenderCount(): number {
   const count = useRef(0);
 
   count.current++;
@@ -9,7 +8,7 @@ export function useRenderCount():number {
   return count.current;
 }
 
-export function useDebounce(value: any, delay: number) {
+export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
