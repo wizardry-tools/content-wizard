@@ -14,6 +14,7 @@ import { useLogger } from './LoggingProvider';
 import exportFromJSON from 'export-from-json';
 import { ExportType } from 'export-from-json/src/types';
 import { useRenderCount } from 'src/utility';
+import { PackagingProvider } from './PackagingProvider';
 
 /**
  * This is an extension of the OOTB export-from-json types,
@@ -146,7 +147,9 @@ export function ResultsProvider({ children }: PropsWithChildren) {
 
   return (
     <ResultsContext.Provider value={value}>
-      <ResultsDispatchContext.Provider value={updateResults}>{children}</ResultsDispatchContext.Provider>
+      <ResultsDispatchContext.Provider value={updateResults}>
+        <PackagingProvider>{children}</PackagingProvider>
+      </ResultsDispatchContext.Provider>
     </ResultsContext.Provider>
   );
 }
