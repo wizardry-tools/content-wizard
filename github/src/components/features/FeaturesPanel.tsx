@@ -13,7 +13,7 @@ type FeaturesPanelProps = {
 const StyledBox = styled(Box)({});
 
 export const FeaturesPanel = (props: FeaturesPanelProps) => {
-  const { children, value, index, padding = 3, ...other } = props;
+  const { children, value, index, ...other } = props;
 
   return (
     <StyledBox
@@ -22,7 +22,7 @@ export const FeaturesPanel = (props: FeaturesPanelProps) => {
       hidden={value !== index}
       id={`features-tabpanel-${index}`}
       aria-labelledby={`features-tab-${index}`}
-      sx={{ p: padding }}
+      pl={'0.5rem'}
       {...other}
     >
       {children}

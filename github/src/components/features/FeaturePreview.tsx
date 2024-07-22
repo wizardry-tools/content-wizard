@@ -1,5 +1,16 @@
 import { JSX, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Button, Card, Chip as MuiChip, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Chip as MuiChip,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { isDark } from 'src/utils';
 import { useMouseOverZoom } from 'src/hooks';
@@ -27,7 +38,7 @@ const Chip = styled(MuiChip)<ChipProps>(({ theme }) => ({
   ],
 }));
 
-const StyledCanvas = styled('canvas')(({ theme }) => ({
+const StyledCanvas = styled(Paper)(({ theme }) => ({
   top: 0,
   left: 0,
   position: 'absolute',
@@ -35,6 +46,7 @@ const StyledCanvas = styled('canvas')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   overflow: 'hidden',
+  padding: '0.5rem',
   '&.show': {
     [theme.breakpoints.up('md')]: {
       display: 'block',
@@ -71,8 +83,8 @@ export type Feature = {
   icon: JSX.Element;
   title: string;
   description: string;
-  imageLight: any;
-  imageDark: any;
+  imageLight: string;
+  imageDark: string;
 };
 
 export type FeaturePreviewProps = {
@@ -187,7 +199,6 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
           display="flex"
           flexDirection="column"
           position="relative"
-          ref={targetContainer}
         >
           <Grid container item sx={{ gap: 1, display: { xs: 'auto', sm: 'none' } }}>
             <RulesHeading heading={heading} subHeading={subHeading} />
@@ -234,10 +245,12 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
             className={`${prefix}-feature-card-stack`}
             spacing={2}
             useFlexGap
+            ref={targetContainer}
             sx={{
               justifyContent: 'center',
               alignItems: 'flex-start',
               width: '100%',
+              position: 'relative',
               display: { xs: 'none', sm: 'flex' },
             }}
           >
@@ -313,8 +326,10 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
                 </Box>
               </Card>
             ))}
+            <StyledCanvas className={hoverImage ? 'show' : 'hide'} elevation={5}>
+              <canvas ref={target} />
+            </StyledCanvas>
           </Stack>
-          <StyledCanvas ref={target} className={hoverImage ? 'show' : 'hide'} />
         </Grid>
         <Grid
           item
