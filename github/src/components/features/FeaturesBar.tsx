@@ -13,6 +13,13 @@ const tabCssProps = {
     sm: '1rem',
     md: '1.5rem',
   },
+  svg: {
+    fontSize: {
+      xs: '1.5rem',
+      sm: '2rem',
+      md: '2.5rem',
+    },
+  },
 };
 
 export const FeaturesBar = ({ tabValue, onTabSelect }: FeaturesBarProps) => {

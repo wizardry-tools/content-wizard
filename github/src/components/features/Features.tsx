@@ -24,7 +24,7 @@ export const Features = () => {
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           disableLazyLoading={false}
-          animateHeight={true}
+          animateHeight={false}
           index={tabValue}
           onChangeIndex={onTabPanelSelect}
           slideClassName="swipeable-view-slide"

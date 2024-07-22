@@ -72,7 +72,7 @@ export default function Hero() {
           flexShrink={1}
           sx={{ alignItems: 'center', width: { xs: '100%', sm: '70%' } }}
         >
-          <Box display={'flex'} flexDirection={'column'} alignItems={'flex-end'}>
+          <Box display={'flex'} flexDirection={'column'} alignItems={{ xs: 'center', sm: 'flex-end' }}>
             <Typography
               variant="h1"
               sx={{
@@ -156,16 +156,17 @@ export default function Hero() {
               inheritViewBox
               sx={{
                 fontSize: '2rem',
-                mr: 2,
+                mr: { xs: 0, sm: 2 },
               }}
             />
-            Query&nbsp;
+            Query
             <Typography
               component="span"
               variant="h3"
               sx={(theme) => ({
                 fontSize: 'inherit',
                 color: 'primary.main',
+                ml: { xs: 0, sm: 1 },
                 ...theme.applyStyles('dark', {
                   color: 'primary.light',
                 }),
@@ -230,16 +231,17 @@ export default function Hero() {
               inheritViewBox
               sx={{
                 fontSize: '2rem',
-                mr: 2,
+                mr: { xs: 0, sm: 2 },
               }}
             />
-            Query&nbsp;
+            Query
             <Typography
               component="span"
               variant="h3"
               sx={(theme) => ({
                 fontSize: 'inherit',
                 color: 'primary.main',
+                ml: { xs: 0, sm: 1 },
                 ...theme.applyStyles('dark', {
                   color: 'primary.light',
                 }),
@@ -304,16 +306,17 @@ export default function Hero() {
               inheritViewBox
               sx={{
                 fontSize: '2rem',
-                mr: 2,
+                mr: { xs: 0, sm: 2 },
               }}
             />
-            Query&nbsp;
+            Query
             <Typography
               component="span"
               variant="h3"
               sx={(theme) => ({
                 fontSize: 'inherit',
                 color: 'primary.main',
+                ml: { xs: 0, sm: 1 },
                 ...theme.applyStyles('dark', {
                   color: 'primary.light',
                 }),
