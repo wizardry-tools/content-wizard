@@ -16,8 +16,7 @@ const tabCssProps = {
   svg: {
     fontSize: {
       xs: '1.5rem',
-      sm: '2rem',
-      md: '2.5rem',
+      sm: '1.75rem',
     },
   },
 };
