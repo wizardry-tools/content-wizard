@@ -1,6 +1,6 @@
 import { MouseEvent, useCallback, useState } from 'react';
 import { Fab, Popover, SvgIcon, Tooltip, Typography } from '@mui/material';
-import { ReactComponent as CopyIcon } from '../icons/copy.svg';
+import { CopyIcon } from 'src/icons';
 
 const CopyFab = (props: any) => {
   const { hover, onClick } = props;

@@ -1,5 +1,5 @@
 import { MenuItem } from '@mui/material';
-import { useScrollToId } from '../../utils/scroll';
+import { useScrollToId } from 'src/utils';
 import { ScrollLinkProps } from './ScrollLink';
 import { MenuItemProps } from '@mui/material/MenuItem/MenuItem';
 

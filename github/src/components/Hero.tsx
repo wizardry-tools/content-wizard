@@ -2,22 +2,24 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import qwAuthoringDark from '../images/qw/qw-authoring-dark.webp';
-import qwAuthoringLight from '../images/qw/qw-authoring-light.webp';
-import ideLanguageDark from '../images/ide/ide-language-dark.webp';
-import ideLanguageLight from '../images/ide/ide-language-light.webp';
-import ideGraphqlDark from '../images/ide/ide-graphql-dark.webp';
-import ideGraphqlLight from '../images/ide/ide-graphql-light.webp';
-import resultsImageDark from '../images/results/results-dark.webp';
-import resultsImageLight from '../images/results/results-light.webp';
-import resultsExplorerImageDark from '../images/results/results-explorer-dark.webp';
-import resultsExplorerImageLight from '../images/results/results-explorer-light.webp';
-import resultsExporterImageDark from '../images/results/results-exporter-dark.webp';
-import resultsExporterImageLight from '../images/results/results-exporter-light.webp';
-import resultsFilterSortImageDark from '../images/results/results-filter-sort-dark.webp';
-import resultsFilterSortImageLight from '../images/results/results-filter-sort-light.webp';
-import resultsBuilderImageDark from '../images/results/results-builder-dark.webp';
-import resultsBuilderImageLight from '../images/results/results-builder-light.webp';
+import {
+  qwAuthoringDark,
+  qwAuthoringLight,
+  ideLanguageDark,
+  ideLanguageLight,
+  ideGraphqlDark,
+  ideGraphqlLight,
+  resultsImageDark,
+  resultsImageLight,
+  resultsExplorerImageDark,
+  resultsExplorerImageLight,
+  resultsExporterImageDark,
+  resultsExporterImageLight,
+  resultsFilterSortImageDark,
+  resultsFilterSortImageLight,
+  resultsBuilderImageDark,
+  resultsBuilderImageLight,
+} from 'src/images';
 import { ReactComponent as LogoIcon } from '../wizard-logo.svg';
 import { ReactComponent as WandIcon } from '../icons/magic-wand.svg';
 import { ReactComponent as CodeIcon } from '../icons/programming-code.svg';
@@ -26,8 +28,8 @@ import { ReactComponent as TableIcon } from '../icons/table.svg';
 import { styled } from '@mui/material/styles';
 import { SvgIcon, useTheme, Button } from '@mui/material';
 import { useMemo } from 'react';
-import { isDark } from '../utils';
-import { useReleaseInfoContext, REPO } from '../providers';
+import { isDark } from 'src/utils';
+import { useReleaseInfoContext, REPO } from 'src/providers';
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',

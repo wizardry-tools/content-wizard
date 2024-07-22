@@ -24,11 +24,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "incremental": true,
+    "baseUrl": "./."
   },
   "include": [
-    "src"
+    "./src/**/*"
   ],
   "exclude": [
-    "./node_modules"
+    "./node_modules",
+    "./public"
   ]
 }

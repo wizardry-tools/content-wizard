@@ -1,4 +1,4 @@
-import { useScrollToId } from '../../utils/scroll';
+import { useScrollToId } from 'src/utils';
 import { PropsWithChildren } from 'react';
 import { Link } from '@mui/material';
 

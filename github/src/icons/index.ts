@@ -1,0 +1,12 @@
+export { ReactComponent as LogoIcon } from '../wizard-logo.svg';
+export { ReactComponent as AdobeLogo } from './adobe-logo.svg';
+export { ReactComponent as CodeMirrorLogo } from './codemirror-logo.svg';
+export { ReactComponent as CopyIcon } from './copy.svg';
+export { ReactComponent as GraphiQLLogo } from './graphiql-logo.svg';
+export { ReactComponent as WandIcon } from './magic-wand.svg';
+export { ReactComponent as MavenLogo } from './maven-logo.svg';
+export { ReactComponent as MuiLogo } from './mui-logo.svg';
+export { ReactComponent as CodeIcon } from './programming-code.svg';
+export { ReactComponent as ReactLogo } from './react-logo.svg';
+export { ReactComponent as TableIcon } from './table.svg';
+export { ReactComponent as TSLogo } from './ts-logo.svg';

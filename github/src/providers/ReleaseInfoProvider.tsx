@@ -44,7 +44,6 @@ async function getReleaseInfo(): Promise<ReleaseInfo> {
   const response = await fetch(API_ENDPOINT, headers);
   if (response) {
     const json = await response.json();
-    console.log('JSON Response', json);
     const latestRelease = json[0];
     const { name, html_url } = latestRelease;
     return { name, url: html_url };

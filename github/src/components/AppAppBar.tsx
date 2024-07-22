@@ -3,7 +3,7 @@ import { AppBar, Box, Container, Divider, Drawer, IconButton, PaletteMode, SvgIc
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ToggleColorMode from './ToggleColorMode';
-import { ReactComponent as LogoIcon } from '../wizard-logo.svg';
+import { LogoIcon } from 'src/icons';
 import { ScrollLink, ScrollButton, ScrollMenuItem } from './nav-scrollers';
 
 interface AppAppBarProps {

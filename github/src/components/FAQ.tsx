@@ -2,7 +2,7 @@ import { ReactNode, SyntheticEvent, useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Link, Typography } from '@mui/material';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import toolsNavigation from '../images/aem-tools-navigation.webp';
+import { aemToolsNav } from 'src/images';
 import { styled } from '@mui/material/styles';
 import { memo } from 'react';
 import { ScrollLink } from './nav-scrollers';
@@ -151,7 +151,7 @@ const questionsAndAnswers: QuestionAnswer[] = [
         Content Wizard.
       </p>
     ),
-    image: <StyledImage src={toolsNavigation} alt="AEM Tools Navigation screen with Wizardry Tools tab open." />,
+    image: <StyledImage src={aemToolsNav} alt="AEM Tools Navigation screen with Wizardry Tools tab open." />,
   },
   {
     question: 'Does the Content Wizard only search for and display results?',
@@ -194,13 +194,13 @@ const questionsAndAnswers: QuestionAnswer[] = [
 ];
 
 export default function FAQ() {
-  const [expanded, setExpanded] = useState<string | false>(false);
+  const [expanded, setExpanded] = useState<string>('');
 
   const handleChange = (panel: string) => (_event: SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+    setExpanded(isExpanded ? panel : '');
   };
 
-  const FAQAccordion = memo((_props) => {
+  const FAQAccordion = memo(() => {
     return (
       <Box sx={{ width: '100%' }}>
         {questionsAndAnswers.map((qna, index) => {

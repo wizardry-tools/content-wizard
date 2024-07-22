@@ -10,7 +10,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
   },
 });
 
-export default function getTheme(mode: PaletteMode): ThemeOptions {
+export function getTheme(mode: PaletteMode): ThemeOptions {
   return {
     ...getDesignTokens(mode),
     components: {

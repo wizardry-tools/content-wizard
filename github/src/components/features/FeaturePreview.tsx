@@ -1,4 +1,4 @@
-import { useRef, useState, MouseEvent, useMemo, useEffect } from 'react';
+import { JSX, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -7,72 +7,13 @@ import {
   Container,
   Grid,
   Stack,
-  SvgIcon,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { isDark } from 'src/utils';
+import { useMouseOverZoom } from 'src/hooks';
 import { styled } from '@mui/material/styles';
-import FindInPageIcon from '@mui/icons-material/FindInPage';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import TranslateIcon from '@mui/icons-material/Translate';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import qwTargetingLight from '../images/qw/qw-targeting-light.webp';
-import qwTargetingDark from '../images/qw/qw-targeting-dark.webp';
-import qwAuthoringLight from '../images/qw/qw-authoring-light.webp';
-import qwAuthoringDark from '../images/qw/qw-authoring-dark.webp';
-import qwReplicationLight from '../images/qw/qw-replication-light.webp';
-import qwReplicationDark from '../images/qw/qw-replication-dark.webp';
-import qwMsmLight from '../images/qw/qw-msm-light.webp';
-import qwMsmDark from '../images/qw/qw-msm-dark.webp';
-import qwTranslationLight from '../images/qw/qw-translation-light.webp';
-import qwTranslationDark from '../images/qw/qw-translation-dark.webp';
-import { useMouseOverZoom } from '../hooks';
-import { isDark } from '../utils';
-
-const items = [
-  {
-    icon: <FindInPageIcon />,
-    title: 'Targeting Rules',
-    description:
-      'Standard and required query rules that tell AEM where you want to look, what you want to find, and how max results to return.',
-    imageLight: qwTargetingLight,
-    imageDark: qwTargetingDark,
-  },
-  {
-    icon: <ManageAccountsIcon />,
-    title: 'Authoring Rules',
-    description:
-      'Rules that filter the targeted results based on recorded authoring activity, such as filtering based on the user who authored or the date on which the activity took place.',
-    imageLight: qwAuthoringLight,
-    imageDark: qwAuthoringDark,
-  },
-  {
-    icon: <PublishedWithChangesIcon />,
-    title: 'Replication Rules',
-    description: 'Similar to the Authoring Rules, except these rules are focused around Replication status and events',
-    imageLight: qwReplicationLight,
-    imageDark: qwReplicationDark,
-  },
-  {
-    icon: <AccountTreeIcon />,
-    title: 'MSM(Multi Site Manager) Rules',
-    description:
-      'With the MSM Rules, you will be able to filter the results based on MSM status and activity. Find your content that has been suspended, rolled out, or has local deletions.',
-    imageLight: qwMsmLight,
-    imageDark: qwMsmDark,
-  },
-  {
-    icon: <TranslateIcon />,
-    title: 'Translation Rules',
-    description:
-      'Use Translation based rules to filter results based on if they are a Language Copy, what language they have, and whether or not the Translation has been approved the in AEM.',
-    imageLight: qwTranslationLight,
-    imageDark: qwTranslationDark,
-  },
-];
 
 interface ChipProps {
   selected?: boolean;
@@ -136,7 +77,25 @@ const ZoomCursor = styled('div')(({ theme }) => ({
   },
 }));
 
-export default function Features() {
+// TODO convert the images to a specific type
+export type Feature = {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+  imageLight: any;
+  imageDark: any;
+};
+
+export type FeaturePreviewProps = {
+  features: Feature[];
+  heading: string;
+  subHeading: string;
+  prefix: string;
+};
+
+export const FeaturePreview = (props: FeaturePreviewProps) => {
+  const { features, heading, subHeading, prefix } = props;
+
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const theme = useTheme();
   const isDarkMode = useMemo(() => isDark(theme), [theme]);
@@ -150,24 +109,27 @@ export default function Features() {
   const canvasDimensions = useRef({ width: 0, height: 0 });
 
   const enablePreview = useMediaQuery(theme.breakpoints.up('md'));
-  const selectedFeature = items[selectedItemIndex];
+  const selectedFeature = useMemo(() => features[selectedItemIndex], [features, selectedItemIndex]);
 
-  const handleItemClick = (index: number) => {
+  const handleItemClick = useCallback((index: number) => {
     setSelectedItemIndex(index);
-  };
+  }, []);
 
-  const handleHover = (event: MouseEvent<HTMLElement>) => {
-    const hoveredImage = event.currentTarget as HTMLImageElement;
-    if (hoveredImage && hoveredImage?.tagName === 'IMG') {
-      setHoverImage(true);
-      highResImage.current = new Image();
-      highResImage.current.src = isDarkMode ? selectedFeature.imageDark : selectedFeature.imageLight;
-    }
-  };
-  const handleNoHover = (_event: MouseEvent<HTMLElement>) => {
+  const handleHover = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      const hoveredImage = event.currentTarget as HTMLImageElement;
+      if (hoveredImage && hoveredImage?.tagName === 'IMG') {
+        setHoverImage(true);
+        highResImage.current = new Image();
+        highResImage.current.src = isDarkMode ? selectedFeature.imageDark : selectedFeature.imageLight;
+      }
+    },
+    [isDarkMode, selectedFeature],
+  );
+  const handleNoHover = useCallback((_event: MouseEvent<HTMLElement>) => {
     highResImage.current = null;
     setHoverImage(false);
-  };
+  }, []);
 
   useEffect(() => {
     const element = targetContainer.current;
@@ -194,68 +156,28 @@ export default function Features() {
 
   useMouseOverZoom(highResImage, source, target, cursor, enablePreview, canvasDimensions);
 
-  const RulesSubHeading = () => {
-    return (
-      <div>
-        <Typography component="h3" variant="h5" sx={{ color: 'text.primary' }}>
-          Query Wizard Rules
-        </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}>
-          Explore the different rules and filters that the Query Wizard offers.
-        </Typography>
-      </div>
-    );
-  };
+  const RulesHeading = useMemo(
+    () => (props: { heading: string; subHeading: string }) => {
+      const { heading, subHeading } = props;
+      // Query Wizard Rules
+      // Explore the different rules and filters that the Query Wizard offers.
+      return (
+        <div>
+          <Typography component="h3" variant="h5" sx={{ color: 'text.primary' }}>
+            {heading}
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}>
+            {subHeading}
+          </Typography>
+        </div>
+      );
+    },
+    [],
+  );
 
   return (
-    <Container id="features" sx={{ pb: { xs: 4, sm: 8 } }}>
+    <Container id={`${prefix}-features`} sx={{ pb: { xs: 4, sm: 8 } }}>
       <Grid container spacing={6} sx={{ width: '100%', marginLeft: 0, marginTop: 0 }}>
-        <Stack
-          spacing={2}
-          useFlexGap
-          flexGrow={1}
-          flexShrink={1}
-          sx={{
-            alignItems: 'center',
-            width: { xs: '100%', sm: '70%' },
-            marginTop: 0,
-            paddingBottom: 4,
-          }}
-        >
-          <Typography
-            variant="h3"
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
-              alignItems: 'center',
-              fontSize: 'clamp(2rem, 10vw, 2.5rem)',
-            }}
-          >
-            <SvgIcon
-              component={ConstructionIcon}
-              className="results-icon"
-              inheritViewBox
-              sx={{
-                fontSize: '2rem',
-                mr: 2,
-              }}
-            />
-            Core&nbsp;
-            <Typography
-              component="span"
-              variant="h3"
-              sx={(theme) => ({
-                fontSize: 'inherit',
-                color: 'primary.main',
-                ...theme.applyStyles('dark', {
-                  color: 'primary.light',
-                }),
-              })}
-            >
-              Features
-            </Typography>
-          </Typography>
-        </Stack>
         <Grid
           item
           xs={12}
@@ -263,15 +185,15 @@ export default function Features() {
           sx={{
             paddingLeft: '0 !important',
           }}
-          className="feature-grid"
+          className={`${prefix}-feature-grid`}
           display="flex"
           flexDirection="column"
           position="relative"
           ref={targetContainer}
         >
           <Grid container item sx={{ gap: 1, display: { xs: 'auto', sm: 'none' } }}>
-            <RulesSubHeading />
-            {items.map(({ title }, index) => (
+            <RulesHeading heading={heading} subHeading={subHeading} />
+            {features.map(({ title }, index) => (
               <Chip
                 key={index}
                 label={title}
@@ -295,8 +217,8 @@ export default function Features() {
               })}
               style={
                 {
-                  '--items-image-light': `url("${items[selectedItemIndex].imageLight}")`,
-                  '--items-image-dark': `url("${items[selectedItemIndex].imageDark}")`,
+                  '--items-image-light': `url("${selectedFeature.imageLight}")`,
+                  '--items-image-dark': `url("${selectedFeature.imageDark}")`,
                 } as any
               }
             />
@@ -311,7 +233,7 @@ export default function Features() {
           </Card>
           <Stack
             direction="column"
-            className="feature-card-stack"
+            className={`${prefix}-feature-card-stack`}
             spacing={2}
             useFlexGap
             sx={{
@@ -321,7 +243,7 @@ export default function Features() {
               display: { xs: 'none', sm: 'flex' },
             }}
           >
-            {items.map(({ icon, title, description }, index) => (
+            {features.map(({ icon, title, description }, index) => (
               <Card
                 className="feature-card"
                 key={index}
@@ -410,7 +332,7 @@ export default function Features() {
             paddingTop: '3rem',
           }}
         >
-          <RulesSubHeading />
+          <RulesHeading heading={heading} subHeading={subHeading} />
           <Card
             variant="outlined"
             className="image-card"
@@ -422,7 +344,7 @@ export default function Features() {
             }}
           >
             <StyledImage
-              src={isDarkMode ? items[selectedItemIndex].imageDark : items[selectedItemIndex].imageLight}
+              src={isDarkMode ? selectedFeature.imageDark : selectedFeature.imageLight}
               onMouseOver={handleHover}
               onMouseLeave={handleNoHover}
               ref={source}
@@ -433,4 +355,4 @@ export default function Features() {
       </Grid>
     </Container>
   );
-}
+};

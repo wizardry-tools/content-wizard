@@ -1,6 +1,6 @@
 import { ScrollLinkProps } from './ScrollLink';
 import Button from '@mui/material/Button';
-import { useScrollToId } from '../../utils/scroll';
+import { useScrollToId } from 'src/utils';
 import { ButtonProps } from '@mui/material/Button/Button';
 
 export type ScrollButtonProps = ScrollLinkProps & ButtonProps;

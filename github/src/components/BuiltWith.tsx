@@ -1,13 +1,7 @@
 import { Box, Container, Grid, IconButton, IconButtonProps, SvgIcon, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
-import { ReactComponent as TSLogo } from '../icons/ts-logo.svg';
-import { ReactComponent as ReactLogo } from '../icons/react-logo.svg';
-import { ReactComponent as MuiLogo } from '../icons/mui-logo.svg';
-import { ReactComponent as GraphiQLLogo } from '../icons/graphiql-logo.svg';
-import { ReactComponent as MavenLogo } from '../icons/maven-logo.svg';
-import { ReactComponent as CodeMirrorLogo } from '../icons/codemirror-logo.svg';
-import { ReactComponent as AdobeLogo } from '../icons/adobe-logo.svg';
+import { TSLogo, ReactLogo, MuiLogo, GraphiQLLogo, MavenLogo, CodeMirrorLogo, AdobeLogo } from 'src/icons';
 import '../styles/built-with.scss';
 
 type IconLinkProps = SvgIconProps & IconButtonProps;
