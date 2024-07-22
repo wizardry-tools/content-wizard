@@ -3,10 +3,10 @@ import rehypeReact from 'rehype-react';
 import rehypeHighlight from 'rehype-highlight';
 import { Container, useTheme, Link as MuiLink, Paper } from '@mui/material';
 
-import '../styles/markdown.scss';
 import { memo, useCallback, useState, MouseEvent } from 'react';
-import { useClipBoard } from '../utils/clipboard';
+import { useClipBoard } from 'src/utils';
 import CopyFab from './CopyFab';
+import 'src/styles/markdown.scss';
 
 type MarkdownContainerProps = {
   children?: string | null | undefined;

@@ -1,7 +1,7 @@
 import { Container, Grid, Stack, SvgIcon, Typography } from '@mui/material';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { FeaturePreview } from './FeaturePreview';
-import { queryWizardFeatures } from './content';
+import { ideFeatures, queryWizardFeatures, resultsFeatures } from './content';
 
 export const Features = () => {
   return (
@@ -58,6 +58,18 @@ export const Features = () => {
           prefix={'query-wizard'}
           heading={'Query Wizard Rules'}
           subHeading={'Explore the different rules and filters that the Query Wizard offers.'}
+        />
+        <FeaturePreview
+          features={ideFeatures}
+          prefix={'ide'}
+          heading={'Query IDE Features'}
+          subHeading={'Explore the different features that the Query IDE offers.'}
+        />
+        <FeaturePreview
+          features={resultsFeatures}
+          prefix={'results'}
+          heading={'Results Features'}
+          subHeading={'Explore the different features that the Results offers.'}
         />
       </Grid>
     </Container>

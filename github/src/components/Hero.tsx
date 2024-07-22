@@ -1,35 +1,17 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import { Box, Button, Container, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
+import { useMemo } from 'react';
+import { isDark } from 'src/utils';
+import { useReleaseInfoContext, REPO } from 'src/providers';
 import {
   qwAuthoringDark,
   qwAuthoringLight,
   ideLanguageDark,
   ideLanguageLight,
-  ideGraphqlDark,
-  ideGraphqlLight,
   resultsImageDark,
   resultsImageLight,
-  resultsExplorerImageDark,
-  resultsExplorerImageLight,
-  resultsExporterImageDark,
-  resultsExporterImageLight,
-  resultsFilterSortImageDark,
-  resultsFilterSortImageLight,
-  resultsBuilderImageDark,
-  resultsBuilderImageLight,
 } from 'src/images';
-import { ReactComponent as LogoIcon } from '../wizard-logo.svg';
-import { ReactComponent as WandIcon } from '../icons/magic-wand.svg';
-import { ReactComponent as CodeIcon } from '../icons/programming-code.svg';
-import { ReactComponent as TableIcon } from '../icons/table.svg';
-
-import { styled } from '@mui/material/styles';
-import { SvgIcon, useTheme, Button } from '@mui/material';
-import { useMemo } from 'react';
-import { isDark } from 'src/utils';
-import { useReleaseInfoContext, REPO } from 'src/providers';
+import { LogoIcon, WandIcon, CodeIcon, TableIcon } from 'src/icons';
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -295,34 +277,6 @@ export default function Hero() {
             backgroundImage: `url(${isDarkMode ? ideLanguageDark : ideLanguageLight})`,
           }}
         />
-        <Stack
-          spacing={2}
-          useFlexGap
-          flexGrow={1}
-          flexShrink={1}
-          sx={{
-            alignItems: 'center',
-            width: { xs: '100%', sm: '70%' },
-            marginTop: theme.spacing(4),
-          }}
-        >
-          <Typography
-            sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              width: { sm: '100%', md: '80%' },
-            }}
-          >
-            Retaining out of the box GraphiQL functionality, the Query IDE can provide rich contextual support for
-            GraphQL using the Document Explorer plugin.
-          </Typography>
-        </Stack>
-        <StyledBox
-          id="image"
-          sx={{
-            backgroundImage: `url(${isDarkMode ? ideGraphqlDark : ideGraphqlLight})`,
-          }}
-        />
 
         <Stack
           spacing={2}
@@ -394,118 +348,6 @@ export default function Hero() {
           id="image"
           sx={{
             backgroundImage: `url(${isDarkMode ? resultsImageDark : resultsImageLight})`,
-          }}
-        />
-        <Stack
-          spacing={2}
-          useFlexGap
-          flexGrow={1}
-          flexShrink={1}
-          sx={{
-            alignItems: 'center',
-            width: { xs: '100%', sm: '70%' },
-            marginTop: theme.spacing(4),
-          }}
-        >
-          <Typography
-            sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              width: { sm: '100%', md: '80%' },
-            }}
-          >
-            Sort and filter the results table, making it easier to pin-point and confirm content values.
-          </Typography>
-        </Stack>
-        <StyledBox
-          id="image"
-          sx={{
-            backgroundImage: `url(${isDarkMode ? resultsFilterSortImageDark : resultsFilterSortImageLight})`,
-          }}
-        />
-        <Stack
-          spacing={2}
-          useFlexGap
-          flexGrow={1}
-          flexShrink={1}
-          sx={{
-            alignItems: 'center',
-            width: { xs: '100%', sm: '70%' },
-            marginTop: theme.spacing(4),
-          }}
-        >
-          <Typography
-            sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              width: { sm: '100%', md: '80%' },
-            }}
-          >
-            Explore the JSON of each result. Easily review or copy the JSON of an individual result, along with
-            convenient links to open the content in AEM.
-          </Typography>
-        </Stack>
-        <StyledBox
-          id="image"
-          sx={{
-            backgroundImage: `url(${isDarkMode ? resultsExplorerImageDark : resultsExplorerImageLight})`,
-          }}
-        />
-        <Stack
-          spacing={2}
-          useFlexGap
-          flexGrow={1}
-          flexShrink={1}
-          sx={{
-            alignItems: 'center',
-            width: { xs: '100%', sm: '70%' },
-            marginTop: theme.spacing(4),
-          }}
-        >
-          <Typography
-            sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              width: { sm: '100%', md: '80%' },
-            }}
-          >
-            Export the results as CSV, JSON, XML, XSL(Excel), or HTML. <br />
-            Easily share the results with your team.
-          </Typography>
-        </Stack>
-        <StyledBox
-          id="image"
-          sx={{
-            backgroundImage: `url(${isDarkMode ? resultsExporterImageDark : resultsExporterImageLight})`,
-          }}
-        />
-        <Stack
-          spacing={2}
-          useFlexGap
-          flexGrow={1}
-          flexShrink={1}
-          sx={{
-            alignItems: 'center',
-            width: { xs: '100%', sm: '70%' },
-            marginTop: theme.spacing(4),
-          }}
-        >
-          <Typography
-            sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              width: { sm: '100%', md: '80%' },
-            }}
-          >
-            Create, Build, and Download an AEM content package of the results. <br />
-            Easily export the content for installation into another environment. <br />
-            Also serves as a convenient way to create targeted content backups.
-          </Typography>
-        </Stack>
-        <StyledBox
-          id="image"
-          sx={{
-            backgroundImage: `url(${isDarkMode ? resultsBuilderImageDark : resultsBuilderImageLight})`,
           }}
         />
       </Container>

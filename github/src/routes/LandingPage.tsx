@@ -4,15 +4,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppAppBar from '../components/AppAppBar';
-import Hero from '../components/Hero';
-import Highlights from '../components/Highlights';
+import AppAppBar from 'src/components/AppAppBar';
+import Hero from 'src/components/Hero';
+import Highlights from 'src/components/Highlights';
 import { Features } from 'src/components/features';
-import FAQ from '../components/FAQ';
-import Footer from '../components/Footer';
-import { InstallationGuide } from '../components/InstallationGuide';
+import FAQ from 'src/components/FAQ';
+import Footer from 'src/components/Footer';
+import { InstallationGuide } from 'src/components/InstallationGuide';
 import { getTheme } from 'src/utils';
-import { BuiltWith } from '../components/BuiltWith';
+import { BuiltWith } from 'src/components/BuiltWith';
 
 export default function LandingPage() {
   const [mode, setMode] = useState<PaletteMode>('dark');

@@ -4,7 +4,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { GitHub } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
-import { useScrollToId } from '../utils';
+import { useScrollToId } from 'src/utils';
 
 function Copyright() {
   return (

@@ -11,9 +11,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { isDark } from 'src/utils';
 import { useMouseOverZoom } from 'src/hooks';
-import { styled } from '@mui/material/styles';
 
 interface ChipProps {
   selected?: boolean;

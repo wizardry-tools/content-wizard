@@ -2,7 +2,7 @@ import { Box, Container, Grid, IconButton, IconButtonProps, SvgIcon, Typography 
 import { styled } from '@mui/material/styles';
 import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
 import { TSLogo, ReactLogo, MuiLogo, GraphiQLLogo, MavenLogo, CodeMirrorLogo, AdobeLogo } from 'src/icons';
-import '../styles/built-with.scss';
+import 'src/styles/built-with.scss';
 
 type IconLinkProps = SvgIconProps & IconButtonProps;
 const IconLink = (props: IconLinkProps) => {
