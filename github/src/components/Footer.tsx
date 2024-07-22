@@ -5,19 +5,50 @@ import Typography from '@mui/material/Typography';
 import { GitHub } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { useScrollToId } from 'src/utils';
+import { PropsWithChildren, useMemo } from 'react';
 
 function Copyright() {
   return (
-    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      {'Copyright © '}
-      <Link href="https://wizardry-tools.com/">Content Wizard</Link>&nbsp;
-      {new Date().getFullYear()}
+    <Typography
+      variant="body2"
+      sx={{
+        color: 'text.secondary',
+        display: { xs: 'flex', sm: 'block' },
+        flexDirection: { xs: 'column', sm: 'none' },
+      }}
+    >
+      <span>{'Copyright © '}</span>
+      <Link href="https://wizardry-tools.com/">Content Wizard</Link>
+      <Box component={'span'} sx={{ ml: { xs: 0, sm: 0.5 } }}>
+        {new Date().getFullYear()}
+      </Box>
     </Typography>
   );
 }
 
 export default function Footer() {
   const scrollToSection = useScrollToId();
+
+  const FooterLink = useMemo(
+    () => (props: PropsWithChildren & { id: string; sx?: any }) => {
+      const { id, children, sx = {} } = props;
+      return (
+        <Link
+          id={`${id}-footer-link`}
+          variant="body2"
+          onClick={() => scrollToSection.scroll(id)}
+          sx={{
+            cursor: 'pointer',
+            ...sx,
+          }}
+        >
+          {children}
+        </Link>
+      );
+    },
+    [scrollToSection],
+  );
+
   return (
     <Container
       sx={{
@@ -45,21 +76,13 @@ export default function Footer() {
             gap: 1,
           }}
         >
-          <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+          <FooterLink id={'hero'} sx={{ fontWeight: 600 }}>
             Content Wizard
-          </Typography>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('features')}>
-            Features
-          </Link>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('highlights')}>
-            Highlights
-          </Link>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('installation')}>
-            Installation
-          </Link>
-          <Link color="text.secondary" variant="body2" onClick={() => scrollToSection.scroll('faw')}>
-            FAQ
-          </Link>
+          </FooterLink>
+          <FooterLink id={'highlights'}>Highlights</FooterLink>
+          <FooterLink id={'features'}>Features</FooterLink>
+          <FooterLink id={'faq'}>FAQ</FooterLink>
+          <FooterLink id={'installation'}>Installation</FooterLink>
         </Box>
         <Box
           sx={{

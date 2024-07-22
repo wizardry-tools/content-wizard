@@ -8,39 +8,40 @@ import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 
 const items = [
   {
-    icon: <SettingsSuggestRoundedIcon />,
-    title: 'Persisted Settings',
-    description:
-      'The Query IDE supports persisted settings and can remember your Dark/Light mode preference along with previous Query Statements and GraphQL Headers/Variables.',
-  },
-  {
     icon: <ConstructionRoundedIcon />,
     title: 'Build Queries with Ease',
     description:
-      "Whether you're new to AEM or an experienced Developer, the Content Wizard's tools enable you to build Powerful Query Statements that are native to AEM's OOTB Query Languages.",
+      "Whether you're new to AEM or an experienced developer, the Content Wizard's tools enable you to build powerful query statements that are supported by AEM's out of the box query languages.",
   },
   {
-    icon: <ThumbUpAltRoundedIcon />,
-    title: 'Great user experience',
+    icon: <SettingsSuggestRoundedIcon />,
+    title: 'Persisted Settings',
     description:
-      "Seamlessly navigate between Content Wizard's different views. Swap between Query Wizard and Query IDE when building QueryBuilder statements. Exposing powerful content features that are easy to use.",
-  },
-  {
-    icon: <IosShareIcon />,
-    title: 'Export Query, Results, and Content',
-    description:
-      'Conveniently copy query statements to clipboard, download the results as a sharable data file, extract the content of results as an AEM content package zip.',
-  },
-  {
-    icon: <HighlightIcon />,
-    title: 'Syntax Highlighting',
-    description: 'Each supported language features Syntax Highlighting that is tuned to the Dark/Light mode themes.',
+      'The Query IDE supports persisted settings and can remember dark/light mode preference along with previous query statements and GraphQL headers/variables.',
   },
   {
     icon: <QueryStatsRoundedIcon />,
     title: 'Precision Results',
     description:
       'Fine-tune your QueryBuilder Statements in the Query IDE after using the Query Wizard, to maximize the accuracy of your results.',
+  },
+  {
+    icon: <IosShareIcon />,
+    title: 'Export Query, Results, and Content',
+    description:
+      'Conveniently copy query statements to clipboard. Download results as a sharable data file. Extract the content of results as an AEM content package zip.',
+  },
+  {
+    icon: <HighlightIcon />,
+    title: 'Syntax Highlighting',
+    description:
+      'Each supported language features syntax highlighting that is tuned to the dark/light mode themes, making query statements easier to read.',
+  },
+  {
+    icon: <ThumbUpAltRoundedIcon />,
+    title: 'Great user experience',
+    description:
+      "Seamlessly navigate between Content Wizard's different views. Swap between Query Wizard and Query IDE when building QueryBuilder statements. Exposing powerful content features that are easy to use.",
   },
 ];
 
@@ -49,8 +50,8 @@ export default function Highlights() {
     <Box
       id="highlights"
       sx={(theme) => ({
-        pt: { xs: 4, sm: 12 },
-        pb: { xs: 8, sm: 16 },
+        pt: { xs: 4, sm: 8 },
+        pb: { xs: 8, sm: 12 },
         color: theme.palette.mode === 'dark' ? 'white' : 'black',
         bgcolor: theme.palette.mode === 'dark' ? 'hsl(220, 30%, 2%)' : 'hsl(220, 30%, 96%)',
       })}

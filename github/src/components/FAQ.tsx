@@ -54,7 +54,7 @@ const questionsAndAnswers: QuestionAnswer[] = [
           </li>
           <li>
             An integrated development environment (IDE) that features syntax highlighting, query history, multiple
-            editing tabs, or support for all of AEM's OOTB Query Languages.
+            editing tabs, or support for all of AEM's out of the box Query Languages.
           </li>
           <li>
             A quick and convenient way to explore results, along with quick links that can open different AEM Authoring
@@ -138,7 +138,7 @@ const questionsAndAnswers: QuestionAnswer[] = [
       <p>
         No, this is a use at your own risk tool. It comes with no warranties, but please feel free to open an Issue on
         the Github project. This tool does not perform create, updated, or delete operations against AEM, only search
-        related Queries using AEM's OOTB APIs.
+        related Queries using AEM's out of the box APIs.
       </p>
     ),
   },
@@ -240,8 +240,8 @@ export default function FAQ() {
       <Container
         id="faq"
         sx={{
-          pt: { xs: 4, sm: 12 },
-          pb: { xs: 8, sm: 16 },
+          pt: { xs: 4, sm: 8 },
+          pb: { xs: 8, sm: 12 },
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',

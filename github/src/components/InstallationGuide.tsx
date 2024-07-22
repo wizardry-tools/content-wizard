@@ -39,8 +39,8 @@ export const InstallationGuide = () => {
     <Box
       id="installation"
       sx={{
-        pt: { xs: 4, sm: 12 },
-        pb: { xs: 8, sm: 16 },
+        pt: { xs: 4, sm: 8 },
+        pb: { xs: 8, sm: 12 },
       }}
     >
       <MarkdownContainer>{modifiedContent}</MarkdownContainer>

@@ -19,7 +19,13 @@ export const Features = () => {
   }, []);
 
   return (
-    <Container id="features" sx={{ pb: { xs: 4, sm: 8 } }}>
+    <Container
+      id="features"
+      sx={{
+        pt: { xs: 4, sm: 8 },
+        pb: { xs: 8, sm: 12 },
+      }}
+    >
       <Grid container spacing={6} sx={{ width: '100%', marginLeft: 0, marginTop: 0 }}>
         <Stack
           spacing={2}

@@ -17,7 +17,7 @@ export const useScrollToId = (props?: ScrollToIdProps) => {
       block: 'end',
     } as ScrollIntoViewOptions,
     hook = () => {},
-    offset = 128,
+    offset = 32,
     hookProps,
   } = props || {};
 

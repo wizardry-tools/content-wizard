@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ToggleColorMode from './ToggleColorMode';
 import { LogoIcon } from 'src/icons';
-import { ScrollLink, ScrollButton, ScrollMenuItem } from './nav-scrollers';
+import { ScrollButton, ScrollMenuItem } from './nav-scrollers';
 
 interface AppAppBarProps {
   mode: PaletteMode;
@@ -51,21 +51,28 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
           })}
         >
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <ScrollLink scrollId="hero" scrollOptions={scrollOptions}>
-              <SvgIcon sx={{ height: '3rem', width: '3rem', mr: 2 }} component={LogoIcon} inheritViewBox />
-            </ScrollLink>
+            <ScrollButton scrollId="hero" sx={{ mr: 2, borderRadius: '3rem' }} scrollOptions={scrollOptions}>
+              <SvgIcon
+                sx={{
+                  height: { xs: '2.5rem', sm: '3rem' },
+                  width: { xs: '2.5rem', sm: '3rem' },
+                }}
+                component={LogoIcon}
+                inheritViewBox
+              />
+            </ScrollButton>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <ScrollButton variant="text" color="info" size="small" scrollId="features">
-                Features
-              </ScrollButton>
               <ScrollButton variant="text" color="info" size="small" scrollId="highlights">
                 Highlights
               </ScrollButton>
-              <ScrollButton variant="text" color="info" size="small" scrollId="installation">
-                Installation
+              <ScrollButton variant="text" color="info" size="small" scrollId="features">
+                Features
               </ScrollButton>
               <ScrollButton variant="text" color="info" size="small" scrollId="faq" sx={{ minWidth: 0 }}>
                 FAQ
+              </ScrollButton>
+              <ScrollButton variant="text" color="info" size="small" scrollId="installation">
+                Installation
               </ScrollButton>
             </Box>
           </Box>
@@ -97,10 +104,10 @@ export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                   </IconButton>
                 </Box>
                 <Divider sx={{ my: 3 }} />
-                <ScrollMenuItem scrollId="features">Features</ScrollMenuItem>
                 <ScrollMenuItem scrollId="highlights">Highlights</ScrollMenuItem>
-                <ScrollMenuItem scrollId="installation">Installation</ScrollMenuItem>
+                <ScrollMenuItem scrollId="features">Features</ScrollMenuItem>
                 <ScrollMenuItem scrollId="faq">FAQ</ScrollMenuItem>
+                <ScrollMenuItem scrollId="installation">Installation</ScrollMenuItem>
               </Box>
             </Drawer>
           </Box>
