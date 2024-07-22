@@ -20,14 +20,17 @@ export const FeaturesBar = ({ tabValue, onTabSelect }: FeaturesBarProps) => {
     <Tabs
       value={tabValue}
       onChange={onTabSelect}
-      indicatorColor="secondary"
-      textColor="secondary"
+      indicatorColor="primary"
+      textColor="primary"
       variant="fullWidth"
+      sx={{
+        width: '100%',
+      }}
       className="bar-tabs"
     >
       <Tab
         label="Query Wizard"
-        {...a11yProps(0)}
+        {...a11yProps(0, 'features-tab-')}
         icon={<WandIcon />}
         iconPosition="start"
         className="bar-tab query-wizard-tab"

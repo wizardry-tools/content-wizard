@@ -1,16 +1,5 @@
 import { JSX, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  Chip as MuiChip,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, Card, Chip as MuiChip, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { isDark } from 'src/utils';
 import { useMouseOverZoom } from 'src/hooks';
@@ -95,7 +84,6 @@ export type FeaturePreviewProps = {
 
 export const FeaturePreview = (props: FeaturePreviewProps) => {
   const { features, heading, subHeading, prefix } = props;
-
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const theme = useTheme();
   const isDarkMode = useMemo(() => isDark(theme), [theme]);
@@ -110,6 +98,23 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
 
   const enablePreview = useMediaQuery(theme.breakpoints.up('md'));
   const selectedFeature = useMemo(() => features[selectedItemIndex], [features, selectedItemIndex]);
+
+  const updateDimensions = useCallback(() => {
+    const element = targetContainer.current;
+    if (element) {
+      canvasDimensions.current = {
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+      };
+    }
+  }, []);
+
+  const handleMouseEnterContainer = useCallback(() => {
+    // since we introduced SwipeableViews, the hidden views are not properly capturing
+    // the canvas dimensions, and we need to ensure they are captured/updated before
+    // the user interacts with the preview image.
+    updateDimensions();
+  }, [updateDimensions]);
 
   const handleItemClick = useCallback((index: number) => {
     setSelectedItemIndex(index);
@@ -134,13 +139,6 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
   useEffect(() => {
     const element = targetContainer.current;
     if (element) {
-      const updateDimensions = () => {
-        canvasDimensions.current = {
-          width: element.offsetWidth,
-          height: element.offsetHeight,
-        };
-      };
-
       // Initial dimensions
       updateDimensions();
 
@@ -152,7 +150,7 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
         window.removeEventListener('resize', updateDimensions);
       };
     }
-  }, []);
+  }, [updateDimensions]);
 
   useMouseOverZoom(highResImage, source, target, cursor, enablePreview, canvasDimensions);
 
@@ -176,7 +174,7 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
   );
 
   return (
-    <Container id={`${prefix}-features`} sx={{ pb: { xs: 4, sm: 8 } }}>
+    <Box id={`${prefix}-features`} sx={{ pb: { xs: 4, sm: 8 } }} onMouseEnter={handleMouseEnterContainer}>
       <Grid container spacing={6} sx={{ width: '100%', marginLeft: 0, marginTop: 0 }}>
         <Grid
           item
@@ -353,6 +351,6 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
           </Card>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
