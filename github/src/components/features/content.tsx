@@ -49,7 +49,7 @@ export const queryWizardFeatures = [
     icon: <FindInPageIcon />,
     title: 'Targeting Rules',
     description:
-      'Standard and required query rules that tell AEM where you want to look, what you want to find, and how max results to return.',
+      'Standard and required query rules that tell AEM where you want to look, what you want to find, and how many results to return.',
     imageLight: qwTargetingLight,
     imageDark: qwTargetingDark,
   },
@@ -80,7 +80,7 @@ export const queryWizardFeatures = [
     icon: <TranslateIcon />,
     title: 'Translation Rules',
     description:
-      'Use Translation based rules to filter results based on if they are a Language Copy, what language they have, and whether or not the Translation has been approved the in AEM.',
+      'Use Translation based rules to filter results that are a Language Copy, what language they have, and whether or not the Translation has been approved the in AEM.',
     imageLight: qwTranslationLight,
     imageDark: qwTranslationDark,
   },
@@ -107,7 +107,7 @@ export const ideFeatures = [
     ),
     title: 'Language Select',
     description:
-      'Pick from 5 out of the box query languages. Existing GraphQL support from GrapiQL IDE, extended for SQL, JCR SQL2, QueryBuilder, and XPATH',
+      'Pick from 5 out of the box query languages. Existing GraphQL support from GrapiQL IDE, extended for SQL, JCR SQL2, QueryBuilder, and XPATH.',
     imageDark: ideLanguageDark,
     imageLight: ideLanguageLight,
   },
