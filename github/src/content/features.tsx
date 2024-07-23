@@ -44,7 +44,7 @@ import {
 import { CodeIcon } from 'src/icons';
 import { SvgIcon } from '@mui/material';
 
-export const queryWizardFeatures = [
+const queryWizardFeatures = [
   {
     icon: <FindInPageIcon />,
     title: 'Targeting Rules',
@@ -86,7 +86,7 @@ export const queryWizardFeatures = [
   },
 ];
 
-export const ideFeatures = [
+const ideFeatures = [
   {
     icon: <DataObjectIcon />,
     title: 'Raw Results',
@@ -129,7 +129,7 @@ export const ideFeatures = [
   },
 ];
 
-export const resultsFeatures = [
+const resultsFeatures = [
   {
     icon: <FindInPageIcon />,
     title: 'Results Table',
@@ -169,3 +169,21 @@ export const resultsFeatures = [
     imageLight: resultsBuilderImageLight,
   },
 ];
+
+export const featureContent = {
+  queryWizard: {
+    heading: 'Query Wizard Rules',
+    subHeading: 'Explore the different rules and filters that the Query Wizard offers.',
+    features: queryWizardFeatures,
+  },
+  ide: {
+    heading: 'Query IDE Features',
+    subHeading: 'Explore the different features that the Query IDE offers.',
+    features: ideFeatures,
+  },
+  results: {
+    heading: 'Results Features',
+    subHeading: 'Explore the different features that the Results offers.',
+    features: resultsFeatures,
+  },
+};

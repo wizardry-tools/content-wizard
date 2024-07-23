@@ -26,7 +26,7 @@ function Copyright() {
   );
 }
 
-export default function Footer() {
+export function Footer() {
   const scrollToSection = useScrollToId();
 
   const FooterLink = useMemo(

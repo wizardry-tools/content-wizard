@@ -39,7 +39,7 @@ const StyledBox = styled('div')(({ theme }) => ({
   }),
 }));
 
-export default function Hero() {
+export function Hero() {
   const theme = useTheme();
   const isDarkMode = useMemo(() => isDark(theme), [theme]);
   const { name, url } = useReleaseInfoContext();

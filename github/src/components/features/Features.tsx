@@ -1,11 +1,13 @@
 import { Container, Grid, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import { FeaturePreview } from './FeaturePreview';
-import { ideFeatures, queryWizardFeatures, resultsFeatures } from './content';
+import { featureContent } from 'src/content';
 import { FeaturesBar } from './FeaturesBar';
 import { useCallback, useState } from 'react';
 import { SwipeableViews } from './swipeable-views';
 import { FeaturesPanel } from './FeaturesPanel';
+
+const { ide, queryWizard, results } = featureContent;
 
 export const Features = () => {
   const theme = useTheme();
@@ -84,28 +86,13 @@ export const Features = () => {
           slideClassName="swipeable-view-slide"
         >
           <FeaturesPanel value={tabValue} index={0} dir={theme.direction}>
-            <FeaturePreview
-              features={queryWizardFeatures}
-              prefix={'query-wizard'}
-              heading={'Query Wizard Rules'}
-              subHeading={'Explore the different rules and filters that the Query Wizard offers.'}
-            />
+            <FeaturePreview prefix={'query-wizard'} {...queryWizard} />
           </FeaturesPanel>
           <FeaturesPanel value={tabValue} index={1} dir={theme.direction}>
-            <FeaturePreview
-              features={ideFeatures}
-              prefix={'ide'}
-              heading={'Query IDE Features'}
-              subHeading={'Explore the different features that the Query IDE offers.'}
-            />
+            <FeaturePreview prefix={'ide'} {...ide} />
           </FeaturesPanel>
           <FeaturesPanel value={tabValue} index={2} dir={theme.direction}>
-            <FeaturePreview
-              features={resultsFeatures}
-              prefix={'results'}
-              heading={'Results Features'}
-              subHeading={'Explore the different features that the Results offers.'}
-            />
+            <FeaturePreview prefix={'results'} {...results} />
           </FeaturesPanel>
         </SwipeableViews>
       </Grid>

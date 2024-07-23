@@ -1,18 +1,8 @@
 import { useState } from 'react';
-import { PaletteMode } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
+import { Box, CssBaseline, Divider, PaletteMode } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppAppBar from 'src/components/AppAppBar';
-import Hero from 'src/components/Hero';
-import Highlights from 'src/components/Highlights';
-import { Features } from 'src/components/features';
-import FAQ from 'src/components/FAQ';
-import Footer from 'src/components/Footer';
-import { InstallationGuide } from 'src/components/InstallationGuide';
+import { AppAppBar, BuiltWith, FAQ, Features, Footer, Hero, Highlights, InstallationGuide } from 'src/components';
 import { getTheme } from 'src/utils';
-import { BuiltWith } from 'src/components/BuiltWith';
 
 export default function LandingPage() {
   const [mode, setMode] = useState<PaletteMode>('dark');

@@ -11,7 +11,7 @@ interface AppAppBarProps {
   toggleColorMode: () => void;
 }
 
-export default function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
+export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
   const [open, setOpen] = useState(false);
   const scrollOptions = { hook: setOpen, hookProps: false };
 
