@@ -107,5 +107,18 @@
   ],
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "identity-obj-proxy"
+    },
+    "transform": {
+      "^.+\\.(ts|tsx)$": ["ts-jest", {
+        "tsconfig": "<rootDir>/tsconfig.json"
+      }]
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill)"
+    ]
   }
 }

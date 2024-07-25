@@ -14,6 +14,8 @@ export function useObjectState<T>(initialValue: T): [T, (arg: Partial<T> | Funct
             ...s,
             ...newState,
           };
+        } else {
+          return s;
         }
       });
     }
