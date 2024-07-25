@@ -109,8 +109,12 @@
     "extends": "react-app"
   },
   "jest": {
+    "preset": "ts-jest",
     "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy"
+      "\\.(css|scss)$": "identity-obj-proxy",
+      "moduleNameMapper": {
+        "^src/(.*)$": "<rootDir>/src/$1"
+      }
     },
     "transform": {
       "^.+\\.(ts|tsx)$": ["ts-jest", {

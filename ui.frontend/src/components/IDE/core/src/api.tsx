@@ -2,7 +2,7 @@ import { createContextHook, createNullableContext } from './utility/context';
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
 import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { buildGraphQLURL, endpoints, Statement } from 'src/components/Query';
-import { createAPIFetcher } from 'src/utility';
+import { useCreateFetcher } from 'src/utility';
 import { useLogger } from 'src/providers';
 import { useRenderCount } from 'src/utility';
 
@@ -70,12 +70,13 @@ export function APIContextProvider(props: APIContextProviderProps) {
   const logger = useLogger();
   logger.debug({ message: `APIContextProvider[${renderCount}] render()` });
   const { children } = props;
+  const fetcher = useCreateFetcher();
   const apiFetcher = useMemo(
     () =>
-      createAPIFetcher({
+      fetcher.createAPIFetcher({
         url: endpoints.graphQlListPath,
       }),
-    [],
+    [fetcher],
   );
   const [APIs, setAPIs] = useState([] as API[]);
   const isFetching = useRef(false);

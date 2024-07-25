@@ -2,7 +2,7 @@ import { ChangeEvent, memo, MouseEvent, useMemo } from 'react';
 import { TableFooter, TablePagination, TableRow } from '@mui/material';
 import { TablePaginationActions } from './TablePaginationActions';
 import { useLogger, useResults } from 'src/providers';
-import { usePaperTheme } from 'src/utility/theme';
+import { usePaperTheme } from 'src/utility';
 
 export type ResultTableFooterProps = {
   rowsPerPage: number;

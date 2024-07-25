@@ -1,6 +1,6 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Logger, useLogger } from './LoggingProvider';
-import { getAuthorizationHeaders, useObjectState, useRenderCount } from '../utility';
+import { createContext, JSX, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useLogger } from './LoggingProvider';
+import { useAuthHeaders, useObjectState, useRenderCount } from 'src/utility';
 import { useAlertDispatcher } from './WizardAlertProvider';
 import { useResults } from './ResultsProvider';
 import { Result } from '../components/Results';
@@ -90,6 +90,25 @@ const initialPackage: PackageProps = {
   isReady: false,
 };
 
+type PackageManagerRequestOptions = {
+  action: PackageManagerAction;
+  packageState?: PackageProps;
+  formData?: FormData;
+};
+type HandlePackageProps = Omit<PackageManagerRequestOptions, 'action'>;
+
+/**
+ * Represents the properties required by a PackagingContext component.
+ * @typedef {Object} PackagingContextProps
+ * @property {string[]} groups - An array of group names.
+ * @property {boolean} isCreating - Indicates if the packaging context is in create mode.
+ * @property {boolean} isBuilding - Indicates if the packaging context is in build mode.
+ * @property {function} setPackageName - A function to set the package name.
+ * @property {function} setGroupName - A function to set the group name.
+ * @property {function} create - A function to initiate the create process.
+ * @property {function} build - A function to initiate the build process.
+ * @property {PackageProps} packageState - The current state of the package.
+ */
 type PackagingContextProps = {
   groups: string[];
   isCreating: boolean;
@@ -103,11 +122,19 @@ type PackagingContextProps = {
 
 const PackagingContext = createContext<PackagingContextProps>(null!);
 
-export const PackagingProvider = ({ children }: PropsWithChildren) => {
+/**
+ * Represents a provider for packaging functionality.
+ *
+ * @param {PropsWithChildren} - The properties with children for the PackagingProvider component.
+ *
+ * @returns {JSX.Element} The PackagingProvider component.
+ */
+export const PackagingProvider = ({ children }: PropsWithChildren): JSX.Element => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `PackagingProvider[${renderCount}] render()` });
   const alertDispatcher = useAlertDispatcher();
+  const { fetchGroups, createPackage, editPackageFilters, buildPackage, buildFilterPayload } = usePackageHandler();
   const { results } = useResults();
   const [groups, setGroups] = useState([] as string[]);
 
@@ -154,7 +181,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
       logger.debug({ message: `PackagingProvider createFilterPayload: packagePath: `, packagePath });
       return buildFilterPayload(results, { ...packageState, packagePath });
     },
-    [logger, packageState, results],
+    [buildFilterPayload, logger, packageState, results],
   );
 
   /**
@@ -210,7 +237,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
       }
       setIsCreating(false);
     })();
-  }, [packageState, logger, createFilterPayload, setPackagePath, alertDispatcher]);
+  }, [createPackage, packageState, logger, createFilterPayload, editPackageFilters, alertDispatcher, setPackagePath]);
 
   /**
    * This callback is called when the build package button is clicked.
@@ -239,7 +266,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
       }
       setIsBuilding(false);
     })();
-  }, [alertDispatcher, logger, packageState, setPackageState]);
+  }, [alertDispatcher, buildPackage, logger, packageState, setPackageState]);
 
   /**
    * This useEffect is responsible for fetching the list of Package Groups,
@@ -252,7 +279,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
         setGroups(groups);
       }
     })();
-  }, [logger]);
+  }, [fetchGroups, logger]);
 
   /**
    * This useEffect will reset the packageState to initial values when the Results update.
@@ -279,258 +306,323 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
   return <PackagingContext.Provider value={value}>{children}</PackagingContext.Provider>;
 };
 
-export function usePackagingContext() {
-  return useContext(PackagingContext);
-}
-
 /**
- * This method takes an array of Result objects, loops through them,
- * and builds a stringified PackageFilter array
+ * Retrieves the current packaging context from the React context.
  *
- * example filter: [
- *    {
- *      "root":"/content/some/path",
- *      "rules": [
- *        {
- *          "modifier":"include",
- *          "pattern":"jcr:content"
- *        }
- *      ]
- *    }
- * ]
- * @param results
+ * @return {object} The packaging context object.
  */
-function buildPackageFilters(results: Result[]): string {
-  // map Result[] into PackageFilter[]
-  const packageFilters: PackageFilter[] = results
-    .map((result) => {
-      if (result.hasOwnProperty('path')) {
-        let path = result.path;
-        const jcrIndex = path.indexOf(PATH_DELIMITER);
-        if (jcrIndex !== -1) {
-          // is part of content, need to grab content node parent
-          path = path.slice(0, jcrIndex);
-        } // else, is the content
-        return {
-          root: path + PATH_DELIMITER,
-          rules: [],
-        };
-      }
-      // if a result doesn't have a path, we can't add it to a package.
-      return {
-        root: '',
-        rules: [],
-      };
-    })
-    // filter the PackageFilter[] to remove objects without root prop
-    .filter((filter) => !!filter.root);
-  // remove duplicate values
-  const uniquePackageFilters: PackageFilter[] = [];
-  const seenValues = new Set<string>();
-  for (const filter of packageFilters) {
-    if (!seenValues.has(filter.root)) {
-      seenValues.add(filter.root);
-      uniquePackageFilters.push(filter);
-    }
-  }
-  console.log('buildPackageFilters() uniquePackageFilters: ', uniquePackageFilters);
-  return JSON.stringify(uniquePackageFilters);
-}
-
-function buildFilterPayload(results: Result[], packageState: PackageProps): FormData | null {
-  if (!packageState.packagePath) {
-    return null;
-  }
-  const formData = new FormData();
-  const packageFilters = buildPackageFilters(results);
-  formData.append('path', packageState.packagePath);
-  formData.append('packageName', packageState.packageName);
-  formData.append('groupName', packageState.groupName);
-  formData.append('version', '');
-  formData.append('description', 'This Content package was built with results found by Content Wizard.');
-  formData.append('filter', packageFilters);
-  formData.append('_charset_', 'UTF-8');
-  console.log('buildFilterPayload() formData: ', formData);
-  return formData;
-}
-
-async function appendAuthHeader(request: PackageManagerRequest): Promise<PackageManagerRequest> {
-  const authHeaders = await getAuthorizationHeaders(request.method);
-  return {
-    ...request,
-    headers: {
-      ...request.headers,
-      ...authHeaders,
-    },
-  };
-}
-
-type PackageManagerRequestOptions = {
-  action: PackageManagerAction;
-  packageState?: PackageProps;
-  formData?: FormData;
-};
-async function buildPackageRequest(props: PackageManagerRequestOptions): Promise<PackageManagerRequest | null> {
-  const { action, packageState, formData } = props;
-  const { packageName = DEFAULT_PACKAGE_NAME, groupName = DEFAULT_GROUP, packagePath } = packageState || {};
-  switch (action) {
-    case 'create': {
-      let request = await appendAuthHeader(packageRequestMap.create);
-      const body = {
-        packageName,
-        groupName,
-        packageVersion: '',
-        _charset_: 'utf-8',
-      };
-      request.body = new URLSearchParams(body);
-      return request;
-    }
-    case 'edit': {
-      if (!formData) {
-        // formData is required
-        return null;
-      }
-      let request = await appendAuthHeader(packageRequestMap.edit);
-      request.body = formData;
-      return request;
-    }
-    case 'build': {
-      if (!packagePath) {
-        // packagePath is required for this action
-        return null;
-      }
-      let request = await appendAuthHeader(packageRequestMap.build);
-      request.endpoint = request.endpoint + packagePath;
-      const formData = new FormData();
-      formData.append('cmd', 'build');
-      request.body = formData;
-      return request;
-    }
-    case 'listGroups': {
-      let request = await appendAuthHeader(packageRequestMap.listGroups);
-      request.params = {
-        ...request.params,
-        _dc: `${Date.now()}`,
-      };
-      return request;
-    }
-  }
-
-  return null;
-}
-
-async function fetchGroups(logger: Logger): Promise<string[] | null> {
-  const request = await buildPackageRequest({ action: 'listGroups' });
-  logger.debug({ message: 'fetchGroups request: ', request });
-  if (request) {
-    const { endpoint, params, headers, method } = request;
-    const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
-    const response = await fetch(url, {
-      method,
-      headers,
-    });
-    logger.debug({ message: `fetchGroups response`, response });
-    if (response.ok) {
-      const json = await response.json();
-      if (json) {
-        logger.debug({ message: `fetchGroups json`, json });
-        if (json.groups) {
-          return json.groups.map(({ name }: GroupName) => name) || null;
-        }
-      }
-    }
-  }
-  return null;
-}
-
-type HandlePackageProps = Omit<PackageManagerRequestOptions, 'action'> & {
-  logger: Logger;
-};
-
-/**
- * This async function is responsible for building and fetching the request
- * to create a package in CRX PackageManager
- * @param props
- */
-async function createPackage(props: HandlePackageProps): Promise<any> {
-  const { logger, ...other } = props;
-  const request = await buildPackageRequest({ action: 'create', ...other });
-  logger.debug({ message: 'createPackage request: ', request });
-  if (request) {
-    const { endpoint, params, headers, method, body } = request;
-    const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
-    const response = await fetch(url, {
-      method,
-      headers,
-      body,
-    });
-    logger.debug({ message: 'createPackage response: ', response });
-    if (response.ok && response.status === 200) {
-      const json = await response.json();
-      if (json) {
-        logger.debug({ message: 'createPackage json: ', json });
-        return json;
-      }
-    }
-  }
-  return null;
+export function usePackagingContext(): PackagingContextProps {
+  return useContext(PackagingContext);
 }
 
 /**
  * This async function is responsible for building and fetching the request
  * to update/edit the filters for a package in CRX PackageManager
- * @param props
+ *
+ * @returns {any} - A promise that resolves to the response JSON object, or null if the request fails.
  */
-async function editPackageFilters(props: HandlePackageProps): Promise<any> {
-  const { logger, ...other } = props;
-  const request = await buildPackageRequest({ action: 'edit', ...other });
-  logger.debug({ message: 'editPackageFilter: request ', request });
-  if (request) {
-    const { endpoint, params, headers, method, body } = request;
-    const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
-    const response = await fetch(url, {
-      method,
-      headers,
-      body,
-    });
-    logger.debug({ message: 'editPackageFilter response: ', response });
-    if (response.ok && response.status === 200) {
-      const json = await response.json();
-      if (json) {
-        logger.debug({ message: 'editPackageFilter json: ', json });
-        return json;
-      }
-    }
-  }
-  return null;
-}
+const usePackageHandler = (): Record<string, Function> => {
+  const logger = useLogger();
+  const authHeaders = useAuthHeaders();
 
-/**
- * This async function is responsible for building and fetching the request
- * to build a package in CRX PackageManager
- * Packages have to be created before they can be built.
- * @param props
- */
-async function buildPackage(props: HandlePackageProps): Promise<boolean> {
-  const { logger, ...other } = props;
-  const request = await buildPackageRequest({ action: 'build', ...other });
-  logger.debug({ message: 'buildPackage: request ', request });
-  if (request) {
-    const { endpoint, params, headers, method, body } = request;
-    const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
-    const response = await fetch(url, {
-      method,
-      headers,
-      body,
-    });
-    logger.debug({ message: 'buildPackage response: ', response });
-    if (response.ok && response.status === 200) {
-      const html = await response.text();
-      if (html) {
-        logger.debug({ message: 'buildPackage html: ', html });
-        return true;
+  /**
+   * Append authentication header to the given package manager request.
+   *
+   * @param {PackageManagerRequest} request - The package manager request to append the header to.
+   * @returns {Promise<PackageManagerRequest>} The updated package manager request with the appended header.
+   */
+  const appendAuthHeader = useCallback(
+    async (request: PackageManagerRequest): Promise<PackageManagerRequest> => {
+      const headers = await authHeaders.get(request);
+      return {
+        ...request,
+        headers,
+      };
+    },
+    [authHeaders],
+  );
+
+  /**
+   * Builds package filters based on an array of results.
+   *
+   * This method takes an array of Result objects, loops through them,
+   * and builds a stringified PackageFilter array
+   *
+   * example filter: [
+   *    {
+   *      "root":"/content/some/path",
+   *      "rules": [
+   *        {
+   *          "modifier":"include",
+   *          "pattern":"jcr:content"
+   *        }
+   *      ]
+   *    }
+   * ]
+   *
+   * @param {Result[]} results - The array of results to build package filters from.
+   * @returns {string} - A stringified version of the unique package filters in JSON format.
+   */
+  const buildPackageFilters = useCallback((results: Result[]): string => {
+    // map Result[] into PackageFilter[]
+    const packageFilters: PackageFilter[] = results
+      .map((result) => {
+        if (result.hasOwnProperty('path')) {
+          let path = result.path;
+          const jcrIndex = path.indexOf(PATH_DELIMITER);
+          if (jcrIndex !== -1) {
+            // is part of content, need to grab content node parent
+            path = path.slice(0, jcrIndex);
+          } // else, is the content
+          return {
+            root: path + PATH_DELIMITER,
+            rules: [],
+          };
+        }
+        // if a result doesn't have a path, we can't add it to a package.
+        return {
+          root: '',
+          rules: [],
+        };
+      })
+      // filter the PackageFilter[] to remove objects without root prop
+      .filter((filter) => !!filter.root);
+    // remove duplicate values
+    const uniquePackageFilters: PackageFilter[] = [];
+    const seenValues = new Set<string>();
+    for (const filter of packageFilters) {
+      if (!seenValues.has(filter.root)) {
+        seenValues.add(filter.root);
+        uniquePackageFilters.push(filter);
       }
     }
-  }
-  return false;
-}
+    console.log('buildPackageFilters() uniquePackageFilters: ', uniquePackageFilters);
+    return JSON.stringify(uniquePackageFilters);
+  }, []);
+
+  /**
+   * Builds the payload of filters to be sent in a form data object.
+   *
+   * @param {Result[]} results - The results obtained from Content Wizard.
+   * @param {PackageProps} packageState - The state of the package.
+   * @returns {FormData|null} - The payload of filters in a FormData object or null if packagePath is not set.
+   */
+  const buildFilterPayload = useCallback(
+    (results: Result[], packageState: PackageProps): FormData | null => {
+      if (!packageState.packagePath) {
+        return null;
+      }
+      const formData = new FormData();
+      const packageFilters = buildPackageFilters(results);
+      formData.append('path', packageState.packagePath);
+      formData.append('packageName', packageState.packageName);
+      formData.append('groupName', packageState.groupName);
+      formData.append('version', '');
+      formData.append('description', 'This Content package was built with results found by Content Wizard.');
+      formData.append('filter', packageFilters);
+      formData.append('_charset_', 'UTF-8');
+      console.log('buildFilterPayload() formData: ', formData);
+      return formData;
+    },
+    [buildPackageFilters],
+  );
+
+  /**
+   * Async function used to build a package request.
+   *
+   * @param {PackageManagerRequestOptions} props - The package manager request options.
+   * @returns {Promise<PackageManagerRequest | null>} - A Promise that resolves with the package manager request or null if there was an error.
+   */
+  const buildPackageRequest = useCallback(
+    async (props: PackageManagerRequestOptions): Promise<PackageManagerRequest | null> => {
+      const { action, packageState, formData } = props;
+      const { packageName = DEFAULT_PACKAGE_NAME, groupName = DEFAULT_GROUP, packagePath } = packageState || {};
+      switch (action) {
+        case 'create': {
+          let request = await appendAuthHeader(packageRequestMap.create);
+          const body = {
+            packageName,
+            groupName,
+            packageVersion: '',
+            _charset_: 'utf-8',
+          };
+          request.body = new URLSearchParams(body);
+          return request;
+        }
+        case 'edit': {
+          if (!formData) {
+            // formData is required
+            return null;
+          }
+          let request = await appendAuthHeader(packageRequestMap.edit);
+          request.body = formData;
+          return request;
+        }
+        case 'build': {
+          if (!packagePath) {
+            // packagePath is required for this action
+            return null;
+          }
+          let request = await appendAuthHeader(packageRequestMap.build);
+          request.endpoint = request.endpoint + packagePath;
+          const formData = new FormData();
+          formData.append('cmd', 'build');
+          request.body = formData;
+          return request;
+        }
+        case 'listGroups': {
+          let request = await appendAuthHeader(packageRequestMap.listGroups);
+          request.params = {
+            ...request.params,
+            _dc: `${Date.now()}`,
+          };
+          return request;
+        }
+      }
+    },
+    [appendAuthHeader],
+  );
+
+  /**
+   * Fetches package groups from AEM.
+   *
+   * This function sends a request to the server to retrieve a list of groups.
+   *
+   * @param {Logger} logger - The logger object for logging debug messages.
+   * @returns {Promise<string[] | null>} A promise that resolves to an array of group names if successful, `null` otherwise.
+   */
+  const fetchGroups = useCallback(async (): Promise<string[] | null> => {
+    const request = await buildPackageRequest({ action: 'listGroups' });
+    logger.debug({ message: 'fetchGroups request: ', request });
+    if (request) {
+      const { endpoint, params, headers, method } = request;
+      const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
+      const response = await fetch(url, {
+        method,
+        headers,
+      });
+      logger.debug({ message: `fetchGroups response`, response });
+      if (response.ok) {
+        const json = await response.json();
+        if (json) {
+          logger.debug({ message: `fetchGroups json`, json });
+          if (json.groups) {
+            return json.groups.map(({ name }: GroupName) => name) || null;
+          }
+        }
+      }
+    }
+    return null;
+  }, [buildPackageRequest, logger]);
+
+  /**
+   * This async function is responsible for building and fetching the request
+   * to create a package in CRX PackageManager
+   *
+   * @param {HandlePackageProps} props - The props to handle the package creation.
+   * @returns {Promise<any>} - A promise that resolves to the response JSON object, or null if the request fails.
+   */
+  const createPackage = useCallback(
+    async (props: HandlePackageProps): Promise<any> => {
+      const request = await buildPackageRequest({ action: 'create', ...props });
+      logger.debug({ message: 'createPackage request: ', request });
+      if (request) {
+        const { endpoint, params, headers, method, body } = request;
+        const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
+        const response = await fetch(url, {
+          method,
+          headers,
+          body,
+        });
+        logger.debug({ message: 'createPackage response: ', response });
+        if (response.ok && response.status === 200) {
+          const json = await response.json();
+          if (json) {
+            logger.debug({ message: 'createPackage json: ', json });
+            return json;
+          }
+        }
+      }
+      return null;
+    },
+    [buildPackageRequest, logger],
+  );
+
+  /**
+   * This async function is responsible for building and fetching the request
+   * to update/edit the filters for a package in CRX PackageManager
+   *
+   * @param {HandlePackageProps} props - The properties needed to handle the package.
+   * @returns {Promise<any>} - A promise that resolves to the API response data, or null if the edit request failed.
+   */
+  const editPackageFilters = useCallback(
+    async (props: HandlePackageProps): Promise<any> => {
+      const request = await buildPackageRequest({ action: 'edit', ...props });
+      logger.debug({ message: 'editPackageFilter: request ', request });
+      if (request) {
+        const { endpoint, params, headers, method, body } = request;
+        const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
+        const response = await fetch(url, {
+          method,
+          headers,
+          body,
+        });
+        logger.debug({ message: 'editPackageFilter response: ', response });
+        if (response.ok && response.status === 200) {
+          const json = await response.json();
+          if (json) {
+            logger.debug({ message: 'editPackageFilter json: ', json });
+            return json;
+          }
+        }
+      }
+      return null;
+    },
+    [buildPackageRequest, logger],
+  );
+
+  /**
+   * This async function is responsible for building and fetching the request
+   * to build a package in CRX PackageManager
+   * Packages have to be created before they can be built.
+   *
+   * @param {HandlePackageProps} props - The handle package props.
+   * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating whether the package was successfully built.
+   */
+  const buildPackage = useCallback(
+    async (props: HandlePackageProps): Promise<boolean> => {
+      const request = await buildPackageRequest({ action: 'build', ...props });
+      logger.debug({ message: 'buildPackage: request ', request });
+      if (request) {
+        const { endpoint, params, headers, method, body } = request;
+        const url = endpoint + (params ? '?' + new URLSearchParams(params) : '');
+        const response = await fetch(url, {
+          method,
+          headers,
+          body,
+        });
+        logger.debug({ message: 'buildPackage response: ', response });
+        if (response.ok && response.status === 200) {
+          const html = await response.text();
+          if (html) {
+            logger.debug({ message: 'buildPackage html: ', html });
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+    [buildPackageRequest, logger],
+  );
+
+  return useMemo(
+    () => ({
+      fetchGroups,
+      createPackage,
+      editPackageFilters,
+      buildPackage,
+      buildFilterPayload,
+    }),
+    [buildFilterPayload, buildPackage, createPackage, editPackageFilters, fetchGroups],
+  );
+};
