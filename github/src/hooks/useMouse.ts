@@ -37,7 +37,7 @@ export function useMouse(ref: RefObject<HTMLElement | null>, enablePreview: bool
           });
         }
       };
-      const handleMouseOut = (_e: MouseEvent) => {
+      const handleMouseOut = () => {
         setMouse({
           x: 0,
           y: 0,

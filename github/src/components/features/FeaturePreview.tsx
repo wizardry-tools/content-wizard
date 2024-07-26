@@ -12,8 +12,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { isDark } from 'src/utils';
-import { useMouseOverZoom } from 'src/hooks';
+import { isDark } from '@/utils';
+import { useMouseOverZoom } from '@/hooks';
 
 interface ChipProps {
   selected?: boolean;

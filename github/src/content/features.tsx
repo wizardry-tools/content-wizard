@@ -40,8 +40,8 @@ import {
   resultsFilterSortImageLight,
   resultsBuilderImageDark,
   resultsBuilderImageLight,
-} from 'src/images';
-import { CodeIcon } from 'src/icons';
+} from '@/images';
+import { CodeIcon } from '@/icons';
 import { SvgIcon } from '@mui/material';
 
 const queryWizardFeatures = [

@@ -1,14 +1,6 @@
-import {
-  CSSProperties,
-  HTMLProps,
-  isValidElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from 'react';
-import { Axis, axisProperties, defaultSwiperStyles } from './swiper-props';
+import { Children } from 'react';
+import { isValidElement, useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { axisProperties, defaultSwiperStyles } from './swiper-props';
 import {
   adaptMouse,
   addEventListener,
@@ -22,55 +14,7 @@ import {
   getDomTreeShapes,
   checkIndexBounds,
 } from './util';
-import { Children } from 'react';
-
-export type SpringConfig = {
-  duration: string;
-  easeFunction: string;
-  delay: string;
-};
-
-export type OnChangeIndexCallback = (index: number, indexLatest: number) => void;
-
-export type OnTransitionEndCallback = () => void;
-
-export type OnSwitchingCallback = (index: number, type: OnSwitchingCallbackTypeDescriptor) => void;
-
-export type OnSwitchingCallbackTypeDescriptor = 'move' | 'end';
-
-export type SwipeableViewsProps = Omit<HTMLProps<HTMLDivElement>, 'action'> & {
-  animateHeight?: boolean | undefined;
-  animateTransitions?: boolean | undefined;
-  axis?: Axis | undefined;
-  containerStyle?: CSSProperties | undefined;
-  disabled?: boolean | undefined;
-  /*
-   * This is the config used to disable lazy loading, if true it will render all the views in first rendering.
-   */
-  disableLazyLoading?: boolean | undefined;
-  enableMouseEvents?: boolean | undefined;
-  hysteresis?: number | undefined;
-  ignoreNativeScroll?: boolean | undefined;
-  index?: number | undefined;
-  onChangeIndex?: OnChangeIndexCallback | undefined;
-  onSwitching?: OnSwitchingCallback | undefined;
-  onTransitionEnd?: OnTransitionEndCallback | undefined;
-  resistance?: boolean | undefined;
-  style?: CSSProperties | undefined;
-  slideStyle?: CSSProperties | undefined;
-  springConfig?: SpringConfig | undefined;
-  slideClassName?: string | undefined;
-  threshold?: number | undefined;
-  action?: ActionCallback;
-};
-
-export type UpdateHeightAction = () => void;
-
-export interface Actions {
-  updateHeight: UpdateHeightAction;
-}
-
-export type ActionCallback = (actions: Actions) => void;
+import { Axis, SwipeableViewsProps } from '@/types';
 
 /**
  * This is the main component
@@ -81,7 +25,7 @@ export type ActionCallback = (actions: Actions) => void;
  * @constructor
  */
 export const SwipeableViews = (props: SwipeableViewsProps) => {
-  const initialIndex = props.index || 0;
+  const initialIndex = props.index ?? 0;
   const {
     action,
     animateHeight = false,
@@ -188,7 +132,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   }, [onTransitionEnd, displaySameSlide, isDragging]);
 
   useEffect(() => {
-    const newIndex = props.index as number;
+    const newIndex = props.index!;
     if (newIndex !== previousProps.current.index) {
       if (process.env.NODE_ENV !== 'production') {
         checkIndexBounds({ index: index.current, children });
@@ -213,7 +157,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
       index.current = i;
 
       if (containerNode.current.tagName) {
-        const transform: string = axisProperties.transform[axis as Axis](i * 100);
+        const transform: string = axisProperties.transform[axis](i * 100);
         containerNode.current.style.webkitTransform = transform;
         containerNode.current.style.transform = transform;
       }

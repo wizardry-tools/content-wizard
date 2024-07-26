@@ -1,6 +1,6 @@
+import { AppProvider } from '@/providers';
+import { LandingPage } from '@/routes';
 import './App.css';
-import LandingPage from './routes/LandingPage';
-import { AppProvider } from './providers/AppProvider';
 
 function App() {
   return (

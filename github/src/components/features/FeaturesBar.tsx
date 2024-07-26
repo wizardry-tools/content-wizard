@@ -1,10 +1,10 @@
 import { Tab, Tabs } from '@mui/material';
-import { WandIcon, CodeIcon, TableIcon } from 'src/icons';
-import { a11yProps } from 'src/utils';
+import { WandIcon, CodeIcon, TableIcon } from '@/icons';
+import { a11yProps } from '@/utils';
 
 export type FeaturesBarProps = {
   tabValue: number;
-  onTabSelect: (_event: any, value: any) => void;
+  onTabSelect: (_event: unknown, value: number) => void;
 };
 
 const tabCssProps = {

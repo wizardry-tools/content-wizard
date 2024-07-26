@@ -1,7 +1,7 @@
 import { Box, Container, Grid, IconButton, IconButtonProps, SvgIcon, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
-import { TSLogo, ReactLogo, MuiLogo, GraphiQLLogo, MavenLogo, CodeMirrorLogo, AdobeLogo } from 'src/icons';
+import { TSLogo, ReactLogo, MuiLogo, GraphiQLLogo, MavenLogo, CodeMirrorLogo, AdobeLogo } from '@/icons';
 import 'src/styles/built-with.scss';
 
 type IconLinkProps = SvgIconProps & IconButtonProps;

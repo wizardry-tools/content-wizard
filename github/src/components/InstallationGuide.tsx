@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import MarkdownContainer from './MarkdownContainer';
-import { useReleaseInfoContext, REPO, DEFAULT_RELEASE_URL } from 'src/providers';
+import { useReleaseInfoContext, REPO, DEFAULT_RELEASE_URL } from '@/providers';
 
 export const InstallationGuide = () => {
   const [content, setContent] = useState('');

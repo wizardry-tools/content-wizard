@@ -2,10 +2,10 @@ import { IconButton, PaletteMode } from '@mui/material';
 import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
 import ModeNightRoundedIcon from '@mui/icons-material/ModeNightRounded';
 
-interface ToggleColorModeProps {
+type ToggleColorModeProps = {
   mode: PaletteMode;
   toggleColorMode: () => void;
-}
+};
 
 export default function ToggleColorMode({ mode, toggleColorMode }: ToggleColorModeProps) {
   return (

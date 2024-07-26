@@ -1,7 +1,7 @@
 import { SyntheticEvent, memo, useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { questionsAndAnswers } from 'src/content';
+import { questionsAndAnswers } from '@/content';
 
 export function FAQ() {
   const [expanded, setExpanded] = useState<string>('');

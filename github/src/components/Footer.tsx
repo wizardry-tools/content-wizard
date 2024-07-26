@@ -1,11 +1,8 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import { GitHub } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-import { useScrollToId } from 'src/utils';
 import { PropsWithChildren, useMemo } from 'react';
+import { SxProps } from '@mui/system';
+import { Box, Container, IconButton, Link, Typography } from '@mui/material';
+import { GitHub } from '@mui/icons-material';
+import { useScrollToId } from '@/utils';
 
 function Copyright() {
   return (
@@ -30,7 +27,7 @@ export function Footer() {
   const scrollToSection = useScrollToId();
 
   const FooterLink = useMemo(
-    () => (props: PropsWithChildren & { id: string; sx?: any }) => {
+    () => (props: PropsWithChildren & { id: string; sx?: SxProps }) => {
       const { id, children, sx = {} } = props;
       return (
         <Link

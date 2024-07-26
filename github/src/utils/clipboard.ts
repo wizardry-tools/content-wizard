@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import copyToClipboard from 'copy-to-clipboard';
 import { visit } from 'unist-util-visit';
+import { Node } from '@/types';
 
 /**
  * ClipBoard use hook
@@ -14,14 +15,14 @@ import { visit } from 'unist-util-visit';
 export const useClipBoard = () => {
   const content = useRef('');
 
-  const captureContent = useCallback((node: any, index: any) => {
-    if (node.value && typeof node.value !== 'undefined' && typeof index === 'number') {
-      content.current += node.value;
+  const captureContent = useCallback((node: Node) => {
+    if (node.value && typeof node.value !== 'undefined') {
+      content.current += node.value.toString();
     }
   }, []);
 
   const copy = useCallback(
-    (node: any) => {
+    (node: Node) => {
       visit(node, captureContent);
       copyToClipboard(content.current);
       content.current = '';

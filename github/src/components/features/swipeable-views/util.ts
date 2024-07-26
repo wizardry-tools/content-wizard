@@ -1,5 +1,6 @@
 import { Children, MutableRefObject, PropsWithChildren, ReactElement } from 'react';
-import { Axis, axisProperties, Position } from './swiper-props';
+import { axisProperties } from './swiper-props';
+import { AddEventListenerProps, Axis, Position } from '@/types';
 
 export const defaultComputeValues = {
   RESISTANCE_COEF: 0.6,
@@ -9,7 +10,14 @@ export const defaultComputeValues = {
   UNCERTAINTY_THRESHOLD: 3, // px
 };
 
-export function computeIndex(params: any) {
+type ComputeIndexProps = PropsWithChildren & {
+  startIndex: number;
+  startX: number;
+  pageX: number;
+  viewLength: number;
+  resistance?: number;
+};
+export function computeIndex(params: ComputeIndexProps) {
   const { children, startIndex, startX, pageX, viewLength, resistance } = params;
 
   const indexMax = Children.count(children) - 1;
@@ -36,16 +44,6 @@ export function computeIndex(params: any) {
     computedX: newStartX,
   };
 }
-
-export type EventListenerProps = {
-  event: any;
-  handler: any;
-  options?: any | undefined;
-};
-
-export type AddEventListenerProps = EventListenerProps & {
-  node: HTMLDivElement;
-};
 
 export function addEventListener({ node, event, handler, options }: AddEventListenerProps) {
   node.addEventListener(event, handler, options);

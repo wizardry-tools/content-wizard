@@ -1,12 +1,10 @@
-import { ScrollLinkProps } from './ScrollLink';
 import Button from '@mui/material/Button';
-import { useScrollToId } from 'src/utils';
-import { ButtonProps } from '@mui/material/Button/Button';
+import { useScrollToId } from '@/utils';
+import { ScrollButtonProps } from '@/types';
 
-export type ScrollButtonProps = ScrollLinkProps & ButtonProps;
 export const ScrollButton = (props: ScrollButtonProps) => {
-  const { scrollId, scrollOptions, children, ...other } = props;
-  const scrollToSection = useScrollToId(scrollOptions);
+  const { scrollId, children, hook, hookProps, ...other } = props;
+  const scrollToSection = useScrollToId({ hook, hookProps });
 
   return (
     <Button {...other} onClick={() => scrollToSection.scroll(scrollId)}>

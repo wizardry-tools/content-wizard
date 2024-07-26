@@ -1,10 +1,4 @@
-interface ScrollToIdProps {
-  scrollToOptions?: ScrollToOptions;
-  scrollIntoViewOptions?: ScrollIntoViewOptions;
-  hook?: (callbackValue: any) => void;
-  hookProps?: any;
-  offset?: number;
-}
+import { ScrollToIdProps } from '@/types';
 
 export const useScrollToId = (props?: ScrollToIdProps) => {
   const {
@@ -16,10 +10,10 @@ export const useScrollToId = (props?: ScrollToIdProps) => {
       inline: 'start',
       block: 'end',
     } as ScrollIntoViewOptions,
-    hook = () => {},
+    hook = () => ({}),
     offset = 32,
     hookProps,
-  } = props || {};
+  } = props ?? {};
 
   const scroll = (id: string) => {
     const element = document.getElementById(id);

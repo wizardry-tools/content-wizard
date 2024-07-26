@@ -1,8 +1,8 @@
-import { Link } from '@mui/material';
-import { ScrollLink } from '../components';
-import { aemToolsNav } from '../images';
-import { styled } from '@mui/material/styles';
 import { ReactNode } from 'react';
+import { Link } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { ScrollLink } from '@/components';
+import { aemToolsNav } from '@/images';
 
 const StyledImage = styled('img')(({ theme }) => ({
   objectFit: 'contain',

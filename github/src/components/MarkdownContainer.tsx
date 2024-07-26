@@ -1,23 +1,26 @@
+import { ElementType, memo, PropsWithChildren, useCallback, useState } from 'react';
 import Markdown from 'react-markdown';
 import rehypeReact from 'rehype-react';
 import rehypeHighlight from 'rehype-highlight';
 import { Container, useTheme, Link as MuiLink, Paper } from '@mui/material';
-import { memo, useCallback, useState, MouseEvent } from 'react';
-import { useClipBoard } from 'src/utils';
+import { Node } from '@/types';
+import { useClipBoard } from '@/utils';
 import CopyFab from './CopyFab';
 import 'src/styles/markdown.scss';
 
 type MarkdownContainerProps = {
   children?: string | null | undefined;
 };
-type ComponentOverride = MarkdownContainerProps & any;
+type PaperPreProps = PropsWithChildren & {
+  node: Node;
+};
 
-const Link = memo((props: ComponentOverride) => {
-  const { _node, ...rest } = props;
+const Link = memo((props: MarkdownContainerProps) => {
+  const { ...rest } = props;
   return <MuiLink target="_blank" {...rest} color="info.main" />;
 });
 
-const CodeContainer = ({ children, ...other }: any) => {
+const CodeContainer = ({ children, ...other }: PropsWithChildren) => {
   // I'm not sure why Paper does not accept mouse event listeners, so this is a workaround
   return (
     <div className="code-container" {...other}>
@@ -26,21 +29,18 @@ const CodeContainer = ({ children, ...other }: any) => {
   );
 };
 
-const PaperPre = (props: ComponentOverride) => {
+const PaperPre = (props: PaperPreProps) => {
   const clipBoard = useClipBoard();
   const { node, children, ...rest } = props;
   const [hover, setHover] = useState(false);
   const [touched, setTouched] = useState(false);
-  const copyCode = useCallback(
-    (_e: Event) => {
-      clipBoard.copy(node);
-    },
-    [clipBoard, node],
-  );
-  const mouseEnter = useCallback((_e: MouseEvent) => {
+  const copyCode = useCallback(() => {
+    clipBoard.copy(node);
+  }, [clipBoard, node]);
+  const mouseEnter = useCallback(() => {
     setHover(true);
   }, []);
-  const mouseLeave = useCallback((_e: MouseEvent) => {
+  const mouseLeave = useCallback(() => {
     setTimeout(() => {
       setHover(false);
     }, 100);
@@ -58,7 +58,7 @@ const PaperPre = (props: ComponentOverride) => {
   return (
     <Paper
       className="markdown-paper"
-      component={CodeContainer as any}
+      component={CodeContainer as ElementType}
       onMouseOver={mouseEnter}
       onMouseLeave={mouseLeave}
       onTouchStartCapture={onTouch}
@@ -78,12 +78,12 @@ const MarkdownContainer = ({ children }: MarkdownContainerProps) => {
     <Container className={`markdown-container ${theme.palette.mode ?? 'dark'}`}>
       <Markdown
         rehypePlugins={[rehypeReact, rehypeHighlight]}
-        components={
-          {
-            a: Link,
-            pre: PaperPre,
-          } as any
-        }
+        components={{
+          // @ts-expect-error markdown container types are weird
+          a: Link,
+          // @ts-expect-error markdown container types are weird
+          pre: PaperPre,
+        }}
       >
         {children}
       </Markdown>

@@ -1,12 +1,10 @@
 import { MenuItem } from '@mui/material';
-import { useScrollToId } from 'src/utils';
-import { ScrollLinkProps } from './ScrollLink';
-import { MenuItemProps } from '@mui/material/MenuItem/MenuItem';
+import { useScrollToId } from '@/utils';
+import { ScrollMenuItemProps } from '@/types';
 
-export type ScrollMenuItemProps = ScrollLinkProps & MenuItemProps;
 export const ScrollMenuItem = (props: ScrollMenuItemProps) => {
-  const { scrollId, scrollOptions, children } = props;
-  const scrollToSection = useScrollToId(scrollOptions);
+  const { scrollId, children } = props;
+  const scrollToSection = useScrollToId();
 
   return <MenuItem onClick={() => scrollToSection.scroll(scrollId)}>{children}</MenuItem>;
 };

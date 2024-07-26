@@ -3,20 +3,24 @@ import { AppBar, Box, Container, Divider, Drawer, IconButton, PaletteMode, SvgIc
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ToggleColorMode from './ToggleColorMode';
-import { LogoIcon } from 'src/icons';
+import { LogoIcon } from '@/icons';
 import { ScrollButton, ScrollMenuItem } from './nav-scrollers';
 
-interface AppAppBarProps {
+type AppAppBarProps = {
   mode: PaletteMode;
   toggleColorMode: () => void;
-}
+};
 
 export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
   const [open, setOpen] = useState(false);
-  const scrollOptions = { hook: setOpen, hookProps: false };
-
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
+  };
+
+  const hook = (value: unknown) => {
+    if (typeof value === 'boolean') {
+      setOpen(value);
+    }
   };
 
   return (
@@ -24,7 +28,7 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
       position="fixed"
       sx={{
         boxShadow: 0,
-        bgcolor: 'transparent',
+        bgColor: 'transparent',
         backgroundImage: 'none',
         mt: 2,
       }}
@@ -42,16 +46,16 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             maxHeight: 40,
             border: '1px solid',
             borderColor: 'divider',
-            bgcolor: 'hsla(220, 60%, 99%, 0.6)',
+            bgColor: 'hsla(220, 60%, 99%, 0.6)',
             boxShadow: '0 1px 2px hsla(210, 0%, 0%, 0.05), 0 2px 12px hsla(210, 100%, 80%, 0.5)',
             ...theme.applyStyles('dark', {
-              bgcolor: 'hsla(220, 0%, 0%, 0.7)',
+              bgColor: 'hsla(220, 0%, 0%, 0.7)',
               boxShadow: '0 1px 2px hsla(210, 0%, 0%, 0.5), 0 2px 12px hsla(210, 100%, 25%, 0.3)',
             }),
           })}
         >
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <ScrollButton scrollId="hero" sx={{ mr: 2, borderRadius: '3rem' }} scrollOptions={scrollOptions}>
+            <ScrollButton scrollId="hero" sx={{ mr: 2, borderRadius: '3rem' }} hook={hook} hookProps={false}>
               <SvgIcon
                 sx={{
                   height: { xs: '2.5rem', sm: '3rem' },
