@@ -7,7 +7,7 @@ export type UsePaperThemeProps = {
   styles?: CSSProperties;
 };
 export const usePaperTheme = (props?: UsePaperThemeProps) => {
-  const { elevation = 1, styles = {} } = props || {};
+  const { elevation = 1, styles = {} } = props ?? {};
 
   return (theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,

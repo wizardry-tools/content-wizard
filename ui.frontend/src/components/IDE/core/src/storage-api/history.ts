@@ -2,7 +2,7 @@ import { parse } from 'graphql';
 
 import { useWizardStore, WizardStore, WizardStoreItem } from './store';
 import { WizardStorageAPI } from './storage-api';
-import { QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
+import { QueryLanguage, QueryLanguageKey, Statement } from '@/components/Query';
 import { useState } from 'react';
 
 const MAX_QUERY_SIZE = 100000;
@@ -13,8 +13,8 @@ export type WHistoryStoreProps = {
 };
 export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
   const { storage, maxSize } = props;
-  let history: WizardStore = useWizardStore({ key: 'queries', storage, maxSize });
-  let favorite: WizardStore = useWizardStore({ key: 'favorites', storage, maxSize: null });
+  const history: WizardStore = useWizardStore({ key: 'queries', storage, maxSize });
+  const favorite: WizardStore = useWizardStore({ key: 'favorites', storage, maxSize: null });
   const [queries, setQueries] = useState([...history.fetchAll(), ...favorite.fetchAll()]);
 
   function shouldSaveQuery(

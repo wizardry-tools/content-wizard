@@ -5,11 +5,11 @@ import {
   HistoryContextProvider,
   PluginContextProvider,
   SchemaContextProvider,
-} from 'src/components/IDE/core/src';
-import { APIContextProvider } from 'src/components/IDE/core/src';
+} from '@/components/IDE/core/src';
+import { APIContextProvider } from '@/components/IDE/core/src';
 import { PropsWithChildren } from 'react';
 import { useLogger } from './LoggingProvider';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 export type IDEProviderProps = PropsWithChildren;
 

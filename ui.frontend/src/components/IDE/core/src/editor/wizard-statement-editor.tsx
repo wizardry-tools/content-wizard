@@ -4,9 +4,9 @@ import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
 import { useCopyQuery, useKeyMap, useSynchronizeOption } from './hooks';
 import { CodeMirrorType, CommonEditorProps } from './types';
-import { useLogger, useQuery } from 'src/providers';
-import { QueryLanguage } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
+import { useLogger, useQuery } from '@/providers';
+import { QueryLanguage } from '@/components/Query';
+import { useRenderCount } from '@/utility';
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {
   className?: string;
@@ -53,7 +53,7 @@ export function useWizardStatementEditor(
 
   useEffect(() => {
     let isActive = true;
-    let addons = [
+    const addons = [
       import('codemirror/addon/fold/foldgutter'),
       import('codemirror/addon/fold/brace-fold'),
       import('codemirror/addon/dialog/dialog'),

@@ -3,16 +3,14 @@ import { renderHook } from '@testing-library/react';
 
 import { useAuthHeaders } from '../useAuthHeaders';
 import { useCsrfToken } from '../useCsrfToken';
-import { useLogger } from 'src/providers/LoggingProvider';
+import { useLogger } from '@/providers/LoggingProvider';
 
-//jest.mock('src/providers/LoggingProvider');
+//jest.mock('@/providers/LoggingProvider');
 // Mocking hooks used inside useAuthHeaders
 jest.mock('../useRenderCount');
 jest.mock('../useCsrfToken');
 
 test('Using useAuthHeaders', async () => {
-
-
   // Creating a mock CSRF token and setting up mock for useCsrfToken hook
   const mockCsrfToken = 'mockCsrfToken';
   (useCsrfToken as jest.Mock).mockReturnValue({
@@ -23,14 +21,14 @@ test('Using useAuthHeaders', async () => {
   const { result } = renderHook(() => useAuthHeaders());
 
   // Act
-  const headers:HeadersInit = await result.current.get({
+  const headers: HeadersInit = await result.current.get({
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
   });
 
-  const token = Object.entries(headers).find((value)=>{
-    return value[0] === 'CSRF-Token'
-  })
+  const token = Object.entries(headers).find((value) => {
+    return value[0] === 'CSRF-Token';
+  });
   // Assert
   // Checking the CSRF token is present in header for non GET methods
   expect(token?.at(1)).toEqual(mockCsrfToken);

@@ -1,9 +1,9 @@
 import { useWizardStorageAPI } from '../storage-api';
-import { useAlertDispatcher } from 'src/providers';
+import { useAlertDispatcher } from '@/providers';
 
 const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
 
-jest.mock('src/providers', () => {
+jest.mock('@/providers', () => {
   const mockAlertDispatcher = jest.fn(() => {});
   return {
     useAlertDispatcher() {

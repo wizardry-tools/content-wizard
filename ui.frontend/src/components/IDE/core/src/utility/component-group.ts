@@ -2,7 +2,7 @@ import { JSXElementConstructor } from 'react';
 
 export const createComponentGroup = <
   Root extends JSXElementConstructor<any>,
-  Children extends { [key: string]: JSXElementConstructor<any> },
+  Children extends Record<string, JSXElementConstructor<any>>,
 >(
   root: Root,
   children: Children,

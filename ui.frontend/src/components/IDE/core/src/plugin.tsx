@@ -1,10 +1,10 @@
 import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { DocExplorer, useExplorerContext } from './explorer';
 import { History, useHistoryContext } from './history';
-import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from 'src/icons';
+import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from '@/icons';
 import { useStorageContext } from './storage';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useIsGraphQL } from 'src/providers';
+import { useIsGraphQL } from '@/providers';
 import { LanguageSelector } from './language-selector';
 
 export type GraphiQLPlugin = {
@@ -130,13 +130,13 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
   }, [hasExplorerContext, hasHistoryContext, isGraphQL, props.plugins]);
 
   const [visiblePlugin, internalSetVisiblePlugin] = useState<GraphiQLPlugin | null>(() => {
-    const storedValue = storage?.get(STORAGE_KEY);
+    const storedValue = storage.get(STORAGE_KEY);
     const pluginForStoredValue = plugins.find((plugin) => plugin.title === storedValue);
     if (pluginForStoredValue) {
       return pluginForStoredValue;
     }
     if (storedValue) {
-      storage?.set(STORAGE_KEY, '');
+      storage.set(STORAGE_KEY, '');
     }
 
     if (!props.visiblePlugin) {

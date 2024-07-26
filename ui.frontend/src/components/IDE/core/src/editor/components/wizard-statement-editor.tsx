@@ -7,7 +7,7 @@ import '../style/editor.scss';
 import { useMemo } from 'react';
 import { Paper, Stack } from '@mui/material';
 import { ToolbarButton } from '../../toolbar';
-import { CopyIcon } from 'src/icons';
+import { CopyIcon } from '@/icons';
 import { useCopyQuery } from '../hooks';
 
 import './wizard-statement-editor.scss';

@@ -1,21 +1,19 @@
 import { useCallback, useState } from 'react';
+import { isPlainObject } from '../libs';
 
-/**
- * Simple method that checks if a passed value is an Object or not.
- * @param value
- */
-export function isPlainObject<T>(value: T): boolean {
-  return Object.prototype.toString.call(value) === '[object Object]';
-}
+// handleUpdate
+type ObjectStateHandleUpdate<T> = (state: T) => void;
+// arg()
+type ObjectStateUpdateCallback<T> = (state: T) => T;
+type ObjectStateOrCallback<T> = ObjectStateUpdateCallback<T> | T;
 
-export function useObjectState<T>(initialValue: T): [T, (arg: Partial<T> | Function) => void] {
+export function useObjectState<T>(initialValue: T): [T, ObjectStateHandleUpdate<T>] {
   const [state, setState] = useState(initialValue);
 
-  const handleUpdate = useCallback((arg: any) => {
+  const handleUpdate = useCallback((arg: ObjectStateOrCallback<T>) => {
     if (typeof arg === 'function') {
-      setState((s) => {
-        const newState = arg(s);
-
+      setState((s: T): T => {
+        const newState: T = arg(s);
         if (isPlainObject(newState)) {
           return {
             ...s,
@@ -28,10 +26,12 @@ export function useObjectState<T>(initialValue: T): [T, (arg: Partial<T> | Funct
     }
 
     if (isPlainObject(arg)) {
-      setState((s) => ({
-        ...s,
-        ...arg,
-      }));
+      setState(
+        (s: T): T => ({
+          ...s,
+          ...arg,
+        }),
+      );
     }
   }, []);
 

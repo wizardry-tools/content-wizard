@@ -1,7 +1,7 @@
 import { MutableRefObject, useCallback } from 'react';
-import { DYNAMIC_HEADERS } from 'src/utility';
+import { DYNAMIC_HEADERS } from '@/utility';
 import { ResultData } from './ResultExplorer';
-import { useAlertDispatcher } from 'src/providers';
+import { useAlertDispatcher } from '@/providers';
 
 export type FetcherProps = {
   fetching: MutableRefObject<boolean>;
@@ -33,7 +33,7 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
           const url = `${path}.${depth}.json`;
           try {
             fetching.current = true;
-            let response = await fetch(url, DYNAMIC_HEADERS);
+            const response = await fetch(url, DYNAMIC_HEADERS);
             if (response.ok) {
               return await response.json();
             } else {

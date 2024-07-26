@@ -3,7 +3,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useMemo } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { DARK, LIGHT, useThemeDispatch, WizardAlert } from 'src/providers';
+import { DARK, LIGHT, useThemeDispatch, WizardAlert } from '@/providers';
 
 import './GlobalNav.scss';
 

@@ -1,8 +1,8 @@
 import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from 'react';
 import { Fetcher } from '@graphiql/toolkit/src/create-fetcher/types';
-import { buildQueryString, Query, QueryLanguage } from '../components/Query';
-import { CustomCreateFetcherOptions, useRenderCount, useCreateFetcher } from 'src/utility';
-import { Result } from 'src/components/Results';
+import { buildQueryString, Query, QueryLanguage } from '@/components/Query';
+import { CustomCreateFetcherOptions, useRenderCount, useCreateFetcher } from '@/utility';
+import { Result } from '@/types';
 import { useResultsDispatcher } from './ResultsProvider';
 import { useQuery } from './QueryProvider';
 import { useLogger } from './LoggingProvider';
@@ -35,7 +35,7 @@ export function FetcherProvider({ children }: FetcherProviderProps) {
     (query: Query, onResults: (data: any) => void): Fetcher => {
       // only append queryString if it's not GraphQL
       logger.debug({ message: `FetcherProvider createQueryFetcher()` });
-      let options: CustomCreateFetcherOptions = {
+      const options: CustomCreateFetcherOptions = {
         url: query.url + (query.language !== QueryLanguage.GraphQL ? buildQueryString(query) : ''),
         onResults: onResults,
       };

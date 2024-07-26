@@ -3,9 +3,9 @@ import { ReactNode, useCallback, useMemo } from 'react';
 
 import { useStorageContext } from '../storage';
 import { createContextHook, createNullableContext } from '../utility/context';
-import { QueryLanguageKey, Statement } from 'src/components/Query';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { QueryLanguageKey, Statement } from '@/components/Query';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type HistoryContextType = {
   /**
@@ -105,7 +105,7 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
 
   const addToHistory: HistoryContextType['addToHistory'] = useCallback(
     (operation: WizardStoreItem) => {
-      historyStore?.updateHistory(operation);
+      historyStore.updateHistory(operation);
     },
     [historyStore],
   );

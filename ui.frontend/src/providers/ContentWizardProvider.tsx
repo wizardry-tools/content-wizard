@@ -5,7 +5,7 @@ import { ResultsProvider } from './ResultsProvider';
 import { FetcherProvider } from './FetcherProvider';
 import { FieldsProvider } from './FieldsProvider';
 import { useLogger } from './LoggingProvider';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 export function ContentWizardProvider({ children }: PropsWithChildren) {
   const logger = useLogger();

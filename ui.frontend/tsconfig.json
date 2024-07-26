@@ -1,34 +1,26 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./built",
-    "allowJs": true,
-    "target": "ES6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "sourceMap": true,
-    "declaration": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "experimentalDecorators": true,
     "incremental": true,
-    "baseUrl":"./."
+    "plugins": [
+      {
+        "name": "react"
+      }
+    ],
   },
-  "include": [
-    "./src/**/*"
+  "exclude": [
+    "**/node_modules",
+    "**/node",
+    "**/build",
+    "**/public",
+    "**/target",
+    "**/.*/"
   ],
-  "exclude": ["node_modules", "build", "node", "target"]
+  "include": [
+    "react-app-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

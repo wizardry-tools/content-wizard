@@ -24,9 +24,9 @@ import {
 } from './hooks';
 import { CodeMirrorEditor, CodeMirrorType, WriteableEditorProps } from './types';
 import { normalizeWhitespace } from './whitespace';
-import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from 'src/providers';
-import { QueryLanguage } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
+import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from '@/providers';
+import { QueryLanguage } from '@/components/Query';
+import { useRenderCount } from '@/utility';
 
 export type UseQueryEditorArgs = WriteableEditorProps &
   Pick<UseCopyQueryArgs, 'onCopyQuery'> & {
@@ -76,7 +76,7 @@ export function useQueryEditor(
     updateActiveTabValues,
   } = useEditorContext({
     nonNull: true,
-    caller: caller || useQueryEditor,
+    caller: caller ?? useQueryEditor,
   });
   const executionContext = useExecutionContext();
   const storage = useStorageContext();
@@ -125,7 +125,7 @@ export function useQueryEditor(
 
   useEffect(() => {
     let isActive = true;
-    let addons: any[] = [import('codemirror/addon/comment/comment'), import('codemirror/addon/search/search')];
+    const addons: any[] = [import('codemirror/addon/comment/comment'), import('codemirror/addon/search/search')];
 
     let mode = '';
     switch (queryLanguage) {
@@ -344,12 +344,12 @@ export function useQueryEditor(
         ...queryObj,
         statement: editorInstance.getValue(),
       };
-      storage?.set(STORAGE_KEY_QUERY, JSON.stringify(query));
+      storage.set(STORAGE_KEY_QUERY, JSON.stringify(query));
 
       const currentOperationName = editorInstance.operationName;
       const operationFacts = getAndUpdateOperationFacts(editorInstance);
       if (operationFacts?.operationName !== undefined) {
-        storage?.set(STORAGE_KEY_OPERATION_NAME, operationFacts.operationName);
+        storage.set(STORAGE_KEY_OPERATION_NAME, operationFacts.operationName);
       }
 
       // Invoke callback props only after the operation facts have been updated
@@ -373,7 +373,9 @@ export function useQueryEditor(
     getAndUpdateOperationFacts(queryEditor);
 
     queryEditor.on('change', handleChange);
-    return () => queryEditor.off('change', handleChange);
+    return () => {
+      queryEditor.off('change', handleChange);
+    };
   }, [
     onEdit,
     queryEditor,

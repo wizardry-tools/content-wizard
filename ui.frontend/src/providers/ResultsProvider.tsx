@@ -8,12 +8,12 @@ import {
   useMemo,
   useEffect,
 } from 'react';
-import { Result } from 'src/components/Results';
-import { useAlertDispatcher } from './WizardAlertProvider';
-import { useLogger } from './LoggingProvider';
 import exportFromJSON from 'export-from-json';
 import { ExportType } from 'export-from-json/src/types';
-import { useRenderCount } from 'src/utility';
+import { Result, ResultProp } from '@/types';
+import { isPlainObject, useRenderCount } from '@/utility';
+import { useAlertDispatcher } from './WizardAlertProvider';
+import { useLogger } from './LoggingProvider';
 import { PackagingProvider } from './PackagingProvider';
 
 /**
@@ -33,7 +33,6 @@ export type Order = 'asc' | 'desc';
 
 export type ResultsDispatchProps = {
   results: Result[];
-  caller: Function;
 };
 export type ResultsContextProps = {
   results: Result[];
@@ -47,8 +46,20 @@ export type ResultsContextProps = {
   setOrderBy: (orderBy: string) => void;
   exportResults: (fileName?: string, exportType?: AllowedExportType) => void;
 };
-const ResultsContext = createContext<ResultsContextProps>(null!);
-const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProps>>(null!);
+const emptyContext: ResultsContextProps = {
+  results: [],
+  keys: [],
+  filter: '',
+  setFilter: () => ({}),
+  tableResults: [],
+  order: 'asc',
+  setOrder: () => ({}),
+  orderBy: '',
+  setOrderBy: () => ({}),
+  exportResults: () => ({}),
+};
+const ResultsContext = createContext<ResultsContextProps>(emptyContext);
+const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProps>>(() => ({}));
 
 /**
  * This Provider is responsible for the Results returned by Queries.
@@ -67,7 +78,9 @@ export function ResultsProvider({ children }: PropsWithChildren) {
   const alertDispatcher = useAlertDispatcher();
   // non-modified results is more or less used as a reference for rendering logic
   const [results, setResults] = useState([] as Result[]);
-  const keys = useMemo(() => Object.keys((results && results[0]) || {}), [results]);
+  const keys = useMemo(() => {
+    return results.length > 0 && isPlainObject(results[0]) ? Object.keys(results[0]) : [];
+  }, [results]);
   // store modified results in a separate state
   const [tableResults, setTableResults] = useState([] as Result[]);
   const [order, setOrder] = useState<Order>('asc');
@@ -75,13 +88,12 @@ export function ResultsProvider({ children }: PropsWithChildren) {
   const [filter, setFilter] = useState('');
 
   const updateResults = useCallback(
-    ({ results, caller }: ResultsDispatchProps) => {
-      logger.debug({ message: `ResultsProvider results dispatcher called by `, caller });
+    ({ results }: ResultsDispatchProps) => {
+      logger.debug({ message: `ResultsProvider results dispatcher called` });
       if (!results || results.length < 1) {
         alertDispatcher({
           message: 'No results were found.',
           severity: 'warning',
-          caller: ResultsProvider,
         });
       } else {
         setResults(results);
@@ -122,7 +134,6 @@ export function ResultsProvider({ children }: PropsWithChildren) {
         alertDispatcher({
           message: 'No Results to export. How did you even press this button?',
           severity: 'warning',
-          caller: ResultsProvider,
         });
       }
     },
@@ -203,10 +214,10 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
  * @param orderBy
  * @return (a: T, b: T) => number
  */
-function getComparator<Key extends keyof any>(
+function getComparator<Key extends keyof Result>(
   order: Order,
   orderBy: Key,
-): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
+): (a: { [key in Key]: ResultProp }, b: { [key in Key]: ResultProp }) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -224,7 +235,7 @@ function getComparator<Key extends keyof any>(
  * @param comparator (a: T, b: T) => number
  *
  */
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number): T[] {
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T[] {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);

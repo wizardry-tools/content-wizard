@@ -8,8 +8,8 @@ import { useAutoCompleteLeafs, useEditorContext } from './editor';
 import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useFetcher, useLogger, useQuery } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useFetcher, useLogger, useQuery } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type ExecutionContextType = {
   /**
@@ -290,13 +290,13 @@ function tryParseJsonObject({
 
 type IncrementalResult = {
   data?: Record<string, unknown> | null;
-  errors?: ReadonlyArray<GraphQLError>;
+  errors?: readonly GraphQLError[];
   extensions?: Record<string, unknown>;
   hasNext?: boolean;
-  path?: ReadonlyArray<string | number>;
-  incremental?: ReadonlyArray<IncrementalResult>;
+  path?: readonly (string | number)[];
+  incremental?: readonly IncrementalResult[];
   label?: string;
-  items?: ReadonlyArray<Record<string, unknown>> | null;
+  items?: readonly Record<string, unknown>[] | null;
 };
 
 /**

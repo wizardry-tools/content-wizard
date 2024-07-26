@@ -6,7 +6,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
 
-interface WizardPaginationActionsProps extends TablePaginationActionsProps {}
+type WizardPaginationActionsProps = {} & TablePaginationActionsProps;
 
 export const TablePaginationActions = (props: WizardPaginationActionsProps) => {
   const theme = useTheme();

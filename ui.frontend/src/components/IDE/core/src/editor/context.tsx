@@ -23,9 +23,9 @@ import {
 } from './tabs';
 import { CodeMirrorEditor } from './types';
 import { STORAGE_KEY as STORAGE_KEY_VARIABLES } from './variable-editor';
-import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
-import { defaultAdvancedQueries, Query } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
+import { useLogger, useQuery, useQueryDispatcher } from '@/providers';
+import { defaultAdvancedQueries, Query } from '@/components/Query';
+import { useRenderCount } from '@/utility';
 
 export type CodeMirrorEditorWithOperationFacts = CodeMirrorEditor & {
   documentAST: DocumentNode | null;
@@ -284,9 +284,9 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   const [variableEditor, setVariableEditor] = useState<CodeMirrorEditor | null>(null);
 
   const [shouldPersistHeaders, setShouldPersistHeadersInternal] = useState(() => {
-    const isStored = storage?.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
+    const isStored = storage.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
     return props.shouldPersistHeaders !== false && isStored
-      ? storage?.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
+      ? storage.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
       : Boolean(props.shouldPersistHeaders);
   });
 
@@ -304,12 +304,12 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   // We store this in state but never update it. By passing a function we only
   // need to compute it lazily during the initial render.
   const [initialState] = useState(() => {
-    const storedQuery = JSON.parse(storage?.get(STORAGE_KEY_QUERY) || '{}') as Query;
+    const storedQuery = JSON.parse(storage.get(STORAGE_KEY_QUERY) || '{}') as Query;
 
-    // TODO: Add move IDE providers into src/providers and add support for QueryWizard fieldsConfig storage.
+    // TODO: Add move IDE providers into @/providers and add support for QueryWizard fieldsConfig storage.
     const query = queryObj ?? storedQuery ?? null;
-    const variables = props.variables ?? storage?.get(STORAGE_KEY_VARIABLES) ?? null;
-    const headers = props.headers ?? storage?.get(STORAGE_KEY_HEADERS) ?? null;
+    const variables = props.variables ?? storage.get(STORAGE_KEY_VARIABLES) ?? null;
+    const headers = props.headers ?? storage.get(STORAGE_KEY_HEADERS) ?? null;
     const response = props.response ?? '';
     const wizardStatement = props.wizardStatement ?? '';
 
@@ -339,15 +339,15 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   const setShouldPersistHeaders = useCallback(
     (persist: boolean) => {
       if (persist) {
-        storage?.set(STORAGE_KEY_HEADERS, headerEditor?.getValue() ?? '');
+        storage.set(STORAGE_KEY_HEADERS, headerEditor?.getValue() ?? '');
         const serializedTabs = serializeTabState(tabState, true);
-        storage?.set(STORAGE_KEY_TABS, serializedTabs);
+        storage.set(STORAGE_KEY_TABS, serializedTabs);
       } else {
-        storage?.set(STORAGE_KEY_HEADERS, '');
+        storage.set(STORAGE_KEY_HEADERS, '');
         clearHeadersFromTabs(storage);
       }
       setShouldPersistHeadersInternal(persist);
-      storage?.set(PERSIST_HEADERS_STORAGE_KEY, persist.toString());
+      storage.set(PERSIST_HEADERS_STORAGE_KEY, persist.toString());
     },
     [storage, tabState, headerEditor],
   );
@@ -355,7 +355,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   const lastShouldPersistHeadersProp = useRef<boolean | undefined>();
   useEffect(() => {
     const propValue = Boolean(props.shouldPersistHeaders);
-    if (lastShouldPersistHeadersProp?.current !== propValue) {
+    if (lastShouldPersistHeadersProp.current !== propValue) {
       setShouldPersistHeaders(propValue);
       lastShouldPersistHeadersProp.current = propValue;
     }

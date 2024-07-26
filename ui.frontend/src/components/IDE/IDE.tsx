@@ -24,7 +24,7 @@ import {
   useStorageContext,
   VariableEditor,
 } from './core/src';
-import { useIsGraphQL, useIDETheme, useThemeDispatch, useLogger } from 'src/providers';
+import { useIsGraphQL, useIDETheme, useThemeDispatch, useLogger } from '@/providers';
 import Paper from '@mui/material/Paper';
 import {
   ChevronDownIcon,
@@ -36,9 +36,9 @@ import {
   PrettifyIcon,
   ReloadIcon,
   SettingsIcon,
-} from 'src/icons';
+} from '@/icons';
 import './style.scss';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 const majorVersion = parseInt(React.version.slice(0, 2), 10);
 
@@ -169,7 +169,7 @@ export function IDEInterface() {
 
   const handleClearData = useCallback(() => {
     try {
-      storageContext?.clear();
+      storageContext.clear();
       setClearStorageStatus('success');
     } catch {
       setClearStorageStatus('error');
@@ -569,7 +569,7 @@ export function IDEInterface() {
 }
 
 const modifier =
-  typeof window !== 'undefined' && window.navigator.platform.toLowerCase().indexOf('mac') === 0 ? 'Cmd' : 'Ctrl';
+  typeof window !== 'undefined' && window.navigator.platform.toLowerCase().startsWith('mac') ? 'Cmd' : 'Ctrl';
 
 const SHORT_KEYS = Object.entries({
   'Search in editor': [modifier, 'F'],

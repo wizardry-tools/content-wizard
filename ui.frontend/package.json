@@ -3,12 +3,12 @@
   "version": "1.2.1",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && clientlib clientlib.config.cjs --verbose",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "craco start",
+    "build": "craco build && clientlib clientlib.config.cjs --verbose",
+    "test": "craco test",
+    "eject": "craco eject",
     "sync": "aemsync -d -w ../ui.apps/src/main/content -t http://admin:admin@192.168.4.49:4502",
-    "lint": "eslint --ext .ts,.tsx src/",
+    "lint": "eslint",
     "format": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts|tsx|json)\""
   },
   "dependencies": {
@@ -53,6 +53,8 @@
     "@babel/preset-flow": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
     "@codemirror/buildhelper": "^1.0.1",
+    "@craco/craco": "^7.1.0",
+    "@craco/types": "^7.1.0",
     "@emotion/babel-plugin": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -100,29 +102,13 @@
     "webpack-node-externals": "^3.0.0",
     "webpack-shell-plugin": "^0.5.0"
   },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
   "type": "module",
   "proxy": "http://192.168.4.49:4502",
   "browserslist": [
     "defaults"
-  ],
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy",
-      "moduleNameMapper": {
-        "^src/(.*)$": "<rootDir>/src/$1"
-      }
-    },
-    "transform": {
-      "^.+\\.(ts|tsx)$": ["ts-jest", {
-        "tsconfig": "<rootDir>/tsconfig.json"
-      }]
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill)"
-    ]
-  }
+  ]
 }

@@ -1,6 +1,6 @@
 import { WizardStorageAPI } from '../../storage-api';
 import { createTab, fuzzyExtractOperationName, getDefaultTabState, clearHeadersFromTabs, STORAGE_KEY } from '../tabs';
-import { defaultAdvancedQueries, QueryLanguageLabels } from 'src/components/Query';
+import { defaultAdvancedQueries, QueryLanguageLabels } from '@/components/Query';
 
 describe('createTab', () => {
   it('creates with language title', () => {

@@ -57,14 +57,14 @@ export function useDragResize({
     () =>
       debounce(500, (value: string) => {
         if (storageKey) {
-          storage?.set(storageKey, value);
+          storage.set(storageKey, value);
         }
       }),
     [storage, storageKey],
   );
 
   const [hiddenElement, setHiddenElement] = useState<ResizableElement | null>(() => {
-    const storedValue = storageKey && storage?.get(storageKey);
+    const storedValue = storageKey && storage.get(storageKey);
     if (storedValue === HIDE_FIRST || initiallyHidden === 'first') {
       return 'first';
     }
@@ -94,7 +94,7 @@ export function useDragResize({
    * Set initial flex values
    */
   useLayoutEffect(() => {
-    const storedValue = (storageKey && storage?.get(storageKey)) || defaultFlexRef.current;
+    const storedValue = (storageKey && storage.get(storageKey)) || defaultFlexRef.current;
 
     if (firstRef.current) {
       firstRef.current.style.display = 'flex';
@@ -199,7 +199,8 @@ export function useDragResize({
 
       function handleMouseMove(moveEvent: MouseEvent) {
         if (moveEvent.buttons === 0) {
-          return handleMouseUp();
+          handleMouseUp();
+          return;
         }
 
         const firstSize = moveEvent[eventProperty] - wrapper.getBoundingClientRect()[rectProperty] - offset;

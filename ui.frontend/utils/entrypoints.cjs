@@ -3,10 +3,10 @@ const fs = require('fs');
 /**
  * Returns all entrypoint chunks (JS and CSS) of the React app. These chunks
  * will not need to be precached because they're already requested from the HTML
- * file)
+ * file
  *
- * @param {string} assetManifestPath: Path to the asset manifest file from which
  * the entrypoint files can be read
+ * @param assetManifestPath
  */
 function getEntrypoints(assetManifestPath) {
   if (!fs.existsSync(assetManifestPath)) {

@@ -1,8 +1,7 @@
-import { getParams } from 'src/utility';
-import { API } from 'src/components/IDE/core/src';
-import { Result } from 'src/components/Results';
+import { getParams } from '@/utility';
+import { Query, QueryMap } from '@/types';
 
-export const endpoints: { [name: string]: string } = {
+export const endpoints: Record<string, string> = {
   queryBuilderPath: '/bin/querybuilder.json',
   crxQueryPath: '/crx/de/query.jsp',
   graphQlListPath: '/graphql/list.json',
@@ -36,49 +35,25 @@ export const QueryLanguageLabels: Record<QueryLanguageKey, string> = {
   GraphQL: 'GraphQL',
 };
 
-/** Query Support */
-export type Statement = string;
-
-export type Query = {
-  language: QueryLanguageKey;
-  statement: Statement;
-  url: string;
-  api?: API;
-  status?: string;
-  isAdvanced: boolean; // this is mainly for QueryBuilder language, as it's used in two different UIs and this differentiates the UIs.
-  label?: string; // this gets populated when a History Query has an edited label.
-};
-export type QueryAction = Partial<Query> & {
-  type: string;
-  caller?: Function;
-};
-
-export type QueryResponse = {
-  results: Result[];
-  status: string | number;
-  query: Query;
-};
-
-export type QueryMap = Record<QueryLanguageKey, Query>;
-
 export function buildGraphQLURL(endpoint: string): string {
   return AEM_GRAPHQL_ACTIONS.serviceURL + AEM_GRAPHQL_ACTIONS.endpoint.replace('global', endpoint);
 }
 
 export function buildQueryString(query: Query): string {
-  if (query.language === QueryLanguage.GraphQL) {
-    if (query.url) {
-      return query.url;
+  const { api, language, url } = query;
+  if (language === QueryLanguage.GraphQL) {
+    if (url) {
+      return url;
     }
     // never called for IDE based requests
-    if (query.api?.endpoint) {
-      buildGraphQLURL(query.api.endpoint);
+    if (api?.endpoint) {
+      buildGraphQLURL(api.endpoint);
     }
     return AEM_GRAPHQL_ACTIONS.endpoint;
   }
 
-  const params: { [name: string]: string } = getParams(query);
-  return '?' + new URLSearchParams(params);
+  const params: Record<string, string> = getParams(query);
+  return '?' + new URLSearchParams(params).toString();
 }
 
 export const defaultAdvancedQueries: QueryMap = {

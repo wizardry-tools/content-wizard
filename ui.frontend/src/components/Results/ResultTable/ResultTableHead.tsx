@@ -1,10 +1,10 @@
 import { MouseEvent, useCallback, useMemo } from 'react';
 import { Box, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { useLogger, useResults } from 'src/providers';
+import { useLogger, useResults } from '@/providers';
 import { TableHeadCell } from './TableHeadCell';
 import { TableToolBar } from './TableToolBar';
-import { useRenderCount, usePaperTheme } from 'src/utility';
+import { useRenderCount, usePaperTheme } from '@/utility';
 
 export type ResultTableHeadProps = {
   elevation?: number;

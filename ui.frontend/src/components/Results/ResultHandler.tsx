@@ -1,7 +1,7 @@
 import { ResultTable } from './ResultTable/ResultTable';
 import { Paper } from '@mui/material';
-import { QueryLanguage } from 'src/components/Query';
-import { useQuery } from 'src/providers';
+import { QueryLanguage } from '@/components/Query';
+import { useQuery } from '@/providers';
 
 export function ResultHandler() {
   const query = useQuery();

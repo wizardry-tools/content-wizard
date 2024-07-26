@@ -1,10 +1,10 @@
 import { memo } from 'react';
-import { FormGrid } from 'src/components/QueryWizard/Components';
+import { FormGrid } from '@/components/QueryWizard/Components';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { QueryLanguage, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
+import { QueryLanguage, QueryLanguageKey, QueryLanguageLabels } from '@/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type QueryLanguageSelectorProps = {
   language: QueryLanguageKey;

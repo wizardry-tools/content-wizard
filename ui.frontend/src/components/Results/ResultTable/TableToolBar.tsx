@@ -1,13 +1,13 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Box, IconButton, TableRow, TextField, Tooltip } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useLogger, useResults } from 'src/providers';
+import { useLogger, useResults } from '@/providers';
 import { TableHeadCell } from './TableHeadCell';
 import DownloadIcon from '@mui/icons-material/Download';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import { ResultsExporterDialog } from '../ResultsExporter';
 import { PackageBuilderDialog } from '../PackageBuilder';
-import { useDebounce, useRenderCount } from 'src/utility';
+import { useDebounce, useRenderCount } from '@/utility';
 
 export const TableToolBar = () => {
   const logger = useLogger();
@@ -30,11 +30,19 @@ export const TableToolBar = () => {
     [logger],
   );
 
-  const handleCloseExporter = useCallback(() => setOpenExporter(false), []);
-  const handleOpenExporter = useCallback(() => setOpenExporter(true), []);
+  const handleCloseExporter = useCallback(() => {
+    setOpenExporter(false);
+  }, []);
+  const handleOpenExporter = useCallback(() => {
+    setOpenExporter(true);
+  }, []);
 
-  const handleClosePackageBuilder = useCallback(() => setOpenPackageBuilder(false), []);
-  const handleOpenPackageBuilder = useCallback(() => setOpenPackageBuilder(true), []);
+  const handleClosePackageBuilder = useCallback(() => {
+    setOpenPackageBuilder(false);
+  }, []);
+  const handleOpenPackageBuilder = useCallback(() => {
+    setOpenPackageBuilder(true);
+  }, []);
 
   useEffect(() => {
     setFilter(debouncedValue);
@@ -101,7 +109,9 @@ export const TableToolBar = () => {
           )}
           <Tooltip title="Filter results">
             <IconButton
-              onClick={() => setOpenFilter((prev) => !prev)}
+              onClick={() => {
+                setOpenFilter((prev) => !prev);
+              }}
               sx={{
                 width: '3rem',
                 height: '3rem',

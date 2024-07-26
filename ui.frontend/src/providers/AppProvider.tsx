@@ -1,4 +1,4 @@
-import { StorageContextProvider } from 'src/components/IDE/core/src';
+import { StorageContextProvider } from '@/components/IDE/core/src';
 import { PropsWithChildren, useMemo } from 'react';
 import { WizardAlertProvider } from './WizardAlertProvider';
 import { LoggingProvider, LoggingProviderProps } from './LoggingProvider';

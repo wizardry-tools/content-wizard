@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from 'react';
 
-export type LoggingProps = Record<string, any> & {
+export type LoggingProps = Record<string, unknown> & {
   message: string;
 };
 export type Logger = {
@@ -9,7 +9,12 @@ export type Logger = {
   debug: (props: LoggingProps) => void;
   error: (props: LoggingProps) => void;
 };
-const LoggingContext = createContext<Logger>(null!);
+const LoggingContext = createContext<Logger>({
+  log: () => ({}),
+  debug: () => ({}),
+  warn: () => ({}),
+  error: () => ({}),
+});
 
 export type LoggingProviderProps = PropsWithChildren & {
   showLog?: boolean;
@@ -108,5 +113,5 @@ export function useLogger() {
 }
 
 function isEmpty(obj: object): boolean {
-  return !obj || Object.keys(obj).length === 0;
+  return Object.keys(obj).length === 0;
 }

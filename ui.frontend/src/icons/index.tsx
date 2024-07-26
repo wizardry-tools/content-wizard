@@ -1,6 +1,6 @@
 /**
  * All icons must be added to this module.
- * Exposed via 'src/icons'
+ * Exposed via '@/icons'
  */
 import { ComponentProps, FC } from 'react';
 import { ReactComponent as _ArgumentIcon } from './argument.svg';

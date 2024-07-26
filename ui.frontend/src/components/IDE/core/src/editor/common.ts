@@ -6,7 +6,7 @@ export const DEFAULT_KEY_MAP: KeyMap = 'sublime';
 let isMacOs = false;
 
 if (typeof window === 'object') {
-  isMacOs = window.navigator.platform.toLowerCase().indexOf('mac') === 0;
+  isMacOs = window.navigator.platform.toLowerCase().startsWith('mac');
 }
 
 export const commonKeys = {

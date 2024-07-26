@@ -9,13 +9,13 @@ const TestComponent = () => {
 
   return (
     <button
-      onClick={() =>
+      onClick={() => {
         dispatchAlert({
           message: 'Test Alert',
           severity: 'error',
           caller: TestComponent,
-        })
-      }
+        });
+      }}
     >
       Trigger Alert
     </button>

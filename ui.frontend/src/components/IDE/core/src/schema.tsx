@@ -11,9 +11,9 @@ import { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState
 
 import { useEditorContext } from './editor';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useAlertDispatcher, useFetcher, useLogger, useQuery } from 'src/providers';
-import { QueryLanguage } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
+import { useAlertDispatcher, useFetcher, useLogger, useQuery } from '@/providers';
+import { QueryLanguage } from '@/components/Query';
+import { useRenderCount } from '@/utility';
 
 type MaybeGraphQLSchema = GraphQLSchema | null | undefined;
 
@@ -189,7 +189,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
 
       isFetching.current = false;
 
-      if (result?.data && '__schema' in result.data) {
+      if (result.data && '__schema' in result.data) {
         return result.data as IntrospectionQuery;
       }
 
@@ -257,7 +257,9 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
       }
 
       window.addEventListener('keydown', triggerIntrospection);
-      return () => window.removeEventListener('keydown', triggerIntrospection);
+      return () => {
+        window.removeEventListener('keydown', triggerIntrospection);
+      };
     }
   }, [introspect, language]);
 

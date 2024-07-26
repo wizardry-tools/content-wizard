@@ -1,8 +1,8 @@
-import { FormGrid } from 'src/components/QueryWizard/Components';
+import { FormGrid } from '@/components/QueryWizard/Components';
 import { APISelector, APISelectorProps } from './APISelector';
 import { PersistedQuerySelector, PersistedQuerySelectorProps } from './PersistedQuerySelector';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type GraphQLSelectorProps = Omit<APISelectorProps, 'endpoint'> & Partial<PersistedQuerySelectorProps>;
 
@@ -13,7 +13,7 @@ export const GraphQLSelector = ({ api, APIs, onAPIChange, onStatementChange = ()
   return (
     <FormGrid item xs={12} md={6}>
       <APISelector endpoint={api?.endpoint} APIs={APIs} onAPIChange={onAPIChange} />
-      {api && api.endpoint && api.persistedQueries?.length > 0 && (
+      {api?.endpoint && api.persistedQueries.length > 0 && (
         <PersistedQuerySelector api={api} onStatementChange={onStatementChange} />
       )}
     </FormGrid>

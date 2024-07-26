@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 import { FocusEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Combobox } from '@headlessui/react';
-import { MagnifyingGlassIcon } from 'src/icons';
+import { MagnifyingGlassIcon } from '@/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';
 
@@ -47,7 +47,9 @@ export function Search() {
     }
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const navItem = explorerNavStack.at(-1)!;
@@ -91,7 +93,9 @@ export function Search() {
           autoComplete="off"
           onFocus={handleFocus}
           onBlur={handleFocus}
-          onChange={(event) => setSearchValue(event.target.value)}
+          onChange={(event) => {
+            setSearchValue(event.target.value);
+          }}
           placeholder="&#x2318; K"
           ref={inputRef}
           value={searchValue}

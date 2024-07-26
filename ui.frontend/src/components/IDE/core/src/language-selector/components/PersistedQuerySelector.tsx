@@ -1,10 +1,10 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { Statement } from 'src/components/Query';
+import { Statement } from '@/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { API } from '../../api';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type PersistedQuerySelectorProps = {
   /**
@@ -30,10 +30,10 @@ export const PersistedQuerySelector = memo(({ api, onStatementChange }: Persiste
     (event: SelectChangeEvent) => {
       const queryName = event.target.value;
       setSelectedQuery(queryName);
-      let foundQuery = persistedQueries.find((pq) => {
-        return pq?.path?.shortForm === queryName;
+      const foundQuery = persistedQueries.find((pq) => {
+        return pq.path.shortForm === queryName;
       });
-      if (foundQuery?.data?.query) {
+      if (foundQuery?.data.query) {
         onStatementChange(foundQuery.data.query);
       }
     },
@@ -41,7 +41,7 @@ export const PersistedQuerySelector = memo(({ api, onStatementChange }: Persiste
   );
 
   const persistedQueryMenuItems = useMemo(() => {
-    return persistedQueries?.map((option, index) => {
+    return persistedQueries.map((option, index) => {
       //example:  /we-retail/AllStores
       const parts = option.path.shortForm.split('/');
       const name = parts[2] || parts[1];

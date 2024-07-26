@@ -1,34 +1,10 @@
-import { createContextHook, createNullableContext } from './utility/context';
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
 import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { buildGraphQLURL, endpoints, Statement } from 'src/components/Query';
-import { useCreateFetcher } from 'src/utility';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
-
-export type API = {
-  endpoint: string;
-  persistedQueries: PersistedQuery[];
-};
-
-/** GraphQL Support */
-export type PersistedQueryData = {
-  query: Statement;
-};
-export type PersistedQueryPath = {
-  longForm: string;
-  shortForm: string;
-};
-
-export type PersistedQuery = {
-  path: PersistedQueryPath;
-  data: PersistedQueryData;
-};
-
-export type GraphQLEndpointConfig = {
-  configurationName: string;
-  queries: PersistedQuery[];
-};
+import { API, GraphQLEndpointConfig, PersistedQuery } from '@/types';
+import { buildGraphQLURL, endpoints } from '@/components';
+import { useCreateFetcher, useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
+import { createContextHook, createNullableContext } from './utility/context';
 
 export const mapAPIs = (response: GraphQLEndpointConfig[]): API[] => {
   return response.map((endpointConfig) => {
@@ -71,13 +47,11 @@ export function APIContextProvider(props: APIContextProviderProps) {
   logger.debug({ message: `APIContextProvider[${renderCount}] render()` });
   const { children } = props;
   const fetcher = useCreateFetcher();
-  const apiFetcher = useMemo(
-    () =>
-      fetcher.createAPIFetcher({
-        url: endpoints.graphQlListPath,
-      }),
-    [fetcher],
-  );
+  const apiFetcher = useMemo(() => {
+    return fetcher.createAPIFetcher({
+      url: endpoints?.graphQlListPath ?? '',
+    });
+  }, [fetcher]);
   const [APIs, setAPIs] = useState([] as API[]);
   const isFetching = useRef(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -94,7 +68,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
       }
       isFetching.current = true;
       setFetchError(null);
-      let result = await fetch;
+      const result = await fetch;
 
       if (result === null || typeof result === 'undefined') {
         throw new Error(
@@ -117,7 +91,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
 
     fetchAPIs()
       .then((data: GraphQLEndpointConfig[]) => {
-        const apis = data?.map(
+        const apis = data.map(
           (config: GraphQLEndpointConfig): API => ({
             endpoint: config.configurationName,
             persistedQueries: config.queries,
@@ -133,10 +107,10 @@ export function APIContextProvider(props: APIContextProviderProps) {
 
   const getPersistedQueries = useCallback(
     (passedAPI: API) => {
-      let foundAPI = APIs.find((api) => {
+      const foundAPI = APIs.find((api) => {
         return passedAPI.endpoint === api.endpoint;
       });
-      return foundAPI?.persistedQueries || passedAPI.persistedQueries || [];
+      return foundAPI?.persistedQueries ?? passedAPI.persistedQueries ?? [];
     },
     [APIs],
   );

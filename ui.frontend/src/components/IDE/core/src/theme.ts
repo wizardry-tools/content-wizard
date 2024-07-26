@@ -51,7 +51,7 @@ export function useTheme() {
 
   const setTheme = useCallback(
     (newTheme: Theme) => {
-      storageContext?.set(STORAGE_KEY, newTheme || '');
+      storageContext.set(STORAGE_KEY, newTheme || '');
       setThemeInternal(newTheme);
     },
     [storageContext],

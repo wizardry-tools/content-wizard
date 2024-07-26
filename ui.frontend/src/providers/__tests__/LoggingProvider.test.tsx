@@ -7,10 +7,34 @@ const TestComponent = () => {
 
   return (
     <div>
-      <button onClick={() => logger.log({ message: 'Log Message' })}>Log</button>
-      <button onClick={() => logger.warn({ message: 'Warn Message' })}>Warn</button>
-      <button onClick={() => logger.debug({ message: 'Debug Message' })}>Debug</button>
-      <button onClick={() => logger.error({ message: 'Error Message' })}>Error</button>
+      <button
+        onClick={() => {
+          logger.log({ message: 'Log Message' });
+        }}
+      >
+        Log
+      </button>
+      <button
+        onClick={() => {
+          logger.warn({ message: 'Warn Message' });
+        }}
+      >
+        Warn
+      </button>
+      <button
+        onClick={() => {
+          logger.debug({ message: 'Debug Message' });
+        }}
+      >
+        Debug
+      </button>
+      <button
+        onClick={() => {
+          logger.error({ message: 'Error Message' });
+        }}
+      >
+        Error
+      </button>
     </div>
   );
 };
@@ -74,10 +98,34 @@ describe('LoggingProvider', () => {
 
       return (
         <div>
-          <button onClick={() => logger.log(logProps)}>Log</button>
-          <button onClick={() => logger.warn(warnProps)}>Warn</button>
-          <button onClick={() => logger.debug(debugProps)}>Debug</button>
-          <button onClick={() => logger.error(errorProps)}>Error</button>
+          <button
+            onClick={() => {
+              logger.log(logProps);
+            }}
+          >
+            Log
+          </button>
+          <button
+            onClick={() => {
+              logger.warn(warnProps);
+            }}
+          >
+            Warn
+          </button>
+          <button
+            onClick={() => {
+              logger.debug(debugProps);
+            }}
+          >
+            Debug
+          </button>
+          <button
+            onClick={() => {
+              logger.error(errorProps);
+            }}
+          >
+            Error
+          </button>
         </div>
       );
     };

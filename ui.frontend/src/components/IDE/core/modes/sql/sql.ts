@@ -2,21 +2,21 @@
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror, { ModeFactory } from 'codemirror';
 
-export interface SqlContext {
+export type SqlContext = {
   prev: SqlContext | null;
   indent: number;
   col: number;
   type: string;
-}
+};
 
-export interface SqlState {
+export type SqlState = {
   tokenize: (arg0: CodeMirror.StringStream, arg1: any) => any;
   context: SqlContext | null;
   indent?: number;
-}
+};
 type ModeOptionMap = Record<string, boolean>;
 type HookMap = Record<string, (stream: CodeMirror.StringStream) => string>;
-export interface ModeOptions {
+export type ModeOptions = {
   client?: any;
   atoms?: ModeOptionMap;
   builtin?: ModeOptionMap;
@@ -28,11 +28,11 @@ export interface ModeOptions {
   backslashStringEscapes?: boolean;
   brackets?: RegExp;
   punctuation?: RegExp;
-}
+};
 
 (() => {
   CodeMirror.defineMode('sql', ((config, parserConfig: ModeOptions) => {
-    let client = parserConfig.client || {},
+    const client = parserConfig.client || {},
       atoms = parserConfig.atoms || { false: true, true: true, null: true },
       builtin = parserConfig.builtin || set(defaultBuiltin),
       keywords = parserConfig.keywords || set(sqlKeywords),
@@ -45,14 +45,14 @@ export interface ModeOptions {
       punctuation = parserConfig.punctuation || /^[;.,:]/;
 
     function tokenBase(stream: CodeMirror.StringStream, state: SqlState) {
-      let ch: string | null = stream.next();
+      const ch: string | null = stream.next();
       if (!ch) {
         return null;
       }
 
       // call hooks from the mime type
       if (hooks[ch]) {
-        let result = hooks[ch](stream);
+        const result = hooks[ch](stream);
         if (result) return result;
       }
 
@@ -151,7 +151,7 @@ export interface ModeOptions {
         return 'number';
       } else {
         stream.eatWhile(/^[_\w\d]/);
-        let word = stream.current().toLowerCase();
+        const word = stream.current().toLowerCase();
         // dates (standard SQL syntax)
         // ref: https://dev.mysql.com/doc/refman/8.0/en/date-and-time-literals.html
         if (dateSQL.hasOwnProperty(word) && (stream.match(/^( )+'[^']*'/) || stream.match(/^( )+"[^"]*"/)))
@@ -165,7 +165,7 @@ export interface ModeOptions {
     }
 
     // 'string', with char specified in quote escaped by '\'
-    function tokenLiteral(quote: string | null, backslashEscapes: boolean = false, endToken: string | null = '') {
+    function tokenLiteral(quote: string | null, backslashEscapes = false, endToken: string | null = '') {
       return function (stream: CodeMirror.StringStream, state: SqlState) {
         let escaped = false,
           ch;
@@ -188,7 +188,7 @@ export interface ModeOptions {
     }
     function tokenComment(depth: number) {
       return function (stream: CodeMirror.StringStream, state: SqlState) {
-        let m = stream.match(/^.*?(\/\*|\*\/)/);
+        const m = stream.match(/^.*?(\/\*|\*\/)/);
         if (!m) stream.skipToEnd();
         else if (m[1] === '/*') state.tokenize = tokenComment(depth + 1);
         else if (depth > 1) state.tokenize = tokenComment(depth - 1);
@@ -224,12 +224,12 @@ export interface ModeOptions {
         }
         if (state.tokenize === tokenBase && stream.eatSpace()) return null;
 
-        let style = state.tokenize(stream, state);
+        const style = state.tokenize(stream, state);
         if (style === 'comment') return style;
 
         if (state.context && state.context.align == null) state.context.align = true;
 
-        let tok = stream.current();
+        const tok = stream.current();
         if (tok === '(') pushContext(stream, state, ')');
         else if (tok === '[') pushContext(stream, state, ']');
         else if (state.context && state.context.type === tok) popContext(state);
@@ -237,9 +237,9 @@ export interface ModeOptions {
       },
 
       indent: function (state, textAfter) {
-        let cx = state.context;
+        const cx = state.context;
         if (!cx) return CodeMirror.Pass;
-        let closing = textAfter.charAt(0) === cx.type;
+        const closing = textAfter.charAt(0) === cx.type;
         if (cx.align) return cx.col + (closing ? 0 : 1);
         else return cx.indent + (closing ? 0 : config.indentUnit);
       },
@@ -317,18 +317,18 @@ export interface ModeOptions {
   }
 
   // these keywords are used by all SQL dialects (however, a mode can still overwrite it)
-  let sqlKeywords =
+  const sqlKeywords =
     'alter and as asc between by count create delete desc distinct drop from group having in insert into is join like not on or order select set table union update values where limit ';
 
   // turn a space-separated list into an array
   function set(str: string) {
-    let obj: any = {},
+    const obj: any = {},
       words = str.split(' ');
     for (let i = 0; i < words.length; ++i) obj[words[i]] = true;
     return obj;
   }
 
-  let defaultBuiltin =
+  const defaultBuiltin =
     'bool boolean bit blob enum long longblob longtext medium mediumblob mediumint mediumtext time timestamp tinyblob tinyint tinytext text bigint int int1 int2 int3 int4 int8 integer float float4 float8 double char varbinary varchar varcharacter precision real date datetime year unsigned signed decimal numeric';
 
   // A generic SQL Mode. It's not a standard, it just tries to support what is generally supported

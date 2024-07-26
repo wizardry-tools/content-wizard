@@ -1,4 +1,4 @@
-import { ContentTypes, TargetTypes } from 'src/components/Query';
+import { ContentTypes, TargetTypes } from '@/components/Query';
 import { ElementType } from 'react';
 import dayjs from 'dayjs';
 
@@ -66,7 +66,7 @@ export const fieldCategories: Record<FieldCategoryType, FieldCategory> = {
   translation: 'Filter for Translated content',
 };
 
-export interface FieldConfig {
+export type FieldConfig = {
   readonly name: FieldConfigNameKey;
   readonly label: string;
   readonly fieldType: ElementType;
@@ -75,10 +75,10 @@ export interface FieldConfig {
   required?: boolean;
   isDisabled?: DisabledCallback;
   onChange?: onChangeCallback;
-  readonly options?: typeof ContentTypes | typeof TargetTypes;
+  readonly options?: typeof ContentTypes;
   category: FieldCategoryType;
   render?: boolean; // Dictates that the Field should not render
-}
+};
 export type FieldConfigAction = Pick<FieldConfig, 'name'> &
   Pick<FieldConfig, 'value'> & {
     type: 'UPDATE_VALUE';

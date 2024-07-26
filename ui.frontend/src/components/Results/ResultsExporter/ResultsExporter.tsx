@@ -1,4 +1,4 @@
-import { AllowedExportType, allowedExportTypes, useResults } from 'src/providers';
+import { AllowedExportType, allowedExportTypes, useResults } from '@/providers';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import {
   Button,
@@ -13,7 +13,7 @@ import {
   TextField,
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import { FormGrid } from 'src/components/QueryWizard/Components';
+import { FormGrid } from '@/components/QueryWizard/Components';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 
 /**
@@ -70,8 +70,12 @@ export const ResultsExporter = () => {
               value={fileName}
               color={'secondary'}
               className="results-exporter-field"
-              onFocus={() => setInputElevation(4)}
-              onBlur={() => setInputElevation(1)}
+              onFocus={() => {
+                setInputElevation(4);
+              }}
+              onBlur={() => {
+                setInputElevation(1);
+              }}
               onChange={handleInputChange}
               required
             />
@@ -92,8 +96,12 @@ export const ResultsExporter = () => {
                 color={'secondary'}
                 onChange={handleTypeChange}
                 className="results-exporter-field"
-                onFocus={() => setSelectElevation(4)}
-                onBlur={() => setSelectElevation(1)}
+                onFocus={() => {
+                  setSelectElevation(4);
+                }}
+                onBlur={() => {
+                  setSelectElevation(1);
+                }}
               >
                 {menuItems}
               </Select>

@@ -1,6 +1,6 @@
 import { useCsrfToken } from './useCsrfToken';
 import { useCallback, useMemo } from 'react';
-import { useLogger } from 'src/providers';
+import { useLogger } from '@/providers';
 import { useRenderCount } from './useRenderCount';
 
 /**
@@ -33,9 +33,9 @@ export const useAuthHeaders = (): { get: (props: Partial<RequestInit>) => Promis
       logger.debug({ message: `useAuthHeaders getAuthorizationHeaders()` });
       const { method = 'GET', headers } = props;
       const authHeaders = {
-        ...(headers || {}),
+        ...(headers ?? {}),
         credentials: 'same-origin',
-        Authorization: (authorization || '') as string,
+        Authorization: (authorization ?? '') as string,
       };
       if (method === 'GET') {
         return authHeaders;

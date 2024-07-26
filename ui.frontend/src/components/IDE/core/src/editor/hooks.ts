@@ -13,8 +13,8 @@ import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
 import { CodeMirrorEditor } from './types';
-import { useIsGraphQL, useLogger } from 'src/providers';
-import { Query } from 'src/components/Query';
+import { useIsGraphQL, useLogger } from '@/providers';
+import { Query } from '@/components/Query';
 
 /**
  * This method synchronizes values across editors.
@@ -88,7 +88,9 @@ export function useChangeHandler(
       callback?.(newValue);
     };
     editor.on('change', handleChange);
-    return () => editor.off('change', handleChange);
+    return () => {
+      editor.off('change', handleChange);
+    };
   }, [callback, editor, logger, storage, storageKey, tabProperty, updateActiveTabValues]);
 }
 
@@ -115,12 +117,13 @@ export function useCompletion(
       'hasCompletion',
       handleCompletion,
     );
-    return () =>
+    return () => {
       editor.off(
         // @ts-expect-error @TODO additional args for hasCompletion event
         'hasCompletion',
         handleCompletion,
       );
+    };
   }, [callback, editor, explorer, plugin, schema]);
 }
 
@@ -138,7 +141,9 @@ export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callb
     if (callback) {
       const keyMap: Record<string, EmptyCallback> = {};
       for (const key of keys) {
-        keyMap[key] = () => callback();
+        keyMap[key] = () => {
+          callback();
+        };
       }
       editor.addKeyMap(keyMap);
     }

@@ -5,19 +5,19 @@ import CodeMirror from 'codemirror';
 /**
  * This is a Custom Codemirror mode for XPATH parsing originally based on the OOTB "Properties" mode
  */
-export interface PropertiesState {
+export type PropertiesState = {
   position: 'predicate' | 'quote' | 'comment' | 'path' | 'string' | 'function' | 'def';
   nextMultiline: boolean;
   inMultiline: boolean;
   afterSection: boolean;
-}
+};
 
 /**
  * turn a space-separated list into an array. For some reason, this method can't be imported into other files.
  * @param str
  */
 function set(str: string) {
-  let obj: any = {},
+  const obj: any = {},
     words = str.split(' ');
   for (let i = 0; i < words.length; ++i) obj[words[i]] = true;
   return obj;
@@ -33,7 +33,7 @@ const atoms = set('or and like order by');
   CodeMirror.defineMode('xpath', function () {
     return {
       token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
-        var sol = stream.sol() || state.afterSection;
+        const sol = stream.sol() || state.afterSection;
         //var eol = stream.eol();
 
         state.afterSection = false;
@@ -42,7 +42,7 @@ const atoms = set('or and like order by');
           while (stream.eatSpace()) {}
         }
 
-        var ch = stream.next();
+        const ch = stream.next();
 
         // process sol checks before processing non-sol checks
         if (sol && ch === '/' && stream.match(pathMatch, false)) {
@@ -80,7 +80,7 @@ const atoms = set('or and like order by');
         } else {
           // keyword check
           stream.eatWhile(/^[_\w\d]/);
-          let word = stream.current().toLowerCase().trim();
+          const word = stream.current().toLowerCase().trim();
           if (atoms.hasOwnProperty(word)) return 'atom';
           return null;
         }

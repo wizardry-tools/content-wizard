@@ -10,20 +10,16 @@ import {
   useState,
 } from 'react';
 import { PaletteMode, ThemeProvider as MuiThemeProvider } from '@mui/material';
-import { useStorageContext } from 'src/components/IDE/core/src';
 import { Theme as MuiTheme } from '@mui/material/styles/createTheme';
 import { createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
-import { WizardStorageAPI } from 'src/components/IDE/core/src/storage-api';
+import { useRenderCount } from '@/utility';
+import { Theme } from '@/types';
+import { useStorageContext } from '@/components/IDE/core/src';
+import { WizardStorageAPI } from '@/components/IDE/core/src/storage-api';
 import { useLogger } from './LoggingProvider';
-import { useRenderCount } from 'src/utility';
 
-/**
- * The value `null` semantically means that the user does not explicitly choose
- * any theme, so we use the system default.
- */
-export type Theme = PaletteMode | null;
 export const DARK: PaletteMode = 'dark';
 export const LIGHT: PaletteMode = 'light';
 
@@ -102,7 +98,7 @@ function buildMuiTheme(theme: Theme): MuiTheme {
 }
 
 const ThemeDispatchContext = createContext<Dispatch<NullablePaletteMode>>(null!);
-const IDEThemeContext = createContext<Theme>(null!);
+const IDEThemeContext = createContext<Theme>(null);
 type NullablePaletteMode = PaletteMode | null;
 
 export function WizardThemeProvider(props: PropsWithChildren) {
@@ -131,13 +127,13 @@ export function WizardThemeProvider(props: PropsWithChildren) {
    * IDE Theme, init with null, which implies system theme deferral.
    * This is used to override the Mui Theme
    */
-  const [IDETheme, setIDETheme] = useState(storedTheme || systemTheme);
+  const [IDETheme, setIDETheme] = useState(storedTheme ?? systemTheme);
 
   /**
    * Mui Theme defaults to the system theme, since that's also the default behavior for IDE Theme.
    * IDE will dispatch non-system values.
    */
-  const [muiTheme, setMuiTheme] = useState(buildMuiTheme(storedTheme || systemTheme));
+  const [muiTheme, setMuiTheme] = useState(buildMuiTheme(storedTheme ?? systemTheme));
 
   /**
    * if the system/browser changes its theme settings, this will update.
@@ -146,7 +142,7 @@ export function WizardThemeProvider(props: PropsWithChildren) {
    * dark is enabled/disabled.
    */
   const darkMqListener = useCallback(
-    (event: MediaQueryListEvent): any => {
+    (event: MediaQueryListEvent) => {
       // system theme or browser theme updated;
       if (!IDETheme) {
         // no IDE Theme, which means we need to inherit from System
@@ -195,10 +191,10 @@ export function WizardThemeProvider(props: PropsWithChildren) {
    */
   const handleThemeDispatch = useCallback(
     (theme: Theme) => {
-      storageContext?.set(STORAGE_KEY, theme || '');
+      storageContext?.set(STORAGE_KEY, theme ?? '');
       setIDETheme(theme);
       // if the IDE theme is set to System Default (null), then this will reset Mui back to system Theme.
-      setMuiTheme(buildMuiTheme(theme || systemTheme));
+      setMuiTheme(buildMuiTheme(theme ?? systemTheme));
     },
     [storageContext, systemTheme],
   );

@@ -15,7 +15,7 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import { ResultExplorer } from './ResultExplorer';
 import { useFetcher } from './fetcher';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { escapeColon, escapeUrl } from 'src/utility';
+import { escapeColon, escapeUrl } from '@/utility';
 
 import './ResultExplorer.scss';
 

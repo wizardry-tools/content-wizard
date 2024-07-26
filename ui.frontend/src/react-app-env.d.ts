@@ -2,11 +2,11 @@
 import '@mui/material/styles';
 
 declare module '@mui/material/styles' {
-  interface Palette {
+  type Palette = {
     tertiary: Palette['primary'];
-  }
+  };
 
-  interface PaletteOptions {
+  type PaletteOptions = {
     tertiary?: PaletteOptions['primary'];
-  }
+  };
 }

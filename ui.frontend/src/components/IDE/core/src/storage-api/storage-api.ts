@@ -1,4 +1,4 @@
-import { WizardAlertProps } from 'src/providers';
+import { WizardAlertProps } from '@/providers';
 import { Dispatch } from 'react';
 import { createInMemoryStorage } from './in-memory-storage';
 
@@ -67,7 +67,7 @@ export function buildStorage(storage: WizardStorage | null | undefined) {
       get length() {
         let keys = 0;
         for (const key in window.localStorage) {
-          if (key.indexOf(`${STORAGE_NAMESPACE}:`) === 0) {
+          if (key.startsWith(`${STORAGE_NAMESPACE}:`)) {
             keys += 1;
           }
         }
@@ -77,7 +77,7 @@ export function buildStorage(storage: WizardStorage | null | undefined) {
       clear() {
         // We only want to clear the namespaced items
         for (const key in window.localStorage) {
-          if (key.indexOf(`${STORAGE_NAMESPACE}:`) === 0) {
+          if (key.startsWith(`${STORAGE_NAMESPACE}:`)) {
             window.localStorage.removeItem(key);
           }
         }
@@ -93,8 +93,12 @@ export type WizardStorageAPIProps = {
   alertDispatcher?: Dispatch<WizardAlertProps> | Function;
 };
 export const useWizardStorageAPI = (props: WizardStorageAPIProps) => {
-  const alertDispatcher = props.alertDispatcher || ((obj: any) => console.error(obj));
-  let storage: WizardStorage = buildStorage(props.storage);
+  const alertDispatcher =
+    props.alertDispatcher ||
+    ((obj: any) => {
+      console.error(obj);
+    });
+  const storage: WizardStorage = buildStorage(props.storage);
 
   function get(name: string): string | null {
     if (!storage) {

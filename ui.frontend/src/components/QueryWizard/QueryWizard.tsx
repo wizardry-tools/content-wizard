@@ -1,11 +1,11 @@
 import { Stack, Paper, Theme } from '@mui/material';
-import { ViewsProps } from 'src/components/ContentWizard/Views';
-import { QueryHandler } from 'src/components/Query';
+import { ViewsProps } from '@/components/ContentWizard/Views';
+import { QueryHandler } from '@/components/Query';
 
 import './QueryWizard.scss';
-import { useLogger } from 'src/providers';
+import { useLogger } from '@/providers';
 import { Accordion, StatementWindow } from './Components';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 const buttonStackStyles = (_theme: Theme) => {
   return {

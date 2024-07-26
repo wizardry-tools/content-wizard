@@ -4,7 +4,7 @@ import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
 import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
-import { useQueryDispatcher } from 'src/providers';
+import { useQueryDispatcher } from '@/providers';
 
 jest.mock('../../storage', () => {
   const mockStorage = {
@@ -40,7 +40,7 @@ jest.mock('../../editor', () => {
     },
   };
 });
-jest.mock('src/providers', () => {
+jest.mock('@/providers', () => {
   const mockQueryDispatcher = jest.fn(() => {});
   const mockAlertDispatcher = jest.fn(() => {});
   return {

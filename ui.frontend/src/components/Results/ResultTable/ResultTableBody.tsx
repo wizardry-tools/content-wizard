@@ -1,6 +1,6 @@
 import { memo, ReactNode, useCallback, useMemo } from 'react';
 import { Link, TableBody, TableCell, TableRow } from '@mui/material';
-import { useResults } from 'src/providers';
+import { useResults } from '@/providers';
 
 export type ResultTableBodyProps = {
   rowsPerPage: number;
@@ -15,7 +15,7 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
       return [];
     }
     if (rowsPerPage > 0) {
-      return tableResults?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) ?? [];
+      return tableResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) ?? [];
     }
     return tableResults;
   }, [page, tableResults, rowsPerPage]);
@@ -30,7 +30,9 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
     ({ value }: { value: string }): ReactNode => (
       <Link
         color="secondary"
-        onClick={() => onClick(value)}
+        onClick={() => {
+          onClick(value);
+        }}
         sx={{
           textDecoration: 'none',
           cursor: 'pointer',

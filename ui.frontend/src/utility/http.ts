@@ -1,21 +1,20 @@
 /**
  * The AUTH_TOKEN exists for dev builds
  */
-const AUTH_TOKEN = process.env.REACT_APP_AEM_AUTHORIZATION_HEADER as string;
+const AUTH_TOKEN = process.env.REACT_APP_AEM_AUTHORIZATION_HEADER ?? '';
 
 /**
  * Builds HTTP Fetch options that are needed for local development.
  */
 export const DYNAMIC_HEADERS = ((): RequestInit => {
-  return (
-    (AUTH_TOKEN && {
-      credentials: 'same-origin',
-      headers: {
-        Authorization: AUTH_TOKEN,
-      },
-    }) ||
-    {}
-  );
+  return AUTH_TOKEN
+    ? {
+        credentials: 'same-origin',
+        headers: {
+          Authorization: AUTH_TOKEN,
+        },
+      }
+    : {};
 })();
 
 export type GetParamsProps = {
@@ -68,7 +67,7 @@ export function getParams({ language, statement }: GetParamsProps): Record<strin
  * @param statement
  */
 export const queryToParams = (statement: string) => {
-  let o: { [name: string]: string } = {};
+  const o: Record<string, string> = {};
 
   const replacer = (match: string, s1: string, s2: string) => {
     o[s1] = s2;

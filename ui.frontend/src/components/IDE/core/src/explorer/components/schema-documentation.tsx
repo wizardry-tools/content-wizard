@@ -15,8 +15,8 @@ type SchemaDocumentationProps = {
 
 export function SchemaDocumentation(props: SchemaDocumentationProps) {
   const queryType = props.schema.getQueryType();
-  const mutationType = props.schema.getMutationType?.();
-  const subscriptionType = props.schema.getSubscriptionType?.();
+  const mutationType = props.schema.getMutationType();
+  const subscriptionType = props.schema.getSubscriptionType();
   const typeMap = props.schema.getTypeMap();
   const ignoreTypesInAllSchema = [queryType?.name, mutationType?.name, subscriptionType?.name];
 

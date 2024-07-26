@@ -229,17 +229,13 @@ export const useCreateFetcher = () => {
       | Promise<any>
       | (
           | string
-          | { data?: any; errors?: Array<any>; hasNext: boolean }
+          | { data?: any; errors?: any[]; hasNext: boolean }
           | { data?: any; errors?: any[]; path: (string | number)[]; hasNext: boolean }
         )[],
       any,
-      Promise<
-        | ExecutionResult<Record<string, unknown>, Record<string, unknown>>
-        | Observable<ExecutionResult<Record<string, unknown>, Record<string, unknown>>>
-        | AsyncIterable<ExecutionResult>
-      > &
-        ExecutionResult<Record<string, unknown>, Record<string, unknown>> &
-        Observable<ExecutionResult<Record<string, unknown>, Record<string, unknown>>> &
+      Promise<ExecutionResult | Observable<ExecutionResult> | AsyncIterable<ExecutionResult>> &
+        ExecutionResult &
+        Observable<ExecutionResult> &
         AsyncIterable<ExecutionResult>
     >) =>
       async function* (graphQLParams: FetcherParams, fetcherOpts?: FetcherOpts) {
@@ -310,7 +306,7 @@ export const useCreateFetcher = () => {
       if (typeof window !== 'undefined' && window.fetch) {
         httpFetch = window.fetch;
       }
-      if (options?.enableIncrementalDelivery === null || options.enableIncrementalDelivery !== false) {
+      if (options.enableIncrementalDelivery === null || options.enableIncrementalDelivery !== false) {
         options.enableIncrementalDelivery = true;
       }
       if (options.fetch) {

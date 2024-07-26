@@ -1,5 +1,5 @@
-import { defaultAdvancedQueries, QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
-import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
+import { defaultAdvancedQueries, QueryLanguage, QueryLanguageKey, Statement } from '@/components/Query';
+import { useLogger, useQuery, useQueryDispatcher } from '@/providers';
 import { useCallback } from 'react';
 import './language-selector.scss';
 import { API, useAPIContext } from '../api';
@@ -7,7 +7,7 @@ import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { GraphQLSelector } from './components/GraphQLSelector';
 import { QueryLanguageSelector } from './components/QueryLanguageSelector';
 import { LanguageSelectorHeader } from './components/LanguageSelectorHeader';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 /**
  * This is a custom Plugin for the Query IDE.
@@ -71,7 +71,7 @@ export const LanguageSelector = () => {
     (event: SelectChangeEvent) => {
       const selectedEndpoint = event.target.value;
       // API was selected
-      let foundAPI = APIs.find((api) => {
+      const foundAPI = APIs.find((api) => {
         return api.endpoint === selectedEndpoint;
       });
       if (foundAPI) {

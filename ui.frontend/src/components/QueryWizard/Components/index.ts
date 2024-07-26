@@ -4,7 +4,7 @@ import { SimpleSelect } from './SimpleSelect';
 import { SimpleCheckbox } from './SimpleCheckbox';
 import { SimpleDatePicker } from './SimpleDatePicker';
 import { SimpleSlider } from './SimpleSlider';
-import { ContentTypeLookup, ContentTypes, TargetTypeLookup, TargetTypes } from 'src/components/Query';
+import { ContentTypeLookup, ContentTypes, TargetTypeLookup, TargetTypes } from '@/components/Query';
 import { Field, fieldCategoryTypes, FieldsConfig } from './fields';
 
 export * from './fields';
@@ -20,7 +20,7 @@ export * from './StatementWindow';
 export * from './Tab';
 export * from './Accordion';
 
-export const FieldTypes: { [key: string]: ElementType } = {
+export const FieldTypes: Record<string, ElementType> = {
   SimpleInput,
   SimpleSelect,
   SimpleCheckbox,
@@ -64,7 +64,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => {
-      let type = fields.targetType.value;
+      const type = fields.targetType.value;
       return !type || type === TargetTypeLookup[TargetTypes.none] || type === TargetTypeLookup[TargetTypes.text];
     },
     category: fieldCategoryTypes.targeting,

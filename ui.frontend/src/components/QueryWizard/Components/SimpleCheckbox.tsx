@@ -2,8 +2,8 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import { FormGrid } from './FormGrid';
 import { ChangeEvent, useCallback, useState } from 'react';
 import { SimpleInputProps } from './SimpleInput';
-import { useFieldDispatcher, useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useFieldDispatcher, useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export const SimpleCheckbox = ({ field, disabled }: SimpleInputProps) => {
   const logger = useLogger();

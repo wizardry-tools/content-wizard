@@ -3,8 +3,8 @@ import { ElementType, SyntheticEvent, useMemo } from 'react';
 import { Accordion as AccordionTab, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FormGrid } from './FormGrid';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type TabProps = {
   fields: FieldConfig[];
@@ -35,7 +35,7 @@ export const Tab = (props: TabProps) => {
         }
         const disabled =
           field.isDisabled && typeof field.isDisabled === 'function' ? field.isDisabled(fullConfig) : false;
-        const Component: ElementType = field.fieldType as ElementType;
+        const Component: ElementType = field.fieldType;
         return <Component key={field.name} defaultValue={field.value} field={field} disabled={disabled} />;
       }),
     [fields, fullConfig],

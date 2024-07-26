@@ -1,8 +1,8 @@
 import { ChangeEvent, memo, MouseEvent, useMemo } from 'react';
 import { TableFooter, TablePagination, TableRow } from '@mui/material';
 import { TablePaginationActions } from './TablePaginationActions';
-import { useLogger, useResults } from 'src/providers';
-import { usePaperTheme } from 'src/utility';
+import { useLogger, useResults } from '@/providers';
+import { usePaperTheme } from '@/utility';
 
 export type ResultTableFooterProps = {
   rowsPerPage: number;

@@ -9,11 +9,11 @@ import {
   PredicateConfig,
   predicates,
   predicateTypes,
-} from 'src/components/QueryWizard/Components';
+} from '@/components/QueryWizard/Components';
 import { useQueryDispatcher } from './QueryProvider';
-import { endpoints, Query, QueryLanguage } from 'src/components/Query';
+import { endpoints, Query, QueryLanguage } from '@/components/Query';
 import { useLogger } from './LoggingProvider';
-import { useDebounce } from 'src/utility';
+import { useDebounce } from '@/utility';
 
 const FieldsConfigContext = createContext<FieldsConfig>(null!);
 const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);
@@ -173,7 +173,7 @@ export const generateQuery = (fields: FieldsConfig): string => {
       const predicate = predicates[field.name];
       // check validity of the predicate against the corresponding field value
       // also don't process disabled fields
-      if ((!field.isDisabled || !field.isDisabled(fields)) && predicate.isValid && predicate.isValid(value)) {
+      if (!field.isDisabled?.(fields) && predicate.isValid?.(value)) {
         if (predicate.raw) {
           // if raw, nothing to build, return the raw statement
           return predicate.raw;

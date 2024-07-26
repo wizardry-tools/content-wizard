@@ -3,8 +3,8 @@ import { FormGrid } from './FormGrid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { NumberValue } from './fields';
 import { SimpleInputProps } from './SimpleInput';
-import { useFieldDispatcher, useLogger } from 'src/providers';
-import { useDebounce, useRenderCount } from 'src/utility';
+import { useFieldDispatcher, useLogger } from '@/providers';
+import { useDebounce, useRenderCount } from '@/utility';
 
 type SimpleSliderProps = SimpleInputProps & {
   min: number;

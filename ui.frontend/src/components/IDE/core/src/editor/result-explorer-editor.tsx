@@ -4,8 +4,8 @@ import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
 import { CodeMirrorEditor, CommonEditorProps } from './types';
 import { useEditorContext } from './context';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type UseResultExplorerEditorArgs = CommonEditorProps & {
   className?: string;
@@ -47,7 +47,7 @@ export function useResultExplorerEditor(
       return;
     }
     let isActive = true;
-    let addons = [
+    const addons = [
       import('codemirror/addon/fold/foldgutter'),
       import('codemirror/addon/fold/brace-fold'),
       import('codemirror/addon/dialog/dialog'),

@@ -69,7 +69,7 @@ export function ImagePreview(props: ImagePreviewProps) {
 
 ImagePreview.shouldRender = function shouldRender(token: Token) {
   const url = tokenToURL(token);
-  return url ? isImageURL(url as URL) : false;
+  return url ? isImageURL(url) : false;
 };
 
 function tokenToURL(token: Token) {

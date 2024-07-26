@@ -3,14 +3,14 @@ import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'rea
 import { clsx } from 'clsx';
 
 import { useEditorContext } from '../editor';
-import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from 'src/icons';
+import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from '@/icons';
 import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
 
 import './style.scss';
-import { useLogger, useQueryDispatcher } from 'src/providers';
-import { defaultAdvancedQueries, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
+import { useLogger, useQueryDispatcher } from '@/providers';
+import { defaultAdvancedQueries, QueryLanguageKey, QueryLanguageLabels } from '@/components/Query';
+import { useRenderCount } from '@/utility';
 
 export function History() {
   const logger = useLogger();

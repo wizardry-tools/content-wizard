@@ -1,8 +1,8 @@
-import { ContentWizardProvider, IDEProvider, useLogger } from 'src/providers';
+import { ContentWizardProvider, IDEProvider, useLogger } from '@/providers';
 import { Box } from '@mui/material';
 import { GlobalNav } from '../GlobalNav';
 import { useState } from 'react';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 import { Bar, Views } from './index';
 import './ContentWizard.scss';
 

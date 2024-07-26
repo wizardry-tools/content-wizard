@@ -1,5 +1,5 @@
 import { DateRange, FieldConfigNameKey, FieldsConfig, InputValue } from './fields';
-import { ContentType, ContentTypeMap, TargetType, TargetTypeLookup, TargetTypes } from 'src/components/Query';
+import { ContentType, ContentTypeMap, TargetType, TargetTypeLookup, TargetTypes } from '@/components/Query';
 
 export const predicateTypes = {
   fulltext: 'fulltext',
@@ -19,7 +19,7 @@ export type RawInjectCallback = (value: InputValue, prefix?: string) => string;
 export type PredicateValidityCallback = (value: InputValue) => boolean;
 export type ConfigInjectCallback = (fields: FieldsConfig) => string;
 
-export interface PredicateConfig {
+export type PredicateConfig = {
   readonly type: PredicateType;
   readonly raw?: string; // static predicate value
   readonly rawInject?: RawInjectCallback; // simple predicate based on string injection
@@ -29,7 +29,7 @@ export interface PredicateConfig {
   readonly configInject?: ConfigInjectCallback; // relative property path for the query, uses a callback since some fields need dynamic definitions.
   readonly useConfig?: boolean;
   readonly isValid?: PredicateValidityCallback;
-}
+};
 
 export const Predicate = ({
   rawInject = () => '',
@@ -64,7 +64,7 @@ export const predicates: PredicatesConfig = {
   type: Predicate({
     type: predicateTypes.type,
     rawInject: (value: InputValue) => {
-      let contentType = ContentTypeMap[value as ContentType];
+      const contentType = ContentTypeMap[value as ContentType];
       return `type=${contentType}\n`;
     },
   }),

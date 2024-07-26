@@ -2,8 +2,8 @@ import { memo, useMemo } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { API } from '../../api';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type APISelectorProps = {
   /**

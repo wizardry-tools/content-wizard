@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress, Paper, Stack } from '@mui/material';
-import { Tooltip, ResultExplorerEditor } from 'src/components/IDE/core/src';
+import { Tooltip, ResultExplorerEditor } from '@/components/IDE/core/src';
 import { useFetcher } from './fetcher';
 
 export type ResultExplorerProps = {
@@ -35,7 +35,7 @@ export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   return (
     <div className="result-explorer">
       <Box
-        className={`${data ? 'hide' : 'show'}`}
+        className={data ? 'hide' : 'show'}
         sx={{
           position: 'absolute',
           left: '50%',

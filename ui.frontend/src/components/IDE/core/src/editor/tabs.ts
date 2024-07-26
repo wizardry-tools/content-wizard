@@ -4,9 +4,9 @@ import { Dispatch, useCallback, useMemo } from 'react';
 import debounce from '../utility/debounce';
 import { CodeMirrorEditorWithOperationFacts } from './context';
 import { CodeMirrorEditor } from './types';
-import { defaultAdvancedQueries, isQueryValid, Query, QueryAction, QueryLanguageLabels } from 'src/components/Query';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { defaultAdvancedQueries, isQueryValid, Query, QueryAction, QueryLanguageLabels } from '@/components/Query';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 
 export type TabDefinition = {
   /**

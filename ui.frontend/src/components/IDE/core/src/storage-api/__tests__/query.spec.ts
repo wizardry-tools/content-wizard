@@ -1,8 +1,8 @@
 import { useWizardStorageAPI } from '../storage-api';
 import { useWizardStore } from '../store';
-import { useAlertDispatcher } from 'src/providers';
+import { useAlertDispatcher } from '@/providers';
 
-jest.mock('src/providers', () => {
+jest.mock('@/providers', () => {
   const mockAlertDispatcher = jest.fn(() => {});
   return {
     useAlertDispatcher() {
@@ -13,7 +13,7 @@ jest.mock('src/providers', () => {
 
 class StorageMock {
   shouldThrow: () => boolean;
-  count: number = 0;
+  count = 0;
   map: any = {};
   storage: any = {};
   constructor(shouldThrow: () => boolean) {

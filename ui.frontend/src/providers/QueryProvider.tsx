@@ -1,25 +1,15 @@
 import { createContext, Dispatch, PropsWithChildren, useCallback, useContext, useMemo, useReducer } from 'react';
-import { DYNAMIC_HEADERS, getParams } from 'src/utility';
-import {
-  buildGraphQLURL,
-  buildQueryString,
-  endpoints,
-  Query,
-  QueryAction,
-  QueryLanguage,
-  QueryLanguageKey,
-  QueryResponse,
-  Statement,
-} from 'src/components/Query';
-import { API, useStorageContext } from 'src/components/IDE/core/src';
+import {Query, QueryAction, QueryResponse, QueryResults, Statement} from '@/types';
+import { DYNAMIC_HEADERS, getParams } from '@/utility';
+import { buildGraphQLURL, buildQueryString, endpoints, QueryLanguage, QueryLanguageKey } from '@/components/Query';
+import { API, useStorageContext } from '@/components/IDE/core/src';
 import { useLogger } from './LoggingProvider';
-import { defaultFields } from '../components/QueryWizard/Components';
+import { defaultFields } from '@/components/QueryWizard/Components';
 import { generateQuery } from './FieldsProvider';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 export type QueryRunnerProps = {
   query: Query;
-  caller: Function;
 };
 
 const QueryContext = createContext<Query>(null!);
@@ -49,8 +39,8 @@ export function QueryProvider({ children }: PropsWithChildren) {
   const isGraphQL = useMemo(() => query.language === (QueryLanguage.GraphQL as QueryLanguageKey), [query.language]);
 
   const queryRunner = useCallback(
-    async ({ query, caller }: QueryRunnerProps): Promise<QueryResponse> => {
-      logger.debug({ message: `QueryProvider queryRunner()`, caller });
+    async ({ query }: QueryRunnerProps): Promise<QueryResponse> => {
+      logger.debug({ message: `QueryProvider queryRunner()` });
       const url = query.url + buildQueryString(query);
       // prechecks
       if (!url) {
@@ -60,15 +50,15 @@ export function QueryProvider({ children }: PropsWithChildren) {
           query,
         };
       }
-      let params = isGraphQL ? getParams(query) : DYNAMIC_HEADERS;
+      const params = isGraphQL ? getParams(query) : DYNAMIC_HEADERS;
 
       // flight
       try {
-        let response = await fetch(url, params);
+        const response = await fetch(url, params);
         if (response.ok) {
-          let json = await response.json();
+          const json: QueryResults = await response.json();
           return {
-            results: json.hits || json.results || JSON.stringify(json.data),
+            results: json.hits ?? json.results ?? JSON.stringify(json.data),
             status: response.status,
             query,
           };
@@ -133,7 +123,7 @@ function queryReducer(query: Query, action: QueryAction): Query {
       // 1
       return {
         ...query,
-        statement: action.statement as Statement,
+        statement: action.statement!,
       };
     }
     case 'replaceQuery': {
@@ -146,12 +136,12 @@ function queryReducer(query: Query, action: QueryAction): Query {
       // 3
       return {
         ...query,
-        status: action.status as string,
+        status: action.status!,
       };
     }
     case 'apiChange': {
       // 4
-      const api = action.api as API;
+      const api = action.api!;
       return {
         ...query,
         api: api,

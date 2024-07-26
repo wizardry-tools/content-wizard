@@ -7,7 +7,7 @@ import '../style/editor.scss';
 import { useMemo } from 'react';
 import { Paper, Stack } from '@mui/material';
 import { ToolbarButton } from '../../toolbar';
-import { CopyIcon } from 'src/icons';
+import { CopyIcon } from '@/icons';
 import { useCopyResult } from '../hooks';
 
 import './result-explorer-editor.scss';

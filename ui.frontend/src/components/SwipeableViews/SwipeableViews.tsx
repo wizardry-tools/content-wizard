@@ -107,7 +107,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   const nodeWhoClaimedTheScroll = useRef({} as HTMLDivElement);
 
   const updateHeight = useCallback(() => {
-    if (activeSlide.current.tagName && activeSlide.current?.children.length) {
+    if (activeSlide.current.tagName && activeSlide.current.children.length) {
       const child = activeSlide.current.children[0] as any;
       if (child !== undefined && child.offsetHeight !== undefined && heightLatest !== child.offsetHeight) {
         setHeightLatest(child.offsetHeight);
@@ -133,7 +133,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   }, [onTransitionEnd, displaySameSlide, isDragging]);
 
   useEffect(() => {
-    const newIndex = props.index as number;
+    const newIndex = props.index!;
     if (newIndex !== previousProps.current.index) {
       if (process.env.NODE_ENV !== 'production') {
         checkIndexBounds(props);
@@ -178,7 +178,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
     (event: any) => {
       const touch = applyRotationMatrix(event.touches[0], axis);
       startTransition(() => {
-        const rect: DOMRect = rootNode.current?.getBoundingClientRect();
+        const rect: DOMRect = rootNode.current.getBoundingClientRect();
         viewLength.current = rect[axisProperties.length[axis] as keyof DOMRect] as number;
         startX.current = touch.pageX;
         lastX.current = touch.pageX;

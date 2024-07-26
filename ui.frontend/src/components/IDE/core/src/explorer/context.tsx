@@ -98,7 +98,7 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
           return oldNavStack;
         }
         const newNavStack: ExplorerNavStack = [initialNavStackItem];
-        let lastEntity: GraphQLNamedType | GraphQLField<any, any, any> | null = null;
+        let lastEntity: GraphQLNamedType | GraphQLField<any, any> | null = null;
         for (const item of oldNavStack) {
           if (item === initialNavStackItem) {
             // No need to copy the initial item
@@ -145,7 +145,7 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
               break;
             } else {
               // lastEntity must be a field (because it's not a named type)
-              const field: GraphQLField<any, any, any> = lastEntity;
+              const field: GraphQLField<any, any> = lastEntity;
               // Thus item.def must be an argument, so find the same named argument in the new schema
               const arg = field.args.find((a) => a.name === item.name);
               if (arg) {

@@ -1,5 +1,5 @@
 import { WizardStorageAPI } from './storage-api';
-import { QueryLanguageKey, Statement } from 'src/components/Query';
+import { QueryLanguageKey, Statement } from '@/components/Query';
 
 export type WizardStoreItem = {
   query?: Statement;
@@ -57,7 +57,7 @@ export const useWizardStore = ({ key, storage, maxSize = null }: WizardStoreProp
   function fetchAll() {
     const raw = storage.get(key);
     if (raw) {
-      return JSON.parse(raw)[key] as Array<WizardStoreItem>;
+      return JSON.parse(raw)[key] as WizardStoreItem[];
     }
     return [];
   }
@@ -116,7 +116,7 @@ export const useWizardStore = ({ key, storage, maxSize = null }: WizardStoreProp
 
         for (let attempts = 0; attempts < 5; attempts++) {
           const response = storage.set(key, JSON.stringify({ [key]: items }));
-          if (!response?.error) {
+          if (!response.error) {
             return newItems;
           } else if (response.isQuotaError && maxSize) {
             // Only try to delete last items on LRU stores

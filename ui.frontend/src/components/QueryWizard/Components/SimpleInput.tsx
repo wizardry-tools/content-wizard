@@ -2,8 +2,8 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { FormGrid } from './FormGrid';
 import { Paper, TextField } from '@mui/material';
 import { Field, FieldConfig, InputValue } from './fields';
-import { useFieldDispatcher, useLogger } from 'src/providers';
-import { useDebounce, useRenderCount } from 'src/utility';
+import { useFieldDispatcher, useLogger } from '@/providers';
+import { useDebounce, useRenderCount } from '@/utility';
 
 export type SimpleInputProps = {
   defaultValue: InputValue;
@@ -25,8 +25,12 @@ export const SimpleInput = ({ field, defaultValue, disabled }: SimpleInputProps)
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   }, []);
-  const handleFocus = useCallback(() => setFocused(true), []);
-  const handleBlur = useCallback(() => setFocused(false), []);
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+  }, []);
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+  }, []);
 
   useEffect(() => {
     fieldDispatcher({

@@ -1,6 +1,6 @@
-import { QueryButton } from 'src/components/QueryWizard/Components';
+import { QueryButton } from '@/components/QueryWizard/Components';
 import { Query, QueryLanguage } from './QueryType';
-import { useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatcher } from 'src/providers';
+import { useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatcher } from '@/providers';
 import { useCallback } from 'react';
 
 type QueryHandlerProps = {
@@ -14,7 +14,7 @@ export function QueryHandler({ onResults }: QueryHandlerProps) {
   const queryRunner = useQueryRunner();
 
   const isDisabled = () => {
-    return !query || !query.statement || !query.language || (query.language === QueryLanguage.GraphQL && !query.api);
+    return !query?.statement || !query.language || (query.language === QueryLanguage.GraphQL && !query.api);
   };
 
   const handleClick = useCallback(() => {

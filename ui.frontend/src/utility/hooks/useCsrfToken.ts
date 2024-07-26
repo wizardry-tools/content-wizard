@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 export const useCsrfToken = () => {
   const getCsrfToken = useCallback(async (): Promise<string> => {
     try {
-      const response = await fetch('/libs/granite/csrf/token.json', DYNAMIC_HEADERS);
+      const response: Response = await fetch('/libs/granite/csrf/token.json', DYNAMIC_HEADERS);
       const json = await response.json();
       return json.token;
     } catch (error) {
