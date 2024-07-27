@@ -42,7 +42,6 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
           cache-dependency-path: ./github3
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Install dependencies
@@ -50,7 +49,7 @@ jobs:
       - name: Build project
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run build
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./github3/dist
   # Deployment job
