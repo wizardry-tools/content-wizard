@@ -40,6 +40,6 @@
     },
     "types": ["react", "react-dom", "eslint__js"]
   },
-  "exclude": ["**/node_modules", "**/public", "**/.*/"],
+  "exclude": ["**/node_modules", "**/public", "**/dist", "**/.*/"],
   "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

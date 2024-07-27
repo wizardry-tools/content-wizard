@@ -5,6 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/content-wizard/',
   plugins: [tsconfigPaths(), svgr(), react({ tsDecorators: true })],
   test: {
     globals: true,
