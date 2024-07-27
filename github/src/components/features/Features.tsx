@@ -1,9 +1,9 @@
+import { useCallback, useState } from 'react';
 import { Container, Grid, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import { featureContent } from '@/content';
 import { FeaturePreview } from './FeaturePreview';
-import { featureContent } from 'src/content';
 import { FeaturesBar } from './FeaturesBar';
-import { useCallback, useState } from 'react';
 import { SwipeableViews } from './swipeable-views';
 import { FeaturesPanel } from './FeaturesPanel';
 
@@ -12,7 +12,7 @@ const { ide, queryWizard, results } = featureContent;
 export const Features = () => {
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
-  const onTabSelect = useCallback((_event: any, value: any) => {
+  const onTabSelect = useCallback((_event: unknown, value: number) => {
     setTabValue(value);
   }, []);
 

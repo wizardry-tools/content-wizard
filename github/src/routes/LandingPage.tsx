@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Box, CssBaseline, Divider, PaletteMode } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { AppAppBar, BuiltWith, FAQ, Features, Footer, Hero, Highlights, InstallationGuide } from 'src/components';
-import { getTheme } from 'src/utils';
+import { getTheme } from '@/utils';
+import { AppAppBar, BuiltWith, FAQ, Features, Footer, Hero, Highlights, InstallationGuide } from '@/components';
 
-export default function LandingPage() {
+export function LandingPage() {
   const [mode, setMode] = useState<PaletteMode>('dark');
   const defaultTheme = createTheme(getTheme(mode));
 
@@ -22,7 +22,7 @@ export default function LandingPage() {
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Hero />
-      <Box sx={{ bgcolor: 'background.default' }}>
+      <Box sx={{ bgColor: 'background.default' }}>
         <Highlights />
         <Divider />
         <Features />

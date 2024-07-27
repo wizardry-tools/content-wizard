@@ -1,9 +1,9 @@
-import Box from '@mui/material/Box';
+import { PropsWithChildren } from 'react';
+import { Box } from '@mui/material';
 import { Direction } from '@mui/system';
 import { styled } from '@mui/material/styles';
 
-type FeaturesPanelProps = {
-  children: any;
+type FeaturesPanelProps = PropsWithChildren & {
   index: number;
   value: number;
   dir: Direction;

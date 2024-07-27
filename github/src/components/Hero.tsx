@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { Box, Button, Container, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
 import { useMemo } from 'react';
-import { isDark } from 'src/utils';
-import { useReleaseInfoContext, REPO } from 'src/providers';
+import { isDark } from '@/utils';
+import { useReleaseInfoContext, REPO } from '@/providers';
 import {
   qwAuthoringDark,
   qwAuthoringLight,
@@ -10,8 +10,8 @@ import {
   ideLanguageLight,
   resultsImageDark,
   resultsImageLight,
-} from 'src/images';
-import { LogoIcon, WandIcon, CodeIcon, TableIcon } from 'src/icons';
+} from '@/images';
+import { LogoIcon, WandIcon, CodeIcon, TableIcon } from '@/icons';
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "lib": ["dom", "dom.iterable", "ESNext"],
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "node_modules",
+    "public",
+    "**/.*/*"
+  ],
+  "include": [
+    "eslint.config.*",
+    "react-app-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    "**/*.js",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/*.jsx",
+    "**/*.json",
+  ]
+}

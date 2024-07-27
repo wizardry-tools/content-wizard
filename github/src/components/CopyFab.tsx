@@ -1,8 +1,12 @@
 import { MouseEvent, useCallback, useState } from 'react';
 import { Fab, Popover, SvgIcon, Tooltip, Typography } from '@mui/material';
-import { CopyIcon } from 'src/icons';
+import { CopyIcon } from '@/icons';
 
-const CopyFab = (props: any) => {
+type CopyFabProps = {
+  hover: boolean;
+  onClick: () => void;
+};
+const CopyFab = (props: CopyFabProps) => {
   const { hover, onClick } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [clicked, setClicked] = useState(false);
@@ -21,15 +25,12 @@ const CopyFab = (props: any) => {
     },
     [openPopover],
   );
-  const onFabClick = useCallback(
-    (e: MouseEvent) => {
-      setClicked(true);
-      onClick(e);
-    },
-    [onClick],
-  );
+  const onFabClick = useCallback(() => {
+    setClicked(true);
+    onClick();
+  }, [onClick]);
 
-  const openSuccess = (anchorEl && clicked) || false;
+  const openSuccess = (anchorEl && clicked) ?? false;
 
   return (
     <span className={`clipboard`}>

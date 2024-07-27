@@ -1,7 +1,12 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 
-export type ReleaseInfo = {
+type Release = {
   name: string;
+  html_url: string;
+};
+type ReleaseResponse = Release[];
+
+export type ReleaseInfo = Pick<Release, 'name'> & {
   url: string;
 };
 
@@ -27,7 +32,7 @@ async function getReleaseInfo(): Promise<ReleaseInfo> {
    * replacing "..." with your own personal API Token. You will need appropriate
    * Repository access to be able to use this.
    */
-  const apiToken = process.env.REACT_APP_GH_API_TOKEN || '';
+  const apiToken = process.env.REACT_APP_GH_API_TOKEN ?? '';
 
   if (!apiToken) {
     // refusing to get Release Info
@@ -43,7 +48,7 @@ async function getReleaseInfo(): Promise<ReleaseInfo> {
   };
   const response = await fetch(API_ENDPOINT, headers);
   if (response) {
-    const json = await response.json();
+    const json: ReleaseResponse = await response.json();
     const latestRelease = json[0];
     const { name, html_url } = latestRelease;
     return { name, url: html_url };

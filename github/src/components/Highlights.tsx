@@ -1,5 +1,5 @@
 import { Box, Card, Container, Grid, Stack, Typography } from '@mui/material';
-import { highlightContent } from 'src/content';
+import { highlightContent } from '@/content';
 
 const { items, heading, subHeading } = highlightContent;
 
