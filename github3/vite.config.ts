@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     svgr(),
-    react()
+    react({ tsDecorators: true })
   ],
   test: {
     globals: true,

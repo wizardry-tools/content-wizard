@@ -80,7 +80,7 @@ export const BuiltWith = () => {
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
         color: theme.palette.mode === 'dark' ? 'white' : 'black',
-        bgColor: theme.palette.mode === 'dark' ? 'hsl(220, 30%, 2%)' : 'hsl(220, 30%, 96%)',
+        bgcolor: theme.palette.mode === 'dark' ? 'hsl(220, 30%, 2%)' : 'hsl(220, 30%, 96%)',
       })}
     >
       <Container
