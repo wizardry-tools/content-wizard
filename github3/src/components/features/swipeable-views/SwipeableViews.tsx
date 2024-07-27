@@ -118,7 +118,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   const updateHeight = useCallback(() => {
     if (activeSlide.current?.tagName && activeSlide.current?.children.length) {
       const child = activeSlide.current.children[0] as SwipeableElement;
-      if (child !== undefined && child.offsetHeight !== undefined && heightLatest !== child.offsetHeight) {
+      if (child?.offsetHeight !== undefined && heightLatest !== child.offsetHeight) {
         setHeightLatest(child.offsetHeight);
       }
     }
@@ -412,88 +412,85 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
 
   // the old code didn't have a param here, but only called
   // this function with a param... so it's unused as of now...
-  const handleSwipeEnd = useCallback(
-    (_event: SwipeableEvent) => {
-      nodeWhoClaimedTheScroll.current = {} as HTMLDivElement;
+  const handleSwipeEnd = useCallback(() => {
+    nodeWhoClaimedTheScroll.current = {} as HTMLDivElement;
 
-      // The touch start event can be cancelled.
-      // Makes sure that a starting point is set.
-      if (!started) {
-        return;
-      }
+    // The touch start event can be cancelled.
+    // Makes sure that a starting point is set.
+    if (!started) {
+      return;
+    }
 
-      if (!isSwiping) {
-        return;
-      }
+    if (!isSwiping) {
+      return;
+    }
 
-      const delta = indexLatest - index.current;
+    const delta = indexLatest - index.current;
 
-      let indexNew;
+    let indexNew;
 
-      // Quick movement
-      if (Math.abs(vx.current) > threshold) {
-        if (vx.current > 0) {
-          indexNew = Math.floor(index.current);
-        } else {
-          indexNew = Math.ceil(index.current);
-        }
-      } else if (Math.abs(delta) > hysteresis) {
-        // Some hysteresis with indexLatest.
-        indexNew = delta > 0 ? Math.floor(index.current) : Math.ceil(index.current);
+    // Quick movement
+    if (Math.abs(vx.current) > threshold) {
+      if (vx.current > 0) {
+        indexNew = Math.floor(index.current);
       } else {
-        indexNew = indexLatest;
+        indexNew = Math.ceil(index.current);
       }
+    } else if (Math.abs(delta) > hysteresis) {
+      // Some hysteresis with indexLatest.
+      indexNew = delta > 0 ? Math.floor(index.current) : Math.ceil(index.current);
+    } else {
+      indexNew = indexLatest;
+    }
 
-      const indexMax = Children.count(children) - 1;
+    const indexMax = Children.count(children) - 1;
 
-      if (typeof indexNew === 'undefined' || indexNew < 0) {
-        indexNew = 0;
-      } else if (indexNew > indexMax) {
-        indexNew = indexMax;
-      }
+    if (typeof indexNew === 'undefined' || indexNew < 0) {
+      indexNew = 0;
+    } else if (indexNew > indexMax) {
+      indexNew = indexMax;
+    }
 
-      indexUpdate(indexNew);
-      setIndexLatest(indexNew);
-      setIsDragging(false);
-      if (onSwitching && typeof onSwitching === 'function') {
-        onSwitching(indexNew, 'end');
-      }
-      if (onChangeIndex && typeof onChangeIndex === 'function' && indexNew !== indexLatest) {
-        onChangeIndex(indexNew, indexLatest);
-      }
+    indexUpdate(indexNew);
+    setIndexLatest(indexNew);
+    setIsDragging(false);
+    if (onSwitching && typeof onSwitching === 'function') {
+      onSwitching(indexNew, 'end');
+    }
+    if (onChangeIndex && typeof onChangeIndex === 'function' && indexNew !== indexLatest) {
+      onChangeIndex(indexNew, indexLatest);
+    }
 
-      // Manually calling handleTransitionEnd in that case as isn't otherwise.
-      if (index.current === indexLatest) {
-        handleTransitionEnd();
-      }
-    },
-    [
-      started,
-      isSwiping,
-      onSwitching,
-      onChangeIndex,
-      handleTransitionEnd,
-      children,
-      hysteresis,
-      indexLatest,
-      indexUpdate,
-      threshold,
-    ],
-  );
+    // Manually calling handleTransitionEnd in that case as isn't otherwise.
+    if (index.current === indexLatest) {
+      handleTransitionEnd();
+    }
+  }, [
+    started,
+    isSwiping,
+    onSwitching,
+    onChangeIndex,
+    handleTransitionEnd,
+    children,
+    hysteresis,
+    indexLatest,
+    indexUpdate,
+    threshold,
+  ]);
 
   const handleTouchEnd = useCallback(
     (event: ReactTouchEvent<HTMLDivElement>) => {
       if (onTouchEnd && typeof onTouchEnd === 'function') {
         onTouchEnd(event);
       }
-      handleSwipeEnd(event);
+      handleSwipeEnd();
     },
     [onTouchEnd, handleSwipeEnd],
   );
 
   const handleMouseDown = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
-      if (!event || !event.persist) {
+      if (!event?.persist) {
         return;
       }
       if (onMouseDown) {
@@ -510,7 +507,8 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
       if (onMouseUp) {
         onMouseUp(event);
       }
-      handleSwipeEnd(adaptMouse(event));
+      adaptMouse(event);
+      handleSwipeEnd();
     },
     [onMouseUp, handleSwipeEnd],
   );
@@ -523,7 +521,8 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
 
       // Filter out events
       if (started) {
-        handleSwipeEnd(adaptMouse(event));
+        adaptMouse(event);
+        handleSwipeEnd();
       }
     },
     [onMouseLeave, handleSwipeEnd, started],
@@ -665,8 +664,9 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
           }
 
           if (!isValidElement(child)) {
+            const childString = child?.toString();
             console.warn(
-              `react-swipeable-view: one of the children provided is invalid: ${child}. We are expecting a valid React Element`,
+              `react-swipeable-view: one of the children provided is invalid: [${childString}]. We are expecting a valid React Element`,
             );
           }
 
@@ -686,7 +686,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
             <div
               ref={ref}
               style={slideStyleProp}
-              className={slideClassName || ''}
+              className={slideClassName ?? ''}
               aria-hidden={hidden}
               data-swipeable="true"
             >

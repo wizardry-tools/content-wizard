@@ -38,21 +38,8 @@
       "@/components/content": ["./components/content"],
       "@/routes": ["./routes"]
     },
-    "types": [
-      "react",
-      "react-dom",
-      "eslint__js"
-    ],
-
+    "types": ["react", "react-dom", "eslint__js"]
   },
-  "exclude": [
-    "**/node_modules",
-    "**/public",
-    "**/.*/"
-  ],
-  "include": [
-    "react-app-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["**/node_modules", "**/public", "**/.*/"],
+  "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

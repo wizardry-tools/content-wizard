@@ -70,7 +70,7 @@ export function createTransition(property: string, options: SpringConfig): strin
 }
 
 export function applyRotationMatrix(touch: SwipeableTouch, axis: Axis) {
-  const rotationMatrix: Position = axisProperties.rotationMatrix[axis] as Position;
+  const rotationMatrix: Position = axisProperties.rotationMatrix[axis];
 
   return {
     pageX: rotationMatrix.x[0] * touch.pageX + rotationMatrix.x[1] * touch.pageY,
@@ -85,11 +85,11 @@ export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlidePr
 
   if (previousProps.children.length && props.children.length) {
     const oldKeys = Children.map(props.children, getChildrenKey);
-    const oldKey = oldKeys[previousProps.index as number];
+    const oldKey = oldKeys[previousProps.index!];
 
     if (oldKey) {
       const newKeys = Children.map(props.children, getChildrenKey);
-      const newKey = newKeys[props.index as number];
+      const newKey = newKeys[props.index!];
 
       if (oldKey === newKey) {
         displaySameSlide = true;

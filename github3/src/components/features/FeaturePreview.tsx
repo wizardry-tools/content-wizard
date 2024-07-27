@@ -124,7 +124,7 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
     },
     [isDarkMode, selectedFeature],
   );
-  const handleNoHover = useCallback((_event: MouseEvent<HTMLElement>) => {
+  const handleNoHover = useCallback(() => {
     highResImage.current = null;
     setHoverImage(false);
   }, []);
