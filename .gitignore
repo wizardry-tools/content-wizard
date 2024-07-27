@@ -53,6 +53,7 @@ local.properties
 
 # production
 /github/build
+/github/dist
 
 # misc
 .DS_Store
