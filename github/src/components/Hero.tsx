@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { Box, Button, Container, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
 import { useMemo } from 'react';
-import { isDark } from '@/utils';
-import { useReleaseInfoContext, REPO } from '@/providers';
+import { isDark, REPO } from '@/utils';
+import { useReleaseInfoContext } from '@/providers';
 import {
   qwAuthoringDark,
   qwAuthoringLight,
@@ -83,9 +83,9 @@ export function Hero() {
               }}
             >
               <SvgIcon
-                component={LogoIcon}
                 className="content-wizard-logo"
                 inheritViewBox
+                component={LogoIcon}
                 sx={{
                   fontSize: '7rem',
                 }}
@@ -151,9 +151,9 @@ export function Hero() {
             }}
           >
             <SvgIcon
-              component={WandIcon}
               className="query-wizard-icon"
               inheritViewBox
+              component={WandIcon}
               sx={{
                 fontSize: '2rem',
                 mr: { xs: 0, sm: 2 },
@@ -226,9 +226,9 @@ export function Hero() {
             }}
           >
             <SvgIcon
-              component={CodeIcon}
               className="query-ide-icon"
               inheritViewBox
+              component={CodeIcon}
               sx={{
                 fontSize: '2rem',
                 mr: { xs: 0, sm: 2 },
@@ -301,9 +301,9 @@ export function Hero() {
             }}
           >
             <SvgIcon
-              component={TableIcon}
               className="results-icon"
               inheritViewBox
+              component={TableIcon}
               sx={{
                 fontSize: '2rem',
                 mr: { xs: 0, sm: 2 },

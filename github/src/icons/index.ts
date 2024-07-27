@@ -1,12 +1,26 @@
-export { ReactComponent as LogoIcon } from '../wizard-logo.svg';
-export { ReactComponent as AdobeLogo } from './adobe-logo.svg';
-export { ReactComponent as CodeMirrorLogo } from './codemirror-logo.svg';
-export { ReactComponent as CopyIcon } from './copy.svg';
-export { ReactComponent as GraphiQLLogo } from './graphiql-logo.svg';
-export { ReactComponent as WandIcon } from './magic-wand.svg';
-export { ReactComponent as MavenLogo } from './maven-logo.svg';
-export { ReactComponent as MuiLogo } from './mui-logo.svg';
-export { ReactComponent as CodeIcon } from './programming-code.svg';
-export { ReactComponent as ReactLogo } from './react-logo.svg';
-export { ReactComponent as TableIcon } from './table.svg';
-export { ReactComponent as TSLogo } from './ts-logo.svg';
+/// <reference types="vite-plugin-svgr/client" />
+import LogoIconSvg from '../wizard-logo.svg?react';
+import AdobeLogoSvg from './adobe-logo.svg?react';
+import CodeMirrorLogoSvg from './codemirror-logo.svg?react';
+import CopyIconSvg from './copy.svg?react';
+import GraphiQLLogoSvg from './graphiql-logo.svg?react';
+import WandIconSvg from './magic-wand.svg?react';
+import MavenLogoSvg from './maven-logo.svg?react';
+import MuiLogoSvg from './mui-logo.svg?react';
+import CodeIconSvg from './programming-code.svg?react';
+import ReactLogoSvg from './react-logo.svg?react';
+import TableIconSvg from './table.svg?react';
+import TSLogoSvg from './ts-logo.svg?react';
+
+export const LogoIcon = LogoIconSvg;
+export const AdobeLogo = AdobeLogoSvg;
+export const CodeMirrorLogo = CodeMirrorLogoSvg;
+export const CopyIcon = CopyIconSvg;
+export const GraphiQLLogo = GraphiQLLogoSvg;
+export const WandIcon = WandIconSvg;
+export const MavenLogo = MavenLogoSvg;
+export const MuiLogo = MuiLogoSvg;
+export const CodeIcon = CodeIconSvg;
+export const ReactLogo = ReactLogoSvg;
+export const TableIcon = TableIconSvg;
+export const TSLogo = TSLogoSvg;

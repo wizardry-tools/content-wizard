@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Container, Grid, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
 import ConstructionIcon from '@mui/icons-material/Construction';
-import { featureContent } from '@/content';
+import { featureContent } from '@/components/content';
 import { FeaturePreview } from './FeaturePreview';
 import { FeaturesBar } from './FeaturesBar';
 import { SwipeableViews } from './swipeable-views';

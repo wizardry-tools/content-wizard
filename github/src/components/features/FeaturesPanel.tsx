@@ -1,14 +1,6 @@
-import { PropsWithChildren } from 'react';
 import { Box } from '@mui/material';
-import { Direction } from '@mui/system';
 import { styled } from '@mui/material/styles';
-
-type FeaturesPanelProps = PropsWithChildren & {
-  index: number;
-  value: number;
-  dir: Direction;
-  padding?: number;
-};
+import { FeaturesPanelProps } from '@/types';
 
 const StyledBox = styled(Box)({});
 

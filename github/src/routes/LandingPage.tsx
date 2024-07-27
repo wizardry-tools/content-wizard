@@ -22,7 +22,7 @@ export function LandingPage() {
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Hero />
-      <Box sx={{ bgColor: 'background.default' }}>
+      <Box sx={{ bgcolor: 'background.default' }}>
         <Highlights />
         <Divider />
         <Features />

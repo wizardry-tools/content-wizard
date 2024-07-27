@@ -1,20 +1,30 @@
-import { Children } from 'react';
-import { isValidElement, useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import {
+  isValidElement,
+  Children,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+  CSSProperties,
+  ReactNode,
+  TouchEvent as ReactTouchEvent,
+  MouseEvent as ReactMouseEvent,
+  UIEvent as ReactUIEvent,
+} from 'react';
 import { axisProperties, defaultSwiperStyles } from './swiper-props';
 import {
   adaptMouse,
-  addEventListener,
   applyRotationMatrix,
   computeIndex,
   createTransition,
   defaultComputeValues,
-  DisplaySameSlideProps,
   findNativeHandler,
   getDisplaySameSlide,
   getDomTreeShapes,
   checkIndexBounds,
 } from './util';
-import { Axis, SwipeableViewsProps } from '@/types';
+import { Axis, DisplaySameSlideProps, SwipeableElement, SwipeableEvent, SwipeableViewsProps } from '@/types';
 
 /**
  * This is the main component
@@ -107,8 +117,8 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
 
   const updateHeight = useCallback(() => {
     if (activeSlide.current?.tagName && activeSlide.current?.children.length) {
-      const child = activeSlide.current.children[0] as any;
-      if (child !== undefined && child.offsetHeight !== undefined && heightLatest !== child.offsetHeight) {
+      const child = activeSlide.current.children[0] as SwipeableElement;
+      if (child?.offsetHeight !== undefined && heightLatest !== child.offsetHeight) {
         setHeightLatest(child.offsetHeight);
       }
     }
@@ -174,7 +184,10 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   );
 
   const handleSwipeStart = useCallback(
-    (event: any) => {
+    (event: SwipeableEvent) => {
+      if (!event || !(event instanceof TouchEvent) || !event.touches) {
+        return;
+      }
       const touch = applyRotationMatrix(event.touches[0], axis);
       startTransition(() => {
         const rect: DOMRect = rootNode.current?.getBoundingClientRect();
@@ -213,9 +226,9 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   );
 
   const handleTouchStart = useCallback(
-    (event: any) => {
+    (event: SwipeableEvent) => {
       if (onTouchStart && typeof onTouchStart === 'function') {
-        onTouchStart(event);
+        onTouchStart(event as ReactTouchEvent<HTMLDivElement>);
       }
       handleSwipeStart(event);
     },
@@ -223,7 +236,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   );
 
   const handleSwipeMove = useCallback(
-    (event: any) => {
+    (event: SwipeableEvent) => {
       // The touch start event can be cancel.
       // Makes sure we set a starting point.
       if (!started) {
@@ -232,7 +245,13 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
       }
 
       // We are not supposed to handle this touch move.
-      if (nodeWhoClaimedTheScroll.current.tagName && nodeWhoClaimedTheScroll.current !== rootNode.current) {
+      if (
+        (nodeWhoClaimedTheScroll.current.tagName && nodeWhoClaimedTheScroll.current !== rootNode.current) ||
+        !event ||
+        !(event instanceof TouchEvent) ||
+        !event.touches ||
+        !event.preventDefault
+      ) {
         return;
       }
 
@@ -289,8 +308,8 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
         viewLength: viewLength.current,
       });
       // Add support for native scroll elements.
-      if (!nodeWhoClaimedTheScroll.current.tagName && !ignoreNativeScroll) {
-        const domTreeShapes = getDomTreeShapes(event.target, rootNode.current);
+      if (!nodeWhoClaimedTheScroll.current.tagName && !ignoreNativeScroll && computedX) {
+        const domTreeShapes = getDomTreeShapes(event.target as HTMLDivElement, rootNode.current);
         const hasFoundNativeHandler = findNativeHandler({
           domTreeShapes,
           startX: computedX,
@@ -343,32 +362,30 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
 
   // componentDidMount
   useEffect(() => {
-    const transitionListener = addEventListener({
-      node: containerNode.current,
-      event: 'transitionend',
-      handler: (event: any) => {
-        if (event.target !== containerNode.current) {
-          return;
-        }
-        handleTransitionEnd();
-      },
-    });
-    const touchMoveListener = addEventListener({
-      node: rootNode.current,
-      event: 'touchmove',
-      handler: (event: any) => {
-        // Handling touch events is disabled.
-        if (disabled) {
-          return;
-        }
-        handleSwipeMove(event);
-      },
-      options: {
-        passive: false,
-      },
-    });
+    const transitionListener = (ev: Event) => {
+      const target = ev.target as HTMLDivElement;
+      if (target !== containerNode.current) {
+        return;
+      }
+      handleTransitionEnd();
+    };
+    containerNode.current.addEventListener('transitionend', transitionListener);
+    const removeTransitionListener = () =>
+      containerNode.current.removeEventListener('transitionend', transitionListener);
+
+    const touchListener = (event: TouchEvent) => {
+      // Handling touch events is disabled.
+      if (disabled) {
+        return;
+      }
+      handleSwipeMove(event);
+    };
+
+    rootNode.current.addEventListener('touchmove', touchListener, { passive: false });
+    const removeTouchListener = () => rootNode.current.removeEventListener('touchmove', touchListener);
+
     if (!disableLazyLoading) {
-      if (firstRenderTimeout.current !== null && typeof firstRenderTimeout.current === 'number') {
+      if (firstRenderTimeout.current !== null) {
         clearTimeout(firstRenderTimeout.current);
       }
       firstRenderTimeout.current = window.setTimeout(() => {
@@ -385,9 +402,9 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
 
     // componentWillUnmount()
     return () => {
-      transitionListener.remove();
-      touchMoveListener.remove();
-      if (firstRenderTimeout.current !== null && typeof firstRenderTimeout.current === 'number') {
+      removeTransitionListener();
+      removeTouchListener();
+      if (firstRenderTimeout.current !== null) {
         clearTimeout(firstRenderTimeout.current);
       }
     };
@@ -395,87 +412,87 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
 
   // the old code didn't have a param here, but only called
   // this function with a param... so it's unused as of now...
-  const handleSwipeEnd = useCallback(
-    (_event: any) => {
-      nodeWhoClaimedTheScroll.current = {} as HTMLDivElement;
+  const handleSwipeEnd = useCallback(() => {
+    nodeWhoClaimedTheScroll.current = {} as HTMLDivElement;
 
-      // The touch start event can be cancelled.
-      // Makes sure that a starting point is set.
-      if (!started) {
-        return;
-      }
+    // The touch start event can be cancelled.
+    // Makes sure that a starting point is set.
+    if (!started) {
+      return;
+    }
 
-      if (!isSwiping) {
-        return;
-      }
+    if (!isSwiping) {
+      return;
+    }
 
-      const delta = indexLatest - index.current;
+    const delta = indexLatest - index.current;
 
-      let indexNew;
+    let indexNew;
 
-      // Quick movement
-      if (Math.abs(vx.current) > threshold) {
-        if (vx.current > 0) {
-          indexNew = Math.floor(index.current);
-        } else {
-          indexNew = Math.ceil(index.current);
-        }
-      } else if (Math.abs(delta) > hysteresis) {
-        // Some hysteresis with indexLatest.
-        indexNew = delta > 0 ? Math.floor(index.current) : Math.ceil(index.current);
+    // Quick movement
+    if (Math.abs(vx.current) > threshold) {
+      if (vx.current > 0) {
+        indexNew = Math.floor(index.current);
       } else {
-        indexNew = indexLatest;
+        indexNew = Math.ceil(index.current);
       }
+    } else if (Math.abs(delta) > hysteresis) {
+      // Some hysteresis with indexLatest.
+      indexNew = delta > 0 ? Math.floor(index.current) : Math.ceil(index.current);
+    } else {
+      indexNew = indexLatest;
+    }
 
-      const indexMax = Children.count(children) - 1;
+    const indexMax = Children.count(children) - 1;
 
-      if (typeof indexNew === 'undefined' || indexNew < 0) {
-        indexNew = 0;
-      } else if (indexNew > indexMax) {
-        indexNew = indexMax;
-      }
+    if (typeof indexNew === 'undefined' || indexNew < 0) {
+      indexNew = 0;
+    } else if (indexNew > indexMax) {
+      indexNew = indexMax;
+    }
 
-      indexUpdate(indexNew);
-      setIndexLatest(indexNew);
-      setIsDragging(false);
-      if (onSwitching && typeof onSwitching === 'function') {
-        onSwitching(indexNew, 'end');
-      }
-      if (onChangeIndex && typeof onChangeIndex === 'function' && indexNew !== indexLatest) {
-        onChangeIndex(indexNew, indexLatest);
-      }
+    indexUpdate(indexNew);
+    setIndexLatest(indexNew);
+    setIsDragging(false);
+    if (onSwitching && typeof onSwitching === 'function') {
+      onSwitching(indexNew, 'end');
+    }
+    if (onChangeIndex && typeof onChangeIndex === 'function' && indexNew !== indexLatest) {
+      onChangeIndex(indexNew, indexLatest);
+    }
 
-      // Manually calling handleTransitionEnd in that case as isn't otherwise.
-      if (index.current === indexLatest) {
-        handleTransitionEnd();
-      }
-    },
-    [
-      started,
-      isSwiping,
-      onSwitching,
-      onChangeIndex,
-      handleTransitionEnd,
-      children,
-      hysteresis,
-      indexLatest,
-      indexUpdate,
-      threshold,
-    ],
-  );
+    // Manually calling handleTransitionEnd in that case as isn't otherwise.
+    if (index.current === indexLatest) {
+      handleTransitionEnd();
+    }
+  }, [
+    started,
+    isSwiping,
+    onSwitching,
+    onChangeIndex,
+    handleTransitionEnd,
+    children,
+    hysteresis,
+    indexLatest,
+    indexUpdate,
+    threshold,
+  ]);
 
   const handleTouchEnd = useCallback(
-    (event: any) => {
+    (event: ReactTouchEvent<HTMLDivElement>) => {
       if (onTouchEnd && typeof onTouchEnd === 'function') {
         onTouchEnd(event);
       }
-      handleSwipeEnd(event);
+      handleSwipeEnd();
     },
     [onTouchEnd, handleSwipeEnd],
   );
 
   const handleMouseDown = useCallback(
-    (event: any) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (!event?.persist) {
+        return;
+      }
       if (onMouseDown) {
         onMouseDown(event);
       }
@@ -486,31 +503,33 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   );
 
   const handleMouseUp = useCallback(
-    (event: any) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
       if (onMouseUp) {
         onMouseUp(event);
       }
-      handleSwipeEnd(adaptMouse(event));
+      adaptMouse(event);
+      handleSwipeEnd();
     },
     [onMouseUp, handleSwipeEnd],
   );
 
   const handleMouseLeave = useCallback(
-    (event: any) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
       if (onMouseLeave) {
         onMouseLeave(event);
       }
 
       // Filter out events
       if (started) {
-        handleSwipeEnd(adaptMouse(event));
+        adaptMouse(event);
+        handleSwipeEnd();
       }
     },
     [onMouseLeave, handleSwipeEnd, started],
   );
 
   const handleMouseMove = useCallback(
-    (event: any) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
       if (onMouseMove) {
         onMouseMove(event);
       }
@@ -524,26 +543,31 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   );
 
   const handleScroll = useCallback(
-    (event: any) => {
+    (event: ReactUIEvent<HTMLDivElement>) => {
       if (onScroll) {
         onScroll(event);
       }
+      const target = event.target as HTMLDivElement;
+      const { scrollLeft, clientWidth } = target;
 
       // Ignore events bubbling up.
-      if (event.target !== rootNode.current) {
+      if (target !== rootNode.current) {
         return;
       }
 
+      if (!scrollLeft || !clientWidth) {
+        return;
+      }
       if (ignoreNextScrollEvents.current) {
         ignoreNextScrollEvents.current = false;
         return;
       }
 
-      const indexNew = Math.ceil(event.target.scrollLeft / event.target.clientWidth) + indexLatest;
+      const indexNew = Math.ceil(scrollLeft / clientWidth) + indexLatest;
 
       ignoreNextScrollEvents.current = true;
       // Reset the scroll position.
-      event.target.scrollLeft = 0;
+      target.scrollLeft = 0;
 
       if (onChangeIndex && typeof onChangeIndex === 'function' && indexNew !== indexLatest) {
         onChangeIndex(indexNew, indexLatest);
@@ -597,7 +621,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
     }
   }
 
-  const containerStyleProp: any = {
+  const containerStyleProp: CSSProperties = {
     height: undefined,
     WebkitFlexDirection: axisProperties.flexDirection[axis],
     flexDirection: axisProperties.flexDirection[axis],
@@ -634,14 +658,15 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
         style={Object.assign({}, containerStyleProp, defaultSwiperStyles.container, containerStyle)}
         className="react-swipeable-view-container"
       >
-        {Children.map(children, (child: any, indexChild) => {
+        {Children.map(children, (child: ReactNode, indexChild) => {
           if (renderOnlyActive && indexChild !== indexLatest) {
             return null;
           }
 
           if (!isValidElement(child)) {
+            const childString = child?.toString();
             console.warn(
-              `react-swipeable-view: one of the children provided is invalid: ${child}. We are expecting a valid React Element`,
+              `react-swipeable-view: one of the children provided is invalid: [${childString}]. We are expecting a valid React Element`,
             );
           }
 
@@ -661,7 +686,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
             <div
               ref={ref}
               style={slideStyleProp}
-              className={slideClassName || ''}
+              className={slideClassName ?? ''}
               aria-hidden={hidden}
               data-swipeable="true"
             >

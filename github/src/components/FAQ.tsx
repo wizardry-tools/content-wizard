@@ -1,7 +1,7 @@
 import { SyntheticEvent, memo, useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Container, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { questionsAndAnswers } from '@/content';
+import { QuestionsAndAnswers } from '@/components/content';
 
 export function FAQ() {
   const [expanded, setExpanded] = useState<string>('');
@@ -13,7 +13,7 @@ export function FAQ() {
   const FAQAccordion = memo(() => {
     return (
       <Box sx={{ width: '100%' }}>
-        {questionsAndAnswers.map((qna, index) => {
+        {QuestionsAndAnswers().map((qna, index) => {
           const id = `panel${index}`;
           return (
             <Accordion expanded={expanded === id} key={id} onChange={handleChange(id)}>

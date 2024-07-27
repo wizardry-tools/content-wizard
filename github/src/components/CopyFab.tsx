@@ -41,7 +41,7 @@ const CopyFab = (props: CopyFabProps) => {
           onMouseOver={onMouseOver}
           onMouseLeave={closePopover}
         >
-          <SvgIcon component={CopyIcon} inheritViewBox={true} />
+          <SvgIcon inheritViewBox={true} component={CopyIcon} />
         </Fab>
       </Tooltip>
       <Popover

@@ -1,10 +1,9 @@
-import { Box, Container, Grid, IconButton, IconButtonProps, SvgIcon, Typography } from '@mui/material';
+import { Box, Container, Grid, IconButton, SvgIcon, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
 import { TSLogo, ReactLogo, MuiLogo, GraphiQLLogo, MavenLogo, CodeMirrorLogo, AdobeLogo } from '@/icons';
-import 'src/styles/built-with.scss';
+import { IconLinkProps } from '@/types';
+import './built-with.scss';
 
-type IconLinkProps = SvgIconProps & IconButtonProps;
 const IconLink = (props: IconLinkProps) => {
   const { component, title, children, ...other } = props;
 
@@ -20,7 +19,7 @@ const IconLink = (props: IconLinkProps) => {
         title={title}
         {...other}
       >
-        <SvgIcon component={component} inheritViewBox />
+        <SvgIcon inheritViewBox component={component} />
         <Typography>{title}</Typography>
         {children}
       </IconButton>

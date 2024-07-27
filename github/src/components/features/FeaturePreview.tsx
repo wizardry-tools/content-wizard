@@ -1,4 +1,4 @@
-import { JSX, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,15 +14,12 @@ import {
 import { styled } from '@mui/material/styles';
 import { isDark } from '@/utils';
 import { useMouseOverZoom } from '@/hooks';
-
-interface ChipProps {
-  selected?: boolean;
-}
+import { ChipProps, FeaturePreviewProps } from '@/types';
 
 const Chip = styled(MuiChip)<ChipProps>(({ theme }) => ({
   variants: [
     {
-      props: ({ selected }: any) => selected,
+      props: ({ selected }: ChipProps) => selected,
       style: {
         background: 'linear-gradient(to bottom right, hsl(210, 98%, 48%), hsl(210, 98%, 35%))',
         color: 'hsl(0, 0%, 100%)',
@@ -78,22 +75,6 @@ const ZoomCursor = styled('div')(({ theme }) => ({
   },
 }));
 
-// TODO convert the images to a specific type
-export type Feature = {
-  icon: JSX.Element;
-  title: string;
-  description: string;
-  imageLight: string;
-  imageDark: string;
-};
-
-export type FeaturePreviewProps = {
-  features: Feature[];
-  heading: string;
-  subHeading: string;
-  prefix: string;
-};
-
 export const FeaturePreview = (props: FeaturePreviewProps) => {
   const { features, heading, subHeading, prefix } = props;
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
@@ -143,7 +124,7 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
     },
     [isDarkMode, selectedFeature],
   );
-  const handleNoHover = useCallback((_event: MouseEvent<HTMLElement>) => {
+  const handleNoHover = useCallback(() => {
     highResImage.current = null;
     setHoverImage(false);
   }, []);
@@ -228,7 +209,7 @@ export const FeaturePreview = (props: FeaturePreviewProps) => {
                 {
                   '--items-image-light': `url("${selectedFeature.imageLight}")`,
                   '--items-image-dark': `url("${selectedFeature.imageDark}")`,
-                } as any
+                } as CSSProperties
               }
             />
             <Box sx={{ px: 2, pb: 2 }}>

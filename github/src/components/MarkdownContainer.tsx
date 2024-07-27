@@ -6,7 +6,7 @@ import { Container, useTheme, Link as MuiLink, Paper } from '@mui/material';
 import { Node } from '@/types';
 import { useClipBoard } from '@/utils';
 import CopyFab from './CopyFab';
-import 'src/styles/markdown.scss';
+import './markdown.scss';
 
 type MarkdownContainerProps = {
   children?: string | null | undefined;

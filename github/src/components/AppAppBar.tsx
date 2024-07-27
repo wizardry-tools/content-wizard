@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { AppBar, Box, Container, Divider, Drawer, IconButton, PaletteMode, SvgIcon, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ToggleColorMode from './ToggleColorMode';
 import { LogoIcon } from '@/icons';
+import ToggleColorMode from './ToggleColorMode';
 import { ScrollButton, ScrollMenuItem } from './nav-scrollers';
 
 type AppAppBarProps = {
@@ -28,7 +28,7 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
       position="fixed"
       sx={{
         boxShadow: 0,
-        bgColor: 'transparent',
+        bgcolor: 'transparent',
         backgroundImage: 'none',
         mt: 2,
       }}
@@ -46,10 +46,10 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             maxHeight: 40,
             border: '1px solid',
             borderColor: 'divider',
-            bgColor: 'hsla(220, 60%, 99%, 0.6)',
+            bgcolor: 'hsla(220, 60%, 99%, 0.6)',
             boxShadow: '0 1px 2px hsla(210, 0%, 0%, 0.05), 0 2px 12px hsla(210, 100%, 80%, 0.5)',
             ...theme.applyStyles('dark', {
-              bgColor: 'hsla(220, 0%, 0%, 0.7)',
+              bgcolor: 'hsla(220, 0%, 0%, 0.7)',
               boxShadow: '0 1px 2px hsla(210, 0%, 0%, 0.5), 0 2px 12px hsla(210, 100%, 25%, 0.3)',
             }),
           })}
@@ -61,8 +61,8 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                   height: { xs: '2.5rem', sm: '3rem' },
                   width: { xs: '2.5rem', sm: '3rem' },
                 }}
-                component={LogoIcon}
                 inheritViewBox
+                component={LogoIcon}
               />
             </ScrollButton>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
