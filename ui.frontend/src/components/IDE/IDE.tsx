@@ -52,20 +52,6 @@ if (majorVersion < 18) {
   );
 }
 
-export type IDEToolbarConfig = {
-  /**
-   * This content will be rendered after the built-in buttons of the toolbar.
-   * Note that this will not apply if you provide a completely custom toolbar
-   * (by passing `IDE.Toolbar` as child to the `IDE` component).
-   */
-  additionalContent?: React.ReactNode;
-
-  /**
-   * same as above, except a component with access to context
-   */
-  additionalComponent?: React.JSXElementConstructor<any>;
-};
-
 /**
  * The top-level React component for IDE, intended to encompass the entire
  * browser viewport.
@@ -186,7 +172,7 @@ export function IDEInterface() {
   const handleChangeTheme: MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
       const selectedTheme = event.currentTarget.dataset.theme as 'light' | 'dark' | undefined;
-      themeDispatch(selectedTheme || null);
+      themeDispatch(selectedTheme ?? null);
     },
     [themeDispatch],
   );
@@ -379,7 +365,7 @@ export function IDEInterface() {
                     </section>
                   </div>
 
-                  {(isVariablesEditorEnabled || isHeadersEditorEnabled) && (
+                  {(isVariablesEditorEnabled ?? isHeadersEditorEnabled) && (
                     <div ref={editorToolsResize.dragBarRef}>
                       <div className="wizard-editor-tools">
                         {isVariablesEditorEnabled && (
@@ -435,7 +421,7 @@ export function IDEInterface() {
                     </div>
                   )}
 
-                  {(isVariablesEditorEnabled || isHeadersEditorEnabled) && (
+                  {(isVariablesEditorEnabled ?? isHeadersEditorEnabled) && (
                     <div ref={editorToolsResize.secondRef}>
                       <section
                         className="wizard-editor-tool"
@@ -551,14 +537,14 @@ export function IDEInterface() {
               </div>
               <Button
                 type="button"
-                state={clearStorageStatus || undefined}
+                state={clearStorageStatus ?? undefined}
                 disabled={clearStorageStatus === 'success'}
                 onClick={handleClearData}
               >
                 {{
                   success: 'Cleared data',
                   error: 'Failed',
-                }[clearStorageStatus!] || 'Clear data'}
+                }[clearStorageStatus!] ?? 'Clear data'}
               </Button>
             </div>
           ) : null}
@@ -622,7 +608,7 @@ function ShortKeys({ keyMap }: { keyMap: string }): ReactElement {
 function IDELogo<TProps>(props: PropsWithChildren<TProps>) {
   return (
     <div className="wizard-logo">
-      {props.children || (
+      {props.children ?? (
         <a className="wizard-logo-link" href="https://github.com/graphql/graphiql" target="_blank" rel="noreferrer">
           Graph
           <em>i</em>

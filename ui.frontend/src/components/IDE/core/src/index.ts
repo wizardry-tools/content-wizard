@@ -51,44 +51,6 @@ export { SchemaContext, SchemaContextProvider, useSchemaContext } from './schema
 export { StorageContext, StorageContextProvider, useStorageContext } from './storage';
 export { useTheme } from './theme';
 export { useDragResize } from './utility/resize';
-
 export * from './ui';
 export * from './toolbar';
-
-export type {
-  CommonEditorProps,
-  EditorContextProviderProps,
-  EditorContextType,
-  KeyMap,
-  ResponseTooltipType,
-  TabsState,
-  UseHeaderEditorArgs,
-  UseQueryEditorArgs,
-  UseResponseEditorArgs,
-  UseVariableEditorArgs,
-  WriteableEditorProps,
-} from './editor';
-export type { ExecutionContextProviderProps, ExecutionContextType } from './execution';
-export type {
-  ExplorerContextProviderProps,
-  ExplorerContextType,
-  ExplorerFieldDef,
-  ExplorerNavStack,
-  ExplorerNavStackItem,
-} from './explorer';
-export type { HistoryContextProviderProps, HistoryContextType } from './history';
-export type { GraphiQLPlugin, PluginContextType, PluginContextProviderProps } from './plugin';
-export type { SchemaContextProviderProps, SchemaContextType } from './schema';
-export type { StorageContextProviderProps, StorageContextType } from './storage';
-export type { Theme } from './theme';
-
 export * from './api';
-export type {
-  API,
-  PersistedQuery,
-  PersistedQueryData,
-  PersistedQueryPath,
-  GraphQLEndpointConfig,
-  APIContextType,
-  APIContextProviderProps,
-} from './api';

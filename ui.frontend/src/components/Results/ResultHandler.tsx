@@ -1,6 +1,5 @@
 import { ResultTable } from './ResultTable/ResultTable';
 import { Paper } from '@mui/material';
-import { QueryLanguage } from '@/components/Query';
 import { useQuery } from '@/providers';
 
 export function ResultHandler() {
@@ -15,7 +14,7 @@ export function ResultHandler() {
         position: 'relative',
       }}
     >
-      {query.language !== QueryLanguage.GraphQL && <ResultTable />}
+      {query.language !== 'GraphQL' && <ResultTable />}
     </Paper>
   );
 }

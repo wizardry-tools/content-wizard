@@ -1,11 +1,11 @@
 import { useState, MouseEvent, ChangeEvent, useCallback, memo } from 'react';
 import { Table, TableContainer, Paper, PaperProps } from '@mui/material';
 import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 import { ResultExplorerDialog } from '../ResultExplorer';
 import { ResultTableBody } from './ResultTableBody';
 import { ResultTableFooter } from './ResultTableFooter';
 import { ResultTableHead } from './ResultTableHead';
-import { useRenderCount } from '@/utility';
 
 /**
  * This is the root of the Data Table that displays the Results Data

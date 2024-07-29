@@ -1,6 +1,5 @@
-import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import { useEffect, useRef } from 'react';
-
+import { Caller, CodeMirrorType, UseVariableEditorArgs } from '@/types';
 import { useExecutionContext } from '../execution';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
@@ -12,21 +11,6 @@ import {
   usePrettifyEditors,
   useSynchronizeOption,
 } from './hooks';
-import { CodeMirrorType, WriteableEditorProps } from './types';
-
-export type UseVariableEditorArgs = WriteableEditorProps & {
-  /**
-   * Invoked when a reference to the GraphQL schema (type or field) is clicked
-   * as part of the editor or one of its tooltips.
-   * @param reference The reference that has been clicked.
-   */
-  onClickReference?(reference: SchemaReference): void;
-  /**
-   * Invoked when the contents of the variables editor change.
-   * @param value The new contents of the editor.
-   */
-  onEdit?(value: string): void;
-};
 
 export function useVariableEditor(
   {
@@ -36,15 +20,15 @@ export function useVariableEditor(
     onEdit,
     readOnly = false,
   }: UseVariableEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const { initialVariables, variableEditor, setVariableEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useVariableEditor,
+    caller: caller ?? useVariableEditor,
   });
   const executionContext = useExecutionContext();
-  const merge = useMergeQuery({ caller: caller || useVariableEditor });
-  const prettify = usePrettifyEditors({ caller: caller || useVariableEditor });
+  const merge = useMergeQuery({ caller: caller ?? useVariableEditor });
+  const prettify = usePrettifyEditors({ caller: caller ?? useVariableEditor });
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorRef = useRef<CodeMirrorType>();
 
@@ -80,14 +64,14 @@ export function useVariableEditor(
         readOnly: readOnly ? 'nocursor' : false,
         foldGutter: true,
         lint: {
-          // @ts-expect-error
+          // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
           variableToType: undefined,
         },
         hintOptions: {
           closeOnUnfocus: false,
           completeSingle: false,
           container,
-          // @ts-expect-error
+          // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
           variableToType: undefined,
         },
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
@@ -130,7 +114,7 @@ export function useVariableEditor(
 
   useChangeHandler(variableEditor, onEdit, STORAGE_KEY, 'variables', useVariableEditor);
 
-  useCompletion(variableEditor, onClickReference || null, useVariableEditor);
+  useCompletion(variableEditor, onClickReference ?? null, useVariableEditor);
 
   useKeyMap(variableEditor, ['Cmd-Enter', 'Ctrl-Enter'], executionContext?.run);
   useKeyMap(variableEditor, ['Shift-Ctrl-P'], prettify);

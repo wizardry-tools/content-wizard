@@ -1,28 +1,12 @@
-import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { GraphiQLPlugin, PluginContextProviderProps, PluginContextType } from '@/types';
+import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from '@/icons';
+import { useIsGraphQL } from '@/providers';
 import { DocExplorer, useExplorerContext } from './explorer';
 import { History, useHistoryContext } from './history';
-import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from '@/icons';
 import { useStorageContext } from './storage';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useIsGraphQL } from '@/providers';
 import { LanguageSelector } from './language-selector';
-
-export type GraphiQLPlugin = {
-  /**
-   * A component that renders content into the plugin pane.
-   */
-  content: ComponentType;
-  /**
-   * A component that renders an icon that will be shown inside a button that
-   * toggles the plugin visibility.
-   */
-  icon: ComponentType;
-  /**
-   * The unique title of the plugin. If two plugins are present with the same
-   * title the provider component will throw an error.
-   */
-  title: string;
-};
 
 export const DOC_EXPLORER_PLUGIN: GraphiQLPlugin = {
   title: 'Documentation Explorer',
@@ -44,49 +28,7 @@ export const LANGUAGE_SELECTOR_PLUGIN: GraphiQLPlugin = {
   content: LanguageSelector,
 };
 
-export type PluginContextType = {
-  /**
-   * A list of all current plugins, including the built-in ones (the doc
-   * explorer and the history).
-   */
-  plugins: GraphiQLPlugin[];
-  /**
-   * Defines the plugin which is currently visible.
-   * @param plugin The plugin that should become visible. You can either pass
-   * the plugin object (has to be referentially equal to the one passed as
-   * prop) or the plugin title as string. If `null` is passed, no plugin will
-   * be visible.
-   */
-  setVisiblePlugin(plugin: GraphiQLPlugin | string | null): void;
-  /**
-   * The plugin which is currently visible.
-   */
-  visiblePlugin: GraphiQLPlugin | null;
-};
-
 export const PluginContext = createNullableContext<PluginContextType>('PluginContext');
-
-export type PluginContextProviderProps = {
-  children: ReactNode;
-  /**
-   * Invoked when the visibility state of any plugin changes.
-   * @param visiblePlugin The plugin object that is now visible. If no plugin
-   * is visible, the function will be invoked with `null`.
-   */
-  onTogglePluginVisibility?(visiblePlugin: GraphiQLPlugin | null): void;
-  /**
-   * This props accepts a list of plugins that will be shown in addition to the
-   * built-in ones (the doc explorer and the history).
-   */
-  plugins?: GraphiQLPlugin[];
-  /**
-   * This prop can be used to set the visibility state of plugins. Every time
-   * this prop changes, the visibility state will be overridden. Note that the
-   * visibility state can change in between these updates, for example by
-   * calling the `setVisiblePlugin` function provided by the context.
-   */
-  visiblePlugin?: GraphiQLPlugin | string;
-};
 
 export function PluginContextProvider(props: PluginContextProviderProps) {
   const storage = useStorageContext();
@@ -112,7 +54,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
       pluginTitles[HISTORY_PLUGIN.title] = true;
     }
 
-    for (const plugin of props.plugins || []) {
+    for (const plugin of props.plugins ?? []) {
       if (!plugin.title) {
         throw new Error('All GraphiQL plugins must have a unique title');
       }
@@ -146,7 +88,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
     return (
       plugins.find(
         (plugin) => (typeof props.visiblePlugin === 'string' ? plugin.title : plugin) === props.visiblePlugin,
-      ) || null
+      ) ?? null
     );
   });
 
@@ -154,7 +96,7 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
   const setVisiblePlugin = useCallback<PluginContextType['setVisiblePlugin']>(
     (plugin) => {
       const newVisiblePlugin = plugin
-        ? plugins.find((p) => (typeof plugin === 'string' ? p.title : p) === plugin) || null
+        ? (plugins.find((p) => (typeof plugin === 'string' ? p.title : p) === plugin) ?? null)
         : null;
       internalSetVisiblePlugin((current) => {
         if (newVisiblePlugin === current) {

@@ -1,9 +1,10 @@
+import { SyntheticEvent, useState } from 'react';
 import { ContentWizardProvider, IDEProvider, useLogger } from '@/providers';
 import { Box } from '@mui/material';
-import { GlobalNav } from '../GlobalNav';
-import { useState } from 'react';
 import { useRenderCount } from '@/utility';
-import { Bar, Views } from './index';
+import { GlobalNav } from '../GlobalNav';
+import { Bar } from './Bar';
+import { Views } from './Views';
 import './ContentWizard.scss';
 
 export function ContentWizard() {
@@ -23,7 +24,7 @@ function ContentWizardInterface() {
   logger.debug({ message: `ContentWizardInterface[${renderCount}] render()` });
 
   const [tabValue, setTabValue] = useState(0);
-  const onTabSelect = (_event: any, value: any) => {
+  const onTabSelect = (_event: SyntheticEvent, value: number) => {
     setTabValue(value);
   };
   const onTabPanelSelect = (index: number) => {

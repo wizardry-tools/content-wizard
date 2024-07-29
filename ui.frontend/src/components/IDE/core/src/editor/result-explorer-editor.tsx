@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { Caller, CodeMirrorEditor, UseResultExplorerEditorArgs } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
+import { useEditorContext } from './context';
 import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
-import { CodeMirrorEditor, CommonEditorProps } from './types';
-import { useEditorContext } from './context';
-import { useLogger } from '@/providers';
-import { useRenderCount } from '@/utility';
-
-export type UseResultExplorerEditorArgs = CommonEditorProps & {
-  className?: string;
-  data?: string;
-};
 
 /**
  * This is the Editor used for the Result Explorer.
@@ -26,19 +21,19 @@ export type UseResultExplorerEditorArgs = CommonEditorProps & {
  */
 export function useResultExplorerEditor(
   { keyMap = DEFAULT_KEY_MAP, data = '' }: UseResultExplorerEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useResultExplorerEditor[${renderCount}] render()` });
   const [editor, setEditor] = useState<CodeMirrorEditor | null>(null);
-  const copy = useCopyResult({ caller: caller || useResultExplorerEditor });
+  const copy = useCopyResult({ caller: caller ?? useResultExplorerEditor });
   const ref = useRef<HTMLDivElement>(null);
 
   // still need to use the editor context, so that the useCopyResult function works.
   const { setResultExplorerEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useResultExplorerEditor,
+    caller: caller ?? useResultExplorerEditor,
   });
 
   useEffect(() => {
@@ -55,7 +50,7 @@ export function useResultExplorerEditor(
       import('codemirror/addon/search/searchcursor'),
       import('codemirror/addon/search/jump-to-line'),
       import('codemirror/mode/javascript/javascript' as any),
-      // @ts-expect-error
+      // @ts-expect-error module isn't found, but it is there
       import('codemirror/keymap/sublime'),
     ];
     void importCodeMirror(addons, { useCommonAddons: true }).then((CodeMirror) => {
@@ -79,7 +74,7 @@ export function useResultExplorerEditor(
         mode: 'application/json',
         foldGutter: true,
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-        // @ts-expect-error
+        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
         info: true,
         inputStyle: 'contenteditable',
         electricChars: true,

@@ -25,12 +25,3 @@ export { useResponseEditor } from './response-editor';
 export { useVariableEditor } from './variable-editor';
 export { useWizardStatementEditor } from './wizard-statement-editor';
 export { useResultExplorerEditor } from './result-explorer-editor';
-
-export type { EditorContextType, EditorContextProviderProps } from './context';
-export type { UseHeaderEditorArgs } from './header-editor';
-export type { UseQueryEditorArgs } from './query-editor';
-export type { ResponseTooltipType, UseResponseEditorArgs } from './response-editor';
-export type { TabsState } from './tabs';
-export type { UseVariableEditorArgs } from './variable-editor';
-
-export type { CommonEditorProps, KeyMap, WriteableEditorProps } from './types';

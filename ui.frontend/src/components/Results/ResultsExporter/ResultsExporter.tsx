@@ -1,4 +1,3 @@
-import { AllowedExportType, allowedExportTypes, useResults } from '@/providers';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import {
   Button,
@@ -12,9 +11,11 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-import { FormGrid } from '@/components/QueryWizard/Components';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import DownloadIcon from '@mui/icons-material/Download';
+import { AllowedExportType } from '@/types';
+import { allowedExportTypes, useResults } from '@/providers';
+import { FormGrid } from '@/components/QueryWizard/Components';
 
 /**
  * This component contains the export configuration and button for exporting the Results.

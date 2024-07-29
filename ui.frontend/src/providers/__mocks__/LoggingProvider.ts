@@ -1,8 +1,8 @@
 export function useLogger() {
   return {
-    log: () => {},
-    debug: () => {},
-    error: () => {},
-    warn: () => {},
+    log: () => ({}),
+    debug: () => ({}),
+    error: () => ({}),
+    warn: () => ({}),
   };
 }

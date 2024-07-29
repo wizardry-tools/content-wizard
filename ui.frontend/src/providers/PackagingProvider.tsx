@@ -1,41 +1,25 @@
 import { createContext, JSX, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useLogger } from './LoggingProvider';
 import { useAuthHeaders, useObjectState, useRenderCount } from '@/utility';
+import { useLogger } from './LoggingProvider';
 import { useAlertDispatcher } from './WizardAlertProvider';
 import { useResults } from './ResultsProvider';
-import { Result } from '@/types';
+import {
+  GroupName,
+  HandlePackageProps,
+  PackageFilter,
+  PackageManagerAction,
+  PackageManagerRequest,
+  PackageManagerRequestOptions,
+  PackageManagerResponse,
+  PackageProps,
+  PackagingContextProps,
+  Result,
+} from '@/types';
 
 const PACK_MGR_PATH = '/crx/packmgr';
 const DEFAULT_GROUP = 'my_packages';
 const DEFAULT_PACKAGE_NAME = 'Content-Wizard-Results-Content-Package';
 const PATH_DELIMITER = '/jcr:content';
-
-type PackageFilterRule = {
-  modifier: 'include' | 'exclude';
-  pattern: string;
-};
-type PackageFilter = {
-  root: string;
-  rules: PackageFilterRule[];
-};
-type GroupName = {
-  name: string;
-  title: string;
-  count: number;
-  deepCount: number;
-};
-export type PackageManagerAction = 'create' | 'edit' | 'build' | 'listGroups';
-export type PackageManagerRequest = Omit<RequestInit, 'body'> & {
-  method: 'GET' | 'POST';
-  endpoint: string;
-  params?: Record<string, string>;
-  body?: FormData;
-};
-export type PackageManagerResponse = {
-  success: boolean;
-  msg: string;
-  path?: string;
-};
 
 /**
  * This map sets up the static properties of the various PackageManagerRequest types
@@ -77,14 +61,6 @@ export const packageRequestMap: Record<PackageManagerAction, PackageManagerReque
   },
 };
 
-type PackageProps = {
-  packageName?: string;
-  groupName?: string;
-  packagePath?: string;
-  packageUrl?: string;
-  downloadUrl?: string;
-  isReady?: boolean;
-};
 const initialPackage: PackageProps = {
   packageName: DEFAULT_PACKAGE_NAME,
   groupName: DEFAULT_GROUP,
@@ -92,40 +68,6 @@ const initialPackage: PackageProps = {
   packageUrl: '',
   downloadUrl: '',
   isReady: false,
-};
-
-type PackageManagerRequestOptions = {
-  action: PackageManagerAction;
-  packageState?: PackageProps;
-  formData?: FormData;
-};
-type HandlePackageProps = Omit<PackageManagerRequestOptions, 'action'>;
-type PackageHandlerFunction =
-  | (() => Promise<unknown>)
-  | ((props: HandlePackageProps) => Promise<unknown>)
-  | ((results: Result[], packageState: PackageProps) => FormData | null);
-
-/**
- * Represents the properties required by a PackagingContext component.
- * @typedef {Object} PackagingContextProps
- * @property {string[]} groups - An array of group names.
- * @property {boolean} isCreating - Indicates if the packaging context is in create mode.
- * @property {boolean} isBuilding - Indicates if the packaging context is in build mode.
- * @property {function} setPackageName - A function to set the package name.
- * @property {function} setGroupName - A function to set the group name.
- * @property {function} create - A function to initiate the create process.
- * @property {function} build - A function to initiate the build process.
- * @property {PackageProps} packageState - The current state of the package.
- */
-type PackagingContextProps = {
-  groups: string[];
-  isCreating: boolean;
-  isBuilding: boolean;
-  setPackageName: (packageName: string) => void;
-  setGroupName: (groupName: string) => void;
-  create: () => void;
-  build: () => void;
-  packageState: PackageProps;
 };
 
 const PackagingContext = createContext<PackagingContextProps>(null!);
@@ -201,50 +143,56 @@ export const PackagingProvider = ({ children }: PropsWithChildren): JSX.Element 
    * Upon success, the packagePath state will be set.
    */
   const create = useCallback(() => {
-    (async () => {
-      setIsCreating(true);
-      const { path, success, msg } = await createPackage({ packageState }) ?? {};
-      if (success && path) {
-        // create multipart formData
-        const formData = createFilterPayload(path);
-        if (!formData) {
-          alertDispatcher({
-            severity: 'error',
-            message: `Could not Update Package, unable to create Filters: [${msg}]`,
-            caller: PackagingProvider,
-          });
-          setIsCreating(false);
-          return;
-        }
-        // issue the edit action
-        const editResponse = await editPackageFilters({ formData, packageState });
-        if (editResponse?.path) {
-          // even though packagePath and path are the same, only set it after editPackageFilters has been successful
-          setPackagePath(editResponse.path);
-        } else {
-          if (editResponse?.msg) {
+    setIsCreating(true);
+    createPackage({ packageState })
+      .then((createResponse) => {
+        const { path, success, msg } = createResponse ?? {};
+        if (success && path) {
+          // create multipart formData
+          const formData = createFilterPayload(path);
+          if (!formData) {
             alertDispatcher({
               severity: 'error',
-              message: `Could not Update Package: [${msg}]`,
-              caller: PackagingProvider,
+              message: `Could not Update Package, unable to create Filters: [${msg}]`,
+            });
+            setIsCreating(false);
+            return;
+          }
+          // issue the edit action
+          editPackageFilters({ formData, packageState })
+            .then((editResponse) => {
+              if (editResponse?.path) {
+                // even though packagePath and path are the same, only set it after editPackageFilters has been successful
+                setPackagePath(editResponse.path);
+              } else {
+                if (editResponse?.msg) {
+                  alertDispatcher({
+                    severity: 'error',
+                    message: `Could not Update Package: [${msg}]`,
+                  });
+                } else {
+                  logger.warn({ message: 'Warning, could not edit Package, bad response:', editResponse });
+                }
+              }
+            })
+            .catch((error) => {
+              console.error('An Error occurred while editing content Package Filters', error);
+            });
+        } else {
+          if (msg) {
+            alertDispatcher({
+              severity: 'error',
+              message: `Package [${msg}] Already exists`,
             });
           } else {
-            logger.warn({ message: 'Warning, could not edit Package, bad response:', editResponse });
+            logger.warn({ message: 'Warning, could not create Package, bad response' });
           }
         }
-      } else {
-        if (msg) {
-          alertDispatcher({
-            severity: 'error',
-            message: `Package [${msg}] Already exists`,
-            caller: PackagingProvider,
-          });
-        } else {
-          logger.warn({ message: 'Warning, could not create Package, bad response' });
-        }
-      }
-      setIsCreating(false);
-    })();
+      })
+      .catch((error) => {
+        console.error('An Error occurred while creating content Package', error);
+      });
+    setIsCreating(false);
   }, [createPackage, packageState, logger, createFilterPayload, editPackageFilters, alertDispatcher, setPackagePath]);
 
   /**
@@ -255,25 +203,27 @@ export const PackagingProvider = ({ children }: PropsWithChildren): JSX.Element 
    * Upon success, the isPackageReady state will be set to true.
    */
   const build = useCallback(() => {
-    (async () => {
-      setIsBuilding(true);
-      const buildResponse = await buildPackage({ packageState, logger });
-      if (buildResponse) {
-        logger.debug({ message: 'buildPackage buildResponse success', buildResponse });
-        // once isPackageReady === true, further package functions are disabled until the dialog is remounted.
-        setPackageState(() => ({
-          isReady: true,
-        }));
-      } else {
-        logger.debug({ message: 'buildPackage failed to build' });
-        alertDispatcher({
-          severity: 'error',
-          message: `Error, could not build the content Package [${packageState.packagePath}]. Something went wrong.`,
-          caller: PackagingProvider,
-        });
-      }
-      setIsBuilding(false);
-    })();
+    setIsBuilding(true);
+    buildPackage({ packageState })
+      .then((buildResponse) => {
+        if (buildResponse) {
+          logger.debug({ message: 'buildPackage buildResponse success', buildResponse });
+          // once isPackageReady === true, further package functions are disabled until the dialog is remounted.
+          setPackageState({
+            isReady: true,
+          });
+        } else {
+          logger.debug({ message: 'buildPackage failed to build' });
+          alertDispatcher({
+            severity: 'error',
+            message: `Error, could not build the content Package [${packageState.packagePath}]. Something went wrong.`,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('An Error occurred while building the content Package', error);
+      });
+    setIsBuilding(false);
   }, [alertDispatcher, buildPackage, logger, packageState, setPackageState]);
 
   /**
@@ -281,12 +231,15 @@ export const PackagingProvider = ({ children }: PropsWithChildren): JSX.Element 
    * running once when the component mounts
    */
   useEffect(() => {
-    (async () => {
-      const groups = await fetchGroups();
-      if (groups) {
-        setGroups(groups);
-      }
-    })();
+    fetchGroups()
+      .then((groups) => {
+        if (groups) {
+          setGroups(groups);
+        }
+      })
+      .catch((error) => {
+        console.error('An Error occurred while processing Package Groups', error);
+      });
   }, [fetchGroups]);
 
   /**
@@ -327,9 +280,8 @@ export function usePackagingContext(): PackagingContextProps {
  * This async function is responsible for building and fetching the request
  * to update/edit the filters for a package in CRX PackageManager
  *
- * @returns {any} - A promise that resolves to the response JSON object, or null if the request fails.
  */
-const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
+const usePackageHandler = () => {
   const logger = useLogger();
   const authHeaders = useAuthHeaders();
 
@@ -371,12 +323,12 @@ const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
    * @param {Result[]} results - The array of results to build package filters from.
    * @returns {string} - A stringified version of the unique package filters in JSON format.
    */
-  const buildPackageFilters = useCallback((results: Result[]): string => {
+  const buildPackageFilters: (results: Result[]) => string = useCallback((results) => {
     // map Result[] into PackageFilter[]
     const packageFilters: PackageFilter[] = results
       .map((result) => {
-        if (Object.prototype.hasOwnProperty.call(result, 'path')) {
-          let path: string = result.path;
+        if ('path' in result) {
+          let path: string = result.path as string;
           const jcrIndex = path.indexOf(PATH_DELIMITER);
           if (jcrIndex !== -1) {
             // is part of content, need to grab content node parent
@@ -415,8 +367,8 @@ const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
    * @param {PackageProps} packageState - The state of the package.
    * @returns {FormData|null} - The payload of filters in a FormData object or null if packagePath is not set.
    */
-  const buildFilterPayload = useCallback(
-    (results: Result[], packageState: PackageProps): FormData | null => {
+  const buildFilterPayload: (results: Result[], packageState: PackageProps) => null | FormData = useCallback(
+    (results, packageState) => {
       const { packagePath, packageName, groupName } = packageState;
       if (!packagePath || !packageName || !groupName) {
         return null;
@@ -442,65 +394,65 @@ const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
    * @param {PackageManagerRequestOptions} props - The package manager request options.
    * @returns {Promise<PackageManagerRequest | null>} - A Promise that resolves with the package manager request or null if there was an error.
    */
-  const buildPackageRequest = useCallback(
-    async (props: PackageManagerRequestOptions): Promise<PackageManagerRequest | null> => {
-      const { action, packageState, formData } = props;
-      const { packageName = DEFAULT_PACKAGE_NAME, groupName = DEFAULT_GROUP, packagePath } = packageState ?? {};
-      switch (action) {
-        case 'create': {
-          const request = await appendAuthHeader(packageRequestMap.create);
-          const body = {
-            packageName,
-            groupName,
-            packageVersion: '',
-            _charset_: 'utf-8',
-          };
-          request.body = new URLSearchParams(body);
-          return request;
-        }
-        case 'edit': {
-          if (!formData) {
-            // formData is required
-            return null;
+  const buildPackageRequest: (props: PackageManagerRequestOptions) => Promise<PackageManagerRequest | null> =
+    useCallback(
+      async (props) => {
+        const { action, packageState, formData } = props;
+        const { packageName = DEFAULT_PACKAGE_NAME, groupName = DEFAULT_GROUP, packagePath } = packageState ?? {};
+        switch (action) {
+          case 'create': {
+            const request = await appendAuthHeader(packageRequestMap.create);
+            const body = {
+              packageName,
+              groupName,
+              packageVersion: '',
+              _charset_: 'utf-8',
+            };
+            request.body = new URLSearchParams(body);
+            return request;
           }
-          const request = await appendAuthHeader(packageRequestMap.edit);
-          request.body = formData;
-          return request;
-        }
-        case 'build': {
-          if (!packagePath) {
-            // packagePath is required for this action
-            return null;
+          case 'edit': {
+            if (!formData) {
+              // formData is required
+              return null;
+            }
+            const request = await appendAuthHeader(packageRequestMap.edit);
+            request.body = formData;
+            return request;
           }
-          const request = await appendAuthHeader(packageRequestMap.build);
-          request.endpoint = request.endpoint + packagePath;
-          const formData = new FormData();
-          formData.append('cmd', 'build');
-          request.body = formData;
-          return request;
+          case 'build': {
+            if (!packagePath) {
+              // packagePath is required for this action
+              return null;
+            }
+            const request = await appendAuthHeader(packageRequestMap.build);
+            request.endpoint = request.endpoint + packagePath;
+            const formData = new FormData();
+            formData.append('cmd', 'build');
+            request.body = formData;
+            return request;
+          }
+          case 'listGroups': {
+            const request = await appendAuthHeader(packageRequestMap.listGroups);
+            request.params = {
+              ...request.params,
+              _dc: `${Date.now()}`,
+            };
+            return request;
+          }
         }
-        case 'listGroups': {
-          const request = await appendAuthHeader(packageRequestMap.listGroups);
-          request.params = {
-            ...request.params,
-            _dc: `${Date.now()}`,
-          };
-          return request;
-        }
-      }
-    },
-    [appendAuthHeader],
-  );
+      },
+      [appendAuthHeader],
+    );
 
   /**
    * Fetches package groups from AEM.
    *
    * This function sends a request to the server to retrieve a list of groups.
    *
-   * @param {Logger} logger - The logger object for logging debug messages.
    * @returns {Promise<string[] | null>} A promise that resolves to an array of group names if successful, `null` otherwise.
    */
-  const fetchGroups = useCallback(async (): Promise<string[] | null> => {
+  const fetchGroups: () => Promise<string[] | null> = useCallback(async (): Promise<string[] | null> => {
     const request = await buildPackageRequest({ action: 'listGroups' });
     logger.debug({ message: 'fetchGroups request: ', request });
     if (request) {
@@ -533,8 +485,8 @@ const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
    * @param {HandlePackageProps} props - The props to handle the package creation.
    * @returns {Promise<any>} - A promise that resolves to the response JSON object, or null if the request fails.
    */
-  const createPackage = useCallback(
-    async (props: HandlePackageProps): Promise<unknown> => {
+  const createPackage: (props: HandlePackageProps) => Promise<PackageManagerResponse | null> = useCallback(
+    async (props) => {
       const request = await buildPackageRequest({ action: 'create', ...props });
       logger.debug({ message: 'createPackage request: ', request });
       if (request) {
@@ -569,8 +521,8 @@ const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
    * @param {HandlePackageProps} props - The properties needed to handle the package.
    * @returns {Promise<any>} - A promise that resolves to the API response data, or null if the edit request failed.
    */
-  const editPackageFilters = useCallback(
-    async (props: HandlePackageProps): Promise<unknown> => {
+  const editPackageFilters: (props: HandlePackageProps) => Promise<PackageManagerResponse | null> = useCallback(
+    async (props) => {
       const request = await buildPackageRequest({ action: 'edit', ...props });
       logger.debug({ message: 'editPackageFilter: request ', request });
       if (request) {
@@ -606,8 +558,8 @@ const usePackageHandler = (): Record<string, PackageHandlerFunction> => {
    * @param {HandlePackageProps} props - The handle package props.
    * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating whether the package was successfully built.
    */
-  const buildPackage = useCallback(
-    async (props: HandlePackageProps): Promise<boolean> => {
+  const buildPackage: (props: HandlePackageProps) => Promise<boolean> = useCallback(
+    async (props) => {
       const request = await buildPackageRequest({ action: 'build', ...props });
       logger.debug({ message: 'buildPackage: request ', request });
       if (request) {

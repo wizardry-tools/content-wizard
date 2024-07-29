@@ -20,7 +20,7 @@ function TypeDocumentationWithContext(props: { type: GraphQLNamedType }) {
     <SchemaContext.Provider
       value={{
         fetchError: null,
-        introspect() {},
+        introspect: () => ({}),
         isFetching: { current: false },
         schema: ExampleSchema,
         validationErrors: [],

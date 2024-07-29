@@ -1,6 +1,5 @@
 import { ComponentProps, forwardRef, ReactElement } from 'react';
 import { clsx } from 'clsx';
-import { createComponentGroup } from '../utility/component-group';
 import {
   Trigger,
   Portal,
@@ -10,6 +9,7 @@ import {
   DropdownMenuItemProps,
   Root,
 } from '@radix-ui/react-dropdown-menu';
+import { createComponentGroup } from '../utility/component-group';
 
 import './dropdown.scss';
 

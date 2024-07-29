@@ -4,8 +4,9 @@ import { SimpleSelect } from './SimpleSelect';
 import { SimpleCheckbox } from './SimpleCheckbox';
 import { SimpleDatePicker } from './SimpleDatePicker';
 import { SimpleSlider } from './SimpleSlider';
-import { ContentTypeLookup, ContentTypes, TargetTypeLookup, TargetTypes } from '@/components/Query';
-import { Field, fieldCategoryTypes, FieldsConfig } from './fields';
+import { Field } from './fields';
+import { FieldsConfig } from '@/types';
+import { contentTypeMap, targetTypes } from '@/components';
 
 export * from './fields';
 export * from './predicates';
@@ -39,24 +40,24 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleInput,
     value: '/content/we-retail',
     required: true,
-    category: fieldCategoryTypes.targeting,
+    category: 'targeting',
   }),
   type: Field({
     name: 'type',
     label: 'Content Type',
     fieldType: FieldTypes.SimpleSelect,
-    value: ContentTypeLookup[ContentTypes.child],
+    value: 'child',
     required: true,
-    options: ContentTypes,
-    category: fieldCategoryTypes.targeting,
+    options: contentTypeMap,
+    category: 'targeting',
   }),
   targetType: Field({
     name: 'targetType',
     label: 'Target Type',
     fieldType: FieldTypes.SimpleSelect,
-    value: TargetTypeLookup[TargetTypes.text],
-    options: TargetTypes,
-    category: fieldCategoryTypes.targeting,
+    value: 'text',
+    options: targetTypes,
+    category: 'targeting',
   }),
   targetResourceType: Field({
     name: 'targetResourceType',
@@ -65,9 +66,9 @@ export const defaultFields: FieldsConfig = {
     value: '',
     isDisabled: (fields: FieldsConfig) => {
       const type = fields.targetType.value;
-      return !type || type === TargetTypeLookup[TargetTypes.none] || type === TargetTypeLookup[TargetTypes.text];
+      return !type || type === 'none' || type === 'text';
     },
-    category: fieldCategoryTypes.targeting,
+    category: 'targeting',
   }),
   fulltext: Field({
     name: 'fulltext',
@@ -75,23 +76,23 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleInput,
     value: 'winter',
     isDisabled: (fields: FieldsConfig) => {
-      return fields.targetType.value !== TargetTypeLookup[TargetTypes.text];
+      return fields.targetType.value !== 'text';
     },
-    category: fieldCategoryTypes.targeting,
+    category: 'targeting',
   }),
   createdBy: Field({
     name: 'createdBy',
     label: 'Created By',
     fieldType: FieldTypes.SimpleInput,
     value: '',
-    category: fieldCategoryTypes.authoring,
+    category: 'authoring',
   }),
   lastModifiedBy: Field({
     name: 'lastModifiedBy',
     label: 'Last Modified By',
     fieldType: FieldTypes.SimpleInput,
     value: '',
-    category: fieldCategoryTypes.authoring,
+    category: 'authoring',
   }),
   lastReplicatedBy: Field({
     name: 'lastReplicatedBy',
@@ -99,7 +100,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isUnpublished.value,
-    category: fieldCategoryTypes.replication,
+    category: 'replication',
   }),
   lastRolledoutBy: Field({
     name: 'lastRolledoutBy',
@@ -107,28 +108,28 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   language: Field({
     name: 'language',
     label: 'Target Language',
     fieldType: FieldTypes.SimpleInput,
     value: '',
-    category: fieldCategoryTypes.translation,
+    category: 'translation',
   }),
   created: Field({
     name: 'created',
     label: 'Creation',
     fieldType: FieldTypes.SimpleDatePicker,
     value: null,
-    category: fieldCategoryTypes.authoring,
+    category: 'authoring',
   }),
   lastModified: Field({
     name: 'lastModified',
     label: 'Last Modified',
     fieldType: FieldTypes.SimpleDatePicker,
     value: null,
-    category: fieldCategoryTypes.authoring,
+    category: 'authoring',
   }),
   lastReplicated: Field({
     name: 'lastReplicated',
@@ -136,7 +137,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleDatePicker,
     value: null,
     isDisabled: (fields: FieldsConfig) => !!fields.isUnpublished.value,
-    category: fieldCategoryTypes.replication,
+    category: 'replication',
   }),
   lastRolledout: Field({
     name: 'lastRolledout',
@@ -144,7 +145,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleDatePicker,
     value: null,
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   isPublished: Field({
     name: 'isPublished',
@@ -152,16 +153,16 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleCheckbox,
     checkboxValue: 'Activate',
     value: '',
-    isDisabled: (fields: FieldsConfig) => !!(fields.isUnpublished.value || fields.isDeactivated.value),
-    category: fieldCategoryTypes.replication,
+    isDisabled: (fields: FieldsConfig) => !!(fields.isUnpublished.value ?? fields.isDeactivated.value),
+    category: 'replication',
   }),
   isUnpublished: Field({
     name: 'isUnpublished',
     label: 'Is Unpublished?',
     fieldType: FieldTypes.SimpleCheckbox,
     value: '',
-    isDisabled: (fields: FieldsConfig) => !!(fields.isPublished.value || fields.isDeactivated.value),
-    category: fieldCategoryTypes.replication,
+    isDisabled: (fields: FieldsConfig) => !!(fields.isPublished.value ?? fields.isDeactivated.value),
+    category: 'replication',
   }),
   isDeactivated: Field({
     name: 'isDeactivated',
@@ -169,8 +170,8 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleCheckbox,
     checkboxValue: 'Deactivate',
     value: '',
-    isDisabled: (fields: FieldsConfig) => !!(fields.isPublished.value || fields.isUnpublished.value),
-    category: fieldCategoryTypes.replication,
+    isDisabled: (fields: FieldsConfig) => !!(fields.isPublished.value ?? fields.isUnpublished.value),
+    category: 'replication',
   }),
   isBlueprint: Field({
     name: 'isBlueprint',
@@ -179,7 +180,7 @@ export const defaultFields: FieldsConfig = {
     checkboxValue: 'cq:LiveSync',
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isLiveCopy.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   isLiveCopy: Field({
     name: 'isLiveCopy',
@@ -187,7 +188,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleCheckbox,
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isBlueprint.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   isSuspended: Field({
     name: 'isSuspended',
@@ -196,7 +197,7 @@ export const defaultFields: FieldsConfig = {
     checkboxValue: 'cq:LiveSyncCancelled',
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   hasCancelledPropertyInheritance: Field({
     name: 'hasCancelledPropertyInheritance',
@@ -205,7 +206,7 @@ export const defaultFields: FieldsConfig = {
     checkboxValue: 'cq:PropertyLiveSyncCancelled',
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   inheritanceCancelledProperty: Field({
     name: 'inheritanceCancelledProperty',
@@ -213,7 +214,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   hasLocalContent: Field({
     name: 'hasLocalContent',
@@ -222,7 +223,7 @@ export const defaultFields: FieldsConfig = {
     value: '',
     //isDisabled: (config: any)=>!config.isLiveCopy,
     render: false, // need logic to support child node traversal, do not render until that is implemented
-    category: fieldCategoryTypes.msm,
+    category: 'msm',
   }),
   hasMsmGhosts: Field({
     name: 'hasMsmGhosts',
@@ -230,9 +231,8 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleCheckbox,
     checkboxValue: 'wcm/msm/components/ghost',
     value: '',
-    isDisabled: (fields: FieldsConfig) =>
-      !fields.isSuspended.value || fields.type.value !== ContentTypeLookup[ContentTypes.child],
-    category: fieldCategoryTypes.msm,
+    isDisabled: (fields: FieldsConfig) => !fields.isSuspended.value || fields.type.value !== 'child',
+    category: 'msm',
   }),
   isLanguageCopy: Field({
     name: 'isLanguageCopy',
@@ -240,7 +240,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleCheckbox,
     value: '',
     isDisabled: () => false, // TODO: is there ever a case where we can't search for language copies???,
-    category: fieldCategoryTypes.translation,
+    category: 'translation',
   }),
   hasBeenTranslated: Field({
     name: 'hasBeenTranslated',
@@ -250,29 +250,29 @@ export const defaultFields: FieldsConfig = {
     value: '',
     // checkboxValue: ['READY_FOR_REVIEW', 'APPROVED'] // TODO when multi-value is being processed
     isDisabled: (fields: FieldsConfig) => !fields.isLanguageCopy.value,
-    category: fieldCategoryTypes.translation,
+    category: 'translation',
   }),
   limit: Field({
     name: 'limit',
     label: 'Limit Results',
     fieldType: FieldTypes.SimpleSlider,
     value: 100,
-    category: fieldCategoryTypes.targeting,
+    category: 'targeting',
   }),
 };
 
 export const targetingFields = () => {
-  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.targeting);
+  return Object.values(defaultFields).filter((field) => field.category === 'targeting');
 };
 export const authoringFields = () => {
-  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.authoring);
+  return Object.values(defaultFields).filter((field) => field.category === 'authoring');
 };
 export const replicationFields = () => {
-  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.replication);
+  return Object.values(defaultFields).filter((field) => field.category === 'replication');
 };
 export const msmFields = () => {
-  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.msm);
+  return Object.values(defaultFields).filter((field) => field.category === 'msm');
 };
 export const translationFields = () => {
-  return Object.values(defaultFields).filter((field) => field.category === fieldCategoryTypes.translation);
+  return Object.values(defaultFields).filter((field) => field.category === 'translation');
 };

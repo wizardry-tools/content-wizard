@@ -1,10 +1,9 @@
 import type { Editor, EditorChange } from 'codemirror';
 import type { IHint } from 'codemirror-graphql/hint';
 import { GraphQLNamedType, GraphQLSchema, GraphQLType, isListType, isNonNullType } from 'graphql';
-
-import { ExplorerContextType } from '../explorer';
+import { ExplorerContextType, PluginContextType } from '@/types';
 import { markdown } from '../markdown';
-import { DOC_EXPLORER_PLUGIN, PluginContextType } from '../plugin';
+import { DOC_EXPLORER_PLUGIN } from '../plugin';
 import { importCodeMirror } from './common';
 
 /**
@@ -225,7 +224,7 @@ export function onHasCompletion(
       return;
     }
 
-    const typeName = event.currentTarget.textContent || '';
+    const typeName = event.currentTarget.textContent ?? '';
     const type = schema.getType(typeName);
     if (type) {
       plugin.setVisiblePlugin(DOC_EXPLORER_PLUGIN);

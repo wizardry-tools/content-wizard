@@ -15,7 +15,6 @@ const TestComponent = () => {
           dispatchAlert({
             message: 'Test Alert',
             severity: 'error',
-            caller: TestComponent,
           });
         }}
       >

@@ -1,19 +1,12 @@
-import { forwardRef, ReactNode, JSX } from 'react';
+import { forwardRef, JSX } from 'react';
 import { clsx } from 'clsx';
 import { Reorder } from 'framer-motion';
+import { TabProps, TabsProps } from '@/types';
 import { CloseIcon } from '@/icons';
 import { createComponentGroup } from '../utility/component-group';
 import { UnStyledButton } from './button';
 import { Tooltip } from './tooltip';
-
 import './tabs.scss';
-
-type TabProps = {
-  isActive?: boolean;
-  value: object;
-  className?: string;
-  children: ReactNode;
-};
 
 const TabRoot = forwardRef<HTMLLIElement, TabProps>(({ isActive, value, children, className, ...props }, ref) => (
   <Reorder.Item
@@ -55,13 +48,6 @@ export const Tab = createComponentGroup(TabRoot, {
   Button: TabButton,
   Close: TabClose,
 });
-
-type TabsProps = {
-  values: object[];
-  onReorder: (newOrder: any[]) => void;
-  className?: string;
-  children: ReactNode;
-};
 
 export const Tabs = forwardRef<HTMLUListElement, TabsProps>(
   ({ values, onReorder, children, className, ...props }, ref) => (

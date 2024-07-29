@@ -1,10 +1,10 @@
 import { clsx } from 'clsx';
 import { forwardRef, ReactElement, JSX } from 'react';
+import * as D from '@radix-ui/react-dialog';
+import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { CloseIcon } from '@/icons';
 import { createComponentGroup } from '../utility/component-group';
 import { UnStyledButton } from './button';
-import * as D from '@radix-ui/react-dialog';
-import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import './dialog.scss';
 

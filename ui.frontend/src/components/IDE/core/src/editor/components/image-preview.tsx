@@ -1,12 +1,6 @@
 import type { Token } from 'codemirror';
 import { useEffect, useRef, useState } from 'react';
-
-type ImagePreviewProps = { token: Token };
-
-type Dimensions = {
-  width: number | null;
-  height: number | null;
-};
+import { Dimensions, ImagePreviewProps } from '@/types';
 
 export function ImagePreview(props: ImagePreviewProps) {
   const [dimensions, setDimensions] = useState<Dimensions>({

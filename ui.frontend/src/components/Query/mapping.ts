@@ -6,7 +6,7 @@
 export function createReverseMapping<T extends Record<string, string>>(obj: T): Record<T[keyof T], keyof T> {
   const reverseMapping: Record<string, string> = {};
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (key in obj) {
       reverseMapping[obj[key]] = key;
     }
   }

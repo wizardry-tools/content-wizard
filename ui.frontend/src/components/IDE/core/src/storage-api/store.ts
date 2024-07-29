@@ -1,19 +1,4 @@
-import { WizardStorageAPI } from './storage-api';
-import { QueryLanguageKey, Statement } from '@/components/Query';
-
-export type WizardStoreItem = {
-  query?: Statement;
-  language?: QueryLanguageKey;
-  // API might need to be tracked as well, but PersistedQueries should be refactored out of API before that happens.
-  variables?: string;
-  headers?: string;
-  operationName?: string;
-  label?: string;
-  favorite?: boolean;
-};
-export type WizardStoreItemAction = WizardStoreItem & {
-  type: string;
-};
+import { WizardStore, WizardStoreItem, WizardStoreItemAction, WizardStoreProps } from '@/types';
 
 const compareStoreItem = (storeItem: WizardStoreItem, item: WizardStoreItem): boolean => {
   return (
@@ -23,24 +8,6 @@ const compareStoreItem = (storeItem: WizardStoreItem, item: WizardStoreItem): bo
     storeItem.headers === item.headers &&
     storeItem.operationName === item.operationName
   );
-};
-
-export type WizardStoreProps = {
-  key: string;
-  storage: WizardStorageAPI;
-  maxSize?: number | null;
-};
-
-export type WizardStore = {
-  length: () => number;
-  contains: (item: WizardStoreItem) => boolean;
-  edit: (item: WizardStoreItem, index?: number) => void;
-  remove: (item: WizardStoreItem) => void;
-  push: (item: WizardStoreItem) => void;
-  fetchRecent: () => WizardStoreItem | undefined;
-  fetchAll: () => WizardStoreItem[];
-  save: () => void;
-  getItems: () => WizardStoreItem[];
 };
 
 /**
@@ -57,7 +24,10 @@ export const useWizardStore = ({ key, storage, maxSize = null }: WizardStoreProp
   function fetchAll() {
     const raw = storage.get(key);
     if (raw) {
-      return JSON.parse(raw)[key] as WizardStoreItem[];
+      const store: Record<string, WizardStoreItem[]> = JSON.parse(raw);
+      if (store) {
+        return store[key];
+      }
     }
     return [];
   }

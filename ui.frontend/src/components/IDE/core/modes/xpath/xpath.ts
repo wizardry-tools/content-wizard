@@ -1,16 +1,7 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
-
-/**
- * This is a Custom Codemirror mode for XPATH parsing originally based on the OOTB "Properties" mode
- */
-export type PropertiesState = {
-  position: 'predicate' | 'quote' | 'comment' | 'path' | 'string' | 'function' | 'def';
-  nextMultiline: boolean;
-  inMultiline: boolean;
-  afterSection: boolean;
-};
+import { XpathPropertiesState } from '@/types';
 
 /**
  * turn a space-separated list into an array. For some reason, this method can't be imported into other files.
@@ -32,7 +23,7 @@ const atoms = set('or and like order by');
 (() => {
   CodeMirror.defineMode('xpath', function () {
     return {
-      token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
+      token: function (stream: CodeMirror.StringStream, state: XpathPropertiesState) {
         const sol = stream.sol() || state.afterSection;
         //var eol = stream.eol();
 

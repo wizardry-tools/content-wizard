@@ -1,12 +1,11 @@
-import { FormGrid } from '@/components/QueryWizard/Components';
-import { APISelector, APISelectorProps } from './APISelector';
-import { PersistedQuerySelector, PersistedQuerySelectorProps } from './PersistedQuerySelector';
-import { useLogger } from '@/providers';
+import { GraphQLSelectorProps } from '@/types';
 import { useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
+import { FormGrid } from '@/components/QueryWizard/Components';
+import { APISelector } from './APISelector';
+import { PersistedQuerySelector } from './PersistedQuerySelector';
 
-export type GraphQLSelectorProps = Omit<APISelectorProps, 'endpoint'> & Partial<PersistedQuerySelectorProps>;
-
-export const GraphQLSelector = ({ api, APIs, onAPIChange, onStatementChange = () => {} }: GraphQLSelectorProps) => {
+export const GraphQLSelector = ({ api, APIs, onAPIChange, onStatementChange = () => ({}) }: GraphQLSelectorProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `GraphQLSelector[${renderCount}] render()` });

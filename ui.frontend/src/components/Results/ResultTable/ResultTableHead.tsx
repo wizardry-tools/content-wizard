@@ -1,14 +1,12 @@
-import { MouseEvent, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Box, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
+import { ResultTableHeadProps } from '@/types';
+import { useRenderCount, usePaperTheme } from '@/utility';
 import { useLogger, useResults } from '@/providers';
 import { TableHeadCell } from './TableHeadCell';
 import { TableToolBar } from './TableToolBar';
-import { useRenderCount, usePaperTheme } from '@/utility';
 
-export type ResultTableHeadProps = {
-  elevation?: number;
-};
 export const ResultTableHead = (props: ResultTableHeadProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
@@ -16,7 +14,7 @@ export const ResultTableHead = (props: ResultTableHeadProps) => {
   const { keys, order, orderBy, setOrder, setOrderBy } = useResults();
   const { elevation = 5 } = props;
   const handleSortClick = useCallback(
-    (key: string) => (_event: MouseEvent<unknown>) => {
+    (key: string) => () => {
       // if previous orderBy matches the clicked key and the previous order is asc, then the new order should be desc.
       const isAsc = orderBy === key && order === 'asc';
       logger.debug({ message: `ResultTableHead handleSortClick()`, isAsc, key, order });

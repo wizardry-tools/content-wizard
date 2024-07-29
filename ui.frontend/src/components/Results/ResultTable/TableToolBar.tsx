@@ -1,13 +1,13 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { Box, IconButton, TableRow, TextField, Tooltip } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useLogger, useResults } from '@/providers';
-import { TableHeadCell } from './TableHeadCell';
 import DownloadIcon from '@mui/icons-material/Download';
 import WidgetsIcon from '@mui/icons-material/Widgets';
+import { useDebounce, useRenderCount } from '@/utility';
+import { useLogger, useResults } from '@/providers';
 import { ResultsExporterDialog } from '../ResultsExporter';
 import { PackageBuilderDialog } from '../PackageBuilder';
-import { useDebounce, useRenderCount } from '@/utility';
+import { TableHeadCell } from './TableHeadCell';
 
 export const TableToolBar = () => {
   const logger = useLogger();

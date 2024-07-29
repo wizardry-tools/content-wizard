@@ -1,6 +1,6 @@
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
-import { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { API, GraphQLEndpointConfig, PersistedQuery } from '@/types';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { API, APIContextProviderProps, APIContextType, GraphQLEndpointConfig } from '@/types';
 import { buildGraphQLURL, endpoints } from '@/components';
 import { useCreateFetcher, useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
@@ -16,30 +16,7 @@ export const mapAPIs = (response: GraphQLEndpointConfig[]): API[] => {
   });
 };
 
-export type APIContextType = {
-  /**
-   * Stores an error raised during API Fetch requests
-   */
-  fetchError: string | null;
-  /**
-   * When the APIContextProvider is rendered, it fetches all available APIs that
-   * are configured in AEM for GraphQL.
-   */
-  APIs: API[];
-  /**
-   * This will check all APIs to find the Persisted Queries based on a supplied API.
-   * Matches the API endpoint with the stored APIs' endpoint. If a match is found,
-   * then it returns the Persisted Queries from the stored APIS. If no match is found,
-   * then it returns any pre-existing Persisted Queries found in the API object already,
-   * or it returns an empty array.
-   * @param api
-   */
-  getPersistedQueries: (api: API) => PersistedQuery[];
-};
-
 export const APIContext = createNullableContext<APIContextType>('APIContext');
-
-export type APIContextProviderProps = PropsWithChildren;
 
 export function APIContextProvider(props: APIContextProviderProps) {
   const renderCount = useRenderCount();

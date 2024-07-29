@@ -1,17 +1,17 @@
-import { parse } from 'graphql';
-
-import { useWizardStore, WizardStore, WizardStoreItem } from './store';
-import { WizardStorageAPI } from './storage-api';
-import { QueryLanguage, QueryLanguageKey, Statement } from '@/components/Query';
 import { useState } from 'react';
-
+import { parse } from 'graphql';
+import {
+  QueryLanguage,
+  Statement,
+  WizardStore,
+  WizardStoreItem,
+  WHistoryStoreProps,
+  WizardHistoryStore,
+} from '@/types';
+import { useWizardStore } from './store';
 const MAX_QUERY_SIZE = 100000;
 
-export type WHistoryStoreProps = {
-  storage: WizardStorageAPI;
-  maxSize: number;
-};
-export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
+export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryStore => {
   const { storage, maxSize } = props;
   const history: WizardStore = useWizardStore({ key: 'queries', storage, maxSize });
   const favorite: WizardStore = useWizardStore({ key: 'favorites', storage, maxSize: null });
@@ -19,7 +19,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
 
   function shouldSaveQuery(
     query?: Statement,
-    language?: QueryLanguageKey,
+    language?: QueryLanguage,
     variables?: string,
     headers?: string,
     lastQuerySaved?: WizardStoreItem,
@@ -28,7 +28,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
       return false;
     }
 
-    if (language === QueryLanguage.GraphQL) {
+    if (language === 'GraphQL') {
       try {
         parse(query);
       } catch {
@@ -131,7 +131,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
       const found = store
         .getItems()
         .find(
-          (x: any) =>
+          (x: WizardStoreItem) =>
             x.query === query &&
             x.language === language &&
             x.variables === variables &&
@@ -143,7 +143,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
       }
     }
 
-    if (other.favorite || clearFavorites) {
+    if (other.favorite ?? clearFavorites) {
       deleteFromStore(favorite);
     }
     if (!other.favorite || clearFavorites) {
@@ -162,5 +162,3 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps) => {
     queries,
   };
 };
-
-export type WizardHistoryStore = ReturnType<typeof useWizardHistoryStore>;

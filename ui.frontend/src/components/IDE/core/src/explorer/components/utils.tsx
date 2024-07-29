@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { GraphQLNamedType, GraphQLType, isListType, isNonNullType } from 'graphql';
 
 export function renderType(

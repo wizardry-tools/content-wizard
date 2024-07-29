@@ -1,17 +1,17 @@
-import { useResultExplorerEditor, UseResultExplorerEditorArgs } from '../result-explorer-editor';
-
+import { useMemo } from 'react';
+import { styled, useTheme } from '@mui/material/styles';
+import { Paper, Stack } from '@mui/material';
+import { UseResultExplorerEditorArgs } from '@/types';
+import { CopyIcon } from '@/icons';
+import { useResultExplorerEditor } from '../result-explorer-editor';
 import '../style/codemirror.scss';
 import '../style/fold.scss';
 import '../style/info.scss';
 import '../style/editor.scss';
-import { useMemo } from 'react';
-import { Paper, Stack } from '@mui/material';
-import { ToolbarButton } from '../../toolbar';
-import { CopyIcon } from '@/icons';
-import { useCopyResult } from '../hooks';
 
+import { ToolbarButton } from '../../toolbar';
+import { useCopyResult } from '../hooks';
 import './result-explorer-editor.scss';
-import { styled, useTheme } from '@mui/material/styles';
 
 const StyledToolbarButton = styled(ToolbarButton)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.light : theme.palette.primary.dark,

@@ -1,23 +1,10 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { Statement } from '@/components/Query';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { API } from '../../api';
+import { PersistedQuerySelectorProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 
-export type PersistedQuerySelectorProps = {
-  /**
-   * This is the AEM GraphQL API that has been selected.
-   */
-  api: API;
-  /**
-   * This callback will be called after a Persisted Query has been selected.
-   * A string containing a Query statement will be passed to the callback.
-   * @param statement string
-   */
-  onStatementChange: (statement: Statement) => void;
-};
 export const PersistedQuerySelector = memo(({ api, onStatementChange }: PersistedQuerySelectorProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();

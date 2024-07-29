@@ -1,14 +1,8 @@
 import { forwardRef, JSX } from 'react';
 import { clsx } from 'clsx';
+import { MarkdownContentProps } from '@/types';
 import { markdown } from '../markdown';
-
 import './markdown.scss';
-
-type MarkdownContentProps = {
-  children: string;
-  onlyShowFirstChild?: boolean;
-  type: 'description' | 'deprecation';
-};
 
 export const MarkdownContent = forwardRef<
   HTMLDivElement,

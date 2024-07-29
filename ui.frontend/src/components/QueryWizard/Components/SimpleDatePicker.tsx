@@ -1,14 +1,13 @@
 import dayjs from 'dayjs';
+import { useCallback, useState } from 'react';
 import { Stack, IconButton, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider, DateTimePicker, PickersDay } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { FormGrid } from './FormGrid';
-import { useCallback, useState } from 'react';
-import { DateRange, DayTime } from './fields';
-import { SimpleInputProps } from './SimpleInput';
+import { DateRange, DayTime, SimpleInputProps } from '@/types';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
+import { FormGrid } from './FormGrid';
 
 const StyledButton = styled(IconButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -49,7 +48,6 @@ export const SimpleDatePicker = ({ field }: SimpleInputProps) => {
           lowerBound: dateTime,
         },
         type: 'UPDATE_VALUE',
-        caller: SimpleDatePicker,
       });
     },
     [fieldDispatcher, name, value],
@@ -68,7 +66,6 @@ export const SimpleDatePicker = ({ field }: SimpleInputProps) => {
           upperBound: dateTime,
         },
         type: 'UPDATE_VALUE',
-        caller: SimpleDatePicker,
       });
     },
     [fieldDispatcher, name, value],

@@ -4,9 +4,7 @@ import { Box, IconButton } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
-
-type WizardPaginationActionsProps = {} & TablePaginationActionsProps;
+import { WizardPaginationActionsProps } from '@/types';
 
 export const TablePaginationActions = (props: WizardPaginationActionsProps) => {
   const theme = useTheme();

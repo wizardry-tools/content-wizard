@@ -1,21 +1,12 @@
 import { astFromValue, print, ValueNode } from 'graphql';
-
-import { ExplorerFieldDef } from '../context';
-
 import './default-value.scss';
+import { DefaultValueProps } from '@/types';
 
 const printDefault = (ast?: ValueNode | null): string => {
   if (!ast) {
     return '';
   }
   return print(ast);
-};
-
-type DefaultValueProps = {
-  /**
-   * The field or argument for which to render the default value.
-   */
-  field: ExplorerFieldDef;
 };
 
 export function DefaultValue({ field }: DefaultValueProps) {

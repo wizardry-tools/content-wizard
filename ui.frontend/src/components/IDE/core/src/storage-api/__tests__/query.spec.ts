@@ -1,6 +1,6 @@
+import { useAlertDispatcher } from '@/providers';
 import { useWizardStorageAPI } from '../storage-api';
 import { useWizardStore } from '../store';
-import { useAlertDispatcher } from '@/providers';
 
 jest.mock('@/providers', () => {
   const mockAlertDispatcher = jest.fn(() => {});

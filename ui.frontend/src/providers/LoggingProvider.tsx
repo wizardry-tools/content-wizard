@@ -1,27 +1,12 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
+import { Logger, LoggingProps, LoggingProviderProps } from '@/types';
 
-export type LoggingProps = Record<string, unknown> & {
-  message: string;
-};
-export type Logger = {
-  log: (props: LoggingProps) => void;
-  warn: (props: LoggingProps) => void;
-  debug: (props: LoggingProps) => void;
-  error: (props: LoggingProps) => void;
-};
 const LoggingContext = createContext<Logger>({
   log: () => ({}),
   debug: () => ({}),
   warn: () => ({}),
   error: () => ({}),
 });
-
-export type LoggingProviderProps = PropsWithChildren & {
-  showLog?: boolean;
-  showDebug?: boolean;
-  showWarn?: boolean;
-  showError?: boolean;
-};
 
 /**
  * This is a Logging Provider that allows us to configure how logs

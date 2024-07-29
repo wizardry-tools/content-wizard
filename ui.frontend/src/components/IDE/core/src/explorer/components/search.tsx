@@ -1,22 +1,13 @@
-import {
-  GraphQLArgument,
-  GraphQLField,
-  GraphQLInputField,
-  GraphQLNamedType,
-  isInputObjectType,
-  isInterfaceType,
-  isObjectType,
-} from 'graphql';
+import { GraphQLArgument, isInputObjectType, isInterfaceType, isObjectType } from 'graphql';
 import { FocusEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Combobox } from '@headlessui/react';
+import { Caller, FieldMatch, FieldProps, TypeMatch, TypeProps } from '@/types';
 import { MagnifyingGlassIcon } from '@/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';
-
 import { useExplorerContext } from '../context';
-
-import './search.scss';
 import { renderType } from './utils';
+import './search.scss';
 
 export function Search() {
   const { explorerNavStack, push } = useExplorerContext({
@@ -135,22 +126,14 @@ export function Search() {
   );
 }
 
-type TypeMatch = { type: GraphQLNamedType };
-
-type FieldMatch = {
-  type: GraphQLNamedType;
-  field: GraphQLField<unknown, unknown> | GraphQLInputField;
-  argument?: GraphQLArgument;
-};
-
-export function useSearchResults(caller?: Function) {
+export function useSearchResults(caller?: Caller) {
   const { explorerNavStack } = useExplorerContext({
     nonNull: true,
-    caller: caller || useSearchResults,
+    caller: caller ?? useSearchResults,
   });
   const { schema } = useSchemaContext({
     nonNull: true,
-    caller: caller || useSearchResults,
+    caller: caller ?? useSearchResults,
   });
 
   const navItem = explorerNavStack.at(-1)!;
@@ -232,16 +215,9 @@ function isMatch(sourceText: string, searchValue: string): boolean {
   }
 }
 
-type TypeProps = { type: GraphQLNamedType };
-
 function Type(props: TypeProps) {
   return <span className="wizard-doc-explorer-search-type">{props.type.name}</span>;
 }
-
-type FieldProps = {
-  field: GraphQLField<unknown, unknown> | GraphQLInputField;
-  argument?: GraphQLArgument;
-};
 
 function Field({ field, argument }: FieldProps) {
   return (

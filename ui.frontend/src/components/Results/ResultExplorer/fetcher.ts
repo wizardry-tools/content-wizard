@@ -1,18 +1,8 @@
-import { MutableRefObject, useCallback } from 'react';
+import { useCallback } from 'react';
+import { FetcherProps, LoadDataCallback, LoadDataProps, Result, ResultData } from '@/types';
 import { DYNAMIC_HEADERS } from '@/utility';
-import { ResultData } from './ResultExplorer';
 import { useAlertDispatcher } from '@/providers';
 
-export type FetcherProps = {
-  fetching: MutableRefObject<boolean>;
-};
-export type LoadDataProps = {
-  path: string;
-  resultHandler: (result: any) => void;
-  defaultResult?: any;
-  stringify?: boolean;
-  depth?: number;
-};
 /**
  * This is a simple fetcher that is being used to pull data straight from the JCR.
  * Uses a fetcher reference to track if fetching is occurring, to prevent multiple requests.
@@ -21,7 +11,7 @@ export type LoadDataProps = {
 export const useFetcher = ({ fetching }: FetcherProps) => {
   const alertDispatcher = useAlertDispatcher();
 
-  const loadData = useCallback(
+  const loadData: LoadDataCallback = useCallback(
     (props: LoadDataProps) => {
       const { path, resultHandler, defaultResult = '', stringify = true, depth = -1 } = props;
       if (fetching.current) {
@@ -35,7 +25,10 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
             fetching.current = true;
             const response = await fetch(url, DYNAMIC_HEADERS);
             if (response.ok) {
-              return await response.json();
+              const json = await response.json();
+              if (typeof json === 'object') {
+                return json as Result;
+              }
             } else {
               return defaultResult;
             }
@@ -44,7 +37,6 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
             alertDispatcher({
               message: `Error: could not load data for the result ${path}`,
               severity: 'error',
-              caller: useFetcher,
             });
           }
         }
@@ -58,7 +50,7 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
               const json = JSON.stringify(responseData, null, ' ');
               resultHandler(json);
             } else {
-              resultHandler(responseData);
+              resultHandler(responseData as Result);
             }
           } else {
             resultHandler(defaultResult); // revert to default
@@ -69,7 +61,6 @@ export const useFetcher = ({ fetching }: FetcherProps) => {
           alertDispatcher({
             message: `Error: exception occurred while fetching data for ${path}`,
             severity: 'error',
-            caller: useFetcher,
           });
           resultHandler(defaultResult);
         })

@@ -1,14 +1,8 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { IDETheme, WizardStorageAPI } from '@/types';
 import { useStorageContext } from './storage';
-import { WizardStorageAPI } from './storage-api';
 
-/**
- * The value `null` semantically means that the user does not explicitly choose
- * any theme, so we use the system default.
- */
-export type Theme = 'light' | 'dark' | null;
-
-function getStoredTheme(storageContext: WizardStorageAPI | null): Theme {
+function getStoredTheme(storageContext: WizardStorageAPI | null): IDETheme {
   if (!storageContext) {
     return null;
   }
@@ -36,7 +30,7 @@ export function useTheme() {
 
   const storedTheme = useMemo(() => getStoredTheme(storageContext), [storageContext]);
 
-  const [theme, setThemeInternal] = useState<Theme>(storedTheme);
+  const [theme, setThemeInternal] = useState<IDETheme>(storedTheme);
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') {
@@ -50,8 +44,8 @@ export function useTheme() {
   }, [theme]);
 
   const setTheme = useCallback(
-    (newTheme: Theme) => {
-      storageContext.set(STORAGE_KEY, newTheme || '');
+    (newTheme: IDETheme) => {
+      storageContext.set(STORAGE_KEY, newTheme ?? '');
       setThemeInternal(newTheme);
     },
     [storageContext],

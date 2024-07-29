@@ -1,5 +1,5 @@
-import { useWizardStorageAPI } from '../storage-api';
 import { useAlertDispatcher } from '@/providers';
+import { useWizardStorageAPI } from '../storage-api';
 
 const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
 
@@ -92,8 +92,8 @@ describe('WizardStorageAPI', () => {
         getItem() {
           return null;
         },
-        clear() {},
-        removeItem() {},
+        clear: () => ({}),
+        removeItem: () => ({}),
         length: 1,
       },
     });
@@ -113,8 +113,8 @@ describe('WizardStorageAPI', () => {
         getItem() {
           return null;
         },
-        clear() {},
-        removeItem() {},
+        clear: () => ({}),
+        removeItem: () => ({}),
         length: 1,
       },
     });

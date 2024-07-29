@@ -1,52 +1,16 @@
 import { formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
 import { ExecutionResult, FragmentDefinitionNode, GraphQLError, print } from 'graphql';
 import { getFragmentDependenciesForAST } from 'graphql-language-service';
-import { ReactNode, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import setValue from 'set-value';
-
+import { ExecutionContextProviderProps, ExecutionContextType, IncrementalResult } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useFetcher, useLogger, useQuery } from '@/providers';
 import { useAutoCompleteLeafs, useEditorContext } from './editor';
-import { UseAutoCompleteLeafsArgs } from './editor/hooks';
 import { useHistoryContext } from './history';
 import { createContextHook, createNullableContext } from './utility/context';
-import { useFetcher, useLogger, useQuery } from '@/providers';
-import { useRenderCount } from '@/utility';
-
-export type ExecutionContextType = {
-  /**
-   * If there is currently a GraphQL request in-flight. For multi-part
-   * requests like subscriptions, this will be `true` while fetching the
-   * first partial response and `false` while fetching subsequent batches.
-   */
-  isFetching: boolean;
-  /**
-   * If there is currently a GraphQL request in-flight. For multi-part
-   * requests like subscriptions, this will be `true` until the last batch
-   * has been fetched or the connection is closed from the client.
-   */
-  isSubscribed: boolean;
-  /**
-   * The operation name that will be sent with all GraphQL requests.
-   */
-  operationName: string | null;
-  /**
-   * Start a GraphQL requests based of the current editor contents.
-   */
-  run(): void;
-  /**
-   * Stop the GraphQL request that is currently in-flight.
-   */
-  stop(): void;
-};
 
 export const ExecutionContext = createNullableContext<ExecutionContextType>('ExecutionContext');
-
-export type ExecutionContextProviderProps = Pick<UseAutoCompleteLeafsArgs, 'getDefaultFieldNames'> & {
-  children: ReactNode;
-  /**
-   * This prop sets the operation name that is passed with a GraphQL request.
-   */
-  operationName?: string;
-};
 
 export function ExecutionContextProvider({
   getDefaultFieldNames,
@@ -103,7 +67,7 @@ export function ExecutionContextProvider({
     // Use the edited query after autoCompleteLeafs() runs or,
     // in case autoCompletion fails (the function returns undefined),
     // the current query from the editor.
-    let query = autoCompleteLeafs() || queryEditor.getValue();
+    let query = autoCompleteLeafs() ?? queryEditor.getValue();
 
     const variablesString = variableEditor?.getValue();
     let variables: Record<string, unknown> | undefined;
@@ -114,7 +78,7 @@ export function ExecutionContextProvider({
         errorMessageType: 'Variables are not a JSON object.',
       });
     } catch (error) {
-      setResponse(error instanceof Error ? error.message : `${error}`);
+      setResponse(error instanceof Error ? error.message : `${error as string}`);
       return;
     }
 
@@ -127,7 +91,7 @@ export function ExecutionContextProvider({
         errorMessageType: 'Headers are not a JSON object.',
       });
     } catch (error) {
-      setResponse(error instanceof Error ? error.message : `${error}`);
+      setResponse(error instanceof Error ? error.message : `${error as string}`);
       return;
     }
 
@@ -279,7 +243,7 @@ function tryParseJsonObject({
   try {
     parsed = json && json.trim() !== '' ? JSON.parse(json) : undefined;
   } catch (error) {
-    throw new Error(`${errorMessageParse}: ${error instanceof Error ? error.message : error}.`);
+    throw new Error(`${errorMessageParse}: ${error instanceof Error ? error.message : (error as string)}.`);
   }
   const isObject = typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed);
   if (parsed !== undefined && !isObject) {
@@ -287,17 +251,6 @@ function tryParseJsonObject({
   }
   return parsed;
 }
-
-type IncrementalResult = {
-  data?: Record<string, unknown> | null;
-  errors?: readonly GraphQLError[];
-  extensions?: Record<string, unknown>;
-  hasNext?: boolean;
-  path?: readonly (string | number)[];
-  incremental?: readonly IncrementalResult[];
-  label?: string;
-  items?: readonly Record<string, unknown>[] | null;
-};
 
 /**
  * @param executionResult The complete execution result object which will be

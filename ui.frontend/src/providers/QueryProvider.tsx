@@ -1,25 +1,28 @@
 import { createContext, Dispatch, PropsWithChildren, useCallback, useContext, useMemo, useReducer } from 'react';
-import {Query, QueryAction, QueryResponse, QueryResults, Statement} from '@/types';
-import { DYNAMIC_HEADERS, getParams } from '@/utility';
-import { buildGraphQLURL, buildQueryString, endpoints, QueryLanguage, QueryLanguageKey } from '@/components/Query';
-import { API, useStorageContext } from '@/components/IDE/core/src';
-import { useLogger } from './LoggingProvider';
+import {
+  Query,
+  QueryAction,
+  QueryRunnerResponse,
+  QueryRunnerProps,
+  FetcherResult,
+  Result,
+  QueryLanguage,
+} from '@/types';
+import { DYNAMIC_HEADERS, getParams, useRenderCount } from '@/utility';
+import { buildGraphQLURL, buildQueryString, endpoints } from '@/components/Query';
+import { useStorageContext } from '@/components/IDE/core/src';
 import { defaultFields } from '@/components/QueryWizard/Components';
+import { useLogger } from './LoggingProvider';
 import { generateQuery } from './FieldsProvider';
-import { useRenderCount } from '@/utility';
-
-export type QueryRunnerProps = {
-  query: Query;
-};
 
 const QueryContext = createContext<Query>(null!);
 const QueryDispatchContext = createContext<Dispatch<QueryAction>>(null!);
-const QueryRunnerContext = createContext<(props: QueryRunnerProps) => Promise<QueryResponse>>(null!);
+const QueryRunnerContext = createContext<(props: QueryRunnerProps) => Promise<QueryRunnerResponse>>(null!);
 const IsGraphQLContext = createContext<boolean>(false);
 
 const defaultSimpleQuery: Query = {
   statement: generateQuery(defaultFields), // build inside provider init
-  language: QueryLanguage.QueryBuilder,
+  language: 'QueryBuilder',
   url: endpoints.queryBuilderPath,
   status: '',
   isAdvanced: false,
@@ -36,10 +39,10 @@ export function QueryProvider({ children }: PropsWithChildren) {
    * This boolean will toggle features on/off for the IDE,
    * since the IDE was originally written for GraphQL.
    */
-  const isGraphQL = useMemo(() => query.language === (QueryLanguage.GraphQL as QueryLanguageKey), [query.language]);
+  const isGraphQL = useMemo(() => query.language === ('GraphQL' as QueryLanguage), [query.language]);
 
   const queryRunner = useCallback(
-    async ({ query }: QueryRunnerProps): Promise<QueryResponse> => {
+    async ({ query }: QueryRunnerProps): Promise<QueryRunnerResponse> => {
       logger.debug({ message: `QueryProvider queryRunner()` });
       const url = query.url + buildQueryString(query);
       // prechecks
@@ -56,20 +59,35 @@ export function QueryProvider({ children }: PropsWithChildren) {
       try {
         const response = await fetch(url, params);
         if (response.ok) {
-          const json: QueryResults = await response.json();
+          const json: FetcherResult = await response.json();
+          let results: Result[] = [];
+          if ('hits' in json) {
+            results = json.hits ?? [];
+          } else if ('results' in json) {
+            results = json.results ?? [];
+          } else if ('data' in json) {
+            const jsonString = JSON.stringify(json.data);
+            if (jsonString) {
+              // build a Result[] with 1 Result
+              results = [{ json: jsonString }];
+            }
+          }
           return {
-            results: json.hits ?? json.results ?? JSON.stringify(json.data),
+            results,
             status: response.status,
             query,
           };
         }
       } catch (e) {
         console.error(e);
-        return {
-          results: [],
-          status: `ERROR occurred while fetching results: ${e}`,
-          query,
-        };
+        if (e instanceof Error) {
+          const message = e.toString();
+          return {
+            results: [],
+            status: `ERROR occurred while fetching results: ${message}`,
+            query,
+          };
+        }
       }
       // default
       return {

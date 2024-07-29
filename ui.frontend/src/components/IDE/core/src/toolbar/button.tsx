@@ -1,12 +1,8 @@
 import { forwardRef, MouseEventHandler, useCallback, useState, JSX } from 'react';
 import { clsx } from 'clsx';
+import { ToolbarButtonProps } from '@/types';
 import { Tooltip, UnStyledButton } from '../ui';
-
 import './button.scss';
-
-type ToolbarButtonProps = {
-  label: string;
-};
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps & JSX.IntrinsicElements['button']>(
   ({ label, onClick, ...props }, ref) => {

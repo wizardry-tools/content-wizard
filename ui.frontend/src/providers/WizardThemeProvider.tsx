@@ -15,7 +15,7 @@ import { createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useRenderCount } from '@/utility';
-import { Theme } from '@/types';
+import { NullablePaletteMode, Theme } from '@/types';
 import { useStorageContext } from '@/components/IDE/core/src';
 import { WizardStorageAPI } from '@/components/IDE/core/src/storage-api';
 import { useLogger } from './LoggingProvider';
@@ -99,7 +99,6 @@ function buildMuiTheme(theme: Theme): MuiTheme {
 
 const ThemeDispatchContext = createContext<Dispatch<NullablePaletteMode>>(null!);
 const IDEThemeContext = createContext<Theme>(null);
-type NullablePaletteMode = PaletteMode | null;
 
 export function WizardThemeProvider(props: PropsWithChildren) {
   const logger = useLogger();

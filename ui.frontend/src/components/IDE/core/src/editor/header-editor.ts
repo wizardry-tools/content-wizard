@@ -1,30 +1,22 @@
 import { useEffect, useRef } from 'react';
 
+import { Caller, UseHeaderEditorArgs } from '@/types';
 import { useExecutionContext } from '../execution';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
 import { useChangeHandler, useKeyMap, useMergeQuery, usePrettifyEditors, useSynchronizeOption } from './hooks';
-import { WriteableEditorProps } from './types';
 
-export type UseHeaderEditorArgs = WriteableEditorProps & {
-  /**
-   * Invoked when the contents of the headers editor change.
-   * @param value The new contents of the editor.
-   */
-  onEdit?(value: string): void;
-};
-
-export function useHeaderEditor(
+export const useHeaderEditor = (
   { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, onEdit, readOnly = false }: UseHeaderEditorArgs = {},
-  caller?: Function,
-) {
+  caller?: Caller,
+) => {
   const { initialHeaders, headerEditor, setHeaderEditor, shouldPersistHeaders } = useEditorContext({
     nonNull: true,
-    caller: caller || useHeaderEditor,
+    caller: caller ?? useHeaderEditor,
   });
   const executionContext = useExecutionContext();
-  const merge = useMergeQuery({ caller: caller || useHeaderEditor });
-  const prettify = usePrettifyEditors({ caller: caller || useHeaderEditor });
+  const merge = useMergeQuery({ caller: caller ?? useHeaderEditor });
+  const prettify = usePrettifyEditors({ caller: caller ?? useHeaderEditor });
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -100,6 +92,6 @@ export function useHeaderEditor(
   useKeyMap(headerEditor, ['Shift-Ctrl-M'], merge);
 
   return ref;
-}
+};
 
 export const STORAGE_KEY = 'headers';

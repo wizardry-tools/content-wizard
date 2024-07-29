@@ -7,11 +7,9 @@ import {
   SchemaContextProvider,
 } from '@/components/IDE/core/src';
 import { APIContextProvider } from '@/components/IDE/core/src';
-import { PropsWithChildren } from 'react';
 import { useLogger } from './LoggingProvider';
 import { useRenderCount } from '@/utility';
-
-export type IDEProviderProps = PropsWithChildren;
+import { IDEProviderProps } from '@/types';
 
 export function IDEProvider({ children }: IDEProviderProps) {
   const logger = useLogger();

@@ -1,3 +1,5 @@
+import { GetParamsProps } from '@/types';
+
 /**
  * The AUTH_TOKEN exists for dev builds
  */
@@ -17,10 +19,6 @@ export const DYNAMIC_HEADERS = ((): RequestInit => {
     : {};
 })();
 
-export type GetParamsProps = {
-  language: string;
-  statement: string;
-};
 /**
  * Takes a language and statement as {string}s, then constructs a {Record<string,string>} to represent
  * a param object for HTTP fetch

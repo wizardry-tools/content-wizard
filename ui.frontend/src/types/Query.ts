@@ -1,12 +1,16 @@
-import { API } from './API';
-import { Result } from './Result';
-import { QueryLanguageKey } from '@/components';
+import { Dispatch } from 'react';
+import { API } from './IDE';
+import { OnResultsCallback, Result, ResultProp, ResultsDispatchProps } from './Result';
+
+export type QueryLanguage = 'SQL' | 'JCR_SQL2' | 'XPATH' | 'QueryBuilder' | 'GraphQL';
+export type QueryLanguageLabel = 'SQL' | 'JCR SQL2' | 'XPATH' | 'QueryBuilder' | 'GraphQL';
+export type QueryLanguageMap = Record<QueryLanguage, QueryLanguageLabel>;
 
 /** Query Support */
 export type Statement = string;
 
 export type Query = {
-  language: QueryLanguageKey;
+  language: QueryLanguage;
   statement: Statement;
   url: string;
   api?: API;
@@ -17,11 +21,31 @@ export type Query = {
 export type QueryAction = Partial<Query> & {
   type: string;
 };
-
-export type QueryResponse = {
-  results: Result[];
+export type QueryResults = Result[] | Record<string, ResultProp>;
+export type QueryRunnerProps = {
+  query: Query;
+};
+export type QueryRunnerResponse = {
+  results: QueryResults;
   status: string | number;
   query: Query;
 };
 
-export type QueryMap = Record<QueryLanguageKey, Query>;
+export type QueryMap = Record<QueryLanguage, Query>;
+
+export type QueryHandlerProps = {
+  onResults: OnResultsCallback;
+};
+
+export type DoQueryProps = {
+  query: Query;
+  queryDispatcher: Dispatch<QueryAction>;
+  queryRunner: ({ query }: QueryRunnerProps) => Promise<QueryRunnerResponse>;
+  resultsDispatcher: Dispatch<ResultsDispatchProps>;
+  onResults: OnResultsCallback;
+};
+
+export type GetParamsProps = {
+  language: string;
+  statement: string;
+};

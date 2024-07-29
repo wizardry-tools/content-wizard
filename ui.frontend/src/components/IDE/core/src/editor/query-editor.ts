@@ -1,9 +1,18 @@
 import { getSelectedOperationName } from '@graphiql/toolkit';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
-import type { DocumentNode, FragmentDefinitionNode, GraphQLSchema, ValidationRule } from 'graphql';
+import type { FragmentDefinitionNode, GraphQLSchema, ValidationRule } from 'graphql';
 import { getOperationFacts, GraphQLDocumentMode } from 'graphql-language-service';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 
+import {
+  Caller,
+  CodeMirrorEditor,
+  CodeMirrorEditorWithOperationFacts,
+  CodeMirrorType,
+  UseQueryEditorArgs,
+} from '@/types';
+import { useRenderCount } from '@/utility';
+import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from '@/providers';
 import { useExecutionContext } from '../execution';
 import { useExplorerContext } from '../explorer';
 import { markdown } from '../markdown';
@@ -12,37 +21,16 @@ import { useSchemaContext } from '../schema';
 import { useStorageContext } from '../storage';
 import debounce from '../utility/debounce';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
-import { CodeMirrorEditorWithOperationFacts, useEditorContext } from './context';
+import { useEditorContext } from './context';
 import {
   useCompletion,
   useCopyQuery,
-  UseCopyQueryArgs,
   useKeyMap,
   useMergeQuery,
   usePrettifyEditors,
   useSynchronizeOption,
 } from './hooks';
-import { CodeMirrorEditor, CodeMirrorType, WriteableEditorProps } from './types';
 import { normalizeWhitespace } from './whitespace';
-import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from '@/providers';
-import { QueryLanguage } from '@/components/Query';
-import { useRenderCount } from '@/utility';
-
-export type UseQueryEditorArgs = WriteableEditorProps &
-  Pick<UseCopyQueryArgs, 'onCopyQuery'> & {
-    /**
-     * Invoked when a reference to the GraphQL schema (type or field) is clicked
-     * as part of the editor or one of its tooltips.
-     * @param reference The reference that has been clicked.
-     */
-    onClickReference?(reference: SchemaReference): void;
-    /**
-     * Invoked when the contents of the query editor change.
-     * @param value The new contents of the editor.
-     * @param documentAST The editor contents parsed into a GraphQL document.
-     */
-    onEdit?(value: string, documentAST?: DocumentNode): void;
-  };
 
 export function useQueryEditor(
   {
@@ -53,14 +41,14 @@ export function useQueryEditor(
     onEdit,
     readOnly = false,
   }: UseQueryEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useQueryEditor[${renderCount}] render()` });
   const { schema } = useSchemaContext({
     nonNull: true,
-    caller: caller || useQueryEditor,
+    caller: caller ?? useQueryEditor,
   });
   const queryObj = useQuery();
   const queryObjStatement = useRef(queryObj.statement);
@@ -82,15 +70,15 @@ export function useQueryEditor(
   const storage = useStorageContext();
   const explorer = useExplorerContext();
   const plugin = usePluginContext();
-  const copy = useCopyQuery({ caller: caller || useQueryEditor, onCopyQuery });
-  const merge = useMergeQuery({ caller: caller || useQueryEditor });
-  const prettify = usePrettifyEditors({ caller: caller || useQueryEditor });
+  const copy = useCopyQuery({ caller: caller ?? useQueryEditor, onCopyQuery });
+  const merge = useMergeQuery({ caller: caller ?? useQueryEditor });
+  const prettify = usePrettifyEditors({ caller: caller ?? useQueryEditor });
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorRef = useRef<CodeMirrorType>();
   const queryDispatcher = useQueryDispatcher();
   const isGraphQL = useIsGraphQL();
 
-  const onClickReferenceRef = useRef<NonNullable<UseQueryEditorArgs['onClickReference']>>(() => {});
+  const onClickReferenceRef = useRef<NonNullable<UseQueryEditorArgs['onClickReference']>>(() => ({}));
   useEffect(() => {
     onClickReferenceRef.current = (reference) => {
       if (!explorer || !plugin) {
@@ -129,7 +117,7 @@ export function useQueryEditor(
 
     let mode = '';
     switch (queryLanguage) {
-      case QueryLanguage.GraphQL: {
+      case 'GraphQL': {
         addons.push(
           import('codemirror-graphql/esm/hint'),
           import('codemirror-graphql/esm/lint'),
@@ -140,17 +128,17 @@ export function useQueryEditor(
         mode = 'graphql';
         break;
       }
-      case QueryLanguage.SQL: {
+      case 'SQL': {
         addons.push(import('../../modes/sql/sql'));
         mode = 'text/x-sql';
         break;
       }
-      case QueryLanguage.JCR_SQL2: {
+      case 'JCR_SQL2': {
         addons.push(import('../../modes/sql/sql'));
         mode = 'text/x-jcrsql2';
         break;
       }
-      case QueryLanguage.XPATH: {
+      case 'XPATH': {
         addons.push(import('../../modes/xpath/xpath'));
         mode = 'xpath';
         break;
@@ -174,9 +162,8 @@ export function useQueryEditor(
         return;
       }
 
-      // @ts-ignore
       const newEditor = CodeMirror(container, {
-        value: initialQuery?.statement || queryObjStatement.current || '',
+        value: initialQuery?.statement ?? queryObjStatement.current ?? '',
         lineNumbers: true,
         tabSize: 2,
         foldGutter: true,
@@ -189,14 +176,12 @@ export function useQueryEditor(
         ...(isGraphQL
           ? {
               lint: {
-                // // @ts-expect-error
                 schema: undefined,
                 validationRules: null,
                 // linting accepts string or FragmentDefinitionNode[]
                 externalFragments: undefined,
               },
               hintOptions: {
-                // // @ts-expect-error
                 schema: undefined,
                 closeOnUnfocus: false,
                 completeSingle: false,
@@ -220,7 +205,7 @@ export function useQueryEditor(
               hintOptions: {},
               info: {},
             }),
-        // @ts-expect-error
+        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
         jump: {
           schema: undefined,
           onClick(reference: SchemaReference) {
@@ -365,7 +350,6 @@ export function useQueryEditor(
       queryDispatcher({
         statement: query.statement,
         type: 'statementChange',
-        caller: useQueryEditor,
       });
     }) as (editorInstance: CodeMirrorEditor) => void;
 
@@ -392,7 +376,7 @@ export function useQueryEditor(
   useSynchronizeValidationRules(queryEditor, validationRules ?? null, codeMirrorRef);
   useSynchronizeExternalFragments(queryEditor, externalFragments, codeMirrorRef);
 
-  useCompletion(queryEditor, onClickReference || null, useQueryEditor);
+  useCompletion(queryEditor, onClickReference ?? null, useQueryEditor);
 
   const run = executionContext?.run;
   const runAtCursor = useCallback(() => {

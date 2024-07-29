@@ -1,16 +1,9 @@
-import { Slider, InputLabel, Tooltip } from '@mui/material';
-import { FormGrid } from './FormGrid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { NumberValue } from './fields';
-import { SimpleInputProps } from './SimpleInput';
-import { useFieldDispatcher, useLogger } from '@/providers';
+import { Slider, InputLabel, Tooltip } from '@mui/material';
+import { NumberValue, SimpleSliderProps } from '@/types';
 import { useDebounce, useRenderCount } from '@/utility';
-
-type SimpleSliderProps = SimpleInputProps & {
-  min: number;
-  max: number;
-  step: number;
-};
+import { useFieldDispatcher, useLogger } from '@/providers';
+import { FormGrid } from './FormGrid';
 
 export const SimpleSlider = ({ min = -1, max = 1000, step = 10, defaultValue, field }: SimpleSliderProps) => {
   const logger = useLogger();
@@ -33,7 +26,6 @@ export const SimpleSlider = ({ min = -1, max = 1000, step = 10, defaultValue, fi
       name: name,
       value: debouncedValue,
       type: 'UPDATE_VALUE',
-      caller: SimpleSlider,
     });
   }, [fieldDispatcher, name, debouncedValue]);
 

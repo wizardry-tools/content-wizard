@@ -1,16 +1,10 @@
-import { ChangeEvent, memo, MouseEvent, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { TableFooter, TablePagination, TableRow } from '@mui/material';
-import { TablePaginationActions } from './TablePaginationActions';
+import { ResultTableFooterProps } from '@/types';
 import { useLogger, useResults } from '@/providers';
 import { usePaperTheme } from '@/utility';
+import { TablePaginationActions } from './TablePaginationActions';
 
-export type ResultTableFooterProps = {
-  rowsPerPage: number;
-  page: number;
-  onPageChange: (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
-  onRowsPerPageChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  elevation?: number;
-};
 export const ResultTableFooter = memo((props: ResultTableFooterProps) => {
   const logger = useLogger();
   logger.debug({ message: 'ResultsTableFooter render()' });

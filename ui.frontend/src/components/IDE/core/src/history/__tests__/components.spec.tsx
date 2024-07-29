@@ -52,10 +52,10 @@ jest.mock('@/providers', () => {
     },
     useLogger() {
       return {
-        debug: () => {},
-        log: () => {},
-        error: () => {},
-        warn: () => {},
+        debug: () => ({}),
+        log: () => ({}),
+        error: () => ({}),
+        warn: () => ({}),
       };
     },
   };

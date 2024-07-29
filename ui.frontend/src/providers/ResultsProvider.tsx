@@ -9,8 +9,7 @@ import {
   useEffect,
 } from 'react';
 import exportFromJSON from 'export-from-json';
-import { ExportType } from 'export-from-json/src/types';
-import { Result, ResultProp } from '@/types';
+import { AllowedExportType, Order, Result, ResultProp, ResultsContextProps, ResultsDispatchProps } from '@/types';
 import { isPlainObject, useRenderCount } from '@/utility';
 import { useAlertDispatcher } from './WizardAlertProvider';
 import { useLogger } from './LoggingProvider';
@@ -21,7 +20,7 @@ import { PackagingProvider } from './PackagingProvider';
  * but excludes 'txt' and 'css' as those are just JSON exports
  * with different file extensions.
  */
-export type AllowedExportType = Exclude<ExportType, 'txt' | 'css'>;
+
 export const allowedExportTypes: { [T in AllowedExportType]: T } = {
   html: 'html',
   json: 'json',
@@ -29,23 +28,7 @@ export const allowedExportTypes: { [T in AllowedExportType]: T } = {
   xls: 'xls',
   xml: 'xml',
 };
-export type Order = 'asc' | 'desc';
 
-export type ResultsDispatchProps = {
-  results: Result[];
-};
-export type ResultsContextProps = {
-  results: Result[];
-  keys: string[];
-  filter: string;
-  setFilter: (filter: string) => void;
-  tableResults: Result[];
-  order: Order;
-  setOrder: (order: Order) => void;
-  orderBy: keyof Result;
-  setOrderBy: (orderBy: string) => void;
-  exportResults: (fileName?: string, exportType?: AllowedExportType) => void;
-};
 const emptyContext: ResultsContextProps = {
   results: [],
   keys: [],

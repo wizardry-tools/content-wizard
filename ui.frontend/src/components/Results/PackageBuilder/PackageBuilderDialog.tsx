@@ -1,12 +1,9 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, ThemeProvider, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
+import { PackageBuilderDialogProps } from '@/types';
 import { PackageBuilder } from './PackageBuilder';
 
-export type PackageBuilderDialogProps = {
-  closeHandler: () => void;
-  open: boolean;
-};
 export const PackageBuilderDialog = (props: PackageBuilderDialogProps) => {
   const { closeHandler, open } = props;
   const theme = useTheme();

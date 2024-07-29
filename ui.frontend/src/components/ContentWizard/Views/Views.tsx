@@ -1,13 +1,9 @@
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import { ViewsProps } from '@/types';
 import { useLogger } from '@/providers';
 import { IDE, QueryWizard, ResultHandler, SwipeableViews } from '@/components';
 import { TabPanel } from '../TabPanel';
-
-export type ViewsProps = {
-  tabValue: number;
-  onTabPanelSelect: (index: number) => void;
-};
 
 export function Views({ tabValue, onTabPanelSelect }: ViewsProps) {
   const logger = useLogger();

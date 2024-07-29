@@ -1,14 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, ThemeProvider, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ResultsExporter } from './ResultsExporter';
 import { useTheme } from '@mui/material/styles';
-
-import './ResultsExporter.scss';
-
-export type ResultsExporterDialogProps = {
-  closeHandler: () => void;
-  open: boolean;
-};
+import { ResultsExporterDialogProps } from '@/types';
+import { ResultsExporter } from './ResultsExporter';
 
 /**
  * This Component represents the Dialog that appears when Exporting Results.

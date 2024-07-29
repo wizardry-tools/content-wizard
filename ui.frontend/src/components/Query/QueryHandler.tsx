@@ -1,11 +1,7 @@
 import { QueryButton } from '@/components/QueryWizard/Components';
-import { Query, QueryLanguage } from './QueryType';
+import { QueryHandlerProps, DoQueryProps, QueryRunnerResponse, Result } from '@/types';
 import { useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatcher } from '@/providers';
 import { useCallback } from 'react';
-
-type QueryHandlerProps = {
-  onResults: (index: number) => void;
-};
 
 export function QueryHandler({ onResults }: QueryHandlerProps) {
   const query = useQuery();
@@ -14,7 +10,7 @@ export function QueryHandler({ onResults }: QueryHandlerProps) {
   const queryRunner = useQueryRunner();
 
   const isDisabled = () => {
-    return !query?.statement || !query.language || (query.language === QueryLanguage.GraphQL && !query.api);
+    return !query?.statement || !query.language || (query.language === 'GraphQL' && !query.api);
   };
 
   const handleClick = useCallback(() => {
@@ -28,14 +24,6 @@ export function QueryHandler({ onResults }: QueryHandlerProps) {
   return <QueryButton disabled={isDisabled()} isRunning={isRunning()} onClick={handleClick} />;
 }
 
-type DoQueryProps = {
-  query: Query;
-  queryDispatcher: Function;
-  queryRunner: Function;
-  resultsDispatcher: Function;
-  onResults: Function;
-};
-
 /**
  * This callback is responsible for making the calls between
  * the queryDispatcher
@@ -45,28 +33,30 @@ const doQuery = (props: DoQueryProps) => {
   queryDispatcher({
     type: 'statusChange',
     status: 'running',
-    caller: QueryHandler,
   });
-  queryRunner({ query, caller: QueryHandler }).then((queryResponse: { results: string | any[] }) => {
-    if (queryResponse.results) {
-      resultsDispatcher({
-        results: queryResponse.results,
-        caller: QueryHandler,
-      });
-      if (queryResponse.results.length > 0) {
-        // switch to results tab
-        onResults(2);
+  queryRunner({ query })
+    .then((queryResponse: QueryRunnerResponse) => {
+      if (queryResponse.results) {
+        const resultArr = queryResponse.results as Result[];
+        if (resultArr)
+          resultsDispatcher({
+            results: resultArr,
+          });
+        if (queryResponse.results.length > 0) {
+          // switch to results tab
+          onResults(2);
+        }
+      } else {
+        resultsDispatcher({
+          results: [] as Result[],
+        });
       }
-    } else {
-      resultsDispatcher({
-        results: [],
-        caller: QueryHandler,
+      queryDispatcher({
+        type: 'statusChange',
+        status: 'complete',
       });
-    }
-    queryDispatcher({
-      type: 'statusChange',
-      status: 'complete',
-      caller: QueryHandler,
+    })
+    .catch((error) => {
+      console.error('Error occurred while running QueryBuilder Statement: ', { error, query });
     });
-  });
 };

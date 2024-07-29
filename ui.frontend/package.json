@@ -3,12 +3,13 @@
   "version": "1.2.1",
   "private": true,
   "scripts": {
-    "start": "craco start",
-    "build": "craco build && clientlib clientlib.config.cjs --verbose",
-    "test": "craco test",
-    "eject": "craco eject",
+    "start": "react-scripts start",
+    "build": "react-scripts build && clientlib clientlib.config.cjs --verbose",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "sync": "aemsync -d -w ../ui.apps/src/main/content -t http://admin:admin@192.168.4.49:4502",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "format": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts|tsx|json)\""
   },
   "dependencies": {
@@ -25,7 +26,6 @@
     "@radix-ui/react-visually-hidden": "^1.0.3",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@types/react-swipeable-views": "^0.13.5",
     "codemirror": "^5.65.16",
     "codemirror-graphql": "^2.0.12",
     "copy-to-clipboard": "^3.3.3",
@@ -41,7 +41,6 @@
     "react": "^18.3.1",
     "react-app-polyfill": "^3.0.0",
     "react-dom": "^18.3.1",
-    "react-swipeable-views-core": "^0.14.0",
     "set-value": "^4.1.0",
     "warning": "^4.0.3"
   },
@@ -66,7 +65,6 @@
     "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.12",
     "@types/markdown-it": "^14.1.1",
-    "@types/react-swipeable-views-core": "^0.13.3",
     "@types/react-test-renderer": "^18.3.0",
     "@types/set-value": "^4.0.3",
     "@types/sinon": "^17.0.3",

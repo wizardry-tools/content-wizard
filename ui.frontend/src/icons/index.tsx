@@ -2,7 +2,7 @@
  * All icons must be added to this module.
  * Exposed via '@/icons'
  */
-import { ComponentProps, FC } from 'react';
+import { ComponentProps, FC, SVGProps } from 'react';
 import { ReactComponent as _ArgumentIcon } from './argument.svg';
 import { ReactComponent as _ChevronDownIcon } from './chevron-down.svg';
 import { ReactComponent as _ChevronLeftIcon } from './chevron-left.svg';
@@ -75,21 +75,31 @@ export const TableIcon = generateIcon(_Table);
 export const TrashIcon = generateIcon(_TrashIcon, 'trash icon');
 export const TypeIcon = generateIcon(_TypeIcon);
 
-function generateIcon(RawComponent: any, titleProp?: string): FC<ComponentProps<'svg'>> {
-  const title =
-    titleProp ||
-    (typeof RawComponent.name !== 'undefined' &&
+function generateIcon(RawComponent: FC<SVGProps<SVGSVGElement>>, titleProp?: string): FC<ComponentProps<'svg'>> {
+  const title = titleProp ?? extractName(RawComponent) ?? 'untitled svg';
+  function IconComponent(props: ComponentProps<'svg'>) {
+    return <RawComponent {...props} />;
+  }
+  IconComponent.displayName = title;
+  return IconComponent;
+}
+
+function extractName(RawComponent: unknown) {
+  if (
+    RawComponent &&
+    typeof RawComponent === 'object' &&
+    'name' in RawComponent &&
+    typeof RawComponent.name === 'string'
+  ) {
+    return (
       RawComponent.name
-        // Icon component name starts with `Svg${CamelCaseFilename without .svg}`
         .replace('Svg', '')
         // Insert a space before all caps
         .replaceAll(/([A-Z])/g, ' $1')
         .trimStart()
-        .toLowerCase() + ' icon') ||
-    undefined;
-  function IconComponent(props: ComponentProps<'svg'>) {
-    return <RawComponent title={title} {...props} />;
+        .toLowerCase() + ' icon'
+    );
+  } else {
+    return undefined;
   }
-  IconComponent.displayName = RawComponent.name;
-  return IconComponent;
 }

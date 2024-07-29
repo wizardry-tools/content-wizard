@@ -1,13 +1,9 @@
-import { createContext, Dispatch, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
-import { Alert, AlertColor, AlertProps } from '@mui/material';
+import { createContext, Dispatch, useCallback, useContext, useEffect, useState } from 'react';
+import { Alert, AlertColor } from '@mui/material';
 import { useLogger } from './LoggingProvider';
 import { useRenderCount } from '@/utility';
+import { WizardAlertProps, WizardAlertProviderProps } from '@/types';
 
-export type WizardAlertProps = AlertProps & {
-  message?: string;
-  severity?: AlertColor;
-  alertTimeout?: number;
-};
 const emptyContext: WizardAlertProps = {
   message: '',
   severity: 'info',
@@ -15,8 +11,6 @@ const emptyContext: WizardAlertProps = {
 };
 const WizardAlertContext = createContext<WizardAlertProps>(emptyContext);
 const WizardAlertDispatcher = createContext<Dispatch<WizardAlertProps>>(() => ({}));
-
-export type WizardAlertProviderProps = WizardAlertProps & PropsWithChildren;
 
 /**
  * Provides Alert Context and Alert Dispatcher to the React Node and it's Children

@@ -1,5 +1,5 @@
-import { useQueryEditor, UseQueryEditorArgs } from '../query-editor';
-
+import { UseQueryEditorArgs } from '@/types';
+import { useQueryEditor } from '../query-editor';
 import '../style/codemirror.scss';
 import '../style/fold.scss';
 import '../style/lint.scss';

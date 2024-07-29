@@ -1,15 +1,14 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useMemo } from 'react';
-import { Fetcher } from '@graphiql/toolkit/src/create-fetcher/types';
-import { buildQueryString, Query, QueryLanguage } from '@/components/Query';
-import { CustomCreateFetcherOptions, useRenderCount, useCreateFetcher } from '@/utility';
-import { Result } from '@/types';
+import { createContext, useCallback, useContext, useMemo } from 'react';
+import { Fetcher, SyncExecutionResult } from '@graphiql/toolkit/src/create-fetcher/types';
+import { buildQueryString, QueryLanguage } from '@/components/Query';
+import { useRenderCount, useCreateFetcher } from '@/utility';
+import { CustomCreateFetcherOptions, FetcherProviderProps, FetcherResult, OnFetcherResults, Query } from '@/types';
 import { useResultsDispatcher } from './ResultsProvider';
 import { useQuery } from './QueryProvider';
 import { useLogger } from './LoggingProvider';
 
 const FetcherContext = createContext<Fetcher>(null!);
 
-export type FetcherProviderProps = PropsWithChildren;
 export function FetcherProvider({ children }: FetcherProviderProps) {
   const logger = useLogger();
   const renderCount = useRenderCount();
@@ -19,20 +18,32 @@ export function FetcherProvider({ children }: FetcherProviderProps) {
   const query = useQuery();
 
   const onResults = useCallback(
-    (data: any) => {
+    (data: SyncExecutionResult | FetcherResult) => {
       logger.debug({ message: `FetcherProvider onResults()` });
-      const results: Result[] = data.hits || data.results || JSON.stringify(data);
-      resultsDispatch({
-        results,
-        caller: FetcherProvider,
-      });
+      let results = null;
+      if ('hits' in data) {
+        results = data.hits ?? [];
+      } else if ('results' in data) {
+        results = data.hits ?? [];
+      } else if (typeof data === 'object') {
+        const json = JSON.stringify(data);
+        if (json) {
+          // build a Result[] with 1 Result
+          results = [{ json }];
+        }
+      }
+      if (results) {
+        resultsDispatch({
+          results,
+        });
+      }
     },
     [logger, resultsDispatch],
   );
 
   // TODO: This seems inefficient, rebuilding the fetcher anytime the query changes...
   const createQueryFetcher = useCallback(
-    (query: Query, onResults: (data: any) => void): Fetcher => {
+    (query: Query, onResults: OnFetcherResults): Fetcher => {
       // only append queryString if it's not GraphQL
       logger.debug({ message: `FetcherProvider createQueryFetcher()` });
       const options: CustomCreateFetcherOptions = {

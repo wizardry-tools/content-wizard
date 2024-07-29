@@ -1,24 +1,13 @@
-import { createContext, Dispatch, PropsWithChildren, useContext, useEffect, useReducer, useRef } from 'react';
-import {
-  DateRange,
-  defaultFields,
-  FieldConfigAction,
-  FieldConfigNameKey,
-  FieldsConfig,
-  InputValue,
-  PredicateConfig,
-  predicates,
-  predicateTypes,
-} from '@/components/QueryWizard/Components';
-import { useQueryDispatcher } from './QueryProvider';
-import { endpoints, Query, QueryLanguage } from '@/components/Query';
-import { useLogger } from './LoggingProvider';
+import { createContext, Dispatch, useContext, useEffect, useReducer, useRef } from 'react';
+import { DateRange, FieldConfigAction, FieldsConfig, FieldsProviderProps, InputValue, PredicateConfig } from '@/types';
 import { useDebounce } from '@/utility';
+import { defaultFields, predicates } from '@/components/QueryWizard/Components';
+import { endpoints } from '@/components/Query';
+import { useQueryDispatcher } from './QueryProvider';
+import { useLogger } from './LoggingProvider';
 
 const FieldsConfigContext = createContext<FieldsConfig>(null!);
 const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);
-
-export type FieldsProviderProps = PropsWithChildren & Partial<Query>;
 
 /**
  * This Provider is responsible for handling Field Dispatching and re-building the QueryWizard's
@@ -51,12 +40,11 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
     // dispatch the query with static QueryBuilder values
     queryDispatcher({
       statement,
-      language: QueryLanguage.QueryBuilder,
+      language: 'QueryBuilder',
       url: endpoints.queryBuilderPath,
       status: '',
       isAdvanced: false,
       type: 'replaceQuery',
-      caller: FieldsProvider,
     });
   }, [debouncedFields, logger, queryDispatcher]);
 
@@ -84,7 +72,7 @@ export function useFieldDispatcher() {
 function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigAction): FieldsConfig {
   switch (action.type) {
     case 'UPDATE_VALUE': {
-      const key = action.name as FieldConfigNameKey;
+      const key = action.name;
       const oldField = fields[key];
       const updatedField = {
         ...oldField,
@@ -96,7 +84,7 @@ function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigAction): Fi
       };
     }
     default: {
-      throw Error(`Unknown Query Filter Action ${action.type}`);
+      throw Error(`Unknown Query Filter Action ${action.type as string}`);
     }
   }
 }
@@ -123,7 +111,7 @@ function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, 
     }
   }
 
-  if (dateRange.upperBound || dateRange.lowerBound) {
+  if (dateRange.upperBound ?? dateRange.lowerBound) {
     prefix = `${prefix}daterange.`;
   }
 
@@ -141,11 +129,11 @@ function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, 
     return '';
   }
   // different types of value statements.
-  if ((property || predicate.useConfig) && value && !(dateRange.upperBound || dateRange.lowerBound)) {
+  if ((property ?? predicate.useConfig) && value && !(dateRange.upperBound ?? dateRange.lowerBound)) {
     // don't render value if dateRange is populated.
-    predicateString += `${prefix}property.value=${value}\n`;
+    predicateString += `${prefix}property.value=${value as string}\n`;
   }
-  if ((property || predicate.useConfig) && value && operation) {
+  if ((property ?? predicate.useConfig) && value && operation) {
     //need value for checkbox true/false operations
     predicateString += `${prefix}property.operation=${operation}\n`;
   }
@@ -179,9 +167,9 @@ export const generateQuery = (fields: FieldsConfig): string => {
           return predicate.raw;
         }
         // property strings, configInject functions, and operation strings require predicate statements to have an indexed prefix
-        if (predicate.property || predicate.configInject || predicate.operation) {
+        if (predicate.property ?? predicate.configInject ?? predicate.operation) {
           const predicateStatement = buildPredicateStatement(value, predicate, fields, propCounter);
-          if (predicateStatement && predicate.type === predicateTypes.property) {
+          if (predicateStatement && predicate.type === 'property') {
             // only increment if a statement was returned.
             propCounter++;
           }
@@ -189,7 +177,6 @@ export const generateQuery = (fields: FieldsConfig): string => {
         } else {
           return buildPredicateStatement(value, predicate, fields);
         }
-      } else {
       }
       return '';
     })

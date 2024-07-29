@@ -1,18 +1,17 @@
-import { createReverseMapping } from './mapping';
+import { ContentType, ContentTypeProperty } from '@/types';
 
-export type ContentType = 'page' | 'xf' | 'asset' | 'cf' | 'child';
-export const ContentTypes: Record<ContentType, string> = {
-  page: 'Page',
-  xf: 'XF (Experience Fragment)',
-  asset: 'Asset',
-  cf: 'CF (Content Fragment)',
-  child: 'Child (Component)',
-};
+// export const ContentTypes: Record<ContentType, string> = {
+//   page: 'Page',
+//   xf: 'XF (Experience Fragment)',
+//   asset: 'Asset',
+//   cf: 'CF (Content Fragment)',
+//   child: 'Child (Component)',
+// };
 
-export const ContentTypeLookup = createReverseMapping(ContentTypes);
+//export const ContentTypeLookup = createReverseMapping(ContentTypes);
 
 // pull the correct jcr:contentType from this map when you want to use it based on the user's selected Content Type
-export const ContentTypeMap: Record<ContentType, string> = {
+export const contentTypeMap: Record<ContentType, ContentTypeProperty> = {
   page: 'cq:Page',
   xf: 'cq:Page',
   asset: 'dam:Asset',

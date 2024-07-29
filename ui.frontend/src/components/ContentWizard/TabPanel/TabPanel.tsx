@@ -1,14 +1,6 @@
 import Box from '@mui/material/Box';
-import { Direction } from '@mui/system';
 import { styled } from '@mui/material/styles';
-
-type TabPanelProps = {
-  children: any;
-  index: number;
-  value: number;
-  dir: Direction;
-  padding?: number;
-};
+import { TabPanelProps } from '@/types';
 
 const StyledBox = styled(Box)({});
 

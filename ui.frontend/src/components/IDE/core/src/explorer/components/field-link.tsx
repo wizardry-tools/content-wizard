@@ -1,14 +1,7 @@
-import { ExplorerFieldDef, useExplorerContext } from '../context';
 import { Link } from '@mui/material';
-
+import { FieldLinkProps } from '@/types';
+import { useExplorerContext } from '../context';
 import './field-link.scss';
-
-type FieldLinkProps = {
-  /**
-   * The field or argument that should be linked to.
-   */
-  field: ExplorerFieldDef;
-};
 
 export function FieldLink(props: FieldLinkProps) {
   const { push } = useExplorerContext({ nonNull: true });

@@ -1,17 +1,12 @@
-import { fieldCategories, FieldConfig, FieldsConfig } from './fields';
-import { ElementType, SyntheticEvent, useMemo } from 'react';
+import { ElementType, useMemo } from 'react';
 import { Accordion as AccordionTab, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FormGrid } from './FormGrid';
+import { TabProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
+import { fieldCategories } from '@/components/QueryWizard/Components/fields';
+import { FormGrid } from './FormGrid';
 
-export type TabProps = {
-  fields: FieldConfig[];
-  fullConfig: FieldsConfig;
-  expanded: string | false;
-  onChange: (panel: string) => (_event: SyntheticEvent, isExpanded: boolean) => void;
-};
 export const Tab = (props: TabProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();

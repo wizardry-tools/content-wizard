@@ -1,48 +1,21 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror, { ModeFactory } from 'codemirror';
-
-export type SqlContext = {
-  prev: SqlContext | null;
-  indent: number;
-  col: number;
-  type: string;
-};
-
-export type SqlState = {
-  tokenize: (arg0: CodeMirror.StringStream, arg1: any) => any;
-  context: SqlContext | null;
-  indent?: number;
-};
-type ModeOptionMap = Record<string, boolean>;
-type HookMap = Record<string, (stream: CodeMirror.StringStream) => string>;
-export type ModeOptions = {
-  client?: any;
-  atoms?: ModeOptionMap;
-  builtin?: ModeOptionMap;
-  keywords?: ModeOptionMap;
-  operatorChars?: RegExp;
-  support?: ModeOptionMap;
-  hooks?: HookMap;
-  dateSQL?: ModeOptionMap;
-  backslashStringEscapes?: boolean;
-  brackets?: RegExp;
-  punctuation?: RegExp;
-};
+import { ModeOptions, SqlState } from '@/types';
 
 (() => {
   CodeMirror.defineMode('sql', ((config, parserConfig: ModeOptions) => {
-    const client = parserConfig.client || {},
-      atoms = parserConfig.atoms || { false: true, true: true, null: true },
-      builtin = parserConfig.builtin || set(defaultBuiltin),
-      keywords = parserConfig.keywords || set(sqlKeywords),
-      operatorChars = parserConfig.operatorChars || /^[*+\-%<>!=&|~^/]/,
-      support = parserConfig.support || {},
-      hooks = parserConfig.hooks || {},
-      dateSQL = parserConfig.dateSQL || { date: true, time: true, timestamp: true },
+    const client = parserConfig.client ?? {},
+      atoms = parserConfig.atoms ?? { false: true, true: true, null: true },
+      builtin = parserConfig.builtin ?? set(defaultBuiltin),
+      keywords = parserConfig.keywords ?? set(sqlKeywords),
+      operatorChars = parserConfig.operatorChars ?? /^[*+\-%<>!=&|~^/]/,
+      support = parserConfig.support ?? {},
+      hooks = parserConfig.hooks ?? {},
+      dateSQL = parserConfig.dateSQL ?? { date: true, time: true, timestamp: true },
       backslashStringEscapes = parserConfig.backslashStringEscapes !== false,
-      brackets = parserConfig.brackets || /^[{}()[]]/,
-      punctuation = parserConfig.punctuation || /^[;.,:]/;
+      brackets = parserConfig.brackets ?? /^[{}()[]]/,
+      punctuation = parserConfig.punctuation ?? /^[;.,:]/;
 
     function tokenBase(stream: CodeMirror.StringStream, state: SqlState) {
       const ch: string | null = stream.next();

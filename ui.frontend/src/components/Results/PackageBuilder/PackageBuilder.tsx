@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, SyntheticEvent, useCallback, useMemo, useRef, useState } from 'react';
 import { useLogger, usePackagingContext } from '@/providers';
 import { Autocomplete, Button, CircularProgress, Paper, Stack, TextField, Typography } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -7,8 +7,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
 import { FormGrid } from '@/components/QueryWizard/Components';
 import { useRenderCount } from '@/utility';
-
-import './PackageBuilder.scss';
 
 /**
  * This component controls all Packaging logic.
@@ -44,7 +42,7 @@ export const PackageBuilder = () => {
 
   // simple callback that handles user input for groupName
   const handleGroupChange = useCallback(
-    (_event: any, newValue: string | null) => {
+    (_event: SyntheticEvent, newValue: string | null) => {
       if (newValue) {
         setGroup(newValue);
         setGroupName(newValue);

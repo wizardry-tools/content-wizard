@@ -1,9 +1,9 @@
 import { SyntheticEvent, useCallback, useState } from 'react';
-import { Tab } from './Tab';
-import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './index';
 import { Paper } from '@mui/material';
 import { useFields, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
+import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './index';
+import { Tab } from './Tab';
 
 export const Accordion = () => {
   const logger = useLogger();

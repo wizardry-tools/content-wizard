@@ -1,20 +1,12 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
+import { QueryBuilderPropertiesState } from '@/types';
 
-/**
- * Customized QueryBuilder codemirror parser mode originally based off of the OOTB "Properties" mode
- */
-export type PropertiesState = {
-  position: 'predicate' | 'quote' | 'comment' | 'equals' | 'string';
-  nextMultiline: boolean;
-  inMultiline: boolean;
-  afterSection: boolean;
-};
 (() => {
   CodeMirror.defineMode('querybuilder', function () {
     return {
-      token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
+      token: function (stream: CodeMirror.StringStream, state: QueryBuilderPropertiesState) {
         const sol = stream.sol() || state.afterSection;
         const eol = stream.eol();
 
