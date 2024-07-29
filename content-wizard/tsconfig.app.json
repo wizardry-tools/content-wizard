@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "useUnknownInCatchVariables": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    /* "esModuleInterop": true, */
+
+    /* Module Config */
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+
+    /* Linting */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "newLine": "lf",
+
+    "baseUrl": "./src",
+    "paths": {
+      "@/types": ["./types"],
+      "@/utility": ["./utility"],
+      "@/icons": ["./icons"],
+      "@/providers": ["./providers"],
+      "@/components": ["./components"],
+      "@/components/*": ["./components/*"]
+    },
+    "types": [
+      "react",
+      "react-dom",
+      "eslint__js",
+      "codemirror",
+      "markdown-it",
+      "set-value",
+      "node",
+    ]
+  },
+  "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": [
+    "**/node_modules",
+    "**/build",
+    "**/public",
+    "**/target",
+    "**/node",
+    "**/dist",
+    "**/.*/",
+  ]
+}

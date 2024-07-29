@@ -1,0 +1,46 @@
+.wizard-tabs {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  padding: var(--px-12);
+
+  & > :not(:first-child) {
+    margin-left: var(--px-12);
+  }
+}
+
+.wizard-tab {
+  align-items: stretch;
+  border-radius: var(--border-radius-8);
+  color: hsla(var(--color-neutral), var(--alpha-secondary));
+  display: flex;
+
+  & > button.wizard-tab-close {
+    visibility: hidden;
+  }
+  &.wizard-tab-active > button.wizard-tab-close,
+  &:hover > button.wizard-tab-close,
+  &:focus-within > button.wizard-tab-close {
+    visibility: unset;
+  }
+
+  &.wizard-tab-active {
+    background-color: hsla(var(--color-neutral), var(--alpha-background-heavy));
+    color: hsla(var(--color-neutral), 1);
+  }
+}
+
+button.wizard-tab-button {
+  padding: var(--px-4) 0 var(--px-4) var(--px-8);
+}
+
+button.wizard-tab-close {
+  align-items: center;
+  display: flex;
+  padding: var(--px-4) var(--px-8);
+
+  & > svg {
+    height: var(--px-8);
+    width: var(--px-8);
+  }
+}
