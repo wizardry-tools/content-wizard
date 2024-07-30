@@ -2,8 +2,8 @@ import { useAlertDispatcher } from '@/providers';
 import { useWizardStorageAPI } from '../storage-api';
 import { useWizardStore } from '../store';
 
-jest.mock('@/providers', () => {
-  const mockAlertDispatcher = jest.fn(() => {});
+vi.mock('@/providers', () => {
+  const mockAlertDispatcher = vi.fn(() => ({}));
   return {
     useAlertDispatcher() {
       return mockAlertDispatcher;
@@ -14,8 +14,8 @@ jest.mock('@/providers', () => {
 class StorageMock {
   shouldThrow: () => boolean;
   count = 0;
-  map: any = {};
-  storage: any = {};
+  map: Record<string, string> = {};
+  storage: Record<string, string> = {};
   constructor(shouldThrow: () => boolean) {
     this.shouldThrow = shouldThrow;
   }
@@ -41,7 +41,9 @@ class StorageMock {
     return this.map[key] || null;
   }
 
-  clear() {}
+  clear() {
+    return;
+  }
 }
 // TODO: Add tests with language prop
 describe('QueryStore', () => {
@@ -60,7 +62,7 @@ describe('QueryStore', () => {
 
     it('will fail silently on quota error', () => {
       let i = 0;
-      // @ts-ignore
+      // @ts-expect-error StorageMock isn't strictly typed to WizardStore
       const store = useWizardStore({ key: 'normal', storage: new StorageMock(() => i > 4) });
 
       for (; i < 10; i++) {
@@ -94,7 +96,7 @@ describe('QueryStore', () => {
       let retryCounter = 0;
       const store = useWizardStore({
         key: 'normal',
-        // @ts-ignore
+        // @ts-expect-error StorageMock isn't strictly typed to WizardStore
         storage: new StorageMock(() => {
           retryCounter++;
           return shouldThrow();
@@ -127,7 +129,7 @@ describe('QueryStore', () => {
       let retryCounter = 0;
       const store = useWizardStore({
         key: 'normal',
-        // @ts-ignore
+        // @ts-expect-error StorageMock isn't strictly typed to WizardStore
         storage: new StorageMock(() => {
           retryCounter++;
           return shouldThrow();

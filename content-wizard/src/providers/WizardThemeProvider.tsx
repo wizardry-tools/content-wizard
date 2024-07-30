@@ -18,7 +18,7 @@ import { useRenderCount } from '@/utility';
 import { NullablePaletteMode, Theme } from '@/types';
 import { useStorageContext } from '@/components/IDE/core/src';
 import { WizardStorageAPI } from '@/components/IDE/core/src/storage-api';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 
 export const DARK: PaletteMode = 'dark';
 export const LIGHT: PaletteMode = 'light';

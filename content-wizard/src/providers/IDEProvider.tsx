@@ -7,7 +7,7 @@ import {
   SchemaContextProvider,
 } from '@/components/IDE/core/src';
 import { APIContextProvider } from '@/components/IDE/core/src';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 import { useRenderCount } from '@/utility';
 import { IDEProviderProps } from '@/types';
 

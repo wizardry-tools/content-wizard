@@ -3,7 +3,7 @@ import { GetParamsProps } from '@/types';
 /**
  * The AUTH_TOKEN exists for dev builds
  */
-const AUTH_TOKEN = import.meta.env.REACT_APP_AEM_AUTHORIZATION_HEADER ?? '';
+const AUTH_TOKEN = import.meta.env.VITE_AEM_AUTHORIZATION_HEADER ?? '';
 
 /**
  * Builds HTTP Fetch options that are needed for local development.

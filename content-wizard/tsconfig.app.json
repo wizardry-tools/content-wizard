@@ -33,12 +33,13 @@
 
     "baseUrl": "./src",
     "paths": {
-      "@/types": ["./types"],
-      "@/utility": ["./utility"],
-      "@/icons": ["./icons"],
-      "@/providers": ["./providers"],
-      "@/components": ["./components"],
-      "@/components/*": ["./components/*"]
+      "@/*": ["./*"],
+//      "@/types": ["./types"],
+//      "@/utility": ["./utility"],
+//      "@/icons": ["./icons"],
+//      "@/providers": ["./providers"],
+//      "@/components": ["./components"],
+//      "@/components/*": ["./components/*"]
     },
     "types": [
       "react",
@@ -48,6 +49,8 @@
       "markdown-it",
       "set-value",
       "node",
+      "vitest/globals",
+      "jest-dom"
     ]
   },
   "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"],

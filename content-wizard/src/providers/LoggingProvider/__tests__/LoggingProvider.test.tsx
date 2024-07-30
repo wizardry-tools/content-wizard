@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { LoggingProvider, useLogger } from '../LoggingProvider'; // Adjust the import as necessary
+import { LoggingProvider } from '../LoggingProvider'; // Adjust the import as necessary
+import { useLogger } from '../useLogger';
 
 // Helper component to use the logger
 const TestComponent = () => {
@@ -40,15 +41,8 @@ const TestComponent = () => {
 };
 
 describe('LoggingProvider', () => {
-  beforeEach(() => {
-    console.log = jest.fn();
-    console.warn = jest.fn();
-    console.debug = jest.fn();
-    console.error = jest.fn();
-  });
-
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should log messages when buttons are clicked', () => {

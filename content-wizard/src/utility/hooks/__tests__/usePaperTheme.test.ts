@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { createTheme, Theme } from '@mui/material/styles';
-import { usePaperTheme, UsePaperThemeProps } from '../usePaperTheme';
+import { UsePaperThemeProps } from '@/types';
+import { usePaperTheme } from '../usePaperTheme';
 
 /**
  * Test for usePaperTheme Hook.

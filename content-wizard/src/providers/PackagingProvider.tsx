@@ -1,6 +1,6 @@
 import { createContext, JSX, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useAuthHeaders, useObjectState, useRenderCount } from '@/utility';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 import { useAlertDispatcher } from './WizardAlertProvider';
 import { useResults } from './ResultsProvider';
 import {

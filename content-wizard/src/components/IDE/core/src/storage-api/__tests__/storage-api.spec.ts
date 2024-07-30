@@ -3,8 +3,8 @@ import { useWizardStorageAPI } from '../storage-api';
 
 const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
 
-jest.mock('@/providers', () => {
-  const mockAlertDispatcher = jest.fn(() => {});
+vi.mock('@/providers', () => {
+  const mockAlertDispatcher = vi.fn(() => ({}));
   return {
     useAlertDispatcher() {
       return mockAlertDispatcher;
@@ -83,7 +83,6 @@ describe('WizardStorageAPI', () => {
   });
 
   it('returns any error while setting a value', () => {
-    // @ts-ignore
     const throwingStorage = useWizardStorageAPI({
       storage: {
         setItem() {
@@ -99,12 +98,11 @@ describe('WizardStorageAPI', () => {
     });
     const result = throwingStorage.set('key', 'value');
 
-    expect(result.error?.message).toEqual(ERROR_MESSAGE);
+    expect(result.error?.message).toEqual(`Error: ${ERROR_MESSAGE}`);
     expect(result.isQuotaError).toBe(false);
   });
 
   it('returns isQuotaError to true if isQuotaError is thrown', () => {
-    // @ts-ignore
     const throwingStorage = useWizardStorageAPI({
       storage: {
         setItem() {
@@ -120,7 +118,7 @@ describe('WizardStorageAPI', () => {
     });
     const result = throwingStorage.set('key', 'value');
 
-    expect(result.error?.message).toEqual(ERROR_MESSAGE);
+    expect(result.error?.message).toEqual(`QuotaExceededError: ${ERROR_MESSAGE}`);
     expect(result.isQuotaError).toBe(true);
   });
 });

@@ -48,7 +48,7 @@ describe('TypeLink', () => {
   });
   it('should push to the nav stack on click', () => {
     const { container, getByTestId } = render(<TypeLinkWithContext type={listType} />);
-    fireEvent.click(container.querySelector('a'));
+    fireEvent.click(container.querySelector('a')!);
     expect(getByTestId('nav-stack')).toHaveTextContent('');
   });
   it('should re-render on type change', () => {

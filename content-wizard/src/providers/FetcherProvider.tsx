@@ -5,7 +5,7 @@ import { useRenderCount, useCreateFetcher } from '@/utility';
 import { CustomCreateFetcherOptions, FetcherProviderProps, FetcherResult, OnFetcherResults, Query } from '@/types';
 import { useResultsDispatcher } from './ResultsProvider';
 import { useQuery } from './QueryProvider';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 
 const FetcherContext = createContext<Fetcher>(null!);
 

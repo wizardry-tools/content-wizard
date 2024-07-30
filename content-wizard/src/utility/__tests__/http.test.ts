@@ -1,5 +1,5 @@
-import { escapeColon, escapeUrl, getParams, GetParamsProps, queryToParams } from '../http';
-import '@jest/globals';
+import { GetParamsProps } from '@/types';
+import { escapeColon, escapeUrl, getParams, queryToParams } from '../http';
 
 // existing tests for escapeUrl function
 describe('escapeUrl function', () => {

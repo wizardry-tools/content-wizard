@@ -12,7 +12,7 @@ import { DYNAMIC_HEADERS, getParams, useRenderCount } from '@/utility';
 import { buildGraphQLURL, buildQueryString, endpoints } from '@/components/Query';
 import { useStorageContext } from '@/components/IDE/core/src';
 import { defaultFields } from '@/components/QueryWizard/Components';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 import { generateQuery } from './FieldsProvider';
 
 const QueryContext = createContext<Query>(null!);

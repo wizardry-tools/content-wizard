@@ -1,4 +1,3 @@
-import { describe, it, expect } from '@jest/globals';
 import { a11yProps } from '../ui';
 
 describe('a11yProps function', () => {

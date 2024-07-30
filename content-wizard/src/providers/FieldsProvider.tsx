@@ -4,7 +4,7 @@ import { useDebounce } from '@/utility';
 import { defaultFields, predicates } from '@/components/QueryWizard/Components';
 import { endpoints } from '@/components/Query';
 import { useQueryDispatcher } from './QueryProvider';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 
 const FieldsConfigContext = createContext<FieldsConfig>(null!);
 const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);

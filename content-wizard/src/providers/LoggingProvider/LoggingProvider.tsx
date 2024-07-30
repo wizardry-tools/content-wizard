@@ -1,12 +1,7 @@
-import { createContext, useCallback, useContext, useMemo } from 'react';
-import { Logger, LoggingProps, LoggingProviderProps } from '@/types';
-
-const LoggingContext = createContext<Logger>({
-  log: () => ({}),
-  debug: () => ({}),
-  warn: () => ({}),
-  error: () => ({}),
-});
+import { useCallback, useMemo } from 'react';
+import { LoggingProps, LoggingProviderProps } from '@/types';
+import { isEmpty } from '@/utility';
+import { LoggingContext } from './LoggingContext';
 
 /**
  * This is a Logging Provider that allows us to configure how logs
@@ -91,12 +86,4 @@ export function LoggingProvider({
   );
 
   return <LoggingContext.Provider value={value}>{children}</LoggingContext.Provider>;
-}
-
-export function useLogger() {
-  return useContext(LoggingContext);
-}
-
-function isEmpty(obj: object): boolean {
-  return Object.keys(obj).length === 0;
 }

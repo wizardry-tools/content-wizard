@@ -1,6 +1,6 @@
 import { useCsrfToken } from './useCsrfToken';
 import { useCallback, useMemo } from 'react';
-import { useLogger } from '@/providers';
+import { useLogger } from '@/providers/LoggingProvider';
 import { useRenderCount } from './useRenderCount';
 
 /**
@@ -15,13 +15,12 @@ export const useAuthHeaders = (): { get: (props: Partial<RequestInit>) => Promis
   const csrfToken = useCsrfToken();
 
   const authorization: [string | undefined, string | undefined] | string | undefined = useMemo(() => {
-    const { REACT_APP_AUTH_METHOD, REACT_APP_DEV_TOKEN, REACT_APP_BASIC_AUTH_USER, REACT_APP_BASIC_AUTH_PASS } =
-      import.meta.env;
+    const { VITE_AUTH_METHOD, VITE_DEV_TOKEN, VITE_BASIC_AUTH_USER, VITE_BASIC_AUTH_PASS } = import.meta.env;
 
-    if (REACT_APP_AUTH_METHOD === 'basic') {
-      return [REACT_APP_BASIC_AUTH_USER, REACT_APP_BASIC_AUTH_PASS];
-    } else if (REACT_APP_AUTH_METHOD === 'dev-token') {
-      return REACT_APP_DEV_TOKEN;
+    if (VITE_AUTH_METHOD === 'basic') {
+      return [VITE_BASIC_AUTH_USER, VITE_BASIC_AUTH_PASS];
+    } else if (VITE_AUTH_METHOD === 'dev-token') {
+      return VITE_DEV_TOKEN;
     } else {
       // no authentication set
       return;

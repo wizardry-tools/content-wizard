@@ -16,5 +16,5 @@ export function unwrapType(type: GraphQLType): GraphQLNamedType {
 }
 
 describe('Empty test file', () => {
-  it("Shouldn't do anything", () => {});
+  it("Shouldn't do anything", () => ({}));
 });

@@ -4,7 +4,7 @@ import { QueryProvider } from './QueryProvider';
 import { ResultsProvider } from './ResultsProvider';
 import { FetcherProvider } from './FetcherProvider';
 import { FieldsProvider } from './FieldsProvider';
-import { useLogger } from './LoggingProvider';
+import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 import { useRenderCount } from '@/utility';
 
 export function ContentWizardProvider({ children }: PropsWithChildren) {

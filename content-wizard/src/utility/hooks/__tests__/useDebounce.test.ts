@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useDebounce } from '../useDebounce';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe('useDebounce function', () => {
   it('should return the same value after the delay', () => {
@@ -12,13 +12,13 @@ describe('useDebounce function', () => {
     expect(result.current).toBe('test');
 
     act(() => {
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
     });
 
     expect(result.current).toBe('test');
 
     act(() => {
-      jest.advanceTimersByTime(250);
+      vi.advanceTimersByTime(250);
     });
 
     expect(result.current).toBe('test');
@@ -36,7 +36,7 @@ describe('useDebounce function', () => {
     expect(result.current).toBe('test');
 
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe('updated');
