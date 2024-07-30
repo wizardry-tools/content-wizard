@@ -22,6 +22,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
 
     /* Linting */
     "strict": true,
@@ -53,7 +54,7 @@
       "jest-dom"
     ]
   },
-  "include": ["vite-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["vite-env.d.ts", "**/*.d.ts","**/*.ts", "**/*.tsx"],
   "exclude": [
     "**/node_modules",
     "**/build",

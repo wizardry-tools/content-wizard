@@ -1,11 +1,11 @@
 import { PropsWithChildren } from 'react';
-import { WizardThemeProvider } from './WizardThemeProvider';
-import { QueryProvider } from './QueryProvider';
-import { ResultsProvider } from './ResultsProvider';
-import { FetcherProvider } from './FetcherProvider';
-import { FieldsProvider } from './FieldsProvider';
-import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
 import { useRenderCount } from '@/utility';
+import { WizardThemeProvider } from '../WizardThemeProvider';
+import { QueryProvider } from '../QueryProvider';
+import { ResultsProvider } from '../ResultsProvider';
+import { FetcherProvider } from '../FetcherProvider';
+import { FieldsProvider } from '../FieldsProvider';
+import { useLogger } from '../LoggingProvider';
 
 export function ContentWizardProvider({ children }: PropsWithChildren) {
   const logger = useLogger();

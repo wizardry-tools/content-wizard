@@ -1,6 +1,6 @@
 import { useCsrfToken } from './useCsrfToken';
 import { useCallback, useMemo } from 'react';
-import { useLogger } from '@/providers/LoggingProvider';
+import { useLogger } from '@/providers';
 import { useRenderCount } from './useRenderCount';
 
 /**

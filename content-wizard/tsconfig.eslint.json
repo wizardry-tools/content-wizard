@@ -10,6 +10,7 @@
     "eslint.config.*",
     "vite-env.d.ts",
     "**/*.ts",
+    "**/*.d.ts",
     "**/*.tsx",
     "**/*.mts",
     "**/*.js",

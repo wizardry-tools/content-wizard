@@ -1,32 +1,17 @@
-import { createContext, Dispatch, PropsWithChildren, useCallback, useContext, useMemo, useReducer } from 'react';
-import {
-  Query,
-  QueryAction,
-  QueryRunnerResponse,
-  QueryRunnerProps,
-  FetcherResult,
-  Result,
-  QueryLanguage,
-} from '@/types';
+import { PropsWithChildren, useCallback, useMemo, useReducer } from 'react';
+import { QueryRunnerResponse, QueryRunnerProps, FetcherResult, Result, QueryLanguage } from '@/types';
 import { DYNAMIC_HEADERS, getParams, useRenderCount } from '@/utility';
-import { buildGraphQLURL, buildQueryString, endpoints } from '@/components/Query';
+import { buildQueryString } from '@/components/Query';
 import { useStorageContext } from '@/components/IDE/core/src';
-import { defaultFields } from '@/components/QueryWizard/Components';
-import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
-import { generateQuery } from './FieldsProvider';
-
-const QueryContext = createContext<Query>(null!);
-const QueryDispatchContext = createContext<Dispatch<QueryAction>>(null!);
-const QueryRunnerContext = createContext<(props: QueryRunnerProps) => Promise<QueryRunnerResponse>>(null!);
-const IsGraphQLContext = createContext<boolean>(false);
-
-const defaultSimpleQuery: Query = {
-  statement: generateQuery(defaultFields), // build inside provider init
-  language: 'QueryBuilder',
-  url: endpoints.queryBuilderPath,
-  status: '',
-  isAdvanced: false,
-};
+import { useLogger } from '../LoggingProvider';
+import {
+  defaultSimpleQuery,
+  IsGraphQLContext,
+  QueryContext,
+  QueryDispatchContext,
+  queryReducer,
+  QueryRunnerContext,
+} from './context';
 
 export function QueryProvider({ children }: PropsWithChildren) {
   useStorageContext();
@@ -108,66 +93,4 @@ export function QueryProvider({ children }: PropsWithChildren) {
       </IsGraphQLContext.Provider>
     </QueryContext.Provider>
   );
-}
-
-export function useQuery() {
-  return useContext(QueryContext);
-}
-
-export function useQueryDispatcher() {
-  return useContext(QueryDispatchContext);
-}
-
-export function useQueryRunner() {
-  return useContext(QueryRunnerContext);
-}
-
-export function useIsGraphQL() {
-  return useContext(IsGraphQLContext);
-}
-
-/**
- * Query Actions???
- * 1. Update Statement
- * 2. Update Language (which replaces Query with defaultQuery based on language)
- * 3. Update Status
- * 4. Update API
- * @param query
- * @param action
- */
-function queryReducer(query: Query, action: QueryAction): Query {
-  switch (action.type) {
-    case 'statementChange': {
-      // 1
-      return {
-        ...query,
-        statement: action.statement!,
-      };
-    }
-    case 'replaceQuery': {
-      // 2
-      return {
-        ...(action as Query),
-      };
-    }
-    case 'statusChange': {
-      // 3
-      return {
-        ...query,
-        status: action.status!,
-      };
-    }
-    case 'apiChange': {
-      // 4
-      const api = action.api!;
-      return {
-        ...query,
-        api: api,
-        url: buildGraphQLURL(api.endpoint),
-      };
-    }
-    default: {
-      throw Error(`Unknown Query Action ${action.type}`);
-    }
-  }
 }

@@ -1,8 +1,8 @@
-import { StorageContextProvider } from '@/components/IDE/core/src';
 import { PropsWithChildren, useMemo } from 'react';
 import { LoggingProviderProps } from '@/types';
-import { WizardAlertProvider } from './WizardAlertProvider';
-import { LoggingProvider } from './LoggingProvider/LoggingProvider.tsx';
+import { StorageContextProvider } from '@/components/IDE/core/src';
+import { WizardAlertProvider } from '../WizardAlertProvider';
+import { LoggingProvider } from '../LoggingProvider';
 
 export function AppProvider({ children }: PropsWithChildren) {
   const getLoggingProps = useMemo((): LoggingProviderProps => {

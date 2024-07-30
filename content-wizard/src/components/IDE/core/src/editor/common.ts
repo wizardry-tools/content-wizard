@@ -1,4 +1,4 @@
-import { KeyMap } from '@/types';
+import { CodeMirrorImport, KeyMap } from '@/types';
 
 export const DEFAULT_EDITOR_THEME = 'wizard';
 export const DEFAULT_KEY_MAP: KeyMap = 'sublime';
@@ -26,7 +26,7 @@ export const commonKeys = {
  * Dynamically import codemirror and dependencies
  * This works for codemirror 5, not sure if the same imports work for 6
  */
-export async function importCodeMirror(addons: Promise<any>[], options?: { useCommonAddons?: boolean }) {
+export async function importCodeMirror(addons: Promise<CodeMirrorImport>[], options?: { useCommonAddons?: boolean }) {
   const CodeMirror = await import('codemirror').then((c) =>
     // Depending on bundler and settings the dynamic import either returns a
     // function (e.g. parcel) or an object containing a `default` property
@@ -42,10 +42,11 @@ export async function importCodeMirror(addons: Promise<any>[], options?: { useCo
           import('codemirror/addon/fold/brace-fold'),
           import('codemirror/addon/fold/foldgutter'),
           import('codemirror/addon/lint/lint'),
+          import('codemirror/addon/comment/comment'),
           import('codemirror/addon/search/searchcursor'),
           import('codemirror/addon/search/jump-to-line'),
           import('codemirror/addon/dialog/dialog'),
-          // @ts-expect-error
+          // @ts-expect-error This module declaration doesn't exist.
           import('codemirror/keymap/sublime'),
           ...addons,
         ],

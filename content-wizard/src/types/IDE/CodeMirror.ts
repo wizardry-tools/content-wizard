@@ -47,3 +47,15 @@ export type XpathPropertiesState = {
   inMultiline: boolean;
   afterSection: boolean;
 };
+
+export type CodeMirrorImport =
+  | typeof import('codemirror/addon/comment/comment')
+  | typeof import('codemirror/addon/search/search')
+  | typeof import('codemirror-graphql/esm/hint')
+  | typeof import('codemirror-graphql/esm/lint')
+  | typeof import('codemirror-graphql/esm/info')
+  | typeof import('codemirror-graphql/esm/jump')
+  | typeof import('codemirror-graphql/esm/mode')
+  | typeof import('@/components/IDE/core/modes/sql/sql')
+  | typeof import('@/components/IDE/core/modes/xpath/xpath')
+  | typeof import('@/components/IDE/core/modes/querybuilder/querybuilder');

@@ -1,104 +1,21 @@
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { PaletteMode, ThemeProvider as MuiThemeProvider } from '@mui/material';
-import { Theme as MuiTheme } from '@mui/material/styles/createTheme';
-import { createTheme } from '@mui/material/styles';
-import { blue } from '@mui/material/colors';
+import { PropsWithChildren, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
+import { Theme } from '@/types';
 import { useRenderCount } from '@/utility';
-import { NullablePaletteMode, Theme } from '@/types';
 import { useStorageContext } from '@/components/IDE/core/src';
-import { WizardStorageAPI } from '@/components/IDE/core/src/storage-api';
-import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
-
-export const DARK: PaletteMode = 'dark';
-export const LIGHT: PaletteMode = 'light';
-
-function getThemeMediaQuery(mode: PaletteMode = DARK): MediaQueryList {
-  return window.matchMedia(`(prefers-color-scheme: ${mode})`);
-}
-function isMediaQueryMatch(mq: MediaQueryList, mode: PaletteMode): Theme {
-  return mq.matches ? mode : null;
-}
-function getSystemTheme(mode: PaletteMode = DARK): Theme {
-  return isMediaQueryMatch(getThemeMediaQuery(mode), mode);
-}
-
-function buildMuiTheme(theme: Theme): MuiTheme {
-  // main theme setup
-  const muiTheme = createTheme({
-    palette: {
-      mode: theme ?? LIGHT, // light is our default for Mui
-      ...(theme === DARK
-        ? {
-            primary: {
-              main: '#F0F0F0',
-            },
-            secondary: {
-              main: blue[500],
-            },
-          }
-        : {
-            primary: {
-              main: '#E0E0E0',
-            },
-            secondary: {
-              main: blue[700],
-            },
-          }),
-    },
-    shape: {
-      borderRadius: 8,
-    },
-    breakpoints: {
-      values: {
-        xs: 0,
-        sm: 557,
-        md: 967,
-        lg: 1400,
-        xl: 1536,
-      },
-    },
-    typography: {
-      h4: {
-        fontSize: '2.125rem',
-        '@media (max-width: 1400px)': {
-          fontSize: '1.5rem',
-        },
-        '@media (max-width: 967px)': {
-          fontSize: '1.2rem',
-        },
-        '@media (max-width: 557px)': {
-          fontSize: '0.8rem',
-        },
-      },
-    },
-  });
-
-  // augmented color setup
-  return createTheme(muiTheme, {
-    palette: {
-      tertiary: muiTheme.palette.augmentColor({
-        color: {
-          main: '#FF5794',
-        },
-        name: 'tertiary',
-      }),
-    },
-  });
-}
-
-const ThemeDispatchContext = createContext<Dispatch<NullablePaletteMode>>(null!);
-const IDEThemeContext = createContext<Theme>(null);
+import { useLogger } from '../LoggingProvider';
+import {
+  buildMuiTheme,
+  DARK,
+  getStoredTheme,
+  getSystemTheme,
+  getThemeMediaQuery,
+  IDEThemeContext,
+  LIGHT,
+  STORAGE_KEY,
+  ThemeDispatcherContext,
+} from './context';
 
 export function WizardThemeProvider(props: PropsWithChildren) {
   const logger = useLogger();
@@ -202,39 +119,12 @@ export function WizardThemeProvider(props: PropsWithChildren) {
     <>
       <IDEThemeContext.Provider value={IDETheme}>
         <MuiThemeProvider theme={muiTheme}>
-          <ThemeDispatchContext.Provider value={handleThemeDispatch}>
+          <ThemeDispatcherContext.Provider value={handleThemeDispatch}>
             <CssBaseline />
             {props.children}
-          </ThemeDispatchContext.Provider>
+          </ThemeDispatcherContext.Provider>
         </MuiThemeProvider>
       </IDEThemeContext.Provider>
     </>
   );
-}
-
-export function useThemeDispatch() {
-  return useContext(ThemeDispatchContext);
-}
-export function useIDETheme() {
-  return useContext(IDEThemeContext);
-}
-
-export const STORAGE_KEY = 'theme';
-function getStoredTheme(storageContext: WizardStorageAPI | null): Theme {
-  if (!storageContext) {
-    return null;
-  }
-  const stored = storageContext.get(STORAGE_KEY);
-  switch (stored) {
-    case 'light':
-      return 'light';
-    case 'dark':
-      return 'dark';
-    default:
-      if (typeof stored === 'string') {
-        // Remove the invalid stored value
-        storageContext.set(STORAGE_KEY, '');
-      }
-      return null;
-  }
 }

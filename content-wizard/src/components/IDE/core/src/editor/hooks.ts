@@ -121,17 +121,9 @@ export function useCompletion(
         callback?.({ kind: 'Type', type, schema: schema ?? undefined });
       });
     };
-    editor.on(
-      // @ts-expect-error @TODO additional args for hasCompletion event
-      'hasCompletion',
-      handleCompletion,
-    );
+    editor.on('hasCompletion', handleCompletion);
     return () => {
-      editor.off(
-        // @ts-expect-error @TODO additional args for hasCompletion event
-        'hasCompletion',
-        handleCompletion,
-      );
+      editor.off('hasCompletion', handleCompletion);
     };
   }, [callback, editor, explorer, plugin, schema]);
 }

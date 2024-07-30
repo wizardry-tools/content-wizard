@@ -7,7 +7,7 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react
 import {
   Caller,
   CodeMirrorEditor,
-  CodeMirrorEditorWithOperationFacts,
+  CodeMirrorEditorWithOperationFacts, CodeMirrorImport,
   CodeMirrorType,
   UseQueryEditorArgs,
 } from '@/types';
@@ -113,7 +113,10 @@ export function useQueryEditor(
 
   useEffect(() => {
     let isActive = true;
-    const addons: any[] = [import('codemirror/addon/comment/comment'), import('codemirror/addon/search/search')];
+    const addons: CodeMirrorImport[] = [
+      import('codemirror/addon/comment/comment'),
+      import('codemirror/addon/search/search'),
+    ];
 
     let mode = '';
     switch (queryLanguage) {
@@ -129,22 +132,22 @@ export function useQueryEditor(
         break;
       }
       case 'SQL': {
-        addons.push(import('../../modes/sql/sql'));
+        addons.push(import('@/components/IDE/core/modes/sql/sql'));
         mode = 'text/x-sql';
         break;
       }
       case 'JCR_SQL2': {
-        addons.push(import('../../modes/sql/sql'));
+        addons.push(import('@/components/IDE/core/modes/sql/sql'));
         mode = 'text/x-jcrsql2';
         break;
       }
       case 'XPATH': {
-        addons.push(import('../../modes/xpath/xpath'));
+        addons.push(import('@/components/IDE/core/modes/xpath/xpath'));
         mode = 'xpath';
         break;
       }
       default: {
-        addons.push(import('../../modes/querybuilder/querybuilder'));
+        addons.push(import('@/components/IDE/core/modes/querybuilder/querybuilder'));
         mode = 'querybuilder';
       }
     }

@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
       open: true,
       proxy: {
-        '^/(content|bin|crx|etc)': {
+        '^/(content|bin|crx|etc|graphql)': {
           target: aemHost,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\//, ''),

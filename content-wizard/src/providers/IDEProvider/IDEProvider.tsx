@@ -1,4 +1,7 @@
+import { IDEProviderProps } from '@/types';
+import { useRenderCount } from '@/utility';
 import {
+  APIContextProvider,
   EditorContextProvider,
   ExecutionContextProvider,
   ExplorerContextProvider,
@@ -6,10 +9,7 @@ import {
   PluginContextProvider,
   SchemaContextProvider,
 } from '@/components/IDE/core/src';
-import { APIContextProvider } from '@/components/IDE/core/src';
-import { useLogger } from './LoggingProvider/LoggingProvider.tsx';
-import { useRenderCount } from '@/utility';
-import { IDEProviderProps } from '@/types';
+import { useLogger } from '../LoggingProvider';
 
 export function IDEProvider({ children }: IDEProviderProps) {
   const logger = useLogger();
