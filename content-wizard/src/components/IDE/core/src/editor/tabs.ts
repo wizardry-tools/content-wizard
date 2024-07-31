@@ -245,10 +245,10 @@ export function useSetEditorValues({
   );
 }
 
-export function createTab({ query, variables = null, headers = null }: TabDefinition): TabState {
+export function createTab({ query, variables = null }: TabDefinition): TabState {
   return {
     id: guid(),
-    hash: hashFromTabContents({ query, variables, headers }),
+    hash: hashFromTabContents({ query, variables }),
     title:
       query.label ??
       (query?.statement && fuzzyExtractOperationName(query.statement)) ??
@@ -256,7 +256,7 @@ export function createTab({ query, variables = null, headers = null }: TabDefini
       DEFAULT_TITLE,
     query,
     variables,
-    headers,
+    headers: null,
     operationName: null,
     response: null,
   };

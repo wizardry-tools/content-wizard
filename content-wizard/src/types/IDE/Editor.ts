@@ -1,11 +1,11 @@
 import { Editor, Position, Token } from 'codemirror';
-import { ComponentType, ReactNode } from 'react';
+import { ComponentType, PropsWithChildren } from 'react';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
-import { DocumentNode, FragmentDefinitionNode, OperationDefinitionNode, ValidationRule } from 'graphql/index';
+import { DocumentNode, OperationDefinitionNode, ValidationRule } from 'graphql/index';
 import { VariableToType } from 'graphql-language-service';
 import { Query } from '../Query';
 import { UseCopyQueryArgs } from './hooks';
-import { TabDefinition, TabsState, TabState } from './IDE';
+import { TabsState, TabState } from './IDE';
 
 export type CodeMirrorType = typeof import('codemirror');
 
@@ -64,103 +64,8 @@ export type CodeMirrorEditorWithOperationFacts = CodeMirrorEditor & {
   variableToType: VariableToType | null;
 };
 
-export type EditorContextProviderProps = {
-  children: ReactNode;
-  /**
-   * The initial contents of the query editor when loading GraphiQL and there
-   * is no other source for the editor state. Other sources can be:
-   * - The `query` prop
-   * - The value persisted in storage
-   * These default contents will only be used for the first tab. When opening
-   * more tabs the query editor will start out empty.
-   */
-  defaultQuery?: string;
-  /**
-   * With this prop you can pass so-called "external" fragments that will be
-   * included in the query document (depending on usage). You can either pass
-   * the fragments using SDL (passing a string) or you can pass a list of
-   * `FragmentDefinitionNode` objects.
-   */
-  externalFragments?: string | FragmentDefinitionNode[];
-  /**
-   * This prop can be used to set the contents of the headers editor. Every
-   * time this prop changes, the contents of the headers editor are replaced.
-   * Note that the editor contents can be changed in between these updates by
-   * typing in the editor.
-   */
-  headers?: string;
-  /**
-   * This prop can be used to define the default set of tabs, with their
-   * queries, variables, and headers. It will be used as default only if
-   * there is no tab state persisted in storage.
-   *
-   * @example
-   * ```tsx
-   * <GraphiQL
-   *   defaultTabs={[
-   *     { query: 'query myExampleQuery {}' },
-   *     { query: '{ id }' }
-   *   ]}
-   * />
-   *```
-   */
-  defaultTabs?: TabDefinition[];
-  /**
-   * Invoked when the operation name changes. Possible triggers are:
-   * - Editing the contents of the query editor
-   * - Selecting a operation for execution in a document that contains multiple
-   *   operation definitions
-   * @param operationName The operation name after it has been changed.
-   */
-  onEditOperationName?(operationName: string): void;
-  /**
-   * Invoked when the state of the tabs changes. Possible triggers are:
-   * - Updating any editor contents inside the currently active tab
-   * - Adding a tab
-   * - Switching to a different tab
-   * - Closing a tab
-   * @param tabState The tabs state after it has been updated.
-   */
-  onTabChange?(tabState: TabsState): void;
-  /**
-   * This prop can be used to set the contents of the response editor. Every
-   * time this prop changes, the contents of the response editor are replaced.
-   * Note that the editor contents can change in between these updates by
-   * executing queries that will show a response.
-   */
-  response?: string;
-  /**
-   * This prop can be used to set the contents of the wizard response editor. Every
-   * time this prop changes, the contents of the wizard response editor are replaced.
-   * Note that the editor contents can change in between these updates by
-   * executing queries that will show a response.
-   */
-  wizardStatement?: string;
-  /**
-   * This prop toggles if the contents of the headers editor are persisted in
-   * storage.
-   * @default false
-   */
-  shouldPersistHeaders?: boolean;
-  /**
-   * This prop accepts custom validation rules for GraphQL documents that are
-   * run against the contents of the query editor (in addition to the rules
-   * that are specified in the GraphQL spec).
-   */
-  validationRules?: ValidationRule[];
-  /**
-   * This prop can be used to set the contents of the variables editor. Every
-   * time this prop changes, the contents of the variables editor are replaced.
-   * Note that the editor contents can be changed in between these updates by
-   * typing in the editor.
-   */
-  variables?: string;
-
-  /**
-   * Headers to be set when opening a new tab
-   */
-  defaultHeaders?: string;
-};
+// Removed OOTB GraphiQL properties since we refactored the IDE Providers to not pass default props...
+export type EditorContextProviderProps = PropsWithChildren;
 
 export type EditorContextType = TabsState & {
   /**
@@ -275,12 +180,6 @@ export type EditorContextType = TabsState & {
    * component.
    */
   initialVariables: string;
-
-  /**
-   * A map of fragment definitions using the fragment name as key which are
-   * made available to include in the query.
-   */
-  externalFragments: Map<string, FragmentDefinitionNode>;
   /**
    * A list of custom validation rules that are run in addition to the rules
    * provided by the GraphQL spec.

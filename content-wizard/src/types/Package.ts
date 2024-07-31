@@ -17,7 +17,7 @@ export type PackageManagerRequest = Omit<RequestInit, 'body'> & {
   method: 'GET' | 'POST';
   endpoint: string;
   params?: Record<string, string>;
-  body?: FormData;
+  body?: FormData | URLSearchParams;
 };
 export type PackageManagerResponse = {
   success: boolean;

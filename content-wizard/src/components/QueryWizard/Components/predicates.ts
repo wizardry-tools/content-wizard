@@ -1,19 +1,5 @@
 import { ContentType, DateRange, FieldsConfig, InputValue, PredicateConfig, PredicatesConfig } from '@/types';
 
-// export const predicateTypes = {
-//   fulltext: 'fulltext',
-//   path: 'path',
-//   type: 'type',
-//   nodename: 'nodename',
-//   property: 'property',
-//   limit: 'limit',
-//   isLiveCopy: 'isLiveCopy',
-//   null: null,
-// } as const;
-
-// export type PredicateKey = keyof typeof predicateTypes;
-// export type PredicateType = (typeof predicateTypes)[PredicateKey];
-
 export const Predicate = ({
   rawInject = () => '',
   configInject = () => '',
@@ -161,7 +147,7 @@ export const predicates: PredicatesConfig = {
     type: 'limit',
     rawInject: (value: InputValue) => {
       if (value) {
-        return `p.limit=${value as string}\n${value < 0 ? 'p.guessTotal=1000' : ''}`;
+        return `p.limit=${value as string}\n${(value as number) < 0 ? 'p.guessTotal=1000' : ''}`;
       }
       return '';
     },

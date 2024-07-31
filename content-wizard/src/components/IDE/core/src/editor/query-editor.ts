@@ -1,6 +1,6 @@
 import { getSelectedOperationName } from '@graphiql/toolkit';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
-import type { FragmentDefinitionNode, GraphQLSchema, ValidationRule } from 'graphql';
+import type { GraphQLSchema, ValidationRule } from 'graphql';
 import { getOperationFacts, GraphQLDocumentMode } from 'graphql-language-service';
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 
@@ -55,7 +55,6 @@ export function useQueryEditor(
   const queryObjStatement = useRef(queryObj.statement);
   const queryLanguage = useMemo(() => queryObj.language, [queryObj.language]);
   const {
-    externalFragments,
     initialQuery,
     queryEditor,
     setOperationName,
@@ -319,7 +318,7 @@ export function useQueryEditor(
       editorInstance.operations = operationFacts?.operations ?? null;
 
       // Update variable types for the variable editor
-      if (variableEditor && variableEditor.options && variableEditor.options.lint) {
+      if (variableEditor?.options?.lint) {
         variableEditor.state.lint.linterOptions.variableToType = operationFacts?.variableToType;
         variableEditor.options.lint.variableToType = operationFacts?.variableToType;
         variableEditor.options.hintOptions.variableToType = operationFacts?.variableToType;
@@ -378,7 +377,6 @@ export function useQueryEditor(
 
   useSynchronizeSchema(queryEditor, schema ?? null, codeMirrorRef);
   useSynchronizeValidationRules(queryEditor, validationRules ?? null, codeMirrorRef);
-  useSynchronizeExternalFragments(queryEditor, externalFragments, codeMirrorRef);
 
   useCompletion(queryEditor, onClickReference ?? null, useQueryEditor);
 
@@ -464,38 +462,6 @@ function useSynchronizeValidationRules(
       codeMirrorRef.current.signal(editor, 'change', editor);
     }
   }, [editor, validationRules, codeMirrorRef]);
-}
-
-function useSynchronizeExternalFragments(
-  editor: CodeMirrorEditor | null,
-  externalFragments: Map<string, FragmentDefinitionNode>,
-  codeMirrorRef: MutableRefObject<CodeMirrorType | undefined>,
-) {
-  const externalFragmentList = useMemo(() => [...externalFragments.values()], [externalFragments]);
-
-  useEffect(() => {
-    if (
-      !editor ||
-      !editor.options ||
-      !editor.options.lint ||
-      !editor.state ||
-      !editor.state.lint ||
-      !editor.options.hintOptions ||
-      typeof editor.options.lint === 'boolean'
-    ) {
-      return;
-    }
-
-    const didChange = editor.options.lint.externalFragments !== externalFragmentList;
-
-    editor.state.lint.linterOptions.externalFragments = externalFragmentList;
-    editor.options.lint.externalFragments = externalFragmentList;
-    editor.options.hintOptions.externalFragments = externalFragmentList;
-
-    if (didChange && codeMirrorRef.current) {
-      codeMirrorRef.current.signal(editor, 'change', editor);
-    }
-  }, [editor, externalFragmentList, codeMirrorRef]);
 }
 
 const AUTO_COMPLETE_AFTER_KEY = /^[a-zA-Z0-9_@(]$/;

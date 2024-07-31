@@ -1,4 +1,3 @@
-import { FragmentDefinitionNode, parse, visit } from 'graphql';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   CodeMirrorEditor,
@@ -47,15 +46,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 
   const [shouldPersistHeaders, setShouldPersistHeadersInternal] = useState(() => {
     const isStored = storage.get(PERSIST_HEADERS_STORAGE_KEY) !== null;
-    return props.shouldPersistHeaders !== false && isStored
-      ? storage.get(PERSIST_HEADERS_STORAGE_KEY) === 'true'
-      : Boolean(props.shouldPersistHeaders);
+    return isStored ?? storage.get(PERSIST_HEADERS_STORAGE_KEY) === 'true';
   });
 
-  useSynchronizeValue(headerEditor, props.headers);
   useSynchronizeValue(queryEditor, queryObj);
-  useSynchronizeValue(responseEditor, props.response);
-  useSynchronizeValue(variableEditor, props.variables);
   useSynchronizeValue(wizardStatementEditor, queryObj);
 
   const storeTabs = useStoreTabs({
@@ -70,17 +64,15 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 
     // TODO: Add move IDE providers into @/providers and add support for QueryWizard fieldsConfig storage.
     const query = queryObj ?? storedQuery ?? null;
-    const variables = props.variables ?? storage.get(STORAGE_KEY_VARIABLES) ?? null;
-    const headers = props.headers ?? storage.get(STORAGE_KEY_HEADERS) ?? null;
-    const response = props.response ?? '';
-    const wizardStatement = props.wizardStatement ?? '';
+    const variables = storage.get(STORAGE_KEY_VARIABLES) ?? null;
+    const headers = storage.get(STORAGE_KEY_HEADERS) ?? null;
+    const response = '';
+    const wizardStatement = '';
 
     const tabState = getDefaultTabState({
       query,
       variables,
       headers,
-      defaultTabs: props.defaultTabs,
-      defaultHeaders: props.defaultHeaders,
       storage,
       shouldPersistHeaders,
     });
@@ -89,7 +81,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     return {
       query: query ?? (tabState.activeTabIndex === 0 ? tabState.tabs[0].query : null) ?? null,
       variables: variables ?? '',
-      headers: headers ?? props.defaultHeaders ?? '',
+      headers: headers ?? '',
       response,
       wizardStatement,
       tabState,
@@ -116,12 +108,12 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 
   const lastShouldPersistHeadersProp = useRef<boolean | undefined>();
   useEffect(() => {
-    const propValue = Boolean(props.shouldPersistHeaders);
+    const propValue = false;
     if (lastShouldPersistHeadersProp.current !== propValue) {
       setShouldPersistHeaders(propValue);
       lastShouldPersistHeadersProp.current = propValue;
     }
-  }, [props.shouldPersistHeaders, setShouldPersistHeaders]);
+  }, [setShouldPersistHeaders]);
 
   const synchronizeActiveTabValues = useSynchronizeActiveTabValues({
     queryEditor,
@@ -136,7 +128,7 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
     headerEditor,
     responseEditor,
   });
-  const { onTabChange, defaultHeaders, children } = props;
+  const { children } = props;
 
   const addTab = useCallback<EditorContextType['addTab']>(() => {
     setTabState((current) => {
@@ -144,15 +136,14 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       const updatedValues = synchronizeActiveTabValues(current);
       const newQuery = defaultAdvancedQueries[queryObj.language];
       const updated = {
-        tabs: [...updatedValues.tabs, createTab({ query: newQuery, headers: defaultHeaders })],
+        tabs: [...updatedValues.tabs, createTab({ query: newQuery })],
         activeTabIndex: updatedValues.tabs.length,
       };
       storeTabs(updated);
       setEditorValues(updated.tabs[updated.activeTabIndex]);
-      onTabChange?.(updated);
       return updated;
     });
-  }, [queryObj.language, defaultHeaders, onTabChange, setEditorValues, storeTabs, synchronizeActiveTabValues]);
+  }, [queryObj.language, setEditorValues, storeTabs, synchronizeActiveTabValues]);
 
   const changeTab = useCallback<EditorContextType['changeTab']>(
     (index) => {
@@ -163,11 +154,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
         };
         storeTabs(updated);
         setEditorValues(updated.tabs[updated.activeTabIndex]);
-        onTabChange?.(updated);
         return updated;
       });
     },
-    [onTabChange, setEditorValues, storeTabs],
+    [setEditorValues, storeTabs],
   );
 
   const moveTab = useCallback<EditorContextType['moveTab']>(
@@ -180,11 +170,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
         };
         storeTabs(updated);
         setEditorValues(updated.tabs[updated.activeTabIndex]);
-        onTabChange?.(updated);
         return updated;
       });
     },
-    [onTabChange, setEditorValues, storeTabs],
+    [setEditorValues, storeTabs],
   );
 
   const closeTab = useCallback<EditorContextType['closeTab']>(
@@ -196,11 +185,10 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
         };
         storeTabs(updated);
         setEditorValues(updated.tabs[updated.activeTabIndex]);
-        onTabChange?.(updated);
         return updated;
       });
     },
-    [onTabChange, setEditorValues, storeTabs],
+    [setEditorValues, storeTabs],
   );
 
   const updateActiveTabValues = useCallback<EditorContextType['updateActiveTabValues']>(
@@ -208,14 +196,12 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       setTabState((current) => {
         const updated = setPropertiesInActiveTab(current, partialTab);
         storeTabs(updated);
-        onTabChange?.(updated);
         return updated;
       });
     },
-    [onTabChange, storeTabs],
+    [storeTabs],
   );
 
-  const { onEditOperationName } = props;
   const setOperationName = useCallback<EditorContextType['setOperationName']>(
     (operationName) => {
       if (!queryEditor) {
@@ -224,32 +210,11 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
 
       queryEditor.operationName = operationName;
       updateActiveTabValues({ operationName });
-      onEditOperationName?.(operationName);
     },
-    [onEditOperationName, queryEditor, updateActiveTabValues],
+    [queryEditor, updateActiveTabValues],
   );
 
-  const externalFragments = useMemo(() => {
-    const map = new Map<string, FragmentDefinitionNode>();
-    if (Array.isArray(props.externalFragments)) {
-      for (const fragment of props.externalFragments) {
-        map.set(fragment.name.value, fragment);
-      }
-    } else if (typeof props.externalFragments === 'string') {
-      visit(parse(props.externalFragments, {}), {
-        FragmentDefinition(fragment) {
-          map.set(fragment.name.value, fragment);
-        },
-      });
-    } else if (props.externalFragments) {
-      throw new Error(
-        'The `externalFragments` prop must either be a string that contains the fragment definitions in SDL or a list of FragmentDefinitionNode objects.',
-      );
-    }
-    return map;
-  }, [props.externalFragments]);
-
-  const validationRules = useMemo(() => props.validationRules ?? [], [props.validationRules]);
+  const validationRules = useMemo(() => [], []);
 
   const value = useMemo<EditorContextType>(
     () => ({
@@ -277,7 +242,6 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       initialHeaders: initialState.headers,
       initialResponse: initialState.response,
       initialWizardStatement: initialState.wizardStatement,
-      externalFragments,
       validationRules,
       shouldPersistHeaders,
       setShouldPersistHeaders,
@@ -297,7 +261,6 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
       variableEditor,
       setOperationName,
       initialState,
-      externalFragments,
       validationRules,
       shouldPersistHeaders,
       setShouldPersistHeaders,

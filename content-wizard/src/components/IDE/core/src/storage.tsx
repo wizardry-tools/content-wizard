@@ -1,8 +1,8 @@
-import { StorageContextProviderProps, StorageContextType } from '@/types';
+import { StorageContextProviderProps, StorageContextType, WizardStorageAPI } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useAlertDispatcher, useLogger } from '@/providers';
 import { createNonNullableContext, createNonNullableContextHook } from './utility/context';
-import { WizardStorageAPI, useWizardStorageAPI } from './storage-api';
+import { useWizardStorageAPI } from './storage-api';
 
 export const StorageContext = createNonNullableContext<StorageContextType>('StorageContext');
 

@@ -89,7 +89,7 @@ export function useResultExplorerEditor(
     };
   }, [data, editor, setResultExplorerEditor]);
 
-  useKeyMap(editor, ['Shift-Ctrl-C'], copy);
+  useKeyMap(editor, ['Shift-Ctrl-C'] as string[], copy);
   useSynchronizeOption(editor, 'keyMap', keyMap);
 
   // this is just a basic handler that updates the content inside the editor when the content changes.

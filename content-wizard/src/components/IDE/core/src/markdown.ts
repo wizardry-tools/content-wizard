@@ -1,6 +1,6 @@
-import MarkdownIt from 'markdown-it';
+import markdownit from 'markdown-it';
 
-export const markdown = new MarkdownIt({
+export const markdown = markdownit({
   breaks: true,
   linkify: true,
-});
+} as markdownit.Options);

@@ -213,7 +213,7 @@ import { ModeOptions, SqlState } from '@/types';
       indent: function (state: SqlState, textAfter) {
         const cx = state.context;
         if (!cx) return CodeMirror.Pass;
-        const closing = textAfter.charAt(0) === cx.type;
+        const closing = textAfter.startsWith(cx.type);
         if (cx.align) return cx.col + (closing ? 0 : 1);
         else return cx.indent + (closing ? 0 : (config.indentUnit ?? 0));
       },

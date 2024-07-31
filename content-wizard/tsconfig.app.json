@@ -15,7 +15,6 @@
     /* Module Config */
     "module": "ESNext",
     "moduleResolution": "node",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
