@@ -56,7 +56,7 @@ export const LanguageSelector = () => {
 
   const handleAPIChange = useCallback(
     (newAPI: API) => {
-      logger.debug({ message: `LanguageSelector apiChange()` });
+      logger.debug({ message: `LanguageSelector apiChange() api`, newAPI });
       queryDispatcher({
         type: 'apiChange',
         api: newAPI,

@@ -49,9 +49,8 @@ export function useResultExplorerEditor(
       import('codemirror/addon/search/search'),
       import('codemirror/addon/search/searchcursor'),
       import('codemirror/addon/search/jump-to-line'),
-      import('codemirror/mode/javascript/javascript' as any),
-      // @ts-expect-error module isn't found, but it is there
-      import('codemirror/keymap/sublime'),
+      import('codemirror/mode/javascript/javascript' as never),
+      import('codemirror/keymap/sublime' as never),
     ];
     void importCodeMirror(addons, { useCommonAddons: true }).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up

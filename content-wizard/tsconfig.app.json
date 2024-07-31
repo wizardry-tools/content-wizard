@@ -3,10 +3,10 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
+    "target": "ES2021",
     "useDefineForClassFields": true,
     "useUnknownInCatchVariables": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "allowJs": true,
@@ -35,12 +35,6 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["./*"],
-//      "@/types": ["./types"],
-//      "@/utility": ["./utility"],
-//      "@/icons": ["./icons"],
-//      "@/providers": ["./providers"],
-//      "@/components": ["./components"],
-//      "@/components/*": ["./components/*"]
     },
     "types": [
       "react",
@@ -50,8 +44,7 @@
       "markdown-it",
       "set-value",
       "node",
-      "vitest/globals",
-      "jest-dom"
+      "vitest/globals"
     ]
   },
   "include": ["vite-env.d.ts", "**/*.d.ts","**/*.ts", "**/*.tsx"],

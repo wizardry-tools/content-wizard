@@ -26,7 +26,7 @@ export const commonKeys = {
  * Dynamically import codemirror and dependencies
  * This works for codemirror 5, not sure if the same imports work for 6
  */
-export async function importCodeMirror(addons: Promise<CodeMirrorImport>[], options?: { useCommonAddons?: boolean }) {
+export async function importCodeMirror(addons: CodeMirrorImport[], options?: { useCommonAddons?: boolean }) {
   const CodeMirror = await import('codemirror').then((c) =>
     // Depending on bundler and settings the dynamic import either returns a
     // function (e.g. parcel) or an object containing a `default` property
@@ -46,8 +46,7 @@ export async function importCodeMirror(addons: Promise<CodeMirrorImport>[], opti
           import('codemirror/addon/search/searchcursor'),
           import('codemirror/addon/search/jump-to-line'),
           import('codemirror/addon/dialog/dialog'),
-          // @ts-expect-error This module declaration doesn't exist.
-          import('codemirror/keymap/sublime'),
+          import('codemirror/keymap/sublime' as never),
           ...addons,
         ],
   );

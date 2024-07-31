@@ -3,20 +3,19 @@
 import CodeMirror from 'codemirror';
 import { XpathPropertiesState } from '@/types';
 
-/**
- * turn a space-separated list into an array. For some reason, this method can't be imported into other files.
- * @param str
- */
+// turn a space-separated list into an array
 function set(str: string) {
-  const obj: any = {},
+  const obj: Record<string, boolean> = {},
     words = str.split(' ');
-  for (let i = 0; i < words.length; ++i) obj[words[i]] = true;
+  words.forEach((word) => {
+    obj[word] = true;
+  });
   return obj;
 }
 
-const pathMatch: any = /^[\w\-/:]*\/\//;
-const functionMatch: any = /^[\w:]+\(/;
-const variableMatch: any = /^[\w]+:?[\w]+[,*=\s\])}]?/;
+const pathMatch = /^[\w\-/:]*\/\//;
+const functionMatch = /^[\w:]+\(/;
+const variableMatch = /^\w+:?\w+[,*=\s\])}]?/;
 
 const atoms = set('or and like order by');
 
@@ -24,13 +23,14 @@ const atoms = set('or and like order by');
   CodeMirror.defineMode('xpath', function () {
     return {
       token: function (stream: CodeMirror.StringStream, state: XpathPropertiesState) {
-        const sol = stream.sol() || state.afterSection;
-        //var eol = stream.eol();
+        const sol = stream.sol() ?? state.afterSection;
 
         state.afterSection = false;
 
         if (sol) {
-          while (stream.eatSpace()) {}
+          while (stream.eatSpace()) {
+            /* empty */
+          }
         }
 
         const ch = stream.next();
@@ -72,7 +72,7 @@ const atoms = set('or and like order by');
           // keyword check
           stream.eatWhile(/^[_\w\d]/);
           const word = stream.current().toLowerCase().trim();
-          if (atoms.hasOwnProperty(word)) return 'atom';
+          if (word in atoms) return 'atom';
           return null;
         }
       },

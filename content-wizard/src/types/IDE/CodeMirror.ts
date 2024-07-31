@@ -1,10 +1,11 @@
 import CodeMirror from 'codemirror';
 
+export type QueryBuilderPropertiesStatePosition = 'predicate' | 'quote' | 'comment' | 'equals' | 'string';
 /**
  * Customized QueryBuilder codemirror parser mode originally based off of the OOTB "Properties" mode
  */
 export type QueryBuilderPropertiesState = {
-  position: 'predicate' | 'quote' | 'comment' | 'equals' | 'string';
+  position: QueryBuilderPropertiesStatePosition;
   nextMultiline: boolean;
   inMultiline: boolean;
   afterSection: boolean;
@@ -15,17 +16,18 @@ export type SqlContext = {
   indent: number;
   col: number;
   type: string;
+  align?: boolean;
 };
 
 export type SqlState = {
-  tokenize: (arg0: CodeMirror.StringStream, arg1: any) => any;
+  tokenize: (arg0: CodeMirror.StringStream, arg1: SqlState) => string | null | undefined;
   context: SqlContext | null;
   indent?: number;
 };
 type ModeOptionMap = Record<string, boolean>;
 type HookMap = Record<string, (stream: CodeMirror.StringStream) => string>;
 export type ModeOptions = {
-  client?: any;
+  client?: ModeOptionMap;
   atoms?: ModeOptionMap;
   builtin?: ModeOptionMap;
   keywords?: ModeOptionMap;

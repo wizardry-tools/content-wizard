@@ -121,8 +121,10 @@ export function useCompletion(
         callback?.({ kind: 'Type', type, schema: schema ?? undefined });
       });
     };
+    // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
     editor.on('hasCompletion', handleCompletion);
     return () => {
+      // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
       editor.off('hasCompletion', handleCompletion);
     };
   }, [callback, editor, explorer, plugin, schema]);

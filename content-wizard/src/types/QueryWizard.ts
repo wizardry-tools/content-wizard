@@ -7,7 +7,7 @@ export type QueryButtonProps = {
   disabled: boolean;
   onClick: () => void;
 };
-export type TabProps = {
+export type AccordionTabProps = {
   fields: FieldConfig[];
   fullConfig: FieldsConfig;
   expanded: string | false;

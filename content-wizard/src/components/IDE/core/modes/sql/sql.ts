@@ -4,18 +4,20 @@ import CodeMirror, { ModeFactory } from 'codemirror';
 import { ModeOptions, SqlState } from '@/types';
 
 (() => {
-  CodeMirror.defineMode('sql', ((config, parserConfig: ModeOptions) => {
-    const client = parserConfig.client ?? {},
-      atoms = parserConfig.atoms ?? { false: true, true: true, null: true },
-      builtin = parserConfig.builtin ?? set(defaultBuiltin),
-      keywords = parserConfig.keywords ?? set(sqlKeywords),
-      operatorChars = parserConfig.operatorChars ?? /^[*+\-%<>!=&|~^/]/,
-      support = parserConfig.support ?? {},
-      hooks = parserConfig.hooks ?? {},
-      dateSQL = parserConfig.dateSQL ?? { date: true, time: true, timestamp: true },
-      backslashStringEscapes = parserConfig.backslashStringEscapes !== false,
-      brackets = parserConfig.brackets ?? /^[{}()[]]/,
-      punctuation = parserConfig.punctuation ?? /^[;.,:]/;
+  CodeMirror.defineMode('sql', ((config: CodeMirror.EditorConfiguration, parserConfig: ModeOptions) => {
+    const {
+      client = {},
+      atoms = { false: true, true: true, null: true },
+      builtin = set(defaultBuiltin),
+      keywords = set(sqlKeywords),
+      operatorChars = /^[*+\-%<>!=&|~^/]/,
+      support = {},
+      hooks = {},
+      dateSQL = { date: true, time: true, timestamp: true },
+      backslashStringEscapes = false,
+      brackets = /^[{}()[]]/,
+      punctuation = /^[;.,:]/,
+    } = parserConfig;
 
     function tokenBase(stream: CodeMirror.StringStream, state: SqlState) {
       const ch: string | null = stream.next();
@@ -24,13 +26,13 @@ import { ModeOptions, SqlState } from '@/types';
       }
 
       // call hooks from the mime type
-      if (hooks[ch]) {
+      if (ch in hooks) {
         const result = hooks[ch](stream);
         if (result) return result;
       }
 
       if (
-        support.hexNumber &&
+        'hexNumber' in support &&
         ((ch === '0' && stream.match(/^[xX][0-9a-fA-F]+/)) || ch === 'x' || ch === 'X') &&
         stream.match(/^'[0-9a-fA-F]*'/)
       ) {
@@ -38,7 +40,7 @@ import { ModeOptions, SqlState } from '@/types';
         // ref: https://dev.mysql.com/doc/refman/8.0/en/hexadecimal-literals.html
         return 'number';
       } else if (
-        support.binaryNumber &&
+        'binaryNumber' in support &&
         (((ch === 'b' || ch === 'B') && stream.match(/^'[01]*'/)) || (ch === '0' && stream.match(/^b[01]+/)))
       ) {
         // bitstring
@@ -48,28 +50,28 @@ import { ModeOptions, SqlState } from '@/types';
         // numbers
         // ref: https://dev.mysql.com/doc/refman/8.0/en/number-literals.html
         stream.match(/^[0-9]*(\.[0-9]+)?([eE][-+]?[0-9]+)?/);
-        support.decimallessFloat && stream.match(/^\.(?!\.)/);
+        'decimallessFloat' in support && stream.match(/^\.(?!\.)/);
         return 'number';
       } else if (ch === '?' && (stream.eatSpace() || stream.eol() || stream.eat(';'))) {
         // placeholders
         return 'variable-3';
-      } else if (ch === "'" || (ch === '"' && support.doubleQuote)) {
+      } else if (ch === "'" || (ch === '"' && 'doubleQuote' in support)) {
         // strings
         // ref: https://dev.mysql.com/doc/refman/8.0/en/string-literals.html
         state.tokenize = tokenLiteral(ch);
         return state.tokenize(stream, state);
       } else if (
-        ((support.nCharCast && (ch === 'n' || ch === 'N')) ||
-          (support.charsetCast && ch === '_' && stream.match(/[a-z][a-z0-9]*/i))) &&
+        (('nCharCast' in support && (ch === 'n' || ch === 'N')) ||
+          ('charsetCast' in support && ch === '_' && stream.match(/[a-z][a-z0-9]*/i))) &&
         (stream.peek() === "'" || stream.peek() === '"')
       ) {
         // charset casting: _utf8'str', N'str', n'str'
         // ref: https://dev.mysql.com/doc/refman/8.0/en/string-literals.html
         return 'keyword';
       } else if (
-        support.escapeConstant &&
+        'escapeConstant' in support &&
         (ch === 'e' || ch === 'E') &&
-        (stream.peek() === "'" || (stream.peek() === '"' && support.doubleQuote))
+        (stream.peek() === "'" || (stream.peek() === '"' && 'doubleQuote' in support))
       ) {
         // escape constant: E'str', e'str'
         // ref: https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS-ESCAPE
@@ -77,13 +79,13 @@ import { ModeOptions, SqlState } from '@/types';
           return (state.tokenize = tokenLiteral(stream.next(), true))(stream, state);
         };
         return 'keyword';
-      } else if (support.commentSlashSlash && ch === '/' && stream.eat('/')) {
+      } else if ('commentSlashSlash' in support && ch === '/' && stream.eat('/')) {
         // 1-line comment
         stream.skipToEnd();
         return 'comment';
       } else if (
-        (support.commentHash && ch === '#') ||
-        (ch === '-' && stream.eat('-') && (!support.commentSpaceRequired || stream.eat(' ')))
+        ('commentHash' in support && ch === '#') ||
+        (ch === '-' && stream.eat('-') && (!('commentSpaceRequired' in support) || stream.eat(' ')))
       ) {
         // 1-line comments
         // ref: https://kb.askmonty.org/en/comment-syntax/
@@ -96,7 +98,7 @@ import { ModeOptions, SqlState } from '@/types';
         return state.tokenize(stream, state);
       } else if (ch === '.') {
         // .1 for 0.1
-        if (support.zerolessFloat && stream.match(/^(\d+(?:e[+-]?\d+)?)/i)) return 'number';
+        if ('zerolessFloat' in support && stream.match(/^(\d+(?:e[+-]?\d+)?)/i)) return 'number';
         if (stream.match(/^\.+/)) return null;
         if (stream.match(/^[\w\d_$#]+/)) return 'variable-2';
       } else if (operatorChars.test(ch)) {
@@ -105,7 +107,7 @@ import { ModeOptions, SqlState } from '@/types';
         return 'operator';
       } else if (brackets.test(ch)) {
         // brackets
-        if (support.bracketVariable && ch === '[') {
+        if ('bracketVariable' in support && ch === '[') {
           // this turns the square brackets and any values inside them into a variable-2.
           state.tokenize = tokenLiteral(ch, false, ']');
           return state.tokenize(stream, state);
@@ -127,12 +129,11 @@ import { ModeOptions, SqlState } from '@/types';
         const word = stream.current().toLowerCase();
         // dates (standard SQL syntax)
         // ref: https://dev.mysql.com/doc/refman/8.0/en/date-and-time-literals.html
-        if (dateSQL.hasOwnProperty(word) && (stream.match(/^( )+'[^']*'/) || stream.match(/^( )+"[^"]*"/)))
-          return 'number';
-        if (atoms.hasOwnProperty(word)) return 'atom';
-        if (builtin.hasOwnProperty(word)) return 'type';
-        if (keywords.hasOwnProperty(word)) return 'keyword';
-        if (client.hasOwnProperty(word)) return 'builtin';
+        if (word in dateSQL && (stream.match(/^( )+'[^']*'/) || stream.match(/^( )+"[^"]*"/))) return 'number';
+        if (word in atoms) return 'atom';
+        if (word in builtin) return 'type';
+        if (word in keywords) return 'keyword';
+        if (word in client) return 'builtin';
         return null;
       }
     }
@@ -191,7 +192,7 @@ import { ModeOptions, SqlState } from '@/types';
         return { tokenize: tokenBase, context: null };
       },
 
-      token: function (stream: CodeMirror.StringStream, state) {
+      token: function (stream: CodeMirror.StringStream, state: SqlState) {
         if (stream.sol()) {
           if (state.context && state.context.align == null) state.context.align = false;
         }
@@ -209,12 +210,12 @@ import { ModeOptions, SqlState } from '@/types';
         return style;
       },
 
-      indent: function (state, textAfter) {
+      indent: function (state: SqlState, textAfter) {
         const cx = state.context;
         if (!cx) return CodeMirror.Pass;
         const closing = textAfter.charAt(0) === cx.type;
         if (cx.align) return cx.col + (closing ? 0 : 1);
-        else return cx.indent + (closing ? 0 : config.indentUnit);
+        else return cx.indent + (closing ? 0 : (config.indentUnit ?? 0));
       },
 
       blockCommentStart: '/*',
@@ -223,7 +224,7 @@ import { ModeOptions, SqlState } from '@/types';
       closeBrackets: '()[]{}\'\'""``',
       config: parserConfig,
     };
-  }) as ModeFactory<any>); // end definition
+  }) as ModeFactory<unknown>); // end definition
 
   // `identifier`
   function hookIdentifier(stream: CodeMirror.StringStream) {
@@ -295,9 +296,11 @@ import { ModeOptions, SqlState } from '@/types';
 
   // turn a space-separated list into an array
   function set(str: string) {
-    const obj: any = {},
+    const obj: Record<string, boolean> = {},
       words = str.split(' ');
-    for (let i = 0; i < words.length; ++i) obj[words[i]] = true;
+    words.forEach((word) => {
+      obj[word] = true;
+    });
     return obj;
   }
 
@@ -313,7 +316,7 @@ import { ModeOptions, SqlState } from '@/types';
     dateSQL: set('date time timestamp'),
     punctuation: /^[.,]/,
     support: set('bracketVariable doubleQuote binaryNumber hexNumber'),
-  } as any);
+  } as never);
 
   CodeMirror.defineMIME('text/x-mssql', {
     name: 'sql',
@@ -338,7 +341,7 @@ import { ModeOptions, SqlState } from '@/types';
     hooks: {
       '@': hookVar,
     },
-  } as any);
+  } as never);
 
   CodeMirror.defineMIME('text/x-mysql', {
     name: 'sql',
@@ -363,7 +366,7 @@ import { ModeOptions, SqlState } from '@/types';
       '`': hookIdentifier,
       '\\': hookClient,
     },
-  } as any);
+  } as never);
 
   CodeMirror.defineMIME('text/x-mariadb', {
     name: 'sql',
@@ -388,7 +391,7 @@ import { ModeOptions, SqlState } from '@/types';
       '`': hookIdentifier,
       '\\': hookClient,
     },
-  } as any);
+  } as never);
 
   // provided by the phpLiteAdmin project - phpliteadmin.org
   CodeMirror.defineMIME('text/x-sqlite', {
@@ -425,7 +428,7 @@ import { ModeOptions, SqlState } from '@/types';
       // there is also support for backticks, ref: http://sqlite.org/lang_keywords.html
       '`': hookIdentifier,
     },
-  } as any);
+  } as never);
 
   // the query language used by Apache Cassandra is called CQL, but this mime type
   // is called Cassandra to avoid confusion with Contextual Query Language
@@ -443,7 +446,7 @@ import { ModeOptions, SqlState } from '@/types';
     dateSQL: {},
     support: set('commentSlashSlash decimallessFloat'),
     hooks: {},
-  } as any);
+  } as never);
 
   // this is based on Peter Raganitsch's 'plsql' mode
   CodeMirror.defineMIME('text/x-plsql', {
@@ -460,7 +463,7 @@ import { ModeOptions, SqlState } from '@/types';
     operatorChars: /^[*/+\-%<>!=~]/,
     dateSQL: set('date time timestamp'),
     support: set('doubleQuote nCharCast zerolessFloat binaryNumber hexNumber'),
-  } as any);
+  } as never);
 
   // Created to support specific hive keywords
   CodeMirror.defineMIME('text/x-hive', {
@@ -475,7 +478,7 @@ import { ModeOptions, SqlState } from '@/types';
     operatorChars: /^[*+\-%<>!=]/,
     dateSQL: set('date timestamp'),
     support: set('doubleQuote binaryNumber hexNumber'),
-  } as any);
+  } as never);
 
   CodeMirror.defineMIME('text/x-pgsql', {
     name: 'sql',
@@ -495,7 +498,7 @@ import { ModeOptions, SqlState } from '@/types';
     backslashStringEscapes: false,
     dateSQL: set('date time timestamp'),
     support: set('decimallessFloat zerolessFloat binaryNumber hexNumber nCharCast charsetCast escapeConstant'),
-  } as any);
+  } as never);
 
   // Google's SQL-like query language, GQL
   CodeMirror.defineMIME('text/x-gql', {
@@ -506,7 +509,7 @@ import { ModeOptions, SqlState } from '@/types';
     atoms: set('false true'),
     builtin: set('blob datetime first key __key__ string integer double boolean null'),
     operatorChars: /^[*+\-%<>!=]/,
-  } as any);
+  } as never);
 
   // Greenplum
   CodeMirror.defineMIME('text/x-gpsql', {
@@ -523,7 +526,7 @@ import { ModeOptions, SqlState } from '@/types';
     operatorChars: /^[*+\-%<>!=&|^/#@?~]/,
     dateSQL: set('date time timestamp'),
     support: set('decimallessFloat zerolessFloat binaryNumber hexNumber nCharCast charsetCast'),
-  } as any);
+  } as never);
 
   // Spark SQL
   CodeMirror.defineMIME('text/x-sparksql', {
@@ -538,7 +541,7 @@ import { ModeOptions, SqlState } from '@/types';
     operatorChars: /^[*/+\-%<>!=~&|^]/,
     dateSQL: set('date time timestamp'),
     support: set('doubleQuote zerolessFloat'),
-  } as any);
+  } as never);
 
   // Esper
   CodeMirror.defineMIME('text/x-esper', {
@@ -553,7 +556,7 @@ import { ModeOptions, SqlState } from '@/types';
     operatorChars: /^[*+\-%<>!=&|^/#@?~]/,
     dateSQL: set('time'),
     support: set('decimallessFloat zerolessFloat binaryNumber hexNumber'),
-  } as any);
+  } as never);
 
   // Trino (formerly known as Presto)
   CodeMirror.defineMIME('text/x-trino', {
@@ -577,7 +580,7 @@ import { ModeOptions, SqlState } from '@/types';
     // hexNumber is necessary for VARBINARY literals, e.g. X'65683F'
     // but it also enables 0xFF hex numbers, which Trino doesn't support.
     support: set('decimallessFloat zerolessFloat hexNumber'),
-  } as any);
+  } as never);
 
   // let sqlKeywords = "alter and as asc between by count create delete desc distinct drop from group having in insert into is join like not on or order select set table union update values where limit ";
   CodeMirror.defineMIME('text/x-jcrsql2', {
@@ -598,7 +601,7 @@ import { ModeOptions, SqlState } from '@/types';
     hooks: {
       '\\': hookClient,
     },
-  } as any);
+  } as never);
 })();
 /*
   How Properties of Mime Types are used by SQL Mode

@@ -1,23 +1,9 @@
-import { ComponentType, JSXElementConstructor, PropsWithChildren, ReactNode } from 'react';
+import { ComponentType, PropsWithChildren, ReactNode } from 'react';
 import { Query } from '../Query';
 
 export type IDEProviderProps = PropsWithChildren;
 
 export type Caller<T = never> = ((props?: T, caller?: Caller) => unknown) | ComponentType<T>;
-
-export type IDEToolbarConfig = {
-  /**
-   * This content will be rendered after the built-in buttons of the toolbar.
-   * Note that this will not apply if you provide a completely custom toolbar
-   * (by passing `IDE.Toolbar` as child to the `IDE` component).
-   */
-  additionalContent?: ReactNode;
-
-  /**
-   * same as above, except a component with access to context
-   */
-  additionalComponent?: JSXElementConstructor<any>;
-};
 
 export type ToolbarButtonProps = {
   label: string;

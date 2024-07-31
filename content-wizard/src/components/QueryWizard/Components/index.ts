@@ -18,7 +18,7 @@ export * from './SimpleCheckbox';
 export * from './SimpleSelect';
 export * from './SimpleSlider';
 export * from './StatementWindow';
-export * from './Tab';
+export * from './AccordionTab.tsx';
 export * from './Accordion';
 
 export const FieldTypes: Record<string, ElementType> = {

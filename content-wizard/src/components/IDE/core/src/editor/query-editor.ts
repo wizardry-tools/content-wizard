@@ -7,7 +7,8 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react
 import {
   Caller,
   CodeMirrorEditor,
-  CodeMirrorEditorWithOperationFacts, CodeMirrorImport,
+  CodeMirrorEditorWithOperationFacts,
+  CodeMirrorImport,
   CodeMirrorType,
   UseQueryEditorArgs,
 } from '@/types';
@@ -318,7 +319,7 @@ export function useQueryEditor(
       editorInstance.operations = operationFacts?.operations ?? null;
 
       // Update variable types for the variable editor
-      if (variableEditor) {
+      if (variableEditor && variableEditor.options && variableEditor.options.lint) {
         variableEditor.state.lint.linterOptions.variableToType = operationFacts?.variableToType;
         variableEditor.options.lint.variableToType = operationFacts?.variableToType;
         variableEditor.options.hintOptions.variableToType = operationFacts?.variableToType;
@@ -430,7 +431,6 @@ function useSynchronizeSchema(
     if (!editor) {
       return;
     }
-
     const didChange = JSON.stringify(editor.options.lint.schema) !== JSON.stringify(schema);
 
     editor.state.lint.linterOptions.schema = schema;
@@ -474,9 +474,18 @@ function useSynchronizeExternalFragments(
   const externalFragmentList = useMemo(() => [...externalFragments.values()], [externalFragments]);
 
   useEffect(() => {
-    if (!editor) {
+    if (
+      !editor ||
+      !editor.options ||
+      !editor.options.lint ||
+      !editor.state ||
+      !editor.state.lint ||
+      !editor.options.hintOptions ||
+      typeof editor.options.lint === 'boolean'
+    ) {
       return;
     }
+
     const didChange = editor.options.lint.externalFragments !== externalFragmentList;
 
     editor.state.lint.linterOptions.externalFragments = externalFragmentList;

@@ -14,7 +14,7 @@ describe('TabPanel', () => {
 
     render(<TabPanel {...props} />);
 
-    expect(screen.getByText('Tab Content')).toBeTruthy();
+    expect(screen.getByText('AccordionTab Content')).toBeTruthy();
   });
 
   it('does not render children if value is not equal to index', () => {
@@ -27,7 +27,7 @@ describe('TabPanel', () => {
 
     render(<TabPanel {...props} />);
 
-    expect(screen.queryByText('Tab Content')).not.toBeVisible();
+    expect(screen.queryByText('AccordionTab Content')).not.toBeVisible();
   });
 
   it('renders with provided padding', () => {
@@ -40,7 +40,7 @@ describe('TabPanel', () => {
     };
 
     render(<TabPanel {...props} />);
-    const element = screen.getByText('Tab Content');
+    const element = screen.getByText('AccordionTab Content');
     expect(element).toHaveStyle(`padding: ${props.padding}`);
   });
 });

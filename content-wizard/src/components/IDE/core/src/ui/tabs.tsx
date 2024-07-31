@@ -27,12 +27,12 @@ const TabButton = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>
     {props.children}
   </UnStyledButton>
 ));
-TabButton.displayName = 'Tab.Button';
+TabButton.displayName = 'AccordionTab.Button';
 
 const TabClose = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>((props, ref) => (
-  <Tooltip label="Close Tab">
+  <Tooltip label="Close AccordionTab">
     <UnStyledButton
-      aria-label="Close Tab"
+      aria-label="Close AccordionTab"
       {...props}
       ref={ref}
       type="button"
@@ -42,7 +42,7 @@ const TabClose = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>(
     </UnStyledButton>
   </Tooltip>
 ));
-TabClose.displayName = 'Tab.Close';
+TabClose.displayName = 'AccordionTab.Close';
 
 export const Tab = createComponentGroup(TabRoot, {
   Button: TabButton,

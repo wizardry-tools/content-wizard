@@ -118,8 +118,8 @@ export function ExecutionContextProvider({
     });
 
     try {
-      const fullResponse: ExecutionResult = {};
-      const handleResponse = (result: ExecutionResult) => {
+      const fullResponse = {};
+      const handleResponse = (result: unknown) => {
         // A different query was dispatched in the meantime, so don't
         // show the results of this one.
         if (queryId !== queryIdRef.current) {
@@ -239,7 +239,7 @@ function tryParseJsonObject({
   errorMessageParse: string;
   errorMessageType: string;
 }) {
-  let parsed: Record<string, any> | undefined;
+  let parsed: Record<string, unknown> | undefined;
   try {
     parsed = json && json.trim() !== '' ? JSON.parse(json) : undefined;
   } catch (error) {

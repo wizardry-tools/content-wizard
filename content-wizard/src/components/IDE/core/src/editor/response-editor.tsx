@@ -39,8 +39,7 @@ export function useResponseEditor(
         import('codemirror/addon/search/search'),
         import('codemirror/addon/search/searchcursor'),
         import('codemirror/addon/search/jump-to-line'),
-        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
-        import('codemirror/keymap/sublime'),
+        import('codemirror/keymap/sublime' as never),
         import('codemirror-graphql/esm/results/mode'),
         import('codemirror-graphql/esm/utils/info-addon'),
       ],

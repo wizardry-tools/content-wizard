@@ -31,7 +31,7 @@ export function onHasCompletion(
     CodeMirror.on(
       data,
       'select',
-      // @ts-expect-error
+      // @ts-expect-error The @type definition for this handler seems outdated, and doesn't match how it's being used.
       (ctx: IHint, el: HTMLDivElement) => {
         // Only the first time (usually when the hint UI is first displayed)
         // do we create the information nodes.

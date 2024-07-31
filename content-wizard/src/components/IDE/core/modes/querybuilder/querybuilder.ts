@@ -27,7 +27,9 @@ import { QueryBuilderPropertiesState } from '@/types';
         }
 
         if (sol) {
-          while (stream.eatSpace()) {}
+          while (stream.eatSpace()) {
+            /* empty */
+          }
         }
 
         const ch = stream.next();

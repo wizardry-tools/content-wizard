@@ -1,4 +1,4 @@
-import type { Editor, Position, Token } from 'codemirror';
+import { Editor, Position, Token } from 'codemirror';
 import { ComponentType, ReactNode } from 'react';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import { DocumentNode, FragmentDefinitionNode, OperationDefinitionNode, ValidationRule } from 'graphql/index';
@@ -9,7 +9,9 @@ import { TabDefinition, TabsState, TabState } from './IDE';
 
 export type CodeMirrorType = typeof import('codemirror');
 
-export type CodeMirrorEditor = Editor & { options?: any };
+// TODO: Refactor this logic to avoid use of `any`
+// disable the no-explicit-any rule for this file until the exported function is refactored.
+export type CodeMirrorEditor = Editor & { options?: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export type KeyMap = 'sublime' | 'emacs' | 'vim';
 

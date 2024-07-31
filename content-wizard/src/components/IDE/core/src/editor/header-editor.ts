@@ -21,11 +21,7 @@ export const useHeaderEditor = (
 
   useEffect(() => {
     let isActive = true;
-
-    void importCodeMirror([
-      // @ts-expect-error
-      import('codemirror/mode/javascript/javascript'),
-    ]).then((CodeMirror) => {
+    void importCodeMirror([import('codemirror/mode/javascript/javascript' as never)]).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;

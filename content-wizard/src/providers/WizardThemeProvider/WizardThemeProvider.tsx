@@ -103,7 +103,7 @@ export function WizardThemeProvider(props: PropsWithChildren) {
 
   /**
    * This updates the controlled Themes based on the IDE
-   * TODO: This only fires when the IDE has been rendered, which doesn't happen until the user goes to the IDE Tab
+   * TODO: This only fires when the IDE has been rendered, which doesn't happen until the user goes to the IDE AccordionTab
    */
   const handleThemeDispatch = useCallback(
     (theme: Theme) => {

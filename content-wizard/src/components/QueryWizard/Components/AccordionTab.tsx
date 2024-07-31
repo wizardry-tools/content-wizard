@@ -1,13 +1,13 @@
 import { ElementType, useMemo } from 'react';
-import { Accordion as AccordionTab, AccordionSummary, Typography } from '@mui/material';
+import { Accordion as MuiAccordion, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { TabProps } from '@/types';
+import { AccordionTabProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { fieldCategories } from '@/components/QueryWizard/Components/fields';
 import { FormGrid } from './FormGrid';
 
-export const Tab = (props: TabProps) => {
+export const AccordionTab = (props: AccordionTabProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `Tab[${renderCount}] render()` });
@@ -37,7 +37,7 @@ export const Tab = (props: TabProps) => {
   );
 
   return (
-    <AccordionTab key={drawerID} expanded={expanded === drawerID} onChange={onChange(drawerID)}>
+    <MuiAccordion key={drawerID} expanded={expanded === drawerID} onChange={onChange(drawerID)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${drawerID}-content`} id={`${drawerID}-header`}>
         <Typography variant="h4" sx={{ flexShrink: 1 }}>
           {summary}
@@ -46,6 +46,6 @@ export const Tab = (props: TabProps) => {
       <FormGrid className={`${drawerID}-grid smooth-transition`} container padding={1} spacing={2}>
         {drawerContents}
       </FormGrid>
-    </AccordionTab>
+    </MuiAccordion>
   );
 };
