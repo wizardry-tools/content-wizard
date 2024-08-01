@@ -2,7 +2,7 @@
 <browserconfig>
     <msapplication>
         <tile>
-            <square150x150logo src="/etc.clientlibs/content-wizard/clientlibs/clientlib-react/resources/mstile-150x150.png"/>
+            <square150x150logo src="/etc.clientlibs/content-wizard/clientlibs/content-wizard/resources/mstile-150x150.png"/>
             <TileColor>#1976d2</TileColor>
         </tile>
     </msapplication>

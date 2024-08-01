@@ -3,7 +3,7 @@ const path = require('path');
 
 const srcDir = path.resolve(__dirname, '../dist');
 console.log("srcDir: ", srcDir);
-const destDir = path.resolve(__dirname, '../..', 'ui.apps/src/main/content/jcr_root', 'apps/content-wizard/clientlibs', 'clientlib-react');
+const destDir = path.resolve(__dirname, '../../ui.apps/src/main/content/jcr_root/apps/content-wizard/clientlibs/content-wizard');
 console.log("destDir: ", destDir);
 
 /**

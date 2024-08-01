@@ -9,7 +9,7 @@ export default defineConfig(({ command, mode }) => {
   console.log('Build Mode: ', mode);
   const aemHost = env?.VITE_HOST_URI ?? 'http://localhost:4502';
   return {
-    base: command === 'build' ? '/etc.clientlibs/content-wizard/clientlibs/' : '/',
+    base: command === 'build' ? '/etc.clientlibs/content-wizard/clientlibs/content-wizard' : '/',
     /* BUILD */
     build: {
       reportCompressedSize: false,
@@ -41,7 +41,7 @@ export default defineConfig(({ command, mode }) => {
               const contentXml = `<?xml version="1.0" encoding="UTF-8"?>
             <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
                 jcr:primaryType="cq:ClientLibraryFolder"
-                categories="[content-wizard.react]"
+                categories="[content-wizard.app]"
                 allowProxy="{Boolean}true"
                 cssProcessor="[default:none, min:none]"
                 jsProcessor="[default:none, min:none]"
@@ -57,7 +57,7 @@ export default defineConfig(({ command, mode }) => {
               const jsFiles = [];
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               for (const [fileName, _fileInfo] of Object.entries(bundle)) {
-                //console.log(`fileName[${fileName}]: `, fileInfo.type);
+                console.log(`fileName[${fileName}]: `, _fileInfo.type);
                 if (fileName.endsWith('.css') && !fileName.includes('chunk')) {
                   cssFiles.push(fileName.replace('css/', ''));
                 }
