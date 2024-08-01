@@ -2,13 +2,11 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { resolve } from 'path';
-import fs from 'fs-extra';
-import { exec } from 'child_process';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  console.log('Build Mode: ', mode);
   const aemHost = env?.VITE_HOST_URI ?? 'http://localhost:4502';
   return {
     base: command === 'build' ? '/etc.clientlibs/content-wizard/clientlibs/' : '/',
@@ -19,14 +17,12 @@ export default defineConfig(({ command, mode }) => {
       minify: mode === 'development' ? false : 'terser',
       outDir: 'dist',
       sourcemap: command === 'serve' ? 'inline' : true,
-
       rollupOptions: {
         output: {
           chunkFileNames: 'resources/static/js/[name].[hash].chunk.js',
           entryFileNames: 'js/[name].[hash].js',
           assetFileNames: (assetInfo) => {
             console.log('assetInfo.name: ', assetInfo.name);
-            //console.log('assetInfo: ', assetInfo);
             if (/\.css$/.test(assetInfo.name ?? 'error')) {
               return 'css/[name].[hash][extname]';
             }
@@ -38,36 +34,6 @@ export default defineConfig(({ command, mode }) => {
         },
         plugins: [
           // Plugin to generate .content.xml and txt files
-          // Plugin to customize public asset paths
-          {
-            name: 'custom-public-dir',
-            enforce: 'post',
-            generateBundle(_options, bundle) {
-              const publicDir = 'resources/static';
-              const targetDir = resolve(__dirname, 'dist', publicDir);
-
-              // Ensure target directory exists
-              fs.ensureDirSync(targetDir);
-
-              // Move assets from default location to custom location
-              for (const fileName in bundle) {
-                const asset = bundle[fileName];
-                //console.log(`fileName: `, fileName);
-                if (asset.type === 'asset') {
-                  //const sourcePath = resolve(__dirname, 'dist', asset.fileName);
-                  //const targetPath = resolve(targetDir, asset.fileName);
-                  //console.log(`sourcePath: `, sourcePath);
-                  //console.log(`targetPath: `, targetPath);
-                  //fs.moveSync(sourcePath, targetPath, { overwrite: true });
-                  // Update the asset path in the bundle
-                  //delete bundle[fileName];
-                  //bundle[`${publicDir}/${asset.fileName}`] = asset;
-                } else {
-                  //console.log(`not asset: `, fileName);
-                }
-              }
-            },
-          },
           {
             name: 'aem-clientlib-structure',
             generateBundle(_, bundle) {
@@ -115,25 +81,18 @@ export default defineConfig(({ command, mode }) => {
               });
             },
           },
-          {
-            name: 'copy-dist-plugin',
-            apply: 'build',
-            buildEnd() {
-              // Call the copy-dist.cjs script
-              exec('node util/copy-dist.cjs', (err, stdout, stderr) => {
-                if (err) {
-                  console.error('Error executing copy-dist.cjs:', stderr);
-                } else {
-                  console.log('Copy-dist.js output:', stdout);
-                }
-              });
-            },
-          },
         ],
       },
     },
     /* PLUGINS */
-    plugins: [tsconfigPaths(), svgr(), react({ tsDecorators: true })],
+    plugins: [
+      tsconfigPaths(),
+      svgr({
+        svgrOptions: { exportType: 'default', ref: true, svgo: false, titleProp: true },
+        include: '**/*.svg',
+      }),
+      react({ tsDecorators: true }),
+    ],
     /* SERVER */
     server: {
       port: 3000,

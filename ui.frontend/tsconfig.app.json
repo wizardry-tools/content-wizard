@@ -43,6 +43,7 @@
       "markdown-it",
       "set-value",
       "node",
+      "vite/client",
       "vitest/globals",
       "fs-extra",
     ]

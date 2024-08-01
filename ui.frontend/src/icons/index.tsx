@@ -2,42 +2,42 @@
  * All icons must be added to this module.
  * Exposed via '@/icons'
  */
-import { ComponentProps, FC, SVGProps } from 'react';
-import _ArgumentIcon from './argument.svg?react';
-import _ChevronDownIcon from './chevron-down.svg?react';
-import _ChevronLeftIcon from './chevron-left.svg?react';
-import _ChevronUpIcon from './chevron-up.svg?react';
-import _CloseIcon from './close.svg?react';
-import _CopyIcon from './copy.svg?react';
-import _DeprecatedArgumentIcon from './deprecated-argument.svg?react';
-import _DeprecatedEnumValueIcon from './deprecated-enum-value.svg?react';
-import _DeprecatedFieldIcon from './deprecated-field.svg?react';
-import _DirectiveIcon from './directive.svg?react';
-import _DocsFilledIcon from './docs-filled.svg?react';
-import _DocsIcon from './docs.svg?react';
-import _EnumValueIcon from './enum-value.svg?react';
-import _FieldIcon from './field.svg?react';
-import _HistoryIcon from './history.svg?react';
-import _ImplementsIcon from './implements.svg?react';
-import _KeyboardShortcutIcon from './keyboard-shortcut.svg?react';
-import _MagicWand from './magic-wand.svg?react';
-import _MagnifyingGlassIcon from './magnifying-glass.svg?react';
-import _MergeIcon from './merge.svg?react';
-import _PenIcon from './pen.svg?react';
-import _PlayIcon from './play.svg?react';
-import _PlusIcon from './plus.svg?react';
-import _PrettifyIcon from './prettify.svg?react';
-import _ProgrammingCode from './programming-code.svg?react';
-import _ReloadIcon from './reload.svg?react';
-import _RootTypeIcon from './root-type.svg?react';
-import _Run from './run.svg?react';
-import _SettingsIcon from './settings.svg?react';
-import _StarFilledIcon from './star-filled.svg?react';
-import _StarIcon from './star.svg?react';
-import _StopIcon from './stop.svg?react';
-import _Table from './table.svg?react';
-import _TrashIcon from './trash.svg?react';
-import _TypeIcon from './type.svg?react';
+import { ComponentProps, FC } from 'react';
+import _ArgumentIcon from './argument.svg';
+import _ChevronDownIcon from './chevron-down.svg';
+import _ChevronLeftIcon from './chevron-left.svg';
+import _ChevronUpIcon from './chevron-up.svg';
+import _CloseIcon from './close.svg';
+import _CopyIcon from './copy.svg';
+import _DeprecatedArgumentIcon from './deprecated-argument.svg';
+import _DeprecatedEnumValueIcon from './deprecated-enum-value.svg';
+import _DeprecatedFieldIcon from './deprecated-field.svg';
+import _DirectiveIcon from './directive.svg';
+import _DocsFilledIcon from './docs-filled.svg';
+import _DocsIcon from './docs.svg';
+import _EnumValueIcon from './enum-value.svg';
+import _FieldIcon from './field.svg';
+import _HistoryIcon from './history.svg';
+import _ImplementsIcon from './implements.svg';
+import _KeyboardShortcutIcon from './keyboard-shortcut.svg';
+import _MagicWand from './magic-wand.svg';
+import _MagnifyingGlassIcon from './magnifying-glass.svg';
+import _MergeIcon from './merge.svg';
+import _PenIcon from './pen.svg';
+import _PlayIcon from './play.svg';
+import _PlusIcon from './plus.svg';
+import _PrettifyIcon from './prettify.svg';
+import _ProgrammingCode from './programming-code.svg';
+import _ReloadIcon from './reload.svg';
+import _RootTypeIcon from './root-type.svg';
+import _Run from './run.svg';
+import _SettingsIcon from './settings.svg';
+import _StarFilledIcon from './star-filled.svg';
+import _StarIcon from './star.svg';
+import _StopIcon from './stop.svg';
+import _Table from './table.svg';
+import _TrashIcon from './trash.svg';
+import _TypeIcon from './type.svg';
 
 export const ArgumentIcon = generateIcon(_ArgumentIcon);
 export const ChevronDownIcon = generateIcon(_ChevronDownIcon);
@@ -75,7 +75,7 @@ export const TableIcon = generateIcon(_Table);
 export const TrashIcon = generateIcon(_TrashIcon, 'trash icon');
 export const TypeIcon = generateIcon(_TypeIcon);
 
-function generateIcon(RawComponent: FC<SVGProps<SVGSVGElement>>, titleProp?: string): FC<ComponentProps<'svg'>> {
+function generateIcon(RawComponent: string, titleProp?: string): FC<ComponentProps<'svg'>> {
   const title = titleProp ?? extractName(RawComponent) ?? 'untitled svg';
   function IconComponent(props: ComponentProps<'svg'>) {
     return <RawComponent {...props} />;

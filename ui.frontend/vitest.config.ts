@@ -4,7 +4,14 @@ import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), svgr(), react({ tsDecorators: true })],
+  plugins: [
+    tsconfigPaths(),
+    svgr({
+      svgrOptions: { exportType: 'default', ref: true, svgo: false, titleProp: true },
+      include: '**/*.svg',
+    }),
+    react({ tsDecorators: true }),
+  ],
   test: {
     globals: true,
     environment: 'jsdom',
