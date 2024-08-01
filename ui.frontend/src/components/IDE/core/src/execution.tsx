@@ -1,6 +1,5 @@
 import { formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
-import { ExecutionResult, FragmentDefinitionNode, GraphQLError, print } from 'graphql';
-import { getFragmentDependenciesForAST } from 'graphql-language-service';
+import { ExecutionResult, GraphQLError } from 'graphql';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import setValue from 'set-value';
 import { ExecutionContextProviderProps, ExecutionContextType, IncrementalResult } from '@/types';
@@ -25,7 +24,7 @@ export function ExecutionContextProvider({
     throw new TypeError('The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.');
   }
 
-  const { externalFragments, headerEditor, queryEditor, responseEditor, variableEditor, updateActiveTabValues } =
+  const { headerEditor, queryEditor, responseEditor, variableEditor, updateActiveTabValues } =
     useEditorContext({ nonNull: true, caller: ExecutionContextProvider });
   const history = useHistoryContext();
   const autoCompleteLeafs = useAutoCompleteLeafs({
@@ -67,7 +66,7 @@ export function ExecutionContextProvider({
     // Use the edited query after autoCompleteLeafs() runs or,
     // in case autoCompletion fails (the function returns undefined),
     // the current query from the editor.
-    let query = autoCompleteLeafs() ?? queryEditor.getValue();
+    const query = autoCompleteLeafs() ?? queryEditor.getValue();
 
     const variablesString = variableEditor?.getValue();
     let variables: Record<string, unknown> | undefined;
@@ -95,15 +94,6 @@ export function ExecutionContextProvider({
       return;
     }
 
-    if (externalFragments) {
-      const fragmentDependencies = queryEditor.documentAST
-        ? getFragmentDependenciesForAST(queryEditor.documentAST, externalFragments)
-        : [];
-      if (fragmentDependencies.length > 0) {
-        query += '\n' + fragmentDependencies.map((node: FragmentDefinitionNode) => print(node)).join('\n');
-      }
-    }
-
     setResponse('');
     setIsFetching(true);
 
@@ -118,8 +108,8 @@ export function ExecutionContextProvider({
     });
 
     try {
-      const fullResponse: ExecutionResult = {};
-      const handleResponse = (result: ExecutionResult) => {
+      const fullResponse = {};
+      const handleResponse = (result: unknown) => {
         // A different query was dispatched in the meantime, so don't
         // show the results of this one.
         if (queryId !== queryIdRef.current) {
@@ -133,7 +123,7 @@ export function ExecutionContextProvider({
 
         if (maybeMultipart) {
           for (const part of maybeMultipart) {
-            mergeIncrementalResult(fullResponse, part);
+            mergeIncrementalResult(fullResponse, part as IncrementalResult);
           }
 
           setIsFetching(false);
@@ -200,7 +190,6 @@ export function ExecutionContextProvider({
   }, [
     language,
     autoCompleteLeafs,
-    externalFragments,
     fetcher,
     headerEditor,
     history,
@@ -239,7 +228,7 @@ function tryParseJsonObject({
   errorMessageParse: string;
   errorMessageType: string;
 }) {
-  let parsed: Record<string, any> | undefined;
+  let parsed: Record<string, unknown> | undefined;
   try {
     parsed = json && json.trim() !== '' ? JSON.parse(json) : undefined;
   } catch (error) {

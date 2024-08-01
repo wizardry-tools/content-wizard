@@ -9,7 +9,7 @@ import {
 } from 'graphql/index';
 import { ReactNode } from 'react';
 
-export type ExplorerFieldDef = GraphQLField<any, any, any> | GraphQLInputField | GraphQLArgument;
+export type ExplorerFieldDef = GraphQLField<unknown, unknown, unknown> | GraphQLInputField | GraphQLArgument;
 
 export type ExplorerNavStackItem = {
   /**
@@ -119,6 +119,14 @@ export type FieldMatch = {
   field: GraphQLField<unknown, unknown> | GraphQLInputField;
   argument?: GraphQLArgument;
 };
+
+export type SearchMatch = {
+  within: FieldMatch[];
+  types: TypeMatch[];
+  fields: FieldMatch[];
+};
+
+export type SearchMatchCallback = (searchValue: string) => SearchMatch;
 
 export type TypeProps = { type: GraphQLNamedType };
 

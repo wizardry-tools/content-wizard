@@ -30,6 +30,7 @@ export function useResponseEditor(
   }, [responseTooltip]);
 
   useEffect(() => {
+    console.log('useResponseEditor useEffect importCodeMirror');
     let isActive = true;
     void importCodeMirror(
       [
@@ -39,8 +40,7 @@ export function useResponseEditor(
         import('codemirror/addon/search/search'),
         import('codemirror/addon/search/searchcursor'),
         import('codemirror/addon/search/jump-to-line'),
-        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
-        import('codemirror/keymap/sublime'),
+        import('codemirror/keymap/sublime' as never),
         import('codemirror-graphql/esm/results/mode'),
         import('codemirror-graphql/esm/utils/info-addon'),
       ],
@@ -51,6 +51,7 @@ export function useResponseEditor(
         return;
       }
 
+      console.log('useResponseEditor useEffect importCodeMirror then()');
       // Handle image tooltips and custom tooltips
       const tooltipDiv = document.createElement('div');
       CodeMirror.registerHelper(
@@ -83,6 +84,7 @@ export function useResponseEditor(
         return;
       }
 
+      console.log('useResponseEditor useEffect importCodeMirror then() initialResponse: ', initialResponse);
       const newEditor = CodeMirror(container, {
         value: initialResponse,
         lineWrapping: true,
@@ -108,9 +110,11 @@ export function useResponseEditor(
 
   useEffect(() => {
     if (fetchError) {
+      console.log('useResponseEditor useEffect fetchError: ', fetchError);
       responseEditor?.setValue(fetchError);
     }
     if (validationErrors.length > 0) {
+      console.log('useResponseEditor useEffect validationErrors: ', validationErrors);
       responseEditor?.setValue(formatError(validationErrors));
     }
   }, [responseEditor, fetchError, validationErrors]);

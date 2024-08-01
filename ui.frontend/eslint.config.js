@@ -50,4 +50,7 @@ export default tseslint.config(
     files: ['**/*.config.*'],
     extends: [tseslint.configs.disableTypeChecked],
   },
+  {
+    ignores: ['dist', '.oldeslintrc.cjs', '.prettierrc.cjs'],
+  },
 );

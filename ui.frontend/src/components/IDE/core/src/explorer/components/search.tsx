@@ -1,7 +1,7 @@
 import { GraphQLArgument, isInputObjectType, isInterfaceType, isObjectType } from 'graphql';
 import { FocusEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Combobox } from '@headlessui/react';
-import { Caller, FieldMatch, FieldProps, TypeMatch, TypeProps } from '@/types';
+import { Caller, FieldMatch, FieldProps, SearchMatch, SearchMatchCallback, TypeMatch, TypeProps } from '@/types';
 import { MagnifyingGlassIcon } from '@/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';
@@ -126,7 +126,7 @@ export function Search() {
   );
 }
 
-export function useSearchResults(caller?: Caller) {
+export function useSearchResults(caller?: Caller): SearchMatchCallback {
   const { explorerNavStack } = useExplorerContext({
     nonNull: true,
     caller: caller ?? useSearchResults,
@@ -140,11 +140,7 @@ export function useSearchResults(caller?: Caller) {
 
   return useCallback(
     (searchValue: string) => {
-      const matches: {
-        within: FieldMatch[];
-        types: TypeMatch[];
-        fields: FieldMatch[];
-      } = {
+      const matches: SearchMatch = {
         within: [],
         types: [],
         fields: [],
@@ -208,7 +204,7 @@ export function useSearchResults(caller?: Caller) {
 
 function isMatch(sourceText: string, searchValue: string): boolean {
   try {
-    const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, (ch) => '\\' + ch);
+    const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, (ch: string) => '\\' + ch);
     return sourceText.search(new RegExp(escaped, 'i')) !== -1;
   } catch {
     return sourceText.toLowerCase().includes(searchValue.toLowerCase());

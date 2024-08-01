@@ -121,17 +121,11 @@ export function useCompletion(
         callback?.({ kind: 'Type', type, schema: schema ?? undefined });
       });
     };
-    editor.on(
-      // @ts-expect-error @TODO additional args for hasCompletion event
-      'hasCompletion',
-      handleCompletion,
-    );
+    // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
+    editor.on('hasCompletion', handleCompletion);
     return () => {
-      editor.off(
-        // @ts-expect-error @TODO additional args for hasCompletion event
-        'hasCompletion',
-        handleCompletion,
-      );
+      // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
+      editor.off('hasCompletion', handleCompletion);
     };
   }, [callback, editor, explorer, plugin, schema]);
 }
@@ -157,7 +151,7 @@ export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callb
   }, [editor, keys, callback]);
 }
 
-export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
+export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}): EmptyCallback {
   const { queryEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useCopyQuery,
@@ -174,7 +168,7 @@ export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
   }, [queryEditor, onCopyQuery]);
 }
 
-export function useCopyResult({ caller }: UseCopyResultArgs = {}) {
+export function useCopyResult({ caller }: UseCopyResultArgs = {}): EmptyCallback {
   const { resultExplorerEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useCopyResult,
@@ -188,7 +182,7 @@ export function useCopyResult({ caller }: UseCopyResultArgs = {}) {
   }, [resultExplorerEditor]);
 }
 
-export function useMergeQuery({ caller }: UseMergeQueryArgs = {}) {
+export function useMergeQuery({ caller }: UseMergeQueryArgs = {}): EmptyCallback {
   const { queryEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useMergeQuery,
@@ -205,7 +199,7 @@ export function useMergeQuery({ caller }: UseMergeQueryArgs = {}) {
   }, [queryEditor, schema]);
 }
 
-export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
+export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}): EmptyCallback {
   const { queryEditor, headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? usePrettifyEditors,
@@ -248,7 +242,9 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
   }, [isGraphQL, queryEditor, variableEditor, headerEditor]);
 }
 
-export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}) {
+export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}): () =>
+  | string
+  | undefined {
   const { schema } = useSchemaContext({
     nonNull: true,
     caller: caller ?? useAutoCompleteLeafs,

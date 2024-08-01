@@ -28,8 +28,8 @@ export const SimpleDatePicker = ({ field }: SimpleInputProps) => {
   const fieldDispatcher = useFieldDispatcher();
   const { name, label } = { ...field };
   const value = field.value as DateRange;
-  const [lowerBound, setLowerBound] = useState(value.lowerBound ? dayjs(value.lowerBound) : null);
-  const [upperBound, setUpperBound] = useState(value.upperBound ? dayjs(value.upperBound) : null);
+  const [lowerBound, setLowerBound] = useState(value?.lowerBound ? dayjs(value.lowerBound) : null);
+  const [upperBound, setUpperBound] = useState(value?.upperBound ? dayjs(value.upperBound) : null);
 
   // these two states add an elevation effect to the fields when focused. More noticeable on light-mode.
   const [startFocused, setStartFocused] = useState(false);

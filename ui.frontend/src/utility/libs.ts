@@ -23,3 +23,7 @@ export function isPlainObject<T>(value: T): boolean {
   }
   return Object.prototype.toString.call(value) === '[object Object]';
 }
+
+export function isEmpty(obj: object): boolean {
+  return Object.keys(obj).length === 0;
+}

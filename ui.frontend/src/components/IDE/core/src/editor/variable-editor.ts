@@ -13,13 +13,7 @@ import {
 } from './hooks';
 
 export function useVariableEditor(
-  {
-    editorTheme = DEFAULT_EDITOR_THEME,
-    keyMap = DEFAULT_KEY_MAP,
-    onClickReference,
-    onEdit,
-    readOnly = false,
-  }: UseVariableEditorArgs = {},
+  { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, readOnly = false }: UseVariableEditorArgs = {},
   caller?: Caller,
 ) {
   const { initialVariables, variableEditor, setVariableEditor } = useEditorContext({
@@ -112,9 +106,9 @@ export function useVariableEditor(
 
   useSynchronizeOption(variableEditor, 'keyMap', keyMap);
 
-  useChangeHandler(variableEditor, onEdit, STORAGE_KEY, 'variables', useVariableEditor);
+  useChangeHandler(variableEditor, undefined, STORAGE_KEY, 'variables', useVariableEditor);
 
-  useCompletion(variableEditor, onClickReference ?? null, useVariableEditor);
+  useCompletion(variableEditor, null, useVariableEditor);
 
   useKeyMap(variableEditor, ['Cmd-Enter', 'Ctrl-Enter'], executionContext?.run);
   useKeyMap(variableEditor, ['Shift-Ctrl-P'], prettify);

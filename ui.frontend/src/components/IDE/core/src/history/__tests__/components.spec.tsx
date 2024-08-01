@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import { Mock } from 'vitest';
 import { ComponentProps } from 'react';
 import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
@@ -6,16 +7,16 @@ import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
 import { useQueryDispatcher } from '@/providers';
 
-jest.mock('../../storage', () => {
+vi.mock('../../storage', () => {
   const mockStorage = {
-    set: jest.fn((_name: string, _value: string) => ({ isQuotaError: false, error: null })),
-    get: jest.fn((_name: string) => null),
-    clear: jest.fn(),
+    set: vi.fn(() => ({ isQuotaError: false, error: null })),
+    get: vi.fn(() => null),
+    clear: vi.fn(),
     storage: {
-      getItem: jest.fn((_key: string) => null),
-      setItem: jest.fn((_key: string, _value: string) => {}),
-      removeItem: jest.fn((_key: string) => {}),
-      clear: jest.fn(),
+      getItem: vi.fn(() => null),
+      setItem: vi.fn(() => ({})),
+      removeItem: vi.fn(() => ({})),
+      clear: vi.fn(),
       length: 0,
     },
   };
@@ -26,10 +27,10 @@ jest.mock('../../storage', () => {
     },
   };
 });
-jest.mock('../../editor', () => {
-  const mockedSetQueryEditor = jest.fn();
-  const mockedSetVariableEditor = jest.fn();
-  const mockedSetHeaderEditor = jest.fn();
+vi.mock('../../editor', () => {
+  const mockedSetQueryEditor = vi.fn();
+  const mockedSetVariableEditor = vi.fn();
+  const mockedSetHeaderEditor = vi.fn();
   return {
     useEditorContext() {
       return {
@@ -40,9 +41,9 @@ jest.mock('../../editor', () => {
     },
   };
 });
-jest.mock('@/providers', () => {
-  const mockQueryDispatcher = jest.fn(() => {});
-  const mockAlertDispatcher = jest.fn(() => {});
+vi.mock('@/providers', () => {
+  const mockQueryDispatcher = vi.fn(() => ({}));
+  const mockAlertDispatcher = vi.fn(() => ({}));
   return {
     useQueryDispatcher() {
       return mockQueryDispatcher;
@@ -106,10 +107,10 @@ function getMockProps(customProps?: Partial<QueryHistoryItemProps>): QueryHistor
 }
 
 describe('HistoryItem', () => {
-  const mockedSetQueryEditor = useEditorContext()?.queryEditor?.setValue as jest.Mock;
-  const mockedSetVariableEditor = useEditorContext()?.variableEditor?.setValue as jest.Mock;
-  const mockedSetHeaderEditor = useEditorContext()?.headerEditor?.setValue as jest.Mock;
-  const mockedQueryDispatcher = useQueryDispatcher() as jest.Mock;
+  const mockedSetQueryEditor = useEditorContext()?.queryEditor?.setValue as Mock;
+  const mockedSetVariableEditor = useEditorContext()?.variableEditor?.setValue as Mock;
+  const mockedSetHeaderEditor = useEditorContext()?.headerEditor?.setValue as Mock;
+  const mockedQueryDispatcher = useQueryDispatcher() as Mock;
   beforeEach(() => {
     mockedSetQueryEditor.mockClear();
     mockedSetVariableEditor.mockClear();

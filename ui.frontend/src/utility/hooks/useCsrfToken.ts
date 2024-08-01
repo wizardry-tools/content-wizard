@@ -1,16 +1,25 @@
-import { DYNAMIC_HEADERS } from '../http';
 import { useCallback, useMemo } from 'react';
+import { useLogger } from '@/providers';
+import { DYNAMIC_HEADERS } from '../http';
 
 export const useCsrfToken = () => {
+  const logger = useLogger();
   const getCsrfToken = useCallback(async (): Promise<string> => {
     try {
       const response: Response = await fetch('/libs/granite/csrf/token.json', DYNAMIC_HEADERS);
-      const json = await response.json();
-      if ('token' in json) {
-        const { token } = json;
-        if (typeof token === 'string') {
-          return token;
+      logger.debug({ message: 'useCsrfToken.getCsrfToken() response', response });
+      if (response.ok) {
+        const json = await response.json();
+        logger.debug({ message: 'useCsrfToken.getCsrfToken() json', json });
+        if ('token' in json) {
+          const { token } = json;
+          logger.debug({ message: 'useCsrfToken.getCsrfToken() token', token });
+          if (typeof token === 'string') {
+            return token;
+          }
         }
+      } else {
+        logger.debug({ message: 'useCsrfToken.getCsrfToken() response not ok' });
       }
     } catch (error) {
       console.error('Failed to fetch CSRF Token: ', error);

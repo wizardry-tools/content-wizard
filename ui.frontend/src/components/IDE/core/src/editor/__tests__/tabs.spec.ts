@@ -1,5 +1,5 @@
-import { WizardStorageAPI } from '../../storage-api';
 import { createTab, fuzzyExtractOperationName, getDefaultTabState, clearHeadersFromTabs, STORAGE_KEY } from '../tabs';
+import { WizardStorageAPI } from '@/types';
 import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/components/Query';
 
 describe('createTab', () => {
@@ -160,7 +160,7 @@ describe('clearHeadersFromTabs', () => {
 
     clearHeadersFromTabs(storage);
 
-    expect(JSON.parse(storage.get(STORAGE_KEY))).toEqual({
+    expect(JSON.parse(storage.get(STORAGE_KEY) ?? '')).toEqual({
       ...stateWithoutHeaders,
       headers: null,
     });

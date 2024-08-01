@@ -13,7 +13,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps & 
           onClick?.(event);
           setError(null);
         } catch (err) {
-          setError(err instanceof Error ? err : new Error(`Toolbar button click failed: ${err}`));
+          setError(err instanceof Error ? err : new Error(`Toolbar button click failed: ${err as string}`));
         }
       },
       [onClick],

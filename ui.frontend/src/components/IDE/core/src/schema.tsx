@@ -126,7 +126,14 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
 
       isFetching.current = false;
 
-      if (result.data && '__schema' in result.data) {
+      if (
+        result &&
+        typeof result === 'object' &&
+        'data' in result &&
+        typeof result.data === 'object' &&
+        result.data &&
+        '__schema' in result.data
+      ) {
         return result.data as IntrospectionQuery;
       }
 

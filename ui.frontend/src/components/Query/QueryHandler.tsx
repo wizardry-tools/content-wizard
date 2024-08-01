@@ -42,7 +42,7 @@ const doQuery = (props: DoQueryProps) => {
           resultsDispatcher({
             results: resultArr,
           });
-        if (queryResponse.results.length > 0) {
+        if ((queryResponse.results.length as number) > 0) {
           // switch to results tab
           onResults(2);
         }

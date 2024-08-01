@@ -7,7 +7,7 @@ import { useEditorContext } from './context';
 import { useChangeHandler, useKeyMap, useMergeQuery, usePrettifyEditors, useSynchronizeOption } from './hooks';
 
 export const useHeaderEditor = (
-  { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, onEdit, readOnly = false }: UseHeaderEditorArgs = {},
+  { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, readOnly = false }: UseHeaderEditorArgs = {},
   caller?: Caller,
 ) => {
   const { initialHeaders, headerEditor, setHeaderEditor, shouldPersistHeaders } = useEditorContext({
@@ -21,11 +21,7 @@ export const useHeaderEditor = (
 
   useEffect(() => {
     let isActive = true;
-
-    void importCodeMirror([
-      // @ts-expect-error
-      import('codemirror/mode/javascript/javascript'),
-    ]).then((CodeMirror) => {
+    void importCodeMirror([import('codemirror/mode/javascript/javascript' as never)]).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
       if (!isActive) {
         return;
@@ -37,7 +33,7 @@ export const useHeaderEditor = (
       }
 
       const newEditor = CodeMirror(container, {
-        value: initialHeaders,
+        value: initialHeaders ?? '',
         lineNumbers: true,
         tabSize: 2,
         mode: { name: 'javascript', json: true },
@@ -85,7 +81,7 @@ export const useHeaderEditor = (
 
   useSynchronizeOption(headerEditor, 'keyMap', keyMap);
 
-  useChangeHandler(headerEditor, onEdit, shouldPersistHeaders ? STORAGE_KEY : null, 'headers', useHeaderEditor);
+  useChangeHandler(headerEditor, undefined, shouldPersistHeaders ? STORAGE_KEY : null, 'headers', useHeaderEditor);
 
   useKeyMap(headerEditor, ['Cmd-Enter', 'Ctrl-Enter'], executionContext?.run);
   useKeyMap(headerEditor, ['Shift-Ctrl-P'], prettify);

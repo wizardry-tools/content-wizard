@@ -54,8 +54,7 @@ export function useWizardStatementEditor(
       import('codemirror/addon/search/search'),
       import('codemirror/addon/search/searchcursor'),
       import('codemirror/addon/search/jump-to-line'),
-      // @ts-expect-error module isn't found, but it is there
-      import('codemirror/keymap/sublime'),
+      import('codemirror/keymap/sublime' as never),
       import('../../modes/querybuilder/querybuilder'),
     ];
     void importCodeMirror(addons, { useCommonAddons: true }).then((CodeMirror) => {

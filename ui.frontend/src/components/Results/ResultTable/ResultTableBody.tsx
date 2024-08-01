@@ -64,13 +64,17 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
         });
 
         return (
-          <TableRow key={row.path as string} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableRow
+            key={(row.path as string) ?? Math.random()}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
             {cells}
           </TableRow>
         );
       })}
       {emptyRows > 0 && (
         <TableRow
+          key="empty-row"
           style={{
             height: 55 * emptyRows,
           }}

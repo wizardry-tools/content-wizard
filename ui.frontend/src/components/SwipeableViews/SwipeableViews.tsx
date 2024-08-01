@@ -111,7 +111,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   // That's why we use a singleton here.
   const nodeWhoClaimedTheScroll = useRef({} as HTMLDivElement);
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.env.NODE_ENV !== 'production') {
     checkIndexBounds({ index: index.current, children });
   }
 
@@ -144,7 +144,7 @@ export const SwipeableViews = (props: SwipeableViewsProps) => {
   useEffect(() => {
     const newIndex = props.index!;
     if (newIndex !== previousProps.current.index) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (import.meta.env.NODE_ENV !== 'production') {
         checkIndexBounds({ index: index.current, children });
       }
 
