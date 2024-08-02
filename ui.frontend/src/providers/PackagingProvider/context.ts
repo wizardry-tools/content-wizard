@@ -159,7 +159,6 @@ export const usePackageHandler = () => {
         uniquePackageFilters.push(filter);
       }
     }
-    console.log('buildPackageFilters() uniquePackageFilters: ', uniquePackageFilters);
     return JSON.stringify(uniquePackageFilters);
   }, []);
 
@@ -185,7 +184,6 @@ export const usePackageHandler = () => {
       formData.append('description', 'This Content package was built with results found by Content Wizard.');
       formData.append('filter', packageFilters);
       formData.append('_charset_', 'UTF-8');
-      console.log('buildFilterPayload() formData: ', formData);
       return formData;
     },
     [buildPackageFilters],

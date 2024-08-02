@@ -1,17 +1,13 @@
 import { Fetcher, FetcherOpts, FetcherParams, SyncExecutionResult } from '@graphiql/toolkit/src/create-fetcher/types';
 import { useCallback, useMemo } from 'react';
 import { useAuthHeaders } from './useAuthHeaders';
-import { useRenderCount } from './useRenderCount';
 import { CustomCreateFetcherOptions, SimpleFetcher } from '@/types';
 
 export const useCreateFetcher = () => {
-  const renderCount = useRenderCount();
-  console.debug({ message: `useCreateFetcher[${renderCount}] render()` });
   const authHeaders = useAuthHeaders();
 
   const getRequestInit = useCallback(
     async (options: CustomCreateFetcherOptions, fetcherOpts?: FetcherOpts): Promise<RequestInit> => {
-      console.debug({ message: `useCreateFetcher getRequestInit()` });
       const method = 'GET';
       const headers = {
         'Content-Type': 'application/json',
@@ -108,7 +104,6 @@ export const useCreateFetcher = () => {
 
   const createGraphQLFetcher = useCallback(
     (options: CustomCreateFetcherOptions): Fetcher => {
-      console.debug({ message: `useCreateFetcher createGraphQLFetcher()` });
       let httpFetch;
       if (typeof window !== 'undefined' && window.fetch) {
         httpFetch = window.fetch;
@@ -134,7 +129,6 @@ export const useCreateFetcher = () => {
 
   const createMultiLanguageFetcher = useCallback(
     (options: CustomCreateFetcherOptions): Fetcher => {
-      console.debug({ message: `useCreateFetcher createMultiLanguageFetcher()` });
       let httpFetch;
       if (typeof window !== 'undefined' && window.fetch) {
         httpFetch = window.fetch;
@@ -153,7 +147,6 @@ export const useCreateFetcher = () => {
 
   const createAPIFetcher = useCallback(
     (options: CustomCreateFetcherOptions): SimpleFetcher => {
-      console.debug({ message: `useCreateFetcher createAPIFetcher()` });
       let httpFetch;
       if (typeof window !== 'undefined' && window.fetch) {
         httpFetch = window.fetch;

@@ -11,7 +11,7 @@ const LIB_ROOT = '/etc.clientlibs/content-wizard/clientlibs';
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   console.log('Build Mode: ', mode);
-  const aemHost = env?.VITE_HOST_URI ?? 'http://localhost:4502';
+  const aemHost = env?.VITE_PRIVATE_HOST_URI ?? env?.VITE_HOST_URI ?? 'http://localhost:4502';
   console.log('Proxy Host: ', aemHost);
 
   const plugins = [

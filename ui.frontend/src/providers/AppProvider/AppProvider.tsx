@@ -6,7 +6,7 @@ import { LoggingProvider } from '../LoggingProvider';
 
 export function AppProvider({ children }: PropsWithChildren) {
   const getLoggingProps = useMemo((): LoggingProviderProps => {
-    return import.meta.env.NODE_ENV !== 'production'
+    return import.meta.env.MODE !== 'production'
       ? { showLog: true, showDebug: true, showWarn: true, showError: true }
       : { showError: true };
   }, []);

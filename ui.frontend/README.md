@@ -22,9 +22,9 @@ Installs node dependencies.
 
 ### `npm run dev`
 
-Runs the app in development mode by proxying the JSON model from a local AEM instance running at http://localhost:4502. This assumes that the entire project has been deployed to AEM at least once (`mvn clean install -PautoInstallPackage` **in the project root**).
+Runs the app in development mode by proxying requests to an AEM instance running at http://localhost:4502. This assumes that the entire project has been deployed to AEM at least once (`mvn clean install -PautoInstallPackage` **in the project root**).
 
-After running `npm run dev` **in the `ui.frontend` directory**, your app will be automatically opened in your browser (at path http://localhost:3000/content/content-wizard/us/en/home.html). If you make edits, the page will reload.
+After running `npm run dev` **in the `ui.frontend` directory**, your app will be automatically opened in your browser (at path http://localhost:3000). If you make edits, the page will reload.
 
 If you are getting errors related to CORS, you might want to configure AEM as follows:
 
@@ -87,4 +87,13 @@ This build and deployment logic requires that the AEM Page request the bundle.js
 
 This build also uses the [@aem-vite/vite-aem-plugin](https://www.aemvite.dev/) plugin to generate the clientlib structure and dynamic import mappings. This project does not use the related AEM/Maven dependency by `aem-vite`. No third-party AEM dependencies is a project requirement.
 
+## Additional Development Support
 
+### Proxy Host
+By default, the proxy is configured for http://localhost:4502. If your "local" development instance has an alternative domain/host, you can update the `VITE_HOST_URI` property in `.env.development`. You can alternatively set a `VITE_PRIVATE_HOST_URI` in your bash environment variables, instead of updating the `.env.development` file.
+
+### Fast Iterations
+
+When developing UI Features, you can easily and quickly test against changes by using the built-in Vite Server. No need to deploy to AEM beyond the initial installation. The build was migrated from CRA to Vite, in order to make use of Fast Refresh and SWC, which is considerably faster than CRA.
+
+If you need to re-deploy the frontend Build to AEM, the fastest approach is to run the vite build manually with `npm run build` here in `ui.frontend` directory, followed by `mvn clean install -P autoInstallPackage` from the `../ui.apps` directory.
