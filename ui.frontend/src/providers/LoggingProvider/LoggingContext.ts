@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Logger } from '@/types';
+import type { Logger } from '@/types';
 
 export const LoggingContext = createContext<Logger>({
   log: () => ({}),

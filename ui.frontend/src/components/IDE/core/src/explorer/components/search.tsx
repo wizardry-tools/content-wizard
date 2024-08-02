@@ -1,7 +1,9 @@
-import { GraphQLArgument, isInputObjectType, isInterfaceType, isObjectType } from 'graphql';
-import { FocusEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { isInputObjectType, isInterfaceType, isObjectType } from 'graphql';
+import type { GraphQLArgument } from 'graphql';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { FocusEventHandler } from 'react';
 import { Combobox } from '@headlessui/react';
-import { Caller, FieldMatch, FieldProps, SearchMatch, SearchMatchCallback, TypeMatch, TypeProps } from '@/types';
+import type { Caller, FieldMatch, FieldProps, SearchMatch, SearchMatchCallback, TypeMatch, TypeProps } from '@/types';
 import { MagnifyingGlassIcon } from '@/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';

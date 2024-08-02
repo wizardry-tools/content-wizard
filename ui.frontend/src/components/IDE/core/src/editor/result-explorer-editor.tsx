@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Caller, CodeMirrorEditor, UseResultExplorerEditorArgs } from '@/types';
+import type { Caller, CodeMirrorEditor, UseResultExplorerEditorArgs } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 import { useEditorContext } from './context';

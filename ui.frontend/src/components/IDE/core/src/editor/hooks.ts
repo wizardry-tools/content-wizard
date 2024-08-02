@@ -4,8 +4,7 @@ import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import copyToClipboard from 'copy-to-clipboard';
 import { parse, print } from 'graphql';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
-import {
+import type {
   Caller,
   CodeMirrorEditor,
   EmptyCallback,

@@ -1,6 +1,8 @@
-import { forwardRef, MouseEventHandler, useCallback, useState, JSX } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
+import type { JSX } from 'react';
+import type { MouseEventHandler } from 'react';
 import { clsx } from 'clsx';
-import { ToolbarButtonProps } from '@/types';
+import type { ToolbarButtonProps } from '@/types';
 import { Tooltip, UnStyledButton } from '../ui';
 import './button.scss';
 

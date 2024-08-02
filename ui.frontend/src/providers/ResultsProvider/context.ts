@@ -3,8 +3,9 @@
  * but excludes 'txt' and 'css' as those are just JSON exports
  * with different file extensions.
  */
-import { AllowedExportType, Order, Result, ResultProp, ResultsContextProps, ResultsDispatchProps } from '@/types';
-import { createContext, Dispatch, useContext } from 'react';
+import type { AllowedExportType, Order, Result, ResultProp, ResultsContextProps, ResultsDispatchProps } from '@/types';
+import { createContext, useContext } from 'react';
+import type { Dispatch } from 'react';
 
 export const allowedExportTypes: { [T in AllowedExportType]: T } = {
   html: 'html',

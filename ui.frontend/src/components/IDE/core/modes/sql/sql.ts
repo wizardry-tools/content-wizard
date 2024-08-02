@@ -1,7 +1,8 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
-import CodeMirror, { ModeFactory } from 'codemirror';
-import { ModeOptions, SqlState } from '@/types';
+import CodeMirror from 'codemirror';
+import type { ModeFactory } from 'codemirror';
+import type { ModeOptions, SqlState } from '@/types';
 
 (() => {
   CodeMirror.defineMode('sql', ((config: CodeMirror.EditorConfiguration, parserConfig: ModeOptions) => {

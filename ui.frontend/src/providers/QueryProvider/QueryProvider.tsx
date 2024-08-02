@@ -1,5 +1,6 @@
-import { PropsWithChildren, useCallback, useMemo, useReducer } from 'react';
-import { QueryRunnerResponse, QueryRunnerProps, FetcherResult, Result, QueryLanguage } from '@/types';
+import { useCallback, useMemo, useReducer } from 'react';
+import type { PropsWithChildren } from 'react';
+import type { QueryRunnerResponse, QueryRunnerProps, FetcherResult, Result, QueryLanguage } from '@/types';
 import { DYNAMIC_HEADERS, getParams, useRenderCount } from '@/utility';
 import { buildQueryString } from '@/components/Query';
 import { useStorageContext } from '@/components/IDE/core/src';

@@ -1,5 +1,5 @@
-import { GetDefaultFieldNamesFn } from '@graphiql/toolkit';
-import { Caller } from '@/types';
+import type { GetDefaultFieldNamesFn } from '@graphiql/toolkit';
+import type { Caller } from '@/types';
 
 export type UseCopyQueryArgs = {
   /**

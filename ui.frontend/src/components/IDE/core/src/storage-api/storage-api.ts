@@ -1,4 +1,4 @@
-import { WizardAlertProps, WizardStorage, WizardStorageAPI, WizardStorageAPIProps } from '@/types';
+import type { WizardAlertProps, WizardStorage, WizardStorageAPI, WizardStorageAPIProps } from '@/types';
 import { createInMemoryStorage } from './in-memory-storage';
 
 function isQuotaError(storage: WizardStorage, e: unknown) {

@@ -1,5 +1,5 @@
 import { createTab, fuzzyExtractOperationName, getDefaultTabState, clearHeadersFromTabs, STORAGE_KEY } from '../tabs';
-import { WizardStorageAPI } from '@/types';
+import type { WizardStorageAPI } from '@/types';
 import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/components/Query';
 
 describe('createTab', () => {

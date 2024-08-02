@@ -1,6 +1,7 @@
-import { astFromValue, print, ValueNode } from 'graphql';
+import { astFromValue, print } from 'graphql';
+import type { ValueNode } from 'graphql';
+import type { DefaultValueProps } from '@/types';
 import './default-value.scss';
-import { DefaultValueProps } from '@/types';
 
 const printDefault = (ast?: ValueNode | null): string => {
   if (!ast) {

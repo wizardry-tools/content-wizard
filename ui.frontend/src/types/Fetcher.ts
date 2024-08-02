@@ -1,11 +1,11 @@
-import { PropsWithChildren } from 'react';
-import {
+import type { PropsWithChildren } from 'react';
+import type {
   CreateFetcherOptions,
   FetcherOpts,
   FetcherReturnType,
   SyncExecutionResult,
 } from '@graphiql/toolkit/src/create-fetcher/types';
-import { Result, ResultProp } from './Result';
+import type { Result, ResultProp } from './Result';
 
 export type FetcherProviderProps = PropsWithChildren;
 

@@ -1,4 +1,5 @@
-import { SyntheticEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import type { SyntheticEvent } from 'react';
 import { Paper } from '@mui/material';
 import { useFields, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';

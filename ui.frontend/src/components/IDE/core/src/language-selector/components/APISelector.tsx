@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { APISelectorProps } from '@/types';
+import type { APISelectorProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 

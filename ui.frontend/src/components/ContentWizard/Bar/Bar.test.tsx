@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import { Bar } from './Bar';
 import * as ResultsProvider from '@/providers/ResultsProvider';
-import { ResultsContextProps } from '@/types';
+import type { ResultsContextProps } from '@/types';
 
 const EmptyContext: ResultsContextProps = {
   results: [],

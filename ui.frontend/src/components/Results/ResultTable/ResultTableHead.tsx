@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { Box, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { ResultTableHeadProps } from '@/types';
+import type { ResultTableHeadProps } from '@/types';
 import { useRenderCount, usePaperTheme } from '@/utility';
 import { useLogger, useResults } from '@/providers';
 import { TableHeadCell } from './TableHeadCell';

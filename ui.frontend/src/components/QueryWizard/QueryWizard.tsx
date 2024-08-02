@@ -1,5 +1,5 @@
 import { Stack, Paper } from '@mui/material';
-import { QueryWizardProps } from '@/types';
+import type { QueryWizardProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { QueryHandler } from '@/components/Query';

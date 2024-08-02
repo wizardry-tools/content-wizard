@@ -1,7 +1,8 @@
-import { PropsWithChildren, useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import type { PropsWithChildren } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Theme } from '@/types';
+import type { Theme } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useStorageContext } from '@/components/IDE/core/src';
 import { useLogger } from '../LoggingProvider';

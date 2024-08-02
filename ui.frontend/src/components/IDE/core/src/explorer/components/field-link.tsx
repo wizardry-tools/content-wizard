@@ -1,5 +1,5 @@
 import { Link } from '@mui/material';
-import { FieldLinkProps } from '@/types';
+import type { FieldLinkProps } from '@/types';
 import { useExplorerContext } from '../context';
 import './field-link.scss';
 

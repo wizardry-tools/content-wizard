@@ -1,4 +1,4 @@
-import { SchemaDocumentationProps } from '@/types';
+import type { SchemaDocumentationProps } from '@/types';
 import { MarkdownContent } from '../../ui';
 import { ExplorerSection } from './section';
 

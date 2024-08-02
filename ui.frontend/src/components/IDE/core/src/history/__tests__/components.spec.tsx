@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
-import { Mock } from 'vitest';
-import { ComponentProps } from 'react';
+import type { Mock } from 'vitest';
+import type { ComponentProps } from 'react';
 import { formatQuery, HistoryItem } from '../components';
 import { HistoryContextProvider } from '../context';
 import { useEditorContext } from '../../editor';

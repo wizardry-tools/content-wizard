@@ -1,7 +1,7 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
-import { XpathPropertiesState } from '@/types';
+import type { XpathPropertiesState } from '@/types';
 
 // turn a space-separated list into an array
 function set(str: string) {

@@ -1,5 +1,6 @@
-import { PropsWithChildren, useMemo } from 'react';
-import { LoggingProviderProps } from '@/types';
+import type { PropsWithChildren } from 'react';
+import { useMemo } from 'react';
+import type { LoggingProviderProps } from '@/types';
 import { StorageContextProvider } from '@/components/IDE/core/src';
 import { WizardAlertProvider } from '../WizardAlertProvider';
 import { LoggingProvider } from '../LoggingProvider';

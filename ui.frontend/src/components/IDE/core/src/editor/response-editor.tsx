@@ -1,6 +1,7 @@
 import { formatError } from '@graphiql/toolkit';
 import type { Position, Token } from 'codemirror';
-import { useEffect, useRef, JSX } from 'react';
+import { useEffect, useRef } from 'react';
+import type { JSX } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Caller, CodeMirrorEditor, ResponseTooltipType, UseResponseEditorArgs } from '@/types';

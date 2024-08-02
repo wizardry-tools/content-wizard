@@ -1,5 +1,5 @@
 import { QueryButton } from '@/components/QueryWizard/Components';
-import { QueryHandlerProps, DoQueryProps, QueryRunnerResponse, Result } from '@/types';
+import type { QueryHandlerProps, DoQueryProps, QueryRunnerResponse, Result } from '@/types';
 import { useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatcher } from '@/providers';
 import { useCallback } from 'react';
 

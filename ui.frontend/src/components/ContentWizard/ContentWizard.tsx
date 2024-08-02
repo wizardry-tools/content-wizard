@@ -1,4 +1,5 @@
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
+import type { SyntheticEvent } from 'react';
 import { ContentWizardProvider, IDEProvider, useLogger } from '@/providers';
 import { Box } from '@mui/material';
 import { useRenderCount } from '@/utility';

@@ -1,8 +1,9 @@
-import { formatError, formatResult, isAsyncIterable, isObservable, Unsubscribable } from '@graphiql/toolkit';
-import { ExecutionResult, GraphQLError } from 'graphql';
+import { formatError, formatResult, isAsyncIterable, isObservable } from '@graphiql/toolkit';
+import type { Unsubscribable } from '@graphiql/toolkit';
+import type { ExecutionResult, GraphQLError } from 'graphql';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import setValue from 'set-value';
-import { ExecutionContextProviderProps, ExecutionContextType, IncrementalResult } from '@/types';
+import type { ExecutionContextProviderProps, ExecutionContextType, IncrementalResult } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useFetcher, useLogger, useQuery } from '@/providers';
 import { useAutoCompleteLeafs, useEditorContext } from './editor';

@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react';
 import type { WizardStoreItem } from './Storage';
-import { QueryLanguage, Statement } from '../Query';
-import { ReactNode } from 'react';
+import type { QueryLanguage, Statement } from '../Query';
 
 export type QueryHistoryItemProps = {
   item: WizardStoreItem & { index?: number };

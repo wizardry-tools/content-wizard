@@ -1,5 +1,6 @@
-import { Context, createContext, useContext } from 'react';
-import { Caller } from '@/types';
+import { createContext, useContext } from 'react';
+import type { Context } from 'react';
+import type { Caller } from '@/types';
 
 export function createNullableContext<T>(name: string): Context<T | null> {
   const context = createContext<T | null>(null);

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { clsx } from 'clsx';
-import { HeaderEditorProps } from '@/types';
+import type { HeaderEditorProps } from '@/types';
 import { useEditorContext } from '../context';
 import { useHeaderEditor } from '../header-editor';
 import '../style/codemirror.scss';

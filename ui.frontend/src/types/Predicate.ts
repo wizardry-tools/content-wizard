@@ -1,4 +1,4 @@
-import { FieldConfigName, FieldsConfig, InputValue } from './Fields';
+import type { FieldConfigName, FieldsConfig, InputValue } from './Fields';
 
 export type PredicateType = 'fulltext' | 'path' | 'type' | 'nodename' | 'property' | 'limit' | 'isLiveCopy' | null;
 

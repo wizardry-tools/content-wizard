@@ -1,13 +1,13 @@
-import {
+import type {
   DirectiveNode,
   GraphQLArgument,
   GraphQLField,
   GraphQLInputField,
   GraphQLNamedType,
-  type GraphQLSchema,
+  GraphQLSchema,
   GraphQLType,
 } from 'graphql/index';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type ExplorerFieldDef = GraphQLField<unknown, unknown, unknown> | GraphQLInputField | GraphQLArgument;
 

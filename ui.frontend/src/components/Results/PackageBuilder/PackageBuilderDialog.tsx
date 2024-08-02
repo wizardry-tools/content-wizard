@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, ThemeProvider, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
-import { PackageBuilderDialogProps } from '@/types';
+import type { PackageBuilderDialogProps } from '@/types';
 import { PackageBuilder } from './PackageBuilder';
 
 export const PackageBuilderDialog = (props: PackageBuilderDialogProps) => {

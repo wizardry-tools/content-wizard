@@ -9,7 +9,12 @@ import {
   isUnionType,
 } from 'graphql';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ExplorerContextProviderProps, ExplorerContextType, ExplorerNavStack, ExplorerNavStackItem } from '@/types';
+import type {
+  ExplorerContextProviderProps,
+  ExplorerContextType,
+  ExplorerNavStack,
+  ExplorerNavStackItem,
+} from '@/types';
 import { useSchemaContext } from '../schema';
 import { createContextHook, createNullableContext } from '../utility/context';
 

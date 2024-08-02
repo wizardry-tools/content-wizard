@@ -1,9 +1,10 @@
-import { createContext, Dispatch, useContext } from 'react';
-import { PaletteMode } from '@mui/material';
-import { Theme as MuiTheme } from '@mui/material/styles/createTheme';
+import { createContext, useContext } from 'react';
+import type { Dispatch } from 'react';
+import type { PaletteMode } from '@mui/material';
+import type { Theme as MuiTheme } from '@mui/material/styles/createTheme';
 import { createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
-import { NullablePaletteMode, Theme, WizardStorageAPI } from '@/types';
+import type { NullablePaletteMode, Theme, WizardStorageAPI } from '@/types';
 
 export const DARK: PaletteMode = 'dark';
 export const LIGHT: PaletteMode = 'light';

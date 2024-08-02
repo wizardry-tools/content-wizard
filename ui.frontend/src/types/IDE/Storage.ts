@@ -1,6 +1,6 @@
-import { Dispatch, ReactNode } from 'react';
-import { QueryLanguage, Statement } from '../Query';
-import { WizardAlertProps } from '../WizardAlert';
+import type { Dispatch, ReactNode } from 'react';
+import type { QueryLanguage, Statement } from '../Query';
+import type { WizardAlertProps } from '../WizardAlert';
 
 export type WizardStorageAPI = {
   storage: WizardStorage;

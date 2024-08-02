@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { LoggingProps, LoggingProviderProps } from '@/types';
+import type { LoggingProps, LoggingProviderProps } from '@/types';
 import { isEmpty } from '@/utility';
 import { LoggingContext } from './LoggingContext';
 

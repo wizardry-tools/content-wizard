@@ -1,4 +1,5 @@
-import React, { Fragment, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
+import type { MouseEventHandler, PropsWithChildren, ReactElement } from 'react';
 import {
   Button,
   ButtonGroup,

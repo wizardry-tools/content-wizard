@@ -1,1 +1,1 @@
-export * from './ObjectState';
+export type * from './ObjectState';

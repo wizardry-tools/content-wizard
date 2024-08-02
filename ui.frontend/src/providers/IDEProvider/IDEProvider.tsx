@@ -1,4 +1,4 @@
-import { IDEProviderProps } from '@/types';
+import type { IDEProviderProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import {
   APIContextProvider,

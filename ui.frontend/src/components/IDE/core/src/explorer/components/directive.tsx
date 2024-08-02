@@ -1,4 +1,4 @@
-import { DirectiveProps } from '@/types';
+import type { DirectiveProps } from '@/types';
 import './directive.scss';
 
 export function Directive({ directive }: DirectiveProps) {

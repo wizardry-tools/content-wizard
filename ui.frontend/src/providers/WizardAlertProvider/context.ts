@@ -1,5 +1,6 @@
-import { createContext, Dispatch, useContext } from 'react';
-import { WizardAlertProps } from '@/types';
+import { createContext, useContext } from 'react';
+import type { Dispatch } from 'react';
+import type { WizardAlertProps } from '@/types';
 
 const emptyContext: WizardAlertProps = {
   message: '',

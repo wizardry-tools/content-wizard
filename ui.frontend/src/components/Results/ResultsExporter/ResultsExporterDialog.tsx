@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, ThemeProvider, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
-import { ResultsExporterDialogProps } from '@/types';
+import type { ResultsExporterDialogProps } from '@/types';
 import { ResultsExporter } from './ResultsExporter';
 
 /**

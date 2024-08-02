@@ -1,6 +1,7 @@
-import { forwardRef, JSX } from 'react';
+import { forwardRef } from 'react';
+import type { JSX } from 'react';
 import { clsx } from 'clsx';
-import { ButtonProps } from '@/types';
+import type { ButtonProps } from '@/types';
 import './button.scss';
 
 export const UnStyledButton = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>((props, ref) => (

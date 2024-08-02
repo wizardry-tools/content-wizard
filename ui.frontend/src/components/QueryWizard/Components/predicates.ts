@@ -1,4 +1,4 @@
-import { ContentType, DateRange, FieldsConfig, InputValue, PredicateConfig, PredicatesConfig } from '@/types';
+import type { ContentType, DateRange, FieldsConfig, InputValue, PredicateConfig, PredicatesConfig } from '@/types';
 
 export const Predicate = ({
   rawInject = () => '',

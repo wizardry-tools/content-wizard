@@ -2,7 +2,7 @@
  * All icons must be added to this module.
  * Exposed via '@/icons'
  */
-import { ComponentProps, FC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import _ArgumentIcon from './argument.svg';
 import _ChevronDownIcon from './chevron-down.svg';
 import _ChevronLeftIcon from './chevron-left.svg';

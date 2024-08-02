@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
-import { GraphQLError } from 'graphql/index';
-import { UseAutoCompleteLeafsArgs } from './hooks';
+import type { ReactNode } from 'react';
+import type { GraphQLError } from 'graphql/index';
+import type { UseAutoCompleteLeafsArgs } from './hooks';
 
 export type ExecutionContextType = {
   /**

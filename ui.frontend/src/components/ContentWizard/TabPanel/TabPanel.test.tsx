@@ -1,7 +1,7 @@
 // Importing required dependencies and mock data
 import { render, screen } from '@testing-library/react';
 import { TabPanel } from '../TabPanel';
-import { TabPanelProps } from '@/types';
+import type { TabPanelProps } from '@/types';
 
 describe('TabPanel', () => {
   it('renders children if value is equal to index', () => {

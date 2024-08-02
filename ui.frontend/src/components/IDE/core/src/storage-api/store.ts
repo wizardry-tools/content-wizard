@@ -1,4 +1,4 @@
-import { WizardStore, WizardStoreItem, WizardStoreItemAction, WizardStoreProps } from '@/types';
+import type { WizardStore, WizardStoreItem, WizardStoreItemAction, WizardStoreProps } from '@/types';
 
 const compareStoreItem = (storeItem: WizardStoreItem, item: WizardStoreItem): boolean => {
   return (

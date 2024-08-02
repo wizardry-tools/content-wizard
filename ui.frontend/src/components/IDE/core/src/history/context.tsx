@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { HistoryContextType, HistoryContextProviderProps, WizardStorageAPI, WizardStoreItem } from '@/types';
+import type { HistoryContextType, HistoryContextProviderProps, WizardStorageAPI, WizardStoreItem } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 import { createContextHook, createNullableContext } from '../utility/context';

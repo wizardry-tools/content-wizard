@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react';
-import { AlertColor, AlertProps } from '@mui/material';
+import type { PropsWithChildren } from 'react';
+import type { AlertColor, AlertProps } from '@mui/material';
 
 export type WizardAlertProps = AlertProps & {
   message?: string;

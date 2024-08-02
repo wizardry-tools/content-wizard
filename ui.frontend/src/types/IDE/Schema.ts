@@ -1,5 +1,5 @@
-import { GraphQLError, GraphQLSchema } from 'graphql/index';
-import { ReactNode, RefObject } from 'react';
+import type { GraphQLError, GraphQLSchema } from 'graphql/index';
+import type { ReactNode, RefObject } from 'react';
 
 export type IntrospectionArgs = {
   /**

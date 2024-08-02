@@ -1,5 +1,5 @@
-import { PaletteMode } from '@mui/material';
-import { CSSProperties } from 'react';
+import type { PaletteMode } from '@mui/material';
+import type { CSSProperties } from 'react';
 
 /**
  * The value `null` semantically means that the user does not explicitly choose

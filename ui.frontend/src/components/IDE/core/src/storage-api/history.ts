@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { parse } from 'graphql';
-import {
+import type {
   QueryLanguage,
   Statement,
   WizardStore,
@@ -9,6 +9,7 @@ import {
   WizardHistoryStore,
 } from '@/types';
 import { useWizardStore } from './store';
+
 const MAX_QUERY_SIZE = 100000;
 
 export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryStore => {

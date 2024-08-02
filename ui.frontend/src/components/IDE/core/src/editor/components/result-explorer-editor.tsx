@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Paper, Stack } from '@mui/material';
-import { UseResultExplorerEditorArgs } from '@/types';
+import type { UseResultExplorerEditorArgs } from '@/types';
 import { CopyIcon } from '@/icons';
 import { useResultExplorerEditor } from '../result-explorer-editor';
 import '../style/codemirror.scss';

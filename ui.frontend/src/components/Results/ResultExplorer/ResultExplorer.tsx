@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress, Paper, Stack } from '@mui/material';
-import { ResultData, ResultExplorerProps } from '@/types';
+import type { ResultData, ResultExplorerProps } from '@/types';
 import { Tooltip, ResultExplorerEditor } from '@/components/IDE/core/src';
 import { useFetcher } from './fetcher';
 

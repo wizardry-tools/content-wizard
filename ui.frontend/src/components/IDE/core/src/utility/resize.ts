@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ResizableElement, UseDragResizeArgs } from '@/types';
+import type { ResizableElement, UseDragResizeArgs } from '@/types';
 import { useStorageContext } from '../storage';
 import debounce from './debounce';
 

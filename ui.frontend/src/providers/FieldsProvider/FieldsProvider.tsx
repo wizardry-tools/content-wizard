@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react';
-import { FieldsProviderProps } from '@/types';
+import type { FieldsProviderProps } from '@/types';
 import { useDebounce } from '@/utility';
 import { defaultFields } from '@/components/QueryWizard/Components';
 import { endpoints } from '@/components/Query';

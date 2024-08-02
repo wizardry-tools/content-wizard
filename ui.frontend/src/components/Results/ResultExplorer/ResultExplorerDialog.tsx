@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import EngineeringIcon from '@mui/icons-material/Engineering';
-import { ResultData, ResultExplorerDialogProps } from '@/types';
+import type { ResultData, ResultExplorerDialogProps } from '@/types';
 import { escapeColon, escapeUrl } from '@/utility';
 import { ResultExplorer } from './ResultExplorer';
 import { useFetcher } from './fetcher';

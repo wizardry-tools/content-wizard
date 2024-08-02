@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { TableFooter, TablePagination, TableRow } from '@mui/material';
-import { ResultTableFooterProps } from '@/types';
+import type { ResultTableFooterProps } from '@/types';
 import { useLogger, useResults } from '@/providers';
 import { usePaperTheme } from '@/utility';
 import { TablePaginationActions } from './TablePaginationActions';

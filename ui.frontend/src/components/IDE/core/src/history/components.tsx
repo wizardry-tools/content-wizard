@@ -1,6 +1,7 @@
-import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { MouseEventHandler } from 'react';
 import { clsx } from 'clsx';
-import { QueryHistoryItemProps } from '@/types';
+import type { QueryHistoryItemProps } from '@/types';
 import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from '@/icons';
 import { useRenderCount } from '@/utility';
 import { useLogger, useQueryDispatcher } from '@/providers';

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { clsx } from 'clsx';
-
-import { VariableEditorProps } from '@/types';
+import type { VariableEditorProps } from '@/types';
 import { useEditorContext } from '../context';
 import { useVariableEditor } from '../variable-editor';
 import '../style/codemirror.scss';

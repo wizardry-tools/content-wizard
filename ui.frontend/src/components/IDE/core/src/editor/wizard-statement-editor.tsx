@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Caller, CodeMirrorType, QueryLanguage, Statement, UseWizardStatementEditorArgs } from '@/types';
+import type { Caller, CodeMirrorType, QueryLanguage, Statement, UseWizardStatementEditorArgs } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger, useQuery } from '@/providers';
 import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';

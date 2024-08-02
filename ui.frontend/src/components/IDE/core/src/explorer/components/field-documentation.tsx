@@ -1,6 +1,6 @@
-import { GraphQLArgument } from 'graphql';
+import type { GraphQLArgument } from 'graphql';
 import { useCallback, useState } from 'react';
-import { ExplorerFieldDef, FieldDocumentationProps } from '@/types';
+import type { ExplorerFieldDef, FieldDocumentationProps } from '@/types';
 import { Button, MarkdownContent } from '../../ui';
 import { Argument } from './argument';
 import { DeprecationReason } from './deprecation-reason';

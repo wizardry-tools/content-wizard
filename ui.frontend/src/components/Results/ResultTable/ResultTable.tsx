@@ -1,5 +1,7 @@
-import { useState, MouseEvent, ChangeEvent, useCallback, memo } from 'react';
-import { Table, TableContainer, Paper, PaperProps } from '@mui/material';
+import { useState, useCallback, memo } from 'react';
+import type { MouseEvent, ChangeEvent } from 'react';
+import { Table, TableContainer, Paper } from '@mui/material';
+import type { PaperProps } from '@mui/material';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { ResultExplorerDialog } from '../ResultExplorer';

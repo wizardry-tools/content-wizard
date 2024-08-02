@@ -1,5 +1,6 @@
-import { createContext, Dispatch, useContext } from 'react';
-import { Query, QueryAction, QueryRunnerProps, QueryRunnerResponse } from '@/types';
+import { createContext, useContext } from 'react';
+import type { Dispatch } from 'react';
+import type { Query, QueryAction, QueryRunnerProps, QueryRunnerResponse } from '@/types';
 import { defaultFields } from '@/components/QueryWizard/Components';
 import { buildGraphQLURL, endpoints } from '@/components';
 import { generateQuery } from '../FieldsProvider/context';

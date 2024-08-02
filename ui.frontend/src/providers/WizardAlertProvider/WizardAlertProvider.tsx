@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { AlertColor } from '@mui/material';
-import { WizardAlertProps, WizardAlertProviderProps } from '@/types';
+import type { AlertColor } from '@mui/material';
+import type { WizardAlertProps, WizardAlertProviderProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger } from '../LoggingProvider';
 import { WizardAlertContext, WizardAlertDispatcher } from './context';

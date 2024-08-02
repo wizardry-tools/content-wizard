@@ -1,5 +1,5 @@
 import { getParams } from '@/utility';
-import { Query, QueryLanguageMap, QueryMap } from '@/types';
+import type { Query, QueryLanguageMap, QueryMap } from '@/types';
 
 export const endpoints: Record<string, string> = {
   queryBuilderPath: '/bin/querybuilder.json',
@@ -25,23 +25,6 @@ export const QUERY_LANGUAGES: QueryLanguageMap = {
   QueryBuilder: 'QueryBuilder',
   GraphQL: 'GraphQL',
 };
-
-/** Language Support */
-// export const QueryLanguage = {
-//   SQL: 'SQL',
-//   JCR_SQL2: 'JCR_SQL2',
-//   XPATH: 'XPATH',
-//   QueryBuilder: 'QueryBuilder',
-//   GraphQL: 'GraphQL',
-// } as const;
-//export type QueryLanguageKey = keyof typeof QueryLanguage;
-// export const QueryLanguageLabels: Record<QueryLanguage, QueryLanguageLabel> = {
-//   SQL: 'SQL',
-//   JCR_SQL2: 'JCR SQL2',
-//   XPATH: 'XPATH',
-//   QueryBuilder: 'QueryBuilder',
-//   GraphQL: 'GraphQL',
-// };
 
 export function buildGraphQLURL(endpoint: string): string {
   return AEM_GRAPHQL_ACTIONS.serviceURL + AEM_GRAPHQL_ACTIONS.endpoint.replace('global', endpoint);

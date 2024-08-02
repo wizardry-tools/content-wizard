@@ -1,15 +1,7 @@
-import {
-  GraphQLEnumValue,
-  GraphQLNamedType,
-  isAbstractType,
-  isEnumType,
-  isInputObjectType,
-  isInterfaceType,
-  isNamedType,
-  isObjectType,
-} from 'graphql';
+import { isAbstractType, isEnumType, isInputObjectType, isInterfaceType, isNamedType, isObjectType } from 'graphql';
+import { GraphQLEnumValue, GraphQLNamedType } from 'graphql';
 import { useCallback, useState } from 'react';
-import { ExplorerFieldDef, TypeDocumentationProps } from '@/types';
+import type { ExplorerFieldDef, TypeDocumentationProps } from '@/types';
 import { useSchemaContext } from '../../schema';
 import { Button, MarkdownContent } from '../../ui';
 import { Argument } from './argument';

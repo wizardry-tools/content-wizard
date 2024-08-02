@@ -1,4 +1,5 @@
-import { JSX, PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { JSX, PropsWithChildren } from 'react';
 import { useObjectState, useRenderCount } from '@/utility';
 import { useLogger } from '../LoggingProvider';
 import { useAlertDispatcher } from '../WizardAlertProvider';

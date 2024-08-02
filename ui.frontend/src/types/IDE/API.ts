@@ -1,5 +1,5 @@
-import { Statement } from '@/types';
-import { PropsWithChildren } from 'react';
+import type { Statement } from '@/types';
+import type { PropsWithChildren } from 'react';
 
 export type API = {
   endpoint: string;

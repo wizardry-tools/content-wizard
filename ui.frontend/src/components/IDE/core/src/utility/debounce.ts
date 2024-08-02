@@ -7,7 +7,7 @@
  */
 export default function debounce<F extends (...args: any[]) => void>(duration: number, fn: F) {
   let timeout: number | null;
-  return function (...args) {
+  return function (...args: unknown[]) {
     if (timeout) {
       window.clearTimeout(timeout);
     }

@@ -1,11 +1,11 @@
-import { Editor, Position, Token } from 'codemirror';
-import { ComponentType, PropsWithChildren } from 'react';
+import type { Editor, Position, Token } from 'codemirror';
+import type { ComponentType, PropsWithChildren } from 'react';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
-import { DocumentNode, OperationDefinitionNode, ValidationRule } from 'graphql/index';
-import { VariableToType } from 'graphql-language-service';
-import { Query } from '../Query';
-import { UseCopyQueryArgs } from './hooks';
-import { TabsState, TabState } from './IDE';
+import type { DocumentNode, OperationDefinitionNode, ValidationRule } from 'graphql/index';
+import type { VariableToType } from 'graphql-language-service';
+import type { Query } from '../Query';
+import type { UseCopyQueryArgs } from './hooks';
+import type { TabsState, TabState } from './IDE';
 
 export type CodeMirrorType = typeof import('codemirror');
 

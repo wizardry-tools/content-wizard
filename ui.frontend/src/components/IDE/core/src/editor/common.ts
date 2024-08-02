@@ -1,4 +1,4 @@
-import { CodeMirrorImport, KeyMap } from '@/types';
+import type { CodeMirrorImport, KeyMap } from '@/types';
 
 export const DEFAULT_EDITOR_THEME = 'wizard';
 export const DEFAULT_KEY_MAP: KeyMap = 'sublime';

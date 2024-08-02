@@ -1,4 +1,4 @@
-import { ArgumentProps } from '@/types';
+import type { ArgumentProps } from '@/types';
 import { MarkdownContent } from '../../ui';
 import { DefaultValue } from './default-value';
 import { TypeLink } from './type-link';

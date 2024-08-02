@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { QueryLanguageSelectorProps } from '@/types';
+import type { QueryLanguageSelectorProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 import { FormGrid } from '@/components/QueryWizard/Components';

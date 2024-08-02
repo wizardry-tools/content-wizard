@@ -1,6 +1,7 @@
-import { memo, ReactNode, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import { Link, TableBody, TableCell, TableRow } from '@mui/material';
-import { ResultTableBodyProps } from '@/types';
+import type { ResultTableBodyProps } from '@/types';
 import { useResults } from '@/providers';
 
 export const ResultTableBody = memo((props: ResultTableBodyProps) => {

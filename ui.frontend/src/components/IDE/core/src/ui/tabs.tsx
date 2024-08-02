@@ -1,7 +1,8 @@
-import { forwardRef, JSX } from 'react';
+import { forwardRef } from 'react';
+import type { JSX } from 'react';
 import { clsx } from 'clsx';
 import { Reorder } from 'framer-motion';
-import { TabProps, TabsProps } from '@/types';
+import type { TabProps, TabsProps } from '@/types';
 import { CloseIcon } from '@/icons';
 import { createComponentGroup } from '../utility/component-group';
 import { UnStyledButton } from './button';

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { GraphiQLPlugin, PluginContextProviderProps, PluginContextType } from '@/types';
+import type { GraphiQLPlugin, PluginContextProviderProps, PluginContextType } from '@/types';
 import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from '@/icons';
 import { useIsGraphQL } from '@/providers';
 import { DocExplorer, useExplorerContext } from './explorer';

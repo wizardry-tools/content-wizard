@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Paper, Stack } from '@mui/material';
-import { UseWizardStatementEditorArgs } from '@/types';
+import type { UseWizardStatementEditorArgs } from '@/types';
 import { CopyIcon } from '@/icons';
 import { ToolbarButton } from '../../toolbar';
 import { useWizardStatementEditor } from '../wizard-statement-editor';

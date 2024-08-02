@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Fab, SvgIcon, Typography } from '@mui/material';
-import { QueryButtonProps } from '@/types';
+import type { QueryButtonProps } from '@/types';
 import { RunIcon } from '@/icons';
 import { useAlertContext } from '@/providers';
 

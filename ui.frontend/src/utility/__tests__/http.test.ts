@@ -1,4 +1,4 @@
-import { GetParamsProps } from '@/types';
+import type { GetParamsProps } from '@/types';
 import { escapeColon, escapeUrl, getParams, queryToParams } from '../http';
 
 // existing tests for escapeUrl function

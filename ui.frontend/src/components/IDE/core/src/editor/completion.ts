@@ -1,7 +1,8 @@
 import type { Editor, EditorChange } from 'codemirror';
 import type { IHint } from 'codemirror-graphql/hint';
-import { GraphQLNamedType, GraphQLSchema, GraphQLType, isListType, isNonNullType } from 'graphql';
-import { ExplorerContextType, PluginContextType } from '@/types';
+import { isListType, isNonNullType } from 'graphql';
+import type { GraphQLNamedType, GraphQLSchema, GraphQLType } from 'graphql';
+import type { ExplorerContextType, PluginContextType } from '@/types';
 import { markdown } from '../markdown';
 import { DOC_EXPLORER_PLUGIN } from '../plugin';
 import { importCodeMirror } from './common';

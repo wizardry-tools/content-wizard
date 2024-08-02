@@ -1,6 +1,6 @@
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { API, APIContextProviderProps, APIContextType, GraphQLEndpointConfig } from '@/types';
+import type { API, APIContextProviderProps, APIContextType, GraphQLEndpointConfig } from '@/types';
 import { buildGraphQLURL, endpoints } from '@/components';
 import { useCreateFetcher, useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';

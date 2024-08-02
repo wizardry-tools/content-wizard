@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { ViewsProps } from '@/types';
+import type { ViewsProps } from '@/types';
 import { useLogger } from '@/providers';
 import { IDE, QueryWizard, ResultHandler, SwipeableViews } from '@/components';
 import { TabPanel } from '../TabPanel';

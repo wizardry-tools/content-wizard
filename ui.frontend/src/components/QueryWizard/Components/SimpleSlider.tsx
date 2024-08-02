@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Slider, InputLabel, Tooltip } from '@mui/material';
-import { NumberValue, SimpleSliderProps } from '@/types';
+import type { NumberValue, SimpleSliderProps } from '@/types';
 import { useDebounce, useRenderCount } from '@/utility';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { FormGrid } from './FormGrid';

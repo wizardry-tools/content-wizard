@@ -1,4 +1,5 @@
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import {
   Button,
   Checkbox,
@@ -11,9 +12,9 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import DownloadIcon from '@mui/icons-material/Download';
-import { AllowedExportType } from '@/types';
+import type { AllowedExportType } from '@/types';
 import { allowedExportTypes, useResults } from '@/providers';
 import { FormGrid } from '@/components/QueryWizard/Components';
 

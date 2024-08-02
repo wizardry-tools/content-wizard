@@ -1,4 +1,4 @@
-import { AxisProps, SwiperStyles } from '@/types';
+import type { AxisProps, SwiperStyles } from '@/types';
 
 export const defaultSwiperStyles: SwiperStyles = {
   container: {

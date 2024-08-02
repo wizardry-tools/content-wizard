@@ -1,5 +1,6 @@
-import { Dispatch, useCallback, useMemo } from 'react';
-import {
+import { useCallback, useMemo } from 'react';
+import type { Dispatch } from 'react';
+import type {
   CodeMirrorEditor,
   CodeMirrorEditorWithOperationFacts,
   Query,

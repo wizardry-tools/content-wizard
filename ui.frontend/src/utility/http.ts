@@ -1,4 +1,4 @@
-import { GetParamsProps } from '@/types';
+import type { GetParamsProps } from '@/types';
 
 /**
  * The AUTH_TOKEN exists for dev builds

@@ -1,6 +1,7 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { Paper, TextField } from '@mui/material';
-import { SimpleInputProps } from '@/types';
+import type { SimpleInputProps } from '@/types';
 import { useDebounce, useRenderCount } from '@/utility';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { Field } from './fields';

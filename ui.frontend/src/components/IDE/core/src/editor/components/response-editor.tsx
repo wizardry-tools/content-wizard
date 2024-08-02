@@ -1,4 +1,4 @@
-import { UseResponseEditorArgs } from '@/types';
+import type { UseResponseEditorArgs } from '@/types';
 import { useResponseEditor } from '../response-editor';
 import '../style/codemirror.scss';
 import '../style/fold.scss';

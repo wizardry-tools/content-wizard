@@ -1,6 +1,6 @@
-import { ElementType, PropsWithChildren } from 'react';
-import dayjs from 'dayjs';
-import { Query } from './Query';
+import type { ElementType, PropsWithChildren } from 'react';
+import type { Dayjs } from 'dayjs';
+import type { Query } from './Query';
 
 export type FieldConfigName =
   | 'path'
@@ -35,7 +35,7 @@ export type FieldConfigCategory = 'targeting' | 'authoring' | 'replication' | 'm
 export type FieldCategoryLabel = string;
 export type FieldCategories = Record<FieldConfigCategory, FieldCategoryLabel>;
 
-export type DayTime = dayjs.Dayjs | null;
+export type DayTime = Dayjs | null;
 export type DateRange = {
   lowerBound: DayTime | undefined;
   upperBound: DayTime | undefined;

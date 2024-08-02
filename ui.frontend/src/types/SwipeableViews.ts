@@ -1,4 +1,4 @@
-import {
+import type {
   CSSProperties,
   HTMLProps,
   MutableRefObject,
@@ -9,7 +9,7 @@ import {
   UIEvent as ReactUIEvent,
 } from 'react';
 import { Property } from 'csstype';
-import FlexDirection = Property.FlexDirection;
+type FlexDirection = Property.FlexDirection;
 
 export type SwipeableTouch = {
   pageX: number;

@@ -1,6 +1,7 @@
 import { alpha } from '@mui/system/colorManipulator';
-import { getOverlayAlpha, Theme } from '@mui/material';
-import { UsePaperThemeProps } from '@/types';
+import { getOverlayAlpha } from '@mui/material';
+import type { Theme } from '@mui/material';
+import type { UsePaperThemeProps } from '@/types';
 
 export const usePaperTheme = (props?: UsePaperThemeProps) => {
   const { elevation = 1, styles = {} } = props ?? {};

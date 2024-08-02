@@ -2,7 +2,8 @@ import { getSelectedOperationName } from '@graphiql/toolkit';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import type { GraphQLSchema, ValidationRule } from 'graphql';
 import { getOperationFacts, GraphQLDocumentMode } from 'graphql-language-service';
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import type { MutableRefObject } from 'react';
 
 import {
   Caller,

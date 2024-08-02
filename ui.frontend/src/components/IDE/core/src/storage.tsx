@@ -1,4 +1,4 @@
-import { StorageContextProviderProps, StorageContextType, WizardStorageAPI } from '@/types';
+import type { StorageContextProviderProps, StorageContextType, WizardStorageAPI } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useAlertDispatcher, useLogger } from '@/providers';
 import { createNonNullableContext, createNonNullableContextHook } from './utility/context';

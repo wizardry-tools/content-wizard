@@ -1,18 +1,12 @@
-import {
-  isValidElement,
-  Children,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
+import { isValidElement, Children, useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import type {
   CSSProperties,
   ReactNode,
   TouchEvent as ReactTouchEvent,
   MouseEvent as ReactMouseEvent,
   UIEvent as ReactUIEvent,
 } from 'react';
-import { Axis, DisplaySameSlideProps, SwipeableElement, SwipeableEvent, SwipeableViewsProps } from '@/types';
+import type { Axis, DisplaySameSlideProps, SwipeableElement, SwipeableEvent, SwipeableViewsProps } from '@/types';
 import { axisProperties, defaultSwiperStyles } from './swiper-props';
 import {
   adaptMouse,

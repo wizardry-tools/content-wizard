@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: Refactor this logic to avoid use of `any`
 // disable the no-explicit-any rule for this file until the exported function is refactored.
-import { JSXElementConstructor } from 'react';
+import type { JSXElementConstructor } from 'react';
 
 export const createComponentGroup = <
   Root extends JSXElementConstructor<never>,

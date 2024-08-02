@@ -1,4 +1,5 @@
-import { ChangeEvent, SyntheticEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import type { ChangeEvent, SyntheticEvent } from 'react';
 import { useLogger, usePackagingContext } from '@/providers';
 import { Autocomplete, Button, CircularProgress, Paper, Stack, TextField, Typography } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';

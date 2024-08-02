@@ -1,4 +1,4 @@
-import { UseQueryEditorArgs } from '@/types';
+import type { UseQueryEditorArgs } from '@/types';
 import { useQueryEditor } from '../query-editor';
 import '../style/codemirror.scss';
 import '../style/fold.scss';

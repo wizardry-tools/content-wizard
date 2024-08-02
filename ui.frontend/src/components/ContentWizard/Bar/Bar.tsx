@@ -1,10 +1,9 @@
 import { AppBar, Tabs, Tab } from '@mui/material';
+import type { ContentWizardBarProps } from '@/types';
 import { a11yProps } from '@/utility';
 import { useResults } from '@/providers';
 import { MagicWand, ProgrammingCode, TableIcon } from '@/icons';
-
 import './Bar.scss';
-import { ContentWizardBarProps } from '@/types';
 
 const tabCssProps = {
   fontSize: {

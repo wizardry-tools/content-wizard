@@ -1,5 +1,5 @@
-import { ComponentType } from 'react';
-import { ExplorerSectionProps } from '@/types';
+import type { ComponentType } from 'react';
+import type { ExplorerSectionProps } from '@/types';
 import {
   ArgumentIcon,
   DeprecatedArgumentIcon,

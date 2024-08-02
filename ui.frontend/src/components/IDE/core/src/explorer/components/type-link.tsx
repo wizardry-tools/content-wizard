@@ -1,5 +1,5 @@
 import { Link } from '@mui/material';
-import { TypeLinkProps } from '@/types';
+import type { TypeLinkProps } from '@/types';
 import { useExplorerContext } from '../context';
 import { renderType } from './utils';
 import './type-link.scss';

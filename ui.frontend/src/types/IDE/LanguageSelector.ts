@@ -1,5 +1,5 @@
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { API, QueryLanguage, Statement } from '@/types';
+import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { API, QueryLanguage, Statement } from '@/types';
 
 export type PersistedQuerySelectorProps = {
   /**

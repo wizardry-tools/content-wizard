@@ -1,7 +1,12 @@
-import { Fetcher, FetcherOpts, FetcherParams, SyncExecutionResult } from '@graphiql/toolkit/src/create-fetcher/types';
+import type {
+  Fetcher,
+  FetcherOpts,
+  FetcherParams,
+  SyncExecutionResult,
+} from '@graphiql/toolkit/src/create-fetcher/types';
 import { useCallback, useMemo } from 'react';
 import { useAuthHeaders } from './useAuthHeaders';
-import { CustomCreateFetcherOptions, SimpleFetcher } from '@/types';
+import type { CustomCreateFetcherOptions, SimpleFetcher } from '@/types';
 
 export const useCreateFetcher = () => {
   const authHeaders = useAuthHeaders();

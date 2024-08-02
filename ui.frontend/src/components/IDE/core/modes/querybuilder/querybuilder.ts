@@ -1,7 +1,7 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
-import { QueryBuilderPropertiesState } from '@/types';
+import type { QueryBuilderPropertiesState } from '@/types';
 
 (() => {
   CodeMirror.defineMode('querybuilder', function () {

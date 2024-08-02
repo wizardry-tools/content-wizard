@@ -1,6 +1,7 @@
-import { useState, PropsWithChildren, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import type { PropsWithChildren } from 'react';
 import exportFromJSON from 'export-from-json';
-import { AllowedExportType, Order, Result, ResultsDispatchProps } from '@/types';
+import type { AllowedExportType, Order, Result, ResultsDispatchProps } from '@/types';
 import { isPlainObject, useRenderCount } from '@/utility';
 import { useAlertDispatcher } from '../WizardAlertProvider';
 import { useLogger } from '../LoggingProvider';

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { FetcherProps, LoadDataCallback, LoadDataProps, Result, ResultData } from '@/types';
+import type { FetcherProps, LoadDataCallback, LoadDataProps, Result, ResultData } from '@/types';
 import { DYNAMIC_HEADERS } from '@/utility';
 import { useAlertDispatcher } from '@/providers';
 

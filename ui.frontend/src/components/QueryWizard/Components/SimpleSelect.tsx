@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { InputLabel, Select, MenuItem, FormControl, Paper } from '@mui/material';
-import { InputValue, SimpleInputProps } from '@/types';
+import type { InputValue, SimpleInputProps } from '@/types';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { FormGrid } from './FormGrid';

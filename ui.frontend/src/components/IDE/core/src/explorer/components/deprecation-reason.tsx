@@ -1,4 +1,4 @@
-import { DeprecationReasonProps } from '@/types';
+import type { DeprecationReasonProps } from '@/types';
 import { MarkdownContent } from '../../ui';
 import './deprecation-reason.scss';
 

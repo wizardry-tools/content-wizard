@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ObjectStateHandleUpdate, ObjectStateOrCallback, ObjectStateUpdateCallback } from '@/types';
+import type { ObjectStateHandleUpdate, ObjectStateOrCallback, ObjectStateUpdateCallback } from '@/types';
 import { isPlainObject } from '../libs';
 
 export function useObjectState<T>(initialValue: T): [T, ObjectStateHandleUpdate<T>] {

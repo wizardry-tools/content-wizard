@@ -1,6 +1,7 @@
-import { Children, PropsWithChildren, ReactElement, MouseEvent } from 'react';
+import { Children } from 'react';
+import type { PropsWithChildren, ReactElement, MouseEvent } from 'react';
 import { axisProperties } from './swiper-props';
-import {
+import type {
   Axis,
   DisplaySameSlideProps,
   IndexBoundsCheck,
@@ -19,7 +20,7 @@ export const defaultComputeValues = {
   UNCERTAINTY_THRESHOLD: 3, // px
 };
 
-type ComputeIndexProps = PropsWithChildren & {
+export type ComputeIndexProps = PropsWithChildren & {
   startIndex: number;
   startX: number;
   pageX: number;

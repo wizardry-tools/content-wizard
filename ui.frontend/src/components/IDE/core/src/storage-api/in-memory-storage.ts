@@ -1,4 +1,4 @@
-import { WizardStorage } from '@/types';
+import type { WizardStorage } from '@/types';
 
 export function createInMemoryStorage(): WizardStorage {
   const store: Record<string, string> = {};

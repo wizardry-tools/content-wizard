@@ -1,6 +1,6 @@
-import { Dispatch } from 'react';
-import { API } from './IDE';
-import { OnResultsCallback, Result, ResultProp, ResultsDispatchProps } from './Result';
+import type { Dispatch } from 'react';
+import type { API } from './IDE';
+import type { OnResultsCallback, Result, ResultProp, ResultsDispatchProps } from './Result';
 
 export type QueryLanguage = 'SQL' | 'JCR_SQL2' | 'XPATH' | 'QueryBuilder' | 'GraphQL';
 export type QueryLanguageLabel = 'SQL' | 'JCR SQL2' | 'XPATH' | 'QueryBuilder' | 'GraphQL';

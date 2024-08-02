@@ -1,4 +1,4 @@
-import { GraphQLSelectorProps } from '@/types';
+import type { GraphQLSelectorProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 import { FormGrid } from '@/components/QueryWizard/Components';

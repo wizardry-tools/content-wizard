@@ -1,5 +1,6 @@
-import { createContext, Dispatch, useContext } from 'react';
-import { DateRange, FieldConfigAction, FieldsConfig, InputValue, PredicateConfig } from '@/types';
+import { createContext, useContext } from 'react';
+import type { Dispatch } from 'react';
+import type { DateRange, FieldConfigAction, FieldsConfig, InputValue, PredicateConfig } from '@/types';
 import { predicates } from '@/components/QueryWizard/Components';
 
 export const FieldsConfigContext = createContext<FieldsConfig>(null!);
@@ -114,7 +115,7 @@ export const generateQuery = (fields: FieldsConfig): string => {
       if (!field.isDisabled?.(fields) && predicate.isValid?.(value)) {
         if (predicate.raw) {
           // if raw, nothing to build, return the raw statement
-          return predicate.raw;
+          return predicate.raw + '\n';
         }
         // property strings, configInject functions, and operation strings require predicate statements to have an indexed prefix
         if (predicate.property ?? predicate.configInject ?? predicate.operation) {

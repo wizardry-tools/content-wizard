@@ -1,5 +1,5 @@
-import { Direction } from '@mui/system';
-import { PropsWithChildren, SyntheticEvent } from 'react';
+import type { Direction } from '@mui/system';
+import type { PropsWithChildren, SyntheticEvent } from 'react';
 
 export type ContentWizardBarProps = {
   tabValue: number;

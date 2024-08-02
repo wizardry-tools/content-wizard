@@ -1,6 +1,7 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { SimpleInputProps } from '@/types';
+import type { SimpleInputProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { FormGrid } from './FormGrid';

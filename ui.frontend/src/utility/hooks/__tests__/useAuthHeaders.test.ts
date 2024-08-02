@@ -1,6 +1,6 @@
 // Importing required modules and hooks
 import { renderHook } from '@testing-library/react';
-import { Mock } from 'vitest';
+import type { Mock } from 'vitest';
 import { useAuthHeaders } from '../useAuthHeaders';
 import { useCsrfToken } from '../useCsrfToken';
 

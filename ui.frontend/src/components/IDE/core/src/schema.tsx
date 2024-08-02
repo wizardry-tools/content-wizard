@@ -1,8 +1,10 @@
-import { FetcherOpts, fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
-import { buildClientSchema, getIntrospectionQuery, IntrospectionQuery, validateSchema } from 'graphql';
+import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
+import type { FetcherOpts } from '@graphiql/toolkit';
+import { buildClientSchema, getIntrospectionQuery, validateSchema } from 'graphql';
+import type { IntrospectionQuery } from 'graphql';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { IntrospectionArgs, MaybeGraphQLSchema, SchemaContextProviderProps, SchemaContextType } from '@/types';
+import type { IntrospectionArgs, MaybeGraphQLSchema, SchemaContextProviderProps, SchemaContextType } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useAlertDispatcher, useFetcher, useLogger, useQuery } from '@/providers';
 import { createContextHook, createNullableContext } from './utility/context';

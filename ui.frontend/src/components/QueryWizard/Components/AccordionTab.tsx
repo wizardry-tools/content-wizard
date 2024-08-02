@@ -1,7 +1,8 @@
-import { ElementType, useMemo } from 'react';
+import { useMemo } from 'react';
+import type { ElementType } from 'react';
 import { Accordion as MuiAccordion, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AccordionTabProps } from '@/types';
+import type { AccordionTabProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { fieldCategories } from '@/components/QueryWizard/Components/fields';

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import {
+import type {
   GroupName,
   HandlePackageProps,
   PackageFilter,

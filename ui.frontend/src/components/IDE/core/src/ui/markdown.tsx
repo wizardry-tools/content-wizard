@@ -1,6 +1,7 @@
-import { forwardRef, JSX } from 'react';
+import { forwardRef } from 'react';
+import type { JSX } from 'react';
 import { clsx } from 'clsx';
-import { MarkdownContentProps } from '@/types';
+import type { MarkdownContentProps } from '@/types';
 import { markdown } from '../markdown';
 import './markdown.scss';
 
