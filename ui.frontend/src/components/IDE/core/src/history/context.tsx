@@ -37,7 +37,7 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
    *
    * TODO: The History plugin logic was never paired with the Editor Tabs logic. So, when a History Item's label is
    *  modified, the change isn't propagated to the Tabs. The only time you see a changed label appear in an
-   *  Editor AccordionTab is when you click on the History Item after changing the label, thus creating a new Editor AccordionTab
+   *  Editor Tab is when you click on the History Item after changing the label, thus creating a new Editor AccordionTab
    *  that contains the History Item's current label. Creating new Tabs from a History Item, and then changing
    *  that Item's label, doesn't have any effect on already rendered tabs, even the currently active tab.
    */
