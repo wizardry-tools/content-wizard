@@ -1,38 +1,64 @@
 import { defineConfig, loadEnv } from 'vite';
+import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { visualizer } from 'rollup-plugin-visualizer';
+import { viteForAem } from '@aem-vite/vite-aem-plugin';
 
+const LIB_ROOT = '/etc.clientlibs/content-wizard/clientlibs';
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   console.log('Build Mode: ', mode);
   const aemHost = env?.VITE_HOST_URI ?? 'http://localhost:4502';
+  console.log('Proxy Host: ', aemHost);
+
+  const plugins = [
+    tsconfigPaths(),
+    svgr({
+      svgrOptions: { exportType: 'default', ref: true, svgo: false, titleProp: true },
+      include: '**/*.svg',
+    }),
+    react({ tsDecorators: true }),
+    visualizer(),
+  ];
+  if (command === 'build') {
+    plugins.push(
+      viteForAem({
+        contentPaths: [],
+        publicPath: LIB_ROOT + '/content-wizard',
+      }),
+    );
+  }
+
   return {
-    base: command === 'build' ? '/etc.clientlibs/content-wizard/clientlibs/content-wizard' : '/',
+    base: command === 'build' ? LIB_ROOT + '/' : '',
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    },
+    /* PLUGINS */
+    plugins,
     /* BUILD */
     build: {
       reportCompressedSize: false,
-      manifest: true,
+      manifest: false,
       minify: mode === 'development' ? false : 'terser',
       outDir: 'dist',
-      sourcemap: command === 'serve' ? 'inline' : true,
+      sourcemap: command === 'serve' ? 'inline' : undefined,
       rollupOptions: {
+        input: {
+          bundle: 'src/main.tsx',
+        },
         output: {
-          chunkFileNames: 'resources/static/js/[name].[hash].chunk.js',
-          entryFileNames: 'js/[name].[hash].js',
-          assetFileNames: (assetInfo) => {
-            console.log('assetInfo.name: ', assetInfo.name);
-            if (/\.css$/.test(assetInfo.name ?? 'error')) {
-              return 'css/[name].[hash][extname]';
-            }
-            if (/\.js$/.test(assetInfo.name ?? 'error')) {
-              return 'js/[name].[hash][extname]';
-            }
-            return 'resources/[name].[hash][extname]';
-          },
+          assetFileNames: 'content-wizard/resources/[ext]/[name][extname]',
+          chunkFileNames: 'content-wizard/resources/chunks/[name].[hash].js',
+          entryFileNames: 'content-wizard/resources/js/[name].js',
         },
         plugins: [
+          //nodeResolve(),
           // Plugin to generate .content.xml and txt files
           {
             name: 'aem-clientlib-structure',
@@ -48,7 +74,7 @@ export default defineConfig(({ command, mode }) => {
                 />`;
               this.emitFile({
                 type: 'asset',
-                fileName: '.content.xml',
+                fileName: `content-wizard/.content.xml`,
                 source: contentXml,
               });
 
@@ -59,24 +85,24 @@ export default defineConfig(({ command, mode }) => {
               for (const [fileName, _fileInfo] of Object.entries(bundle)) {
                 console.log(`fileName[${fileName}]: `, _fileInfo.type);
                 if (fileName.endsWith('.css') && !fileName.includes('chunk')) {
-                  cssFiles.push(fileName.replace('css/', ''));
+                  cssFiles.push(fileName.replace(`content-wizard/resources/css/`, ''));
                 }
                 if (fileName.endsWith('.js') && !fileName.includes('chunk')) {
-                  jsFiles.push(fileName.replace('js/', ''));
+                  jsFiles.push(fileName.replace(`content-wizard/resources/js/`, ''));
                 }
               }
 
-              const cssTxt = `#base=css\n${cssFiles.join('\n')}`;
-              const jsTxt = `#base=js\n${jsFiles.join('\n')}`;
+              const cssTxt = `#base=resources/css\n${cssFiles.join('\n')}`;
+              const jsTxt = `#base=resources/js\n${jsFiles.join('\n')}`;
 
               this.emitFile({
                 type: 'asset',
-                fileName: 'css.txt',
+                fileName: `content-wizard/css.txt`,
                 source: cssTxt,
               });
               this.emitFile({
                 type: 'asset',
-                fileName: 'js.txt',
+                fileName: `content-wizard/js.txt`,
                 source: jsTxt,
               });
             },
@@ -84,15 +110,6 @@ export default defineConfig(({ command, mode }) => {
         ],
       },
     },
-    /* PLUGINS */
-    plugins: [
-      tsconfigPaths(),
-      svgr({
-        svgrOptions: { exportType: 'default', ref: true, svgo: false, titleProp: true },
-        include: '**/*.svg',
-      }),
-      react({ tsDecorators: true }),
-    ],
     /* SERVER */
     server: {
       port: 3000,

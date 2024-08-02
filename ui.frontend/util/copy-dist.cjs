@@ -2,9 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const srcDir = path.resolve(__dirname, '../dist');
-console.log("srcDir: ", srcDir);
-const destDir = path.resolve(__dirname, '../../ui.apps/src/main/content/jcr_root/apps/content-wizard/clientlibs/content-wizard');
-console.log("destDir: ", destDir);
+const destDir = path.resolve(__dirname, '../../ui.apps/src/main/content/jcr_root/apps/content-wizard/clientlibs');
 
 /**
  * This function will copy all contents of the FE build directory '../dist',
@@ -21,4 +19,5 @@ async function copyDist() {
   }
 }
 
-copyDist().then();
+
+copyDist().then()
