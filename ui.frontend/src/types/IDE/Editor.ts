@@ -3,7 +3,7 @@ import type { ComponentType, PropsWithChildren } from 'react';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import type { DocumentNode, OperationDefinitionNode, ValidationRule } from 'graphql/index';
 import type { VariableToType } from 'graphql-language-service';
-import type { Query } from '../Query';
+import type { Query } from '@/types';
 import type { UseCopyQueryArgs } from './hooks';
 import type { TabsState, TabState } from './IDE';
 

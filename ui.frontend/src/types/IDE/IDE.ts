@@ -1,5 +1,5 @@
 import type { ComponentType, PropsWithChildren, ReactNode } from 'react';
-import type { Query } from '../Query';
+import type { Query } from '@/types';
 
 export type IDEProviderProps = PropsWithChildren;
 
