@@ -1,14 +1,9 @@
 import { AppBar, Tabs, Tab } from '@mui/material';
-import { a11yProps } from 'src/utility';
-import { useResults } from 'src/providers';
-import { MagicWand, ProgrammingCode, TableIcon } from 'src/icons';
-
+import type { ContentWizardBarProps } from '@/types';
+import { a11yProps } from '@/utility';
+import { useResults } from '@/providers';
+import { MagicWand, ProgrammingCode, TableIcon } from '@/icons';
 import './Bar.scss';
-
-type QueryWizardBarProps = {
-  tabValue: number;
-  onTabSelect: (_event: any, value: any) => void;
-};
 
 const tabCssProps = {
   fontSize: {
@@ -18,7 +13,7 @@ const tabCssProps = {
   },
 };
 
-export const Bar = ({ tabValue, onTabSelect }: QueryWizardBarProps) => {
+export const Bar = ({ tabValue, onTabSelect }: ContentWizardBarProps) => {
   const { results } = useResults();
 
   return (

@@ -1,22 +1,15 @@
-import {
-  GraphQLArgument,
-  GraphQLField,
-  GraphQLInputField,
-  GraphQLNamedType,
-  isInputObjectType,
-  isInterfaceType,
-  isObjectType,
-} from 'graphql';
-import { FocusEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { isInputObjectType, isInterfaceType, isObjectType } from 'graphql';
+import type { GraphQLArgument } from 'graphql';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { FocusEventHandler } from 'react';
 import { Combobox } from '@headlessui/react';
-import { MagnifyingGlassIcon } from 'src/icons';
+import type { Caller, FieldMatch, FieldProps, SearchMatch, SearchMatchCallback, TypeMatch, TypeProps } from '@/types';
+import { MagnifyingGlassIcon } from '@/icons';
 import { useSchemaContext } from '../../schema';
 import debounce from '../../utility/debounce';
-
 import { useExplorerContext } from '../context';
-
-import './search.scss';
 import { renderType } from './utils';
+import './search.scss';
 
 export function Search() {
   const { explorerNavStack, push } = useExplorerContext({
@@ -47,7 +40,9 @@ export function Search() {
     }
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const navItem = explorerNavStack.at(-1)!;
@@ -91,7 +86,9 @@ export function Search() {
           autoComplete="off"
           onFocus={handleFocus}
           onBlur={handleFocus}
-          onChange={(event) => setSearchValue(event.target.value)}
+          onChange={(event) => {
+            setSearchValue(event.target.value);
+          }}
           placeholder="&#x2318; K"
           ref={inputRef}
           value={searchValue}
@@ -131,33 +128,21 @@ export function Search() {
   );
 }
 
-type TypeMatch = { type: GraphQLNamedType };
-
-type FieldMatch = {
-  type: GraphQLNamedType;
-  field: GraphQLField<unknown, unknown> | GraphQLInputField;
-  argument?: GraphQLArgument;
-};
-
-export function useSearchResults(caller?: Function) {
+export function useSearchResults(caller?: Caller): SearchMatchCallback {
   const { explorerNavStack } = useExplorerContext({
     nonNull: true,
-    caller: caller || useSearchResults,
+    caller: caller ?? useSearchResults,
   });
   const { schema } = useSchemaContext({
     nonNull: true,
-    caller: caller || useSearchResults,
+    caller: caller ?? useSearchResults,
   });
 
   const navItem = explorerNavStack.at(-1)!;
 
   return useCallback(
     (searchValue: string) => {
-      const matches: {
-        within: FieldMatch[];
-        types: TypeMatch[];
-        fields: FieldMatch[];
-      } = {
+      const matches: SearchMatch = {
         within: [],
         types: [],
         fields: [],
@@ -221,23 +206,16 @@ export function useSearchResults(caller?: Function) {
 
 function isMatch(sourceText: string, searchValue: string): boolean {
   try {
-    const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, (ch) => '\\' + ch);
+    const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, (ch: string) => '\\' + ch);
     return sourceText.search(new RegExp(escaped, 'i')) !== -1;
   } catch {
     return sourceText.toLowerCase().includes(searchValue.toLowerCase());
   }
 }
 
-type TypeProps = { type: GraphQLNamedType };
-
 function Type(props: TypeProps) {
   return <span className="wizard-doc-explorer-search-type">{props.type.name}</span>;
 }
-
-type FieldProps = {
-  field: GraphQLField<unknown, unknown> | GraphQLInputField;
-  argument?: GraphQLArgument;
-};
 
 function Field({ field, argument }: FieldProps) {
   return (

@@ -1,33 +1,16 @@
-import {
-  GraphQLEnumValue,
-  GraphQLNamedType,
-  isAbstractType,
-  isEnumType,
-  isInputObjectType,
-  isInterfaceType,
-  isNamedType,
-  isObjectType,
-} from 'graphql';
+import { isAbstractType, isEnumType, isInputObjectType, isInterfaceType, isNamedType, isObjectType } from 'graphql';
+import { GraphQLEnumValue, GraphQLNamedType } from 'graphql';
 import { useCallback, useState } from 'react';
-
+import type { ExplorerFieldDef, TypeDocumentationProps } from '@/types';
 import { useSchemaContext } from '../../schema';
 import { Button, MarkdownContent } from '../../ui';
-import { ExplorerFieldDef } from '../context';
 import { Argument } from './argument';
 import { DefaultValue } from './default-value';
 import { DeprecationReason } from './deprecation-reason';
 import { FieldLink } from './field-link';
 import { ExplorerSection } from './section';
 import { TypeLink } from './type-link';
-
 import './type-documentation.scss';
-
-type TypeDocumentationProps = {
-  /**
-   * The type that should be rendered.
-   */
-  type: GraphQLNamedType;
-};
 
 export function TypeDocumentation(props: TypeDocumentationProps) {
   return isNamedType(props.type) ? (

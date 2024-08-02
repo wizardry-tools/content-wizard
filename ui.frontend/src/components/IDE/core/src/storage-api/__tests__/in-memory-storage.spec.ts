@@ -1,5 +1,3 @@
-// storage.test.ts
-
 import { createInMemoryStorage } from '../in-memory-storage';
 
 describe('InMemoryStorage', () => {

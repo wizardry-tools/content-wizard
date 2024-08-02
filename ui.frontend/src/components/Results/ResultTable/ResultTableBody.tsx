@@ -1,12 +1,9 @@
-import { memo, ReactNode, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import { Link, TableBody, TableCell, TableRow } from '@mui/material';
-import { useResults } from 'src/providers';
+import type { ResultTableBodyProps } from '@/types';
+import { useResults } from '@/providers';
 
-export type ResultTableBodyProps = {
-  rowsPerPage: number;
-  page: number;
-  onClick: (value: string) => void;
-};
 export const ResultTableBody = memo((props: ResultTableBodyProps) => {
   const { tableResults, keys } = useResults();
   const { rowsPerPage, page, onClick } = props;
@@ -15,7 +12,7 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
       return [];
     }
     if (rowsPerPage > 0) {
-      return tableResults?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) ?? [];
+      return tableResults.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) ?? [];
     }
     return tableResults;
   }, [page, tableResults, rowsPerPage]);
@@ -30,7 +27,9 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
     ({ value }: { value: string }): ReactNode => (
       <Link
         color="secondary"
-        onClick={() => onClick(value)}
+        onClick={() => {
+          onClick(value);
+        }}
         sx={{
           textDecoration: 'none',
           cursor: 'pointer',
@@ -50,28 +49,33 @@ export const ResultTableBody = memo((props: ResultTableBodyProps) => {
       {rowsToRender.map((row) => {
         const cells: ReactNode[] = [];
         keys.forEach((key, index) => {
-          let value = row[key];
+          const value = row[key];
+          let path;
           let colSpan = 1;
           if (key === 'path') {
-            value = buildLink({ value });
+            path = buildLink({ value: value as string });
             colSpan = 2;
           }
           // align first column to the left
           cells.push(
             <TableCell key={key} component="td" scope="row" colSpan={colSpan} align={index === 0 ? 'left' : 'right'}>
-              {value}
+              {path ?? value}
             </TableCell>,
           );
         });
 
         return (
-          <TableRow key={row.path} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableRow
+            key={(row.path as string) ?? Math.random()}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
             {cells}
           </TableRow>
         );
       })}
       {emptyRows > 0 && (
         <TableRow
+          key="empty-row"
           style={{
             height: 55 * emptyRows,
           }}

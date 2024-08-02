@@ -1,12 +1,10 @@
-import { forwardRef, MouseEventHandler, useCallback, useState, JSX } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
+import type { JSX } from 'react';
+import type { MouseEventHandler } from 'react';
 import { clsx } from 'clsx';
+import type { ToolbarButtonProps } from '@/types';
 import { Tooltip, UnStyledButton } from '../ui';
-
 import './button.scss';
-
-type ToolbarButtonProps = {
-  label: string;
-};
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps & JSX.IntrinsicElements['button']>(
   ({ label, onClick, ...props }, ref) => {
@@ -17,7 +15,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps & 
           onClick?.(event);
           setError(null);
         } catch (err) {
-          setError(err instanceof Error ? err : new Error(`Toolbar button click failed: ${err}`));
+          setError(err instanceof Error ? err : new Error(`Toolbar button click failed: ${err as string}`));
         }
       },
       [onClick],

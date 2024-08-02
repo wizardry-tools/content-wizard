@@ -1,11 +1,13 @@
-import { useState, MouseEvent, ChangeEvent, useCallback, memo } from 'react';
-import { Table, TableContainer, Paper, PaperProps } from '@mui/material';
-import { useLogger } from 'src/providers';
+import { useState, useCallback, memo } from 'react';
+import type { MouseEvent, ChangeEvent } from 'react';
+import { Table, TableContainer, Paper } from '@mui/material';
+import type { PaperProps } from '@mui/material';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
 import { ResultExplorerDialog } from '../ResultExplorer';
 import { ResultTableBody } from './ResultTableBody';
 import { ResultTableFooter } from './ResultTableFooter';
 import { ResultTableHead } from './ResultTableHead';
-import { useRenderCount } from 'src/utility';
 
 /**
  * This is the root of the Data Table that displays the Results Data
@@ -30,7 +32,9 @@ export const ResultTable = () => {
     setPage(0);
   }, []);
 
-  const handleCloseExplorer = useCallback(() => setOpenExplorer(false), []);
+  const handleCloseExplorer = useCallback(() => {
+    setOpenExplorer(false);
+  }, []);
 
   const handleLinkClick = useCallback((value: string) => {
     setExplorerPath(value);

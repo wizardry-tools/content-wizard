@@ -1,13 +1,14 @@
-import { defaultAdvancedQueries, QueryLanguage, QueryLanguageKey, Statement } from 'src/components/Query';
-import { useLogger, useQuery, useQueryDispatcher } from 'src/providers';
 import { useCallback } from 'react';
-import './language-selector.scss';
-import { API, useAPIContext } from '../api';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { API, QueryLanguage, Statement } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useLogger, useQuery, useQueryDispatcher } from '@/providers';
+import { defaultAdvancedQueries } from '@/components/Query';
+import { useAPIContext } from '../api';
 import { GraphQLSelector } from './components/GraphQLSelector';
 import { QueryLanguageSelector } from './components/QueryLanguageSelector';
 import { LanguageSelectorHeader } from './components/LanguageSelectorHeader';
-import { useRenderCount } from 'src/utility';
+import './language-selector.scss';
 
 /**
  * This is a custom Plugin for the Query IDE.
@@ -36,20 +37,18 @@ export const LanguageSelector = () => {
       queryDispatcher({
         type: 'statementChange',
         statement,
-        caller: LanguageSelector,
       });
     },
     [logger, queryDispatcher],
   );
 
   const handleLanguageChange = useCallback(
-    (language: QueryLanguageKey) => {
+    (language: QueryLanguage) => {
       // reset the entire query on language change
       logger.debug({ message: `LanguageSelector[] replaceQuery()` });
       queryDispatcher({
         ...defaultAdvancedQueries[language],
         type: 'replaceQuery',
-        caller: LanguageSelector,
       });
     },
     [logger, queryDispatcher],
@@ -57,11 +56,10 @@ export const LanguageSelector = () => {
 
   const handleAPIChange = useCallback(
     (newAPI: API) => {
-      logger.debug({ message: `LanguageSelector apiChange()` });
+      logger.debug({ message: `LanguageSelector apiChange() api`, newAPI });
       queryDispatcher({
         type: 'apiChange',
         api: newAPI,
-        caller: LanguageSelector,
       });
     },
     [logger, queryDispatcher],
@@ -71,7 +69,7 @@ export const LanguageSelector = () => {
     (event: SelectChangeEvent) => {
       const selectedEndpoint = event.target.value;
       // API was selected
-      let foundAPI = APIs.find((api) => {
+      const foundAPI = APIs.find((api) => {
         return api.endpoint === selectedEndpoint;
       });
       if (foundAPI) {
@@ -97,7 +95,7 @@ export const LanguageSelector = () => {
       <LanguageSelectorHeader />
       <div className="wizard-language-selector-content">
         <QueryLanguageSelector language={language} onLanguageChange={onLanguageChange} />
-        {language === QueryLanguage.GraphQL && (
+        {language === 'GraphQL' && (
           <GraphQLSelector APIs={APIs} onAPIChange={onAPIChange} api={api} onStatementChange={handleStatementChange} />
         )}
       </div>

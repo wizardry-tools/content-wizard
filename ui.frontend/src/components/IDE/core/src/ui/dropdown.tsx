@@ -1,15 +1,9 @@
-import { ComponentProps, forwardRef, ReactElement } from 'react';
+import { forwardRef } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
 import { clsx } from 'clsx';
+import { Trigger, Portal, Content as RadixContent, Item as RadixItem, Root } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuContentProps, DropdownMenuItemProps } from '@radix-ui/react-dropdown-menu';
 import { createComponentGroup } from '../utility/component-group';
-import {
-  Trigger,
-  Portal,
-  Content as RadixContent,
-  Item as RadixItem,
-  DropdownMenuContentProps,
-  DropdownMenuItemProps,
-  Root,
-} from '@radix-ui/react-dropdown-menu';
 
 import './dropdown.scss';
 

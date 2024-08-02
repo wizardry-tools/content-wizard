@@ -1,20 +1,14 @@
 import { useEffect, useRef } from 'react';
-
+import type { Caller, CodeMirrorType, QueryLanguage, Statement, UseWizardStatementEditorArgs } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useLogger, useQuery } from '@/providers';
 import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
 import { useCopyQuery, useKeyMap, useSynchronizeOption } from './hooks';
-import { CodeMirrorType, CommonEditorProps } from './types';
-import { useLogger, useQuery } from 'src/providers';
-import { QueryLanguage } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
 
-export type UseWizardStatementEditorArgs = CommonEditorProps & {
-  className?: string;
-};
-
-const getStatement = (language: string, statement: string) => {
+const getStatement = (language: QueryLanguage, statement: Statement) => {
   // only use the statement if the language is QueryBuilder
-  if (language === QueryLanguage.QueryBuilder) {
+  if (language === 'QueryBuilder') {
     return statement;
   }
   return '';
@@ -27,7 +21,7 @@ const getStatement = (language: string, statement: string) => {
  */
 export function useWizardStatementEditor(
   { keyMap = DEFAULT_KEY_MAP }: UseWizardStatementEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const logger = useLogger();
   const renderCount = useRenderCount();
@@ -44,24 +38,23 @@ export function useWizardStatementEditor(
     setWizardStatementEditor,
   } = useEditorContext({
     nonNull: true,
-    caller: caller || useWizardStatementEditor,
+    caller: caller ?? useWizardStatementEditor,
   });
-  const copy = useCopyQuery({ caller: caller || useWizardStatementEditor });
+  const copy = useCopyQuery({ caller: caller ?? useWizardStatementEditor });
   const ref = useRef<HTMLDivElement>(null);
 
   const codeMirrorRef = useRef<CodeMirrorType>();
 
   useEffect(() => {
     let isActive = true;
-    let addons = [
+    const addons = [
       import('codemirror/addon/fold/foldgutter'),
       import('codemirror/addon/fold/brace-fold'),
       import('codemirror/addon/dialog/dialog'),
       import('codemirror/addon/search/search'),
       import('codemirror/addon/search/searchcursor'),
       import('codemirror/addon/search/jump-to-line'),
-      // @ts-expect-error
-      import('codemirror/keymap/sublime'),
+      import('codemirror/keymap/sublime' as never),
       import('../../modes/querybuilder/querybuilder'),
     ];
     void importCodeMirror(addons, { useCommonAddons: true }).then((CodeMirror) => {
@@ -85,7 +78,7 @@ export function useWizardStatementEditor(
         mode: 'querybuilder',
         foldGutter: true,
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-        // @ts-expect-error
+        // @ts-expect-error TODO: figure out if 'info' is needed, or why it's added to an Object that doesn't support it
         info: true,
         extraKeys: commonKeys,
       });

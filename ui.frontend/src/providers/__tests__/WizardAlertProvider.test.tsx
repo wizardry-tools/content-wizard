@@ -1,8 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { WizardAlertProvider, useAlertContext, useAlertDispatcher } from '../WizardAlertProvider';
-import { useLogger } from '../LoggingProvider';
+import { WizardAlertProvider, useAlertContext, useAlertDispatcher } from '@/providers';
 
-jest.mock('../LoggingProvider');
+vi.mock('./LoggingProvider');
 
 const TestComponent = () => {
   const { message, severity } = useAlertContext();
@@ -11,13 +10,12 @@ const TestComponent = () => {
   return (
     <div>
       <button
-        onClick={() =>
+        onClick={() => {
           dispatchAlert({
             message: 'Test Alert',
             severity: 'error',
-            caller: TestComponent,
-          })
-        }
+          });
+        }}
       >
         Trigger Alert
       </button>
@@ -28,16 +26,7 @@ const TestComponent = () => {
 };
 
 describe('WizardAlertProvider', () => {
-  beforeEach(() => {
-    (useLogger as jest.Mock).mockReturnValue({
-      log: jest.fn(),
-      debug: jest.fn(),
-      error: jest.fn(),
-      warn: jest.fn(),
-    });
-  });
-
-  test('provides default context values', () => {
+  it('provides default context values', () => {
     render(
       <WizardAlertProvider>
         <TestComponent />
@@ -47,7 +36,7 @@ describe('WizardAlertProvider', () => {
     expect(screen.getByTestId('severity')).toHaveTextContent('info');
   });
 
-  test('dispatches alert correctly', () => {
+  it('dispatches alert correctly', () => {
     render(
       <WizardAlertProvider>
         <TestComponent />

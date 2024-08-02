@@ -1,9 +1,20 @@
 import { getSelectedOperationName } from '@graphiql/toolkit';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
-import type { DocumentNode, FragmentDefinitionNode, GraphQLSchema, ValidationRule } from 'graphql';
+import type { GraphQLSchema, ValidationRule } from 'graphql';
 import { getOperationFacts, GraphQLDocumentMode } from 'graphql-language-service';
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import type { MutableRefObject } from 'react';
 
+import {
+  Caller,
+  CodeMirrorEditor,
+  CodeMirrorEditorWithOperationFacts,
+  CodeMirrorImport,
+  CodeMirrorType,
+  UseQueryEditorArgs,
+} from '@/types';
+import { useRenderCount } from '@/utility';
+import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from '@/providers';
 import { useExecutionContext } from '../execution';
 import { useExplorerContext } from '../explorer';
 import { markdown } from '../markdown';
@@ -12,61 +23,37 @@ import { useSchemaContext } from '../schema';
 import { useStorageContext } from '../storage';
 import debounce from '../utility/debounce';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
-import { CodeMirrorEditorWithOperationFacts, useEditorContext } from './context';
+import { useEditorContext } from './context';
 import {
   useCompletion,
   useCopyQuery,
-  UseCopyQueryArgs,
   useKeyMap,
   useMergeQuery,
   usePrettifyEditors,
   useSynchronizeOption,
 } from './hooks';
-import { CodeMirrorEditor, CodeMirrorType, WriteableEditorProps } from './types';
 import { normalizeWhitespace } from './whitespace';
-import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from 'src/providers';
-import { QueryLanguage } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
-
-export type UseQueryEditorArgs = WriteableEditorProps &
-  Pick<UseCopyQueryArgs, 'onCopyQuery'> & {
-    /**
-     * Invoked when a reference to the GraphQL schema (type or field) is clicked
-     * as part of the editor or one of its tooltips.
-     * @param reference The reference that has been clicked.
-     */
-    onClickReference?(reference: SchemaReference): void;
-    /**
-     * Invoked when the contents of the query editor change.
-     * @param value The new contents of the editor.
-     * @param documentAST The editor contents parsed into a GraphQL document.
-     */
-    onEdit?(value: string, documentAST?: DocumentNode): void;
-  };
 
 export function useQueryEditor(
   {
     editorTheme = DEFAULT_EDITOR_THEME,
     keyMap = DEFAULT_KEY_MAP,
-    onClickReference,
     onCopyQuery,
-    onEdit,
     readOnly = false,
   }: UseQueryEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useQueryEditor[${renderCount}] render()` });
   const { schema } = useSchemaContext({
     nonNull: true,
-    caller: caller || useQueryEditor,
+    caller: caller ?? useQueryEditor,
   });
   const queryObj = useQuery();
   const queryObjStatement = useRef(queryObj.statement);
   const queryLanguage = useMemo(() => queryObj.language, [queryObj.language]);
   const {
-    externalFragments,
     initialQuery,
     queryEditor,
     setOperationName,
@@ -76,21 +63,21 @@ export function useQueryEditor(
     updateActiveTabValues,
   } = useEditorContext({
     nonNull: true,
-    caller: caller || useQueryEditor,
+    caller: caller ?? useQueryEditor,
   });
   const executionContext = useExecutionContext();
   const storage = useStorageContext();
   const explorer = useExplorerContext();
   const plugin = usePluginContext();
-  const copy = useCopyQuery({ caller: caller || useQueryEditor, onCopyQuery });
-  const merge = useMergeQuery({ caller: caller || useQueryEditor });
-  const prettify = usePrettifyEditors({ caller: caller || useQueryEditor });
+  const copy = useCopyQuery({ caller: caller ?? useQueryEditor, onCopyQuery });
+  const merge = useMergeQuery({ caller: caller ?? useQueryEditor });
+  const prettify = usePrettifyEditors({ caller: caller ?? useQueryEditor });
   const ref = useRef<HTMLDivElement>(null);
   const codeMirrorRef = useRef<CodeMirrorType>();
   const queryDispatcher = useQueryDispatcher();
   const isGraphQL = useIsGraphQL();
 
-  const onClickReferenceRef = useRef<NonNullable<UseQueryEditorArgs['onClickReference']>>(() => {});
+  const onClickReferenceRef = useRef<NonNullable<UseQueryEditorArgs['onClickReference']>>(() => ({}));
   useEffect(() => {
     onClickReferenceRef.current = (reference) => {
       if (!explorer || !plugin) {
@@ -119,17 +106,19 @@ export function useQueryEditor(
           break;
         }
       }
-      onClickReference?.(reference);
     };
-  }, [explorer, onClickReference, plugin]);
+  }, [explorer, plugin]);
 
   useEffect(() => {
     let isActive = true;
-    let addons: any[] = [import('codemirror/addon/comment/comment'), import('codemirror/addon/search/search')];
+    const addons: CodeMirrorImport[] = [
+      import('codemirror/addon/comment/comment'),
+      import('codemirror/addon/search/search'),
+    ];
 
     let mode = '';
     switch (queryLanguage) {
-      case QueryLanguage.GraphQL: {
+      case 'GraphQL': {
         addons.push(
           import('codemirror-graphql/esm/hint'),
           import('codemirror-graphql/esm/lint'),
@@ -140,23 +129,23 @@ export function useQueryEditor(
         mode = 'graphql';
         break;
       }
-      case QueryLanguage.SQL: {
-        addons.push(import('../../modes/sql/sql'));
+      case 'SQL': {
+        addons.push(import('@/components/IDE/core/modes/sql/sql'));
         mode = 'text/x-sql';
         break;
       }
-      case QueryLanguage.JCR_SQL2: {
-        addons.push(import('../../modes/sql/sql'));
+      case 'JCR_SQL2': {
+        addons.push(import('@/components/IDE/core/modes/sql/sql'));
         mode = 'text/x-jcrsql2';
         break;
       }
-      case QueryLanguage.XPATH: {
-        addons.push(import('../../modes/xpath/xpath'));
+      case 'XPATH': {
+        addons.push(import('@/components/IDE/core/modes/xpath/xpath'));
         mode = 'xpath';
         break;
       }
       default: {
-        addons.push(import('../../modes/querybuilder/querybuilder'));
+        addons.push(import('@/components/IDE/core/modes/querybuilder/querybuilder'));
         mode = 'querybuilder';
       }
     }
@@ -174,9 +163,8 @@ export function useQueryEditor(
         return;
       }
 
-      // @ts-ignore
       const newEditor = CodeMirror(container, {
-        value: initialQuery?.statement || queryObjStatement.current || '',
+        value: initialQuery?.statement ?? queryObjStatement.current ?? '',
         lineNumbers: true,
         tabSize: 2,
         foldGutter: true,
@@ -189,14 +177,12 @@ export function useQueryEditor(
         ...(isGraphQL
           ? {
               lint: {
-                // // @ts-expect-error
                 schema: undefined,
                 validationRules: null,
                 // linting accepts string or FragmentDefinitionNode[]
                 externalFragments: undefined,
               },
               hintOptions: {
-                // // @ts-expect-error
                 schema: undefined,
                 closeOnUnfocus: false,
                 completeSingle: false,
@@ -220,7 +206,7 @@ export function useQueryEditor(
               hintOptions: {},
               info: {},
             }),
-        // @ts-expect-error
+        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
         jump: {
           schema: undefined,
           onClick(reference: SchemaReference) {
@@ -291,7 +277,6 @@ export function useQueryEditor(
       });
 
       newEditor.documentAST = null;
-      newEditor.operationName = null;
       newEditor.operations = null;
       newEditor.variableToType = null;
 
@@ -330,7 +315,7 @@ export function useQueryEditor(
       editorInstance.operations = operationFacts?.operations ?? null;
 
       // Update variable types for the variable editor
-      if (variableEditor) {
+      if (variableEditor?.options?.lint) {
         variableEditor.state.lint.linterOptions.variableToType = operationFacts?.variableToType;
         variableEditor.options.lint.variableToType = operationFacts?.variableToType;
         variableEditor.options.hintOptions.variableToType = operationFacts?.variableToType;
@@ -344,16 +329,14 @@ export function useQueryEditor(
         ...queryObj,
         statement: editorInstance.getValue(),
       };
-      storage?.set(STORAGE_KEY_QUERY, JSON.stringify(query));
+      storage.set(STORAGE_KEY_QUERY, JSON.stringify(query));
 
       const currentOperationName = editorInstance.operationName;
       const operationFacts = getAndUpdateOperationFacts(editorInstance);
       if (operationFacts?.operationName !== undefined) {
-        storage?.set(STORAGE_KEY_OPERATION_NAME, operationFacts.operationName);
+        storage.set(STORAGE_KEY_OPERATION_NAME, operationFacts.operationName);
       }
 
-      // Invoke callback props only after the operation facts have been updated
-      onEdit?.(query.statement, operationFacts?.documentAST);
       if (operationFacts?.operationName && currentOperationName !== operationFacts.operationName) {
         setOperationName(operationFacts.operationName);
       }
@@ -365,7 +348,6 @@ export function useQueryEditor(
       queryDispatcher({
         statement: query.statement,
         type: 'statementChange',
-        caller: useQueryEditor,
       });
     }) as (editorInstance: CodeMirrorEditor) => void;
 
@@ -373,9 +355,10 @@ export function useQueryEditor(
     getAndUpdateOperationFacts(queryEditor);
 
     queryEditor.on('change', handleChange);
-    return () => queryEditor.off('change', handleChange);
+    return () => {
+      queryEditor.off('change', handleChange);
+    };
   }, [
-    onEdit,
     queryEditor,
     schema,
     setOperationName,
@@ -388,9 +371,8 @@ export function useQueryEditor(
 
   useSynchronizeSchema(queryEditor, schema ?? null, codeMirrorRef);
   useSynchronizeValidationRules(queryEditor, validationRules ?? null, codeMirrorRef);
-  useSynchronizeExternalFragments(queryEditor, externalFragments, codeMirrorRef);
 
-  useCompletion(queryEditor, onClickReference || null, useQueryEditor);
+  useCompletion(queryEditor, null, useQueryEditor);
 
   const run = executionContext?.run;
   const runAtCursor = useCallback(() => {
@@ -441,7 +423,6 @@ function useSynchronizeSchema(
     if (!editor) {
       return;
     }
-
     const didChange = JSON.stringify(editor.options.lint.schema) !== JSON.stringify(schema);
 
     editor.state.lint.linterOptions.schema = schema;
@@ -475,29 +456,6 @@ function useSynchronizeValidationRules(
       codeMirrorRef.current.signal(editor, 'change', editor);
     }
   }, [editor, validationRules, codeMirrorRef]);
-}
-
-function useSynchronizeExternalFragments(
-  editor: CodeMirrorEditor | null,
-  externalFragments: Map<string, FragmentDefinitionNode>,
-  codeMirrorRef: MutableRefObject<CodeMirrorType | undefined>,
-) {
-  const externalFragmentList = useMemo(() => [...externalFragments.values()], [externalFragments]);
-
-  useEffect(() => {
-    if (!editor) {
-      return;
-    }
-    const didChange = editor.options.lint.externalFragments !== externalFragmentList;
-
-    editor.state.lint.linterOptions.externalFragments = externalFragmentList;
-    editor.options.lint.externalFragments = externalFragmentList;
-    editor.options.hintOptions.externalFragments = externalFragmentList;
-
-    if (didChange && codeMirrorRef.current) {
-      codeMirrorRef.current.signal(editor, 'change', editor);
-    }
-  }, [editor, externalFragmentList, codeMirrorRef]);
 }
 
 const AUTO_COMPLETE_AFTER_KEY = /^[a-zA-Z0-9_@(]$/;

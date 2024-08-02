@@ -1,5 +1,5 @@
-import { useResponseEditor, UseResponseEditorArgs } from '../response-editor';
-
+import type { UseResponseEditorArgs } from '@/types';
+import { useResponseEditor } from '../response-editor';
 import '../style/codemirror.scss';
 import '../style/fold.scss';
 import '../style/info.scss';

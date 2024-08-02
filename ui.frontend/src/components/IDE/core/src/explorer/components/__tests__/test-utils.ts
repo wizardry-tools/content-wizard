@@ -1,13 +1,12 @@
-import { GraphQLNamedType, GraphQLType } from 'graphql';
-
-import { ExplorerContextType, ExplorerNavStackItem } from '../../context';
+import type { GraphQLNamedType, GraphQLType } from 'graphql';
+import type { ExplorerContextType, ExplorerNavStackItem } from '@/types';
 
 export function mockExplorerContextValue(navStackItem: ExplorerNavStackItem): ExplorerContextType {
   return {
     explorerNavStack: [navStackItem],
-    pop() {},
-    push() {},
-    reset() {},
+    pop: () => ({}),
+    push: () => ({}),
+    reset: () => ({}),
   };
 }
 
@@ -16,5 +15,5 @@ export function unwrapType(type: GraphQLType): GraphQLNamedType {
 }
 
 describe('Empty test file', () => {
-  it("Shouldn't do anything", () => {});
+  it("Shouldn't do anything", () => ({}));
 });

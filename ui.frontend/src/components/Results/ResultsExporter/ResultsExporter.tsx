@@ -1,5 +1,5 @@
-import { AllowedExportType, allowedExportTypes, useResults } from 'src/providers';
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import {
   Button,
   Checkbox,
@@ -12,9 +12,11 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import DownloadIcon from '@mui/icons-material/Download';
-import { FormGrid } from 'src/components/QueryWizard/Components';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { AllowedExportType } from '@/types';
+import { allowedExportTypes, useResults } from '@/providers';
+import { FormGrid } from '@/components/QueryWizard/Components';
 
 /**
  * This component contains the export configuration and button for exporting the Results.
@@ -70,8 +72,12 @@ export const ResultsExporter = () => {
               value={fileName}
               color={'secondary'}
               className="results-exporter-field"
-              onFocus={() => setInputElevation(4)}
-              onBlur={() => setInputElevation(1)}
+              onFocus={() => {
+                setInputElevation(4);
+              }}
+              onBlur={() => {
+                setInputElevation(1);
+              }}
               onChange={handleInputChange}
               required
             />
@@ -92,8 +98,12 @@ export const ResultsExporter = () => {
                 color={'secondary'}
                 onChange={handleTypeChange}
                 className="results-exporter-field"
-                onFocus={() => setSelectElevation(4)}
-                onBlur={() => setSelectElevation(1)}
+                onFocus={() => {
+                  setSelectElevation(4);
+                }}
+                onBlur={() => {
+                  setSelectElevation(1);
+                }}
               >
                 {menuItems}
               </Select>

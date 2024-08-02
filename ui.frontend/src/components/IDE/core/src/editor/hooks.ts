@@ -1,10 +1,21 @@
-import { fillLeafs, GetDefaultFieldNamesFn, mergeAst } from '@graphiql/toolkit';
+import { fillLeafs, mergeAst } from '@graphiql/toolkit';
 import type { EditorChange, EditorConfiguration } from 'codemirror';
 import type { SchemaReference } from 'codemirror-graphql/utils/SchemaReference';
 import copyToClipboard from 'copy-to-clipboard';
 import { parse, print } from 'graphql';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
+import type {
+  Caller,
+  CodeMirrorEditor,
+  EmptyCallback,
+  Query,
+  UseAutoCompleteLeafsArgs,
+  UseCopyQueryArgs,
+  UseCopyResultArgs,
+  UseMergeQueryArgs,
+  UsePrettifyEditorsArgs,
+} from '@/types';
+import { useIsGraphQL, useLogger } from '@/providers';
 import { useExplorerContext } from '../explorer';
 import { usePluginContext } from '../plugin';
 import { useSchemaContext } from '../schema';
@@ -12,9 +23,6 @@ import { useStorageContext } from '../storage';
 import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';
-import { CodeMirrorEditor } from './types';
-import { useIsGraphQL, useLogger } from 'src/providers';
-import { Query } from 'src/components/Query';
 
 /**
  * This method synchronizes values across editors.
@@ -53,7 +61,7 @@ export function useChangeHandler(
   callback: ((value: string) => void) | undefined,
   storageKey: string | null,
   tabProperty: 'variables' | 'headers',
-  caller: Function,
+  caller: Caller,
 ) {
   const logger = useLogger();
   const { updateActiveTabValues } = useEditorContext({ nonNull: true, caller });
@@ -88,14 +96,16 @@ export function useChangeHandler(
       callback?.(newValue);
     };
     editor.on('change', handleChange);
-    return () => editor.off('change', handleChange);
+    return () => {
+      editor.off('change', handleChange);
+    };
   }, [callback, editor, logger, storage, storageKey, tabProperty, updateActiveTabValues]);
 }
 
 export function useCompletion(
   editor: CodeMirrorEditor | null,
   callback: ((reference: SchemaReference) => void) | null,
-  caller: Function,
+  caller: Caller,
 ) {
   const { schema } = useSchemaContext({ nonNull: true, caller });
   const explorer = useExplorerContext();
@@ -107,24 +117,17 @@ export function useCompletion(
 
     const handleCompletion = (instance: CodeMirrorEditor, changeObj?: EditorChange) => {
       onHasCompletion(instance, changeObj, schema, explorer, plugin, (type) => {
-        callback?.({ kind: 'Type', type, schema: schema || undefined });
+        callback?.({ kind: 'Type', type, schema: schema ?? undefined });
       });
     };
-    editor.on(
-      // @ts-expect-error @TODO additional args for hasCompletion event
-      'hasCompletion',
-      handleCompletion,
-    );
-    return () =>
-      editor.off(
-        // @ts-expect-error @TODO additional args for hasCompletion event
-        'hasCompletion',
-        handleCompletion,
-      );
+    // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
+    editor.on('hasCompletion', handleCompletion);
+    return () => {
+      // @ts-expect-error Type Definition for the editor.on doesn't support 'hasCompletion', but the logic is working...
+      editor.off('hasCompletion', handleCompletion);
+    };
   }, [callback, editor, explorer, plugin, schema]);
 }
-
-type EmptyCallback = () => void;
 
 export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callback: EmptyCallback | undefined) {
   useEffect(() => {
@@ -138,32 +141,19 @@ export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callb
     if (callback) {
       const keyMap: Record<string, EmptyCallback> = {};
       for (const key of keys) {
-        keyMap[key] = () => callback();
+        keyMap[key] = () => {
+          callback();
+        };
       }
       editor.addKeyMap(keyMap);
     }
   }, [editor, keys, callback]);
 }
 
-export type UseCopyQueryArgs = {
-  /**
-   * This is how context is tracked when there are multiple instance of context existing at the same time.
-   * It ensures the correct context is being applied based on the caller's own context.
-   * If one is not supplied, a new Context will be created and used, assigning it to the function being called.
-   */
-  caller?: Function;
-  /**
-   * Invoked when the current contents of the query editor are copied to the
-   * clipboard.
-   * @param query The content that has been copied.
-   */
-  onCopyQuery?: (query: string) => void;
-};
-
-export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
+export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}): EmptyCallback {
   const { queryEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useCopyQuery,
+    caller: caller ?? useCopyQuery,
   });
   return useCallback(() => {
     if (!queryEditor) {
@@ -177,12 +167,10 @@ export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}) {
   }, [queryEditor, onCopyQuery]);
 }
 
-export type UseCopyResultArgs = Omit<UseCopyQueryArgs, 'onCopyQuery'>;
-
-export function useCopyResult({ caller }: UseCopyResultArgs = {}) {
+export function useCopyResult({ caller }: UseCopyResultArgs = {}): EmptyCallback {
   const { resultExplorerEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useCopyResult,
+    caller: caller ?? useCopyResult,
   });
   return useCallback(() => {
     if (!resultExplorerEditor) {
@@ -193,17 +181,10 @@ export function useCopyResult({ caller }: UseCopyResultArgs = {}) {
   }, [resultExplorerEditor]);
 }
 
-type UseMergeQueryArgs = {
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
-};
-
-export function useMergeQuery({ caller }: UseMergeQueryArgs = {}) {
+export function useMergeQuery({ caller }: UseMergeQueryArgs = {}): EmptyCallback {
   const { queryEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useMergeQuery,
+    caller: caller ?? useMergeQuery,
   });
   const { schema } = useSchemaContext({ nonNull: true, caller: useMergeQuery });
   return useCallback(() => {
@@ -217,17 +198,10 @@ export function useMergeQuery({ caller }: UseMergeQueryArgs = {}) {
   }, [queryEditor, schema]);
 }
 
-type UsePrettifyEditorsArgs = {
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
-};
-
-export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
+export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}): EmptyCallback {
   const { queryEditor, headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || usePrettifyEditors,
+    caller: caller ?? usePrettifyEditors,
   });
   const isGraphQL = useIsGraphQL();
   return useCallback(() => {
@@ -267,27 +241,16 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}) {
   }, [isGraphQL, queryEditor, variableEditor, headerEditor]);
 }
 
-export type UseAutoCompleteLeafsArgs = {
-  /**
-   * A function to determine which field leafs are automatically added when
-   * trying to execute a query with missing selection sets. It will be called
-   * with the `GraphQLType` for which fields need to be added.
-   */
-  getDefaultFieldNames?: GetDefaultFieldNamesFn;
-  /**
-   * This is only meant to be used internally in `@graphiql/react`.
-   */
-  caller?: Function;
-};
-
-export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}) {
+export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}): () =>
+  | string
+  | undefined {
   const { schema } = useSchemaContext({
     nonNull: true,
-    caller: caller || useAutoCompleteLeafs,
+    caller: caller ?? useAutoCompleteLeafs,
   });
   const { queryEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useAutoCompleteLeafs,
+    caller: caller ?? useAutoCompleteLeafs,
   });
   return useCallback(() => {
     if (!queryEditor) {
@@ -300,7 +263,7 @@ export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCo
       queryEditor.operation(() => {
         const cursor = queryEditor.getCursor();
         const cursorIndex = queryEditor.indexFromPos(cursor);
-        queryEditor.setValue(result || '');
+        queryEditor.setValue(result ?? '');
         let added = 0;
         const markers = insertions.map(({ index, string }) =>
           queryEditor.markText(
@@ -331,8 +294,6 @@ export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCo
     return result;
   }, [getDefaultFieldNames, queryEditor, schema]);
 }
-
-export type InitialState = string | (() => string);
 
 // https://react.dev/learn/you-might-not-need-an-effect
 

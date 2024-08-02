@@ -1,11 +1,8 @@
-import { createReverseMapping } from './mapping';
+import type { TargetType, TargetTypeLabel } from '@/types';
 
-export type TargetType = 'none' | 'resource' | 'template' | 'text';
-export const TargetTypes: Record<TargetType, string> = {
+export const targetTypes: Record<TargetType, TargetTypeLabel> = {
   none: 'None',
   resource: 'Resource Type',
   template: 'Template Type',
   text: 'Full Text Search',
 };
-
-export const TargetTypeLookup = createReverseMapping(TargetTypes);

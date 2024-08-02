@@ -1,15 +1,10 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { ToolbarMenuProps } from '@/types';
 import { DropdownMenu, Tooltip } from '../ui';
 import { createComponentGroup } from '../utility/component-group';
-
 import './menu.scss';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
-type ToolbarMenuProps = {
-  button: ReactNode;
-  label: string;
-};
 
 const ToolbarMenuRoot = ({
   button,

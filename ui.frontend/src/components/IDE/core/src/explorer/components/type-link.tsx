@@ -1,17 +1,8 @@
-import { GraphQLType } from 'graphql';
-
+import { Link } from '@mui/material';
+import type { TypeLinkProps } from '@/types';
 import { useExplorerContext } from '../context';
 import { renderType } from './utils';
-
 import './type-link.scss';
-import { Link } from '@mui/material';
-
-type TypeLinkProps = {
-  /**
-   * The type that should be linked to.
-   */
-  type: GraphQLType;
-};
 
 export function TypeLink(props: TypeLinkProps) {
   const { push } = useExplorerContext({ nonNull: true, caller: TypeLink });

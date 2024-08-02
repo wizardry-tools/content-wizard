@@ -1,22 +1,14 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
+import type { QueryBuilderPropertiesState } from '@/types';
 
-/**
- * Customized QueryBuilder codemirror parser mode originally based off of the OOTB "Properties" mode
- */
-export interface PropertiesState {
-  position: 'predicate' | 'quote' | 'comment' | 'equals' | 'string';
-  nextMultiline: boolean;
-  inMultiline: boolean;
-  afterSection: boolean;
-}
 (() => {
   CodeMirror.defineMode('querybuilder', function () {
     return {
-      token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
-        var sol = stream.sol() || state.afterSection;
-        var eol = stream.eol();
+      token: function (stream: CodeMirror.StringStream, state: QueryBuilderPropertiesState) {
+        const sol = stream.sol() || state.afterSection;
+        const eol = stream.eol();
 
         state.afterSection = false;
 
@@ -35,10 +27,12 @@ export interface PropertiesState {
         }
 
         if (sol) {
-          while (stream.eatSpace()) {}
+          while (stream.eatSpace()) {
+            /* empty */
+          }
         }
 
-        var ch = stream.next();
+        const ch = stream.next();
 
         if (state.position === 'equals' && ch !== '=') {
           // just assume everything past the '=' is tokenized

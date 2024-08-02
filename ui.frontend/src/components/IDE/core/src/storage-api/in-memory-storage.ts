@@ -1,4 +1,4 @@
-import { WizardStorage } from './storage-api';
+import type { WizardStorage } from '@/types';
 
 export function createInMemoryStorage(): WizardStorage {
   const store: Record<string, string> = {};
@@ -16,7 +16,7 @@ export function createInMemoryStorage(): WizardStorage {
     },
     clear(): void {
       for (const key in store) {
-        if (store.hasOwnProperty(key)) {
+        if (key in store) {
           delete store[key];
         }
       }

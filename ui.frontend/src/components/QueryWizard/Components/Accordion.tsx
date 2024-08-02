@@ -1,9 +1,10 @@
-import { SyntheticEvent, useCallback, useState } from 'react';
-import { Tab } from './Tab';
-import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './index';
+import { useCallback, useState } from 'react';
+import type { SyntheticEvent } from 'react';
 import { Paper } from '@mui/material';
-import { useFields, useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useFields, useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
+import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './index';
+import { AccordionTab } from './AccordionTab';
 
 export const Accordion = () => {
   const logger = useLogger();
@@ -22,16 +23,31 @@ export const Accordion = () => {
 
   return (
     <Paper className="accordion-paper" elevation={3}>
-      <Tab fields={targetingFields()} fullConfig={fieldsConfig} expanded={expanded} onChange={handleAccordionChange} />
-      <Tab fields={authoringFields()} fullConfig={fieldsConfig} expanded={expanded} onChange={handleAccordionChange} />
-      <Tab
+      <AccordionTab
+        fields={targetingFields()}
+        fullConfig={fieldsConfig}
+        expanded={expanded}
+        onChange={handleAccordionChange}
+      />
+      <AccordionTab
+        fields={authoringFields()}
+        fullConfig={fieldsConfig}
+        expanded={expanded}
+        onChange={handleAccordionChange}
+      />
+      <AccordionTab
         fields={replicationFields()}
         fullConfig={fieldsConfig}
         expanded={expanded}
         onChange={handleAccordionChange}
       />
-      <Tab fields={msmFields()} fullConfig={fieldsConfig} expanded={expanded} onChange={handleAccordionChange} />
-      <Tab
+      <AccordionTab
+        fields={msmFields()}
+        fullConfig={fieldsConfig}
+        expanded={expanded}
+        onChange={handleAccordionChange}
+      />
+      <AccordionTab
         fields={translationFields()}
         fullConfig={fieldsConfig}
         expanded={expanded}

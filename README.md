@@ -296,7 +296,7 @@ This mode is for AEM Content Users. It allows users to pick and choose various o
 * ui.apps: Contains a basic app page and the Client Library for the Content Wizard.
 * ui.content: contains the content that defines the app page in AEM and makes it accessible in the Tool Navigation.
 * ui.config: contains runmode specific OSGi configs for the project (this is installed with the optional `localDev` maven profile during build time)
-* [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript + Webpack + SCSS)
+* [ui.frontend:](ui.frontend/README.md) a dedicated front-end build mechanism (React + Typescript + Vite + SCSS)
 * all: a single content package that embeds all the compiled modules zips and is deployed to AEM.
 
 ### How to build

@@ -1,48 +1,39 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/5/LICENSE
 import CodeMirror from 'codemirror';
+import type { XpathPropertiesState } from '@/types';
 
-/**
- * This is a Custom Codemirror mode for XPATH parsing originally based on the OOTB "Properties" mode
- */
-export interface PropertiesState {
-  position: 'predicate' | 'quote' | 'comment' | 'path' | 'string' | 'function' | 'def';
-  nextMultiline: boolean;
-  inMultiline: boolean;
-  afterSection: boolean;
-}
-
-/**
- * turn a space-separated list into an array. For some reason, this method can't be imported into other files.
- * @param str
- */
+// turn a space-separated list into an array
 function set(str: string) {
-  let obj: any = {},
+  const obj: Record<string, boolean> = {},
     words = str.split(' ');
-  for (let i = 0; i < words.length; ++i) obj[words[i]] = true;
+  words.forEach((word) => {
+    obj[word] = true;
+  });
   return obj;
 }
 
-const pathMatch: any = /^[\w\-/:]*\/\//;
-const functionMatch: any = /^[\w:]+\(/;
-const variableMatch: any = /^[\w]+:?[\w]+[,*=\s\])}]?/;
+const pathMatch = /^[\w\-/:]*\/\//;
+const functionMatch = /^[\w:]+\(/;
+const variableMatch = /^\w+:?\w+[,*=\s\])}]?/;
 
 const atoms = set('or and like order by');
 
 (() => {
   CodeMirror.defineMode('xpath', function () {
     return {
-      token: function (stream: CodeMirror.StringStream, state: PropertiesState) {
-        var sol = stream.sol() || state.afterSection;
-        //var eol = stream.eol();
+      token: function (stream: CodeMirror.StringStream, state: XpathPropertiesState) {
+        const sol = stream.sol() ?? state.afterSection;
 
         state.afterSection = false;
 
         if (sol) {
-          while (stream.eatSpace()) {}
+          while (stream.eatSpace()) {
+            /* empty */
+          }
         }
 
-        var ch = stream.next();
+        const ch = stream.next();
 
         // process sol checks before processing non-sol checks
         if (sol && ch === '/' && stream.match(pathMatch, false)) {
@@ -80,8 +71,8 @@ const atoms = set('or and like order by');
         } else {
           // keyword check
           stream.eatWhile(/^[_\w\d]/);
-          let word = stream.current().toLowerCase().trim();
-          if (atoms.hasOwnProperty(word)) return 'atom';
+          const word = stream.current().toLowerCase().trim();
+          if (word in atoms) return 'atom';
           return null;
         }
       },

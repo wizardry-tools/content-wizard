@@ -1,12 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress, Paper, Stack } from '@mui/material';
-import { Tooltip, ResultExplorerEditor } from 'src/components/IDE/core/src';
+import type { ResultData, ResultExplorerProps } from '@/types';
+import { Tooltip, ResultExplorerEditor } from '@/components/IDE/core/src';
 import { useFetcher } from './fetcher';
 
-export type ResultExplorerProps = {
-  path: string;
-};
-export type ResultData = string;
 export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   const [data, setData] = useState<ResultData>('');
   const fetching = useRef(false);
@@ -25,7 +22,12 @@ export const ResultExplorer = ({ path }: ResultExplorerProps) => {
       <Paper elevation={3} className="explorer-paper">
         <Tooltip.Provider>
           <Stack className={`result-explorer-stack`} direction="row" spacing={1}>
-            <ResultExplorerEditor editorTheme="wizard" keyMap="sublime" className="result-explorer-data" data={data} />
+            <ResultExplorerEditor
+              editorTheme="wizard"
+              keyMap="sublime"
+              className="result-explorer-data"
+              data={data as string}
+            />
           </Stack>
         </Tooltip.Provider>
       </Paper>
@@ -35,7 +37,7 @@ export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   return (
     <div className="result-explorer">
       <Box
-        className={`${data ? 'hide' : 'show'}`}
+        className={data ? 'hide' : 'show'}
         sx={{
           position: 'absolute',
           left: '50%',

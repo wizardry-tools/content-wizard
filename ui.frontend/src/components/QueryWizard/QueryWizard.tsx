@@ -1,21 +1,18 @@
-import { Stack, Paper, Theme } from '@mui/material';
-import { ViewsProps } from 'src/components/ContentWizard/Views';
-import { QueryHandler } from 'src/components/Query';
-
-import './QueryWizard.scss';
-import { useLogger } from 'src/providers';
+import { Stack, Paper } from '@mui/material';
+import type { QueryWizardProps } from '@/types';
+import { useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
+import { QueryHandler } from '@/components/Query';
 import { Accordion, StatementWindow } from './Components';
-import { useRenderCount } from 'src/utility';
+import './QueryWizard.scss';
 
-const buttonStackStyles = (_theme: Theme) => {
+const buttonStackStyles = () => {
   return {
     display: 'block',
     overflowX: 'visible',
     width: 0,
   };
 };
-
-export type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
 
 export function QueryWizard({ onTabPanelSelect }: QueryWizardProps) {
   const logger = useLogger();

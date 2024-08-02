@@ -1,46 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-
+import type { ResizableElement, UseDragResizeArgs } from '@/types';
 import { useStorageContext } from '../storage';
 import debounce from './debounce';
-
-type ResizableElement = 'first' | 'second';
-
-type UseDragResizeArgs = {
-  /**
-   * Set the default sizes for the two resizable halves by passing their ratio
-   * (first divided by second).
-   */
-  defaultSizeRelation?: number;
-  /**
-   * The direction in which the two halves should be resizable.
-   */
-  direction: 'horizontal' | 'vertical';
-  /**
-   * Choose one of the two halves that should initially be hidden.
-   */
-  initiallyHidden?: ResizableElement;
-  /**
-   * Invoked when the visibility of one of the halves changes.
-   * @param hiddenElement The element that is now hidden after the change
-   * (`null` if both are visible).
-   */
-  onHiddenElementChange?(hiddenElement: ResizableElement | null): void;
-  /**
-   * The minimum width in pixels for the first half. If it is resized to a
-   * width smaller than this threshold, the half will be hidden.
-   */
-  sizeThresholdFirst?: number;
-  /**
-   * The minimum width in pixels for the second half. If it is resized to a
-   * width smaller than this threshold, the half will be hidden.
-   */
-  sizeThresholdSecond?: number;
-  /**
-   * A key for which the state of resizing is persisted in storage (if storage
-   * is available).
-   */
-  storageKey?: string;
-};
 
 export function useDragResize({
   defaultSizeRelation = DEFAULT_FLEX,
@@ -57,14 +18,14 @@ export function useDragResize({
     () =>
       debounce(500, (value: string) => {
         if (storageKey) {
-          storage?.set(storageKey, value);
+          storage.set(storageKey, value);
         }
       }),
     [storage, storageKey],
   );
 
   const [hiddenElement, setHiddenElement] = useState<ResizableElement | null>(() => {
-    const storedValue = storageKey && storage?.get(storageKey);
+    const storedValue = storageKey && storage.get(storageKey);
     if (storedValue === HIDE_FIRST || initiallyHidden === 'first') {
       return 'first';
     }
@@ -94,7 +55,7 @@ export function useDragResize({
    * Set initial flex values
    */
   useLayoutEffect(() => {
-    const storedValue = (storageKey && storage?.get(storageKey)) || defaultFlexRef.current;
+    const storedValue = (storageKey && storage.get(storageKey)) ?? defaultFlexRef.current;
 
     if (firstRef.current) {
       firstRef.current.style.display = 'flex';
@@ -154,7 +115,7 @@ export function useDragResize({
       if (storage && storageKey) {
         const storedValue = storage.get(storageKey);
         if (firstRef.current && storedValue !== HIDE_FIRST && storedValue !== HIDE_SECOND) {
-          firstRef.current.style.flex = storedValue || defaultFlexRef.current;
+          firstRef.current.style.flex = storedValue ?? defaultFlexRef.current;
         }
       }
     },
@@ -199,7 +160,8 @@ export function useDragResize({
 
       function handleMouseMove(moveEvent: MouseEvent) {
         if (moveEvent.buttons === 0) {
-          return handleMouseUp();
+          handleMouseUp();
+          return;
         }
 
         const firstSize = moveEvent[eventProperty] - wrapper.getBoundingClientRect()[rectProperty] - offset;

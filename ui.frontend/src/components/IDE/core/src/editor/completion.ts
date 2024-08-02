@@ -1,10 +1,10 @@
 import type { Editor, EditorChange } from 'codemirror';
 import type { IHint } from 'codemirror-graphql/hint';
-import { GraphQLNamedType, GraphQLSchema, GraphQLType, isListType, isNonNullType } from 'graphql';
-
-import { ExplorerContextType } from '../explorer';
+import { isListType, isNonNullType } from 'graphql';
+import type { GraphQLNamedType, GraphQLSchema, GraphQLType } from 'graphql';
+import type { ExplorerContextType, PluginContextType } from '@/types';
 import { markdown } from '../markdown';
-import { DOC_EXPLORER_PLUGIN, PluginContextType } from '../plugin';
+import { DOC_EXPLORER_PLUGIN } from '../plugin';
 import { importCodeMirror } from './common';
 
 /**
@@ -32,7 +32,7 @@ export function onHasCompletion(
     CodeMirror.on(
       data,
       'select',
-      // @ts-expect-error
+      // @ts-expect-error The @type definition for this handler seems outdated, and doesn't match how it's being used.
       (ctx: IHint, el: HTMLDivElement) => {
         // Only the first time (usually when the hint UI is first displayed)
         // do we create the information nodes.
@@ -225,7 +225,7 @@ export function onHasCompletion(
       return;
     }
 
-    const typeName = event.currentTarget.textContent || '';
+    const typeName = event.currentTarget.textContent ?? '';
     const type = schema.getType(typeName);
     if (type) {
       plugin.setVisiblePlugin(DOC_EXPLORER_PLUGIN);

@@ -1,5 +1,16 @@
-import { Children, MutableRefObject, ReactElement } from 'react';
-import { Axis, axisProperties, Position } from './swiper-props';
+import { Children } from 'react';
+import type { PropsWithChildren, ReactElement, MouseEvent } from 'react';
+import { axisProperties } from './swiper-props';
+import type {
+  Axis,
+  DisplaySameSlideProps,
+  IndexBoundsCheck,
+  NativeHandlerParams,
+  Position,
+  SpringConfig,
+  SwipeableTouch,
+  DomTreeShape,
+} from '@/types';
 
 export const defaultComputeValues = {
   RESISTANCE_COEF: 0.6,
@@ -9,7 +20,14 @@ export const defaultComputeValues = {
   UNCERTAINTY_THRESHOLD: 3, // px
 };
 
-export function computeIndex(params: any) {
+export type ComputeIndexProps = PropsWithChildren & {
+  startIndex: number;
+  startX: number;
+  pageX: number;
+  viewLength: number;
+  resistance?: boolean;
+};
+export function computeIndex(params: ComputeIndexProps) {
   const { children, startIndex, startX, pageX, viewLength, resistance } = params;
 
   const indexMax = Children.count(children) - 1;
@@ -37,39 +55,23 @@ export function computeIndex(params: any) {
   };
 }
 
-export type EventListenerProps = {
-  event: any;
-  handler: any;
-  options?: any | undefined;
-};
-
-export type AddEventListenerProps = EventListenerProps & {
-  node: HTMLDivElement;
-};
-
-export function addEventListener({ node, event, handler, options }: AddEventListenerProps) {
-  node.addEventListener(event, handler, options);
+export function adaptMouse<T>(event: MouseEvent<T>) {
+  const { ...eventProps } = event;
+  const touches = [{ pageX: event.pageX, pageY: event.pageY }];
   return {
-    remove() {
-      node.removeEventListener(event, handler, options);
-    },
+    ...eventProps,
+    touches,
   };
 }
 
-export function adaptMouse(event: any) {
-  //MouseEvent
-  event.touches = [{ pageX: event.pageX, pageY: event.pageY }];
-  return event; //TouchEvent
-}
-
-export function createTransition(property: any, options: any): string {
+export function createTransition(property: string, options: SpringConfig): string {
   const { duration, easeFunction, delay } = options;
 
   return `${property} ${duration} ${easeFunction} ${delay}`;
 }
 
-export function applyRotationMatrix(touch: any, axis: Axis) {
-  const rotationMatrix: Position = axisProperties.rotationMatrix[axis] as Position;
+export function applyRotationMatrix(touch: SwipeableTouch, axis: Axis) {
+  const rotationMatrix: Position = axisProperties.rotationMatrix[axis];
 
   return {
     pageX: rotationMatrix.x[0] * touch.pageX + rotationMatrix.x[1] * touch.pageY,
@@ -77,14 +79,6 @@ export function applyRotationMatrix(touch: any, axis: Axis) {
   };
 }
 
-export type IndexedChildren = {
-  index: number | undefined;
-  children: ReactElement[];
-};
-export type DisplaySameSlideProps = {
-  previousProps: IndexedChildren;
-  props: IndexedChildren;
-};
 export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlideProps) => {
   let displaySameSlide = false;
 
@@ -92,11 +86,11 @@ export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlidePr
 
   if (previousProps.children.length && props.children.length) {
     const oldKeys = Children.map(props.children, getChildrenKey);
-    const oldKey = oldKeys[previousProps.index as number];
+    const oldKey = oldKeys[previousProps.index!];
 
     if (oldKey) {
       const newKeys = Children.map(props.children, getChildrenKey);
-      const newKey = newKeys[props.index as number];
+      const newKey = newKeys[props.index!];
 
       if (oldKey === newKey) {
         displaySameSlide = true;
@@ -107,8 +101,8 @@ export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlidePr
   return displaySameSlide;
 };
 
-export function getDomTreeShapes(element: HTMLDivElement, rootNode: HTMLDivElement) {
-  let domTreeShapes = [];
+export function getDomTreeShapes(element: HTMLDivElement | undefined, rootNode: HTMLDivElement): DomTreeShape[] {
+  let domTreeShapes: DomTreeShape[] = [];
 
   while (element && element !== rootNode && element !== document.body) {
     // We reach a Swipeable View, no need to look higher in the dom tree.
@@ -148,18 +142,10 @@ export function getDomTreeShapes(element: HTMLDivElement, rootNode: HTMLDivEleme
   return domTreeShapes;
 }
 
-export type NativeHandlerParams = {
-  domTreeShapes: any[];
-  pageX: number;
-  startX: number;
-  axis: Axis;
-  nodeReference: MutableRefObject<HTMLDivElement>;
-};
-
 export function findNativeHandler(params: NativeHandlerParams) {
   const { domTreeShapes, pageX, startX, axis, nodeReference } = params;
 
-  return domTreeShapes.some((shape) => {
+  return domTreeShapes.some((shape: DomTreeShape) => {
     // Determine if we are going backward or forward.
     let goingForward = pageX >= startX;
     if (axis === 'x' || axis === 'y') {
@@ -168,12 +154,12 @@ export function findNativeHandler(params: NativeHandlerParams) {
 
     // scrollTop is not always be an integer.
     // https://github.com/jquery/api.jquery.com/issues/608
-    const scrollPosition = Math.round(shape[axisProperties.scrollPosition[axis] as string]);
+    const scrollPosition = Math.round(shape[axisProperties.scrollPosition[axis] as keyof DomTreeShape] as number);
 
     const areNotAtStart = scrollPosition > 0;
     const areNotAtEnd =
-      scrollPosition + shape[axisProperties.clientLength[axis] as string] <
-      shape[axisProperties.scrollLength[axis] as string];
+      scrollPosition + (shape[axisProperties.clientLength[axis] as keyof DomTreeShape] as number) <
+      (shape[axisProperties.scrollLength[axis] as keyof DomTreeShape] as number);
 
     if ((goingForward && areNotAtEnd) || (!goingForward && areNotAtStart)) {
       nodeReference.current = shape.element;
@@ -183,3 +169,13 @@ export function findNativeHandler(params: NativeHandlerParams) {
     return false;
   });
 }
+
+export const checkIndexBounds = (props: IndexBoundsCheck) => {
+  const { index, children } = props;
+
+  const childrenCount = Children.count(children);
+
+  if (!(index >= 0 && index <= childrenCount)) {
+    console.warn(`react-swipeable-view: the new index: ${index} is out of bounds: [0-${childrenCount}].`);
+  }
+};

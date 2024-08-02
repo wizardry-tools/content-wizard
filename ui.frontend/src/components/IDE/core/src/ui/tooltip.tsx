@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import * as T from '@radix-ui/react-tooltip';
 import { createComponentGroup } from '../utility/component-group';
 import './tooltip.scss';

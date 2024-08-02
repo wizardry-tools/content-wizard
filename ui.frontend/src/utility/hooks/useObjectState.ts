@@ -1,28 +1,33 @@
 import { useCallback, useState } from 'react';
+import type { ObjectStateHandleUpdate, ObjectStateOrCallback, ObjectStateUpdateCallback } from '@/types';
 import { isPlainObject } from '../libs';
 
-export function useObjectState<T>(initialValue: T): [T, (arg: Partial<T> | Function) => void] {
+export function useObjectState<T>(initialValue: T): [T, ObjectStateHandleUpdate<T>] {
   const [state, setState] = useState(initialValue);
 
-  const handleUpdate = useCallback((arg: any) => {
-    if (typeof arg === 'function') {
-      setState((s) => {
-        const newState = arg(s);
-
+  const handleUpdate = useCallback((arg: ObjectStateOrCallback<T>) => {
+    const callback = arg as ObjectStateUpdateCallback<T>;
+    if (typeof callback === 'function') {
+      setState((s: T): T => {
+        const newState: T = callback(s);
         if (isPlainObject(newState)) {
           return {
             ...s,
             ...newState,
           };
+        } else {
+          return s;
         }
       });
     }
 
     if (isPlainObject(arg)) {
-      setState((s) => ({
-        ...s,
-        ...arg,
-      }));
+      setState(
+        (s: T): T => ({
+          ...s,
+          ...arg,
+        }),
+      );
     }
   }, []);
 

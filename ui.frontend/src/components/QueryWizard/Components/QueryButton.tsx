@@ -1,15 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Fab, SvgIcon, Typography } from '@mui/material';
-import { RunIcon } from 'src/icons';
-import { MouseEvent, useEffect, useState } from 'react';
-import { useAlertContext } from 'src/providers';
+import type { QueryButtonProps } from '@/types';
+import { RunIcon } from '@/icons';
+import { useAlertContext } from '@/providers';
 
-interface QueryButtonProps {
-  isRunning: boolean;
-  disabled: boolean;
-  onClick: () => void;
-}
-
-export const QueryButton = ({ isRunning = false, disabled = false, onClick = () => {} }: QueryButtonProps) => {
+export const QueryButton = ({ isRunning = false, disabled = false, onClick = () => ({}) }: QueryButtonProps) => {
   const alert = useAlertContext();
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
@@ -18,11 +13,11 @@ export const QueryButton = ({ isRunning = false, disabled = false, onClick = () 
     return `${!isRunning ? 'Run ' : ''}Query ${isRunning ? 'Running' : ''}`;
   };
 
-  const mouseEnter = (_e: MouseEvent) => {
+  const mouseEnter = () => {
     setHover(true);
   };
 
-  const mouseLeave = (_e: MouseEvent) => {
+  const mouseLeave = () => {
     setHover(false);
   };
 
@@ -57,7 +52,7 @@ export const QueryButton = ({ isRunning = false, disabled = false, onClick = () 
         inheritViewBox
         className={`query-button-icon ${open ? 'query-button-hover' : 'query-button-hide'}`}
       />
-      <Typography className={`${open ? 'query-button-hover' : 'query-button-hide'}`}>{buttonText()}</Typography>
+      <Typography className={open ? 'query-button-hover' : 'query-button-hide'}>{buttonText()}</Typography>
     </Fab>
   );
 };

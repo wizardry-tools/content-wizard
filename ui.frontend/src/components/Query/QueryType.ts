@@ -1,8 +1,7 @@
-import { getParams } from 'src/utility';
-import { API } from 'src/components/IDE/core/src';
-import { Result } from 'src/components/Results';
+import { getParams } from '@/utility';
+import type { Query, QueryLanguageMap, QueryMap } from '@/types';
 
-export const endpoints: { [name: string]: string } = {
+export const endpoints: Record<string, string> = {
   queryBuilderPath: '/bin/querybuilder.json',
   crxQueryPath: '/crx/de/query.jsp',
   graphQlListPath: '/graphql/list.json',
@@ -19,16 +18,7 @@ export const AEM_GRAPHQL_ACTIONS = {
   serviceURL: '/',
 };
 
-/** Language Support */
-export const QueryLanguage = {
-  SQL: 'SQL',
-  JCR_SQL2: 'JCR_SQL2',
-  XPATH: 'XPATH',
-  QueryBuilder: 'QueryBuilder',
-  GraphQL: 'GraphQL',
-} as const;
-export type QueryLanguageKey = keyof typeof QueryLanguage;
-export const QueryLanguageLabels: Record<QueryLanguageKey, string> = {
+export const QUERY_LANGUAGES: QueryLanguageMap = {
   SQL: 'SQL',
   JCR_SQL2: 'JCR SQL2',
   XPATH: 'XPATH',
@@ -36,54 +26,30 @@ export const QueryLanguageLabels: Record<QueryLanguageKey, string> = {
   GraphQL: 'GraphQL',
 };
 
-/** Query Support */
-export type Statement = string;
-
-export type Query = {
-  language: QueryLanguageKey;
-  statement: Statement;
-  url: string;
-  api?: API;
-  status?: string;
-  isAdvanced: boolean; // this is mainly for QueryBuilder language, as it's used in two different UIs and this differentiates the UIs.
-  label?: string; // this gets populated when a History Query has an edited label.
-};
-export type QueryAction = Partial<Query> & {
-  type: string;
-  caller?: Function;
-};
-
-export type QueryResponse = {
-  results: Result[];
-  status: string | number;
-  query: Query;
-};
-
-export type QueryMap = Record<QueryLanguageKey, Query>;
-
 export function buildGraphQLURL(endpoint: string): string {
   return AEM_GRAPHQL_ACTIONS.serviceURL + AEM_GRAPHQL_ACTIONS.endpoint.replace('global', endpoint);
 }
 
 export function buildQueryString(query: Query): string {
-  if (query.language === QueryLanguage.GraphQL) {
-    if (query.url) {
-      return query.url;
+  const { api, language, url } = query;
+  if (language === 'GraphQL') {
+    if (url) {
+      return url;
     }
     // never called for IDE based requests
-    if (query.api?.endpoint) {
-      buildGraphQLURL(query.api.endpoint);
+    if (api?.endpoint) {
+      buildGraphQLURL(api.endpoint);
     }
     return AEM_GRAPHQL_ACTIONS.endpoint;
   }
 
-  const params: { [name: string]: string } = getParams(query);
-  return '?' + new URLSearchParams(params);
+  const params: Record<string, string> = getParams(query);
+  return '?' + new URLSearchParams(params).toString();
 }
 
 export const defaultAdvancedQueries: QueryMap = {
   GraphQL: {
-    language: QueryLanguage.GraphQL,
+    language: 'GraphQL',
     url: buildGraphQLURL('we-retail'),
     statement: `{
   weRetailStoreInfoList {
@@ -105,14 +71,14 @@ export const defaultAdvancedQueries: QueryMap = {
     isAdvanced: true,
   },
   SQL: {
-    language: QueryLanguage.SQL,
+    language: 'SQL',
     statement: `select * from nt:unstructured as node
 where node.[sling:resourceType] like 'weretail/components/content/teaser'`,
     url: endpoints.crxQueryPath,
     isAdvanced: true,
   },
   JCR_SQL2: {
-    language: QueryLanguage.JCR_SQL2,
+    language: 'JCR_SQL2',
     statement: `SELECT * FROM [nt:unstructured] AS node
 WHERE ISDESCENDANTNODE(node, "/content/we-retail")
 AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/content/teaser"`,
@@ -120,7 +86,7 @@ AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/cont
     isAdvanced: true,
   },
   XPATH: {
-    language: QueryLanguage.XPATH,
+    language: 'XPATH',
     statement: `/jcr:root/content/we-retail//element(*, nt:unstructured)
 [
   (jcr:like(@sling:resourceType, 'weretail/components/content/teaser'))
@@ -129,7 +95,7 @@ AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/cont
     isAdvanced: true,
   },
   QueryBuilder: {
-    language: QueryLanguage.QueryBuilder,
+    language: 'QueryBuilder',
     statement: `path=/content/we-retail
 type=nt:unstructured
 1_property=sling:resourceType

@@ -1,20 +1,12 @@
-import { GraphQLArgument } from 'graphql';
+import type { GraphQLArgument } from 'graphql';
 import { useCallback, useState } from 'react';
-
+import type { ExplorerFieldDef, FieldDocumentationProps } from '@/types';
 import { Button, MarkdownContent } from '../../ui';
-import { ExplorerFieldDef } from '../context';
 import { Argument } from './argument';
 import { DeprecationReason } from './deprecation-reason';
 import { Directive } from './directive';
 import { ExplorerSection } from './section';
 import { TypeLink } from './type-link';
-
-type FieldDocumentationProps = {
-  /**
-   * The field or argument that should be rendered.
-   */
-  field: ExplorerFieldDef;
-};
 
 export function FieldDocumentation(props: FieldDocumentationProps) {
   return (
@@ -77,7 +69,7 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
 }
 
 function Directives({ field }: { field: ExplorerFieldDef }) {
-  const directives = field.astNode?.directives || [];
+  const directives = field.astNode?.directives ?? [];
   if (!directives || directives.length === 0) {
     return null;
   }

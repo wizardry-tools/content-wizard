@@ -1,22 +1,13 @@
 import { useEffect } from 'react';
 import { clsx } from 'clsx';
-
+import type { HeaderEditorProps } from '@/types';
 import { useEditorContext } from '../context';
-import { useHeaderEditor, UseHeaderEditorArgs } from '../header-editor';
-
+import { useHeaderEditor } from '../header-editor';
 import '../style/codemirror.scss';
 import '../style/fold.scss';
 import '../style/editor.scss';
 
-type HeaderEditorProps = UseHeaderEditorArgs & {
-  /**
-   * Visually hide the header editor.
-   * @default false
-   */
-  isHidden?: boolean;
-};
-
-export function HeaderEditor({ isHidden, ...hookArgs }: HeaderEditorProps) {
+export const HeaderEditor = ({ isHidden, ...hookArgs }: HeaderEditorProps) => {
   const { headerEditor } = useEditorContext({
     nonNull: true,
     caller: HeaderEditor,
@@ -30,4 +21,4 @@ export function HeaderEditor({ isHidden, ...hookArgs }: HeaderEditorProps) {
   }, [headerEditor, isHidden]);
 
   return <div className={clsx('wizard-editor', isHidden && 'hidden')} ref={ref} />;
-}
+};

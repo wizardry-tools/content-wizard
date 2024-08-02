@@ -1,9 +1,5 @@
-import { CSSProperties } from 'react';
+import type { AxisProps, SwiperStyles } from '@/types';
 
-export type SwiperStyles = {
-  container: CSSProperties;
-  slide: CSSProperties;
-};
 export const defaultSwiperStyles: SwiperStyles = {
   container: {
     direction: 'ltr',
@@ -11,29 +7,13 @@ export const defaultSwiperStyles: SwiperStyles = {
     willChange: 'transform',
   },
   slide: {
-    width: '100vw',
+    width: '100%',
     WebkitFlexShrink: 0,
     flexShrink: 0,
     //overflow: 'auto',
   },
 };
 
-export type TranslationFunc = (translate: number) => string;
-export type Position = {
-  x: number[];
-  y: number[];
-};
-export type Axis = 'x' | 'x-reverse' | 'y' | 'y-reverse';
-export type AxisProps = {
-  root: Record<Axis, CSSProperties>;
-  flexDirection: Record<Axis, string>;
-  transform: Record<Axis, TranslationFunc>;
-  length: Record<Axis, string>;
-  rotationMatrix: Record<Axis, Position>;
-  scrollPosition: Record<Axis, string>;
-  scrollLength: Record<Axis, string>;
-  clientLength: Record<Axis, string>;
-};
 export const axisProperties: AxisProps = {
   root: {
     x: {

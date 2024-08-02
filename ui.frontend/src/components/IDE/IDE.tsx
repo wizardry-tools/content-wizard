@@ -1,4 +1,5 @@
-import React, { Fragment, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
+import type { MouseEventHandler, PropsWithChildren, ReactElement } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -24,7 +25,7 @@ import {
   useStorageContext,
   VariableEditor,
 } from './core/src';
-import { useIsGraphQL, useIDETheme, useThemeDispatch, useLogger } from 'src/providers';
+import { useIsGraphQL, useIDETheme, useThemeDispatch, useLogger } from '@/providers';
 import Paper from '@mui/material/Paper';
 import {
   ChevronDownIcon,
@@ -36,9 +37,9 @@ import {
   PrettifyIcon,
   ReloadIcon,
   SettingsIcon,
-} from 'src/icons';
+} from '@/icons';
 import './style.scss';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
 
 const majorVersion = parseInt(React.version.slice(0, 2), 10);
 
@@ -51,20 +52,6 @@ if (majorVersion < 18) {
     ].join('\n'),
   );
 }
-
-export type IDEToolbarConfig = {
-  /**
-   * This content will be rendered after the built-in buttons of the toolbar.
-   * Note that this will not apply if you provide a completely custom toolbar
-   * (by passing `IDE.Toolbar` as child to the `IDE` component).
-   */
-  additionalContent?: React.ReactNode;
-
-  /**
-   * same as above, except a component with access to context
-   */
-  additionalComponent?: React.JSXElementConstructor<any>;
-};
 
 /**
  * The top-level React component for IDE, intended to encompass the entire
@@ -169,7 +156,7 @@ export function IDEInterface() {
 
   const handleClearData = useCallback(() => {
     try {
-      storageContext?.clear();
+      storageContext.clear();
       setClearStorageStatus('success');
     } catch {
       setClearStorageStatus('error');
@@ -186,7 +173,7 @@ export function IDEInterface() {
   const handleChangeTheme: MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
       const selectedTheme = event.currentTarget.dataset.theme as 'light' | 'dark' | undefined;
-      themeDispatch(selectedTheme || null);
+      themeDispatch(selectedTheme ?? null);
     },
     [themeDispatch],
   );
@@ -379,7 +366,7 @@ export function IDEInterface() {
                     </section>
                   </div>
 
-                  {(isVariablesEditorEnabled || isHeadersEditorEnabled) && (
+                  {(isVariablesEditorEnabled ?? isHeadersEditorEnabled) && (
                     <div ref={editorToolsResize.dragBarRef}>
                       <div className="wizard-editor-tools">
                         {isVariablesEditorEnabled && (
@@ -435,7 +422,7 @@ export function IDEInterface() {
                     </div>
                   )}
 
-                  {(isVariablesEditorEnabled || isHeadersEditorEnabled) && (
+                  {(isVariablesEditorEnabled ?? isHeadersEditorEnabled) && (
                     <div ref={editorToolsResize.secondRef}>
                       <section
                         className="wizard-editor-tool"
@@ -551,14 +538,14 @@ export function IDEInterface() {
               </div>
               <Button
                 type="button"
-                state={clearStorageStatus || undefined}
+                state={clearStorageStatus ?? undefined}
                 disabled={clearStorageStatus === 'success'}
                 onClick={handleClearData}
               >
                 {{
                   success: 'Cleared data',
                   error: 'Failed',
-                }[clearStorageStatus!] || 'Clear data'}
+                }[clearStorageStatus!] ?? 'Clear data'}
               </Button>
             </div>
           ) : null}
@@ -569,7 +556,7 @@ export function IDEInterface() {
 }
 
 const modifier =
-  typeof window !== 'undefined' && window.navigator.platform.toLowerCase().indexOf('mac') === 0 ? 'Cmd' : 'Ctrl';
+  typeof window !== 'undefined' && window.navigator.platform.toLowerCase().startsWith('mac') ? 'Cmd' : 'Ctrl';
 
 const SHORT_KEYS = Object.entries({
   'Search in editor': [modifier, 'F'],
@@ -622,7 +609,7 @@ function ShortKeys({ keyMap }: { keyMap: string }): ReactElement {
 function IDELogo<TProps>(props: PropsWithChildren<TProps>) {
   return (
     <div className="wizard-logo">
-      {props.children || (
+      {props.children ?? (
         <a className="wizard-logo-link" href="https://github.com/graphql/graphiql" target="_blank" rel="noreferrer">
           Graph
           <em>i</em>

@@ -1,10 +1,9 @@
-import { FormGrid } from './FormGrid';
-import { InputLabel, Select, MenuItem, FormControl, Paper } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
-import { InputValue } from './fields';
-import { SimpleInputProps } from './SimpleInput';
-import { useFieldDispatcher, useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { InputLabel, Select, MenuItem, FormControl, Paper } from '@mui/material';
+import type { InputValue, SimpleInputProps } from '@/types';
+import { useFieldDispatcher, useLogger } from '@/providers';
+import { useRenderCount } from '@/utility';
+import { FormGrid } from './FormGrid';
 
 export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
   const logger = useLogger();
@@ -24,14 +23,13 @@ export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
         name: name,
         value: newValue,
         type: 'UPDATE_VALUE',
-        caller: SimpleSelect,
       });
     },
     [fieldDispatcher, name],
   );
 
   const menuItems = useMemo(() => {
-    return Object.entries(options || []).map((entry) => {
+    return Object.entries(options ?? []).map((entry) => {
       const [key, option] = entry;
       return (
         <MenuItem key={key} value={key}>
@@ -57,8 +55,12 @@ export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
             color="secondary"
             onChange={handleChange}
             className="query-builder-field"
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
+            onFocus={() => {
+              setFocused(true);
+            }}
+            onBlur={() => {
+              setFocused(false);
+            }}
             required={required}
             disabled={disabled}
           >

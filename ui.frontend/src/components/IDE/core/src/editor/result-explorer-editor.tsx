@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
+import type { Caller, CodeMirrorEditor, UseResultExplorerEditorArgs } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
+import { useEditorContext } from './context';
 import { commonKeys, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } from './hooks';
-import { CodeMirrorEditor, CommonEditorProps } from './types';
-import { useEditorContext } from './context';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
-
-export type UseResultExplorerEditorArgs = CommonEditorProps & {
-  className?: string;
-  data?: string;
-};
 
 /**
  * This is the Editor used for the Result Explorer.
@@ -26,19 +21,19 @@ export type UseResultExplorerEditorArgs = CommonEditorProps & {
  */
 export function useResultExplorerEditor(
   { keyMap = DEFAULT_KEY_MAP, data = '' }: UseResultExplorerEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useResultExplorerEditor[${renderCount}] render()` });
   const [editor, setEditor] = useState<CodeMirrorEditor | null>(null);
-  const copy = useCopyResult({ caller: caller || useResultExplorerEditor });
+  const copy = useCopyResult({ caller: caller ?? useResultExplorerEditor });
   const ref = useRef<HTMLDivElement>(null);
 
   // still need to use the editor context, so that the useCopyResult function works.
   const { setResultExplorerEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useResultExplorerEditor,
+    caller: caller ?? useResultExplorerEditor,
   });
 
   useEffect(() => {
@@ -47,16 +42,15 @@ export function useResultExplorerEditor(
       return;
     }
     let isActive = true;
-    let addons = [
+    const addons = [
       import('codemirror/addon/fold/foldgutter'),
       import('codemirror/addon/fold/brace-fold'),
       import('codemirror/addon/dialog/dialog'),
       import('codemirror/addon/search/search'),
       import('codemirror/addon/search/searchcursor'),
       import('codemirror/addon/search/jump-to-line'),
-      import('codemirror/mode/javascript/javascript' as any),
-      // @ts-expect-error
-      import('codemirror/keymap/sublime'),
+      import('codemirror/mode/javascript/javascript' as never),
+      import('codemirror/keymap/sublime' as never),
     ];
     void importCodeMirror(addons, { useCommonAddons: true }).then((CodeMirror) => {
       // Don't continue if the effect has already been cleaned up
@@ -79,7 +73,7 @@ export function useResultExplorerEditor(
         mode: 'application/json',
         foldGutter: true,
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-        // @ts-expect-error
+        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
         info: true,
         inputStyle: 'contenteditable',
         electricChars: true,
@@ -95,7 +89,7 @@ export function useResultExplorerEditor(
     };
   }, [data, editor, setResultExplorerEditor]);
 
-  useKeyMap(editor, ['Shift-Ctrl-C'], copy);
+  useKeyMap(editor, ['Shift-Ctrl-C'] as string[], copy);
   useSynchronizeOption(editor, 'keyMap', keyMap);
 
   // this is just a basic handler that updates the content inside the editor when the content changes.

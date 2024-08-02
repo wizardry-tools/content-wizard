@@ -1,9 +1,10 @@
+import { useCallback, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import type { SimpleInputProps } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useFieldDispatcher, useLogger } from '@/providers';
 import { FormGrid } from './FormGrid';
-import { ChangeEvent, useCallback, useState } from 'react';
-import { SimpleInputProps } from './SimpleInput';
-import { useFieldDispatcher, useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
 
 export const SimpleCheckbox = ({ field, disabled }: SimpleInputProps) => {
   const logger = useLogger();
@@ -21,7 +22,6 @@ export const SimpleCheckbox = ({ field, disabled }: SimpleInputProps) => {
         name,
         value,
         type: 'UPDATE_VALUE',
-        caller: SimpleCheckbox,
       });
     },
     [fieldDispatcher, name],

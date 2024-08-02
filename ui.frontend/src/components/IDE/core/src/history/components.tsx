@@ -1,16 +1,15 @@
-import type { WizardStoreItem } from '../storage-api';
-import { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { MouseEventHandler } from 'react';
 import { clsx } from 'clsx';
-
+import type { QueryHistoryItemProps } from '@/types';
+import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from '@/icons';
+import { useRenderCount } from '@/utility';
+import { useLogger, useQueryDispatcher } from '@/providers';
+import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/components/Query';
 import { useEditorContext } from '../editor';
-import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from 'src/icons';
 import { Button, Tooltip, UnStyledButton } from '../ui';
 import { useHistoryContext } from './context';
-
 import './style.scss';
-import { useLogger, useQueryDispatcher } from 'src/providers';
-import { defaultAdvancedQueries, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
-import { useRenderCount } from 'src/utility';
 
 export function History() {
   const logger = useLogger();
@@ -57,12 +56,12 @@ export function History() {
     <section aria-label="History" className="wizard-history">
       <div className="wizard-history-header">
         History
-        {(clearStatus || items.length > 0) && (
-          <Button type="button" state={clearStatus || undefined} disabled={!items.length} onClick={handleClearStatus}>
+        {(clearStatus ?? items.length > 0) && (
+          <Button type="button" state={clearStatus ?? undefined} disabled={!items.length} onClick={handleClearStatus}>
             {{
               success: 'Cleared',
               error: 'Failed to Clear',
-            }[clearStatus!] || 'Clear'}
+            }[clearStatus!] ?? 'Clear'}
           </Button>
         )}
       </div>
@@ -88,10 +87,6 @@ export function History() {
   );
 }
 
-type QueryHistoryItemProps = {
-  item: WizardStoreItem & { index?: number };
-};
-
 export function HistoryItem(props: QueryHistoryItemProps) {
   const queryDispatcher = useQueryDispatcher();
   const { editLabel, toggleFavorite, deleteFromHistory, setActive } = useHistoryContext({
@@ -113,9 +108,9 @@ export function HistoryItem(props: QueryHistoryItemProps) {
   }, [isEditable]);
 
   const displayName =
-    props.item.label ||
-    props.item.operationName ||
-    `${QueryLanguageLabels[props.item.language as QueryLanguageKey]} ${formatQuery(props.item.query || '')}`;
+    props.item.label ??
+    props.item.operationName ??
+    `${QUERY_LANGUAGES[props.item.language!]} ${formatQuery(props.item.query! ?? '')}`;
 
   const handleSave = useCallback(() => {
     setIsEditable(false);
@@ -137,11 +132,10 @@ export function HistoryItem(props: QueryHistoryItemProps) {
     // dispatch the query object instead setting value directly to the editor
     // TODO: Make sure that Query.API isn't needed as well...
     queryDispatcher({
-      ...defaultAdvancedQueries[language as QueryLanguageKey],
+      ...defaultAdvancedQueries[language!],
       statement: query,
       label,
       type: 'replaceQuery',
-      caller: HistoryItem,
     });
     // queryEditor?.setValue(query?.statement ?? '');
     variableEditor?.setValue(variables ?? '');

@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { Paper, Stack } from '@mui/material';
-import { Tooltip, WizardStatementEditor } from 'src/components/IDE/core/src';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import { useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
+import { Tooltip, WizardStatementEditor } from '@/components/IDE/core/src';
 
 export const StatementWindow = memo(() => {
   const logger = useLogger();

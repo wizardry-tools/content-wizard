@@ -1,45 +1,27 @@
 import { formatError } from '@graphiql/toolkit';
 import type { Position, Token } from 'codemirror';
-import { ComponentType, useEffect, useRef, JSX } from 'react';
+import { useEffect, useRef } from 'react';
+import type { JSX } from 'react';
 import ReactDOM from 'react-dom';
-import { useSchemaContext } from '../schema';
 
+import { Caller, CodeMirrorEditor, ResponseTooltipType, UseResponseEditorArgs } from '@/types';
+import { useSchemaContext } from '../schema';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { ImagePreview } from './components';
 import { useEditorContext } from './context';
 import { useSynchronizeOption } from './hooks';
-import { CodeMirrorEditor, CommonEditorProps } from './types';
-
-export type ResponseTooltipType = ComponentType<{
-  /**
-   * The position of the token in the editor contents.
-   */
-  pos: Position;
-  /**
-   * The token that has been hovered over.
-   */
-  token: Token;
-}>;
-
-export type UseResponseEditorArgs = CommonEditorProps & {
-  /**
-   * Customize the tooltip when hovering over properties in the response
-   * editor.
-   */
-  responseTooltip?: ResponseTooltipType;
-};
 
 export function useResponseEditor(
   { responseTooltip, editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP }: UseResponseEditorArgs = {},
-  caller?: Function,
+  caller?: Caller,
 ) {
   const { fetchError, validationErrors } = useSchemaContext({
     nonNull: true,
-    caller: caller || useResponseEditor,
+    caller: caller ?? useResponseEditor,
   });
   const { initialResponse, responseEditor, setResponseEditor } = useEditorContext({
     nonNull: true,
-    caller: caller || useResponseEditor,
+    caller: caller ?? useResponseEditor,
   });
   const ref = useRef<HTMLDivElement>(null);
 
@@ -58,8 +40,7 @@ export function useResponseEditor(
         import('codemirror/addon/search/search'),
         import('codemirror/addon/search/searchcursor'),
         import('codemirror/addon/search/jump-to-line'),
-        // @ts-expect-error
-        import('codemirror/keymap/sublime'),
+        import('codemirror/keymap/sublime' as never),
         import('codemirror-graphql/esm/results/mode'),
         import('codemirror-graphql/esm/utils/info-addon'),
       ],
@@ -75,7 +56,7 @@ export function useResponseEditor(
       CodeMirror.registerHelper(
         'info',
         'graphql-results',
-        (token: Token, _options: any, _cm: CodeMirrorEditor, pos: Position) => {
+        (token: Token, _options: never, _cm: CodeMirrorEditor, pos: Position) => {
           const infoElements: JSX.Element[] = [];
 
           const ResponseTooltipComponent = responseTooltipRef.current;
@@ -110,7 +91,7 @@ export function useResponseEditor(
         mode: 'graphql-results',
         foldGutter: true,
         gutters: ['CodeMirror-foldgutter'],
-        // @ts-expect-error
+        // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
         info: true,
         extraKeys: commonKeys,
       });

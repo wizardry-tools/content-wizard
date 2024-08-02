@@ -1,15 +1,14 @@
-import { useWizardStatementEditor, UseWizardStatementEditorArgs } from '../wizard-statement-editor';
-
+import { useMemo } from 'react';
+import { Paper, Stack } from '@mui/material';
+import type { UseWizardStatementEditorArgs } from '@/types';
+import { CopyIcon } from '@/icons';
+import { ToolbarButton } from '../../toolbar';
+import { useWizardStatementEditor } from '../wizard-statement-editor';
+import { useCopyQuery } from '../hooks';
 import '../style/codemirror.scss';
 import '../style/fold.scss';
 import '../style/info.scss';
 import '../style/editor.scss';
-import { useMemo } from 'react';
-import { Paper, Stack } from '@mui/material';
-import { ToolbarButton } from '../../toolbar';
-import { CopyIcon } from 'src/icons';
-import { useCopyQuery } from '../hooks';
-
 import './wizard-statement-editor.scss';
 
 export function WizardStatementEditor(props: UseWizardStatementEditorArgs) {

@@ -1,21 +1,19 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { WizardAlertProvider, WizardAlert, useAlertDispatcher } from '../WizardAlertProvider';
-import { useLogger } from '../LoggingProvider';
+import { WizardAlertProvider, WizardAlert, useAlertDispatcher } from '@/providers';
 
-jest.mock('../LoggingProvider');
+vi.mock('./LoggingProvider');
 
 const TestComponent = () => {
   const dispatchAlert = useAlertDispatcher();
 
   return (
     <button
-      onClick={() =>
+      onClick={() => {
         dispatchAlert({
           message: 'Test Alert',
           severity: 'error',
-          caller: TestComponent,
-        })
-      }
+        });
+      }}
     >
       Trigger Alert
     </button>
@@ -23,18 +21,9 @@ const TestComponent = () => {
 };
 
 describe('WizardAlert', () => {
-  beforeEach(() => {
-    (useLogger as jest.Mock).mockReturnValue({
-      log: jest.fn(),
-      debug: jest.fn(),
-      error: jest.fn(),
-      warn: jest.fn(),
-    });
-  });
+  vi.useFakeTimers();
 
-  jest.useFakeTimers();
-
-  test('displays alert message when triggered', () => {
+  it('displays alert message when triggered', () => {
     render(
       <WizardAlertProvider>
         <TestComponent />
@@ -43,10 +32,10 @@ describe('WizardAlert', () => {
     );
 
     fireEvent.click(screen.getByText('Trigger Alert'));
-    expect(screen.getByText('Test Alert')).toBeInTheDocument();
+    expect(screen.getByText('Test Alert'));
   });
 
-  test('hides alert message after timeout', () => {
+  it('hides alert message after timeout', () => {
     render(
       <WizardAlertProvider>
         <TestComponent />
@@ -56,12 +45,12 @@ describe('WizardAlert', () => {
 
     fireEvent.click(screen.getByText('Trigger Alert'));
     act(() => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
     expect(screen.queryByText('Test Alert')).not.toBeInTheDocument();
   });
 
-  test('does not hide alert message on hover', () => {
+  it('does not hide alert message on hover', () => {
     render(
       <WizardAlertProvider>
         <TestComponent />
@@ -72,17 +61,17 @@ describe('WizardAlert', () => {
     fireEvent.click(screen.getByText('Trigger Alert'));
 
     act(() => {
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
     });
 
     fireEvent.mouseOver(screen.getByText('Test Alert'));
     act(() => {
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
     });
     expect(screen.getByText('Test Alert')).toBeInTheDocument();
   });
 
-  test('hides alert message when mouse leaves', () => {
+  it('hides alert message when mouse leaves', () => {
     render(
       <WizardAlertProvider>
         <TestComponent />
@@ -94,7 +83,7 @@ describe('WizardAlert', () => {
     fireEvent.mouseOver(screen.getByText('Test Alert'));
     fireEvent.mouseLeave(screen.getByText('Test Alert'));
     act(() => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
     expect(screen.queryByText('Test Alert')).not.toBeInTheDocument();
   });

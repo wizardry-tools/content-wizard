@@ -1,14 +1,13 @@
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react';
-import { useLogger, usePackagingContext } from 'src/providers';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import type { ChangeEvent, SyntheticEvent } from 'react';
+import { useLogger, usePackagingContext } from '@/providers';
 import { Autocomplete, Button, CircularProgress, Paper, Stack, TextField, Typography } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
-import { FormGrid } from 'src/components/QueryWizard/Components';
-import { useRenderCount } from 'src/utility';
-
-import './PackageBuilder.scss';
+import { FormGrid } from '@/components/QueryWizard/Components';
+import { useRenderCount } from '@/utility';
 
 /**
  * This component controls all Packaging logic.
@@ -44,7 +43,7 @@ export const PackageBuilder = () => {
 
   // simple callback that handles user input for groupName
   const handleGroupChange = useCallback(
-    (_event: any, newValue: string | null) => {
+    (_event: SyntheticEvent, newValue: string | null) => {
       if (newValue) {
         setGroup(newValue);
         setGroupName(newValue);
@@ -68,8 +67,12 @@ export const PackageBuilder = () => {
               color={'secondary'}
               fullWidth
               className="package-builder-field"
-              onFocus={() => setFocusTarget('packageName')}
-              onBlur={() => setFocusTarget('')}
+              onFocus={() => {
+                setFocusTarget('packageName');
+              }}
+              onBlur={() => {
+                setFocusTarget('');
+              }}
               onChange={handleNameChange}
               required
               disabled={disableAll}
@@ -94,8 +97,12 @@ export const PackageBuilder = () => {
                   label={'Package Group'}
                   color={'secondary'}
                   className="package-builder-field"
-                  onFocus={() => setFocusTarget('groupName')}
-                  onBlur={() => setFocusTarget('')}
+                  onFocus={() => {
+                    setFocusTarget('groupName');
+                  }}
+                  onBlur={() => {
+                    setFocusTarget('');
+                  }}
                   required
                   {...params}
                 />

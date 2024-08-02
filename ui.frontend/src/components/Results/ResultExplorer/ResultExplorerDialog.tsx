@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -12,18 +13,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import type { ResultData, ResultExplorerDialogProps } from '@/types';
+import { escapeColon, escapeUrl } from '@/utility';
 import { ResultExplorer } from './ResultExplorer';
 import { useFetcher } from './fetcher';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { escapeColon, escapeUrl } from 'src/utility';
-
-import './ResultExplorer.scss';
-
-type ResultExplorerDialogProps = {
-  open: boolean;
-  path: string;
-  closeHandler: () => void;
-};
 
 export const DAM_PATH = '/dam';
 export const XF_PATH = '/experience-fragments';
@@ -55,15 +48,14 @@ export const ResultExplorerDialog = ({ open, closeHandler, path }: ResultExplore
       // all the reasons not to fetch
       return;
     }
-    const resultHandler = (response: any) => {
-      if (response.hasOwnProperty(CF_PROP)) {
-        setIsCF(response[CF_PROP]);
+    const resultHandler = (response: ResultData) => {
+      if (typeof response === 'object' && CF_PROP in response) {
+        setIsCF(!!response[CF_PROP]);
       }
     };
     fetcher.loadData({
       path: `${contentPath}${CONTENT_NODE}/${CF_PROP}`,
       resultHandler,
-      defaultResult: false,
       stringify: false,
     });
   }, [contentPath, fetcher, isAsset]);

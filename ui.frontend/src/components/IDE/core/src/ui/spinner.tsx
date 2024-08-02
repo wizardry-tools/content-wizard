@@ -1,4 +1,5 @@
-import { forwardRef, JSX } from 'react';
+import { forwardRef } from 'react';
+import type { JSX } from 'react';
 import { clsx } from 'clsx';
 
 import './spinner.scss';

@@ -1,5 +1,5 @@
-import { ComponentType, ReactNode } from 'react';
-
+import type { ComponentType } from 'react';
+import type { ExplorerSectionProps } from '@/types';
 import {
   ArgumentIcon,
   DeprecatedArgumentIcon,
@@ -11,31 +11,8 @@ import {
   ImplementsIcon,
   RootTypeIcon,
   TypeIcon,
-} from 'src/icons';
-
+} from '@/icons';
 import './section.scss';
-
-type ExplorerSectionProps = {
-  children: ReactNode;
-  /**
-   * The title of the section, which will also determine the icon rendered next
-   * to the headline.
-   */
-  title:
-    | 'Root Types'
-    | 'Fields'
-    | 'Deprecated Fields'
-    | 'Type'
-    | 'Arguments'
-    | 'Deprecated Arguments'
-    | 'Implements'
-    | 'Implementations'
-    | 'Possible Types'
-    | 'Enum Values'
-    | 'Deprecated Enum Values'
-    | 'Directives'
-    | 'All Schema Types';
-};
 
 export function ExplorerSection(props: ExplorerSectionProps) {
   const Icon = TYPE_TO_ICON[props.title];

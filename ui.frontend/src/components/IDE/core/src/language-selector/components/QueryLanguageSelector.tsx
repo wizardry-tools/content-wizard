@@ -1,15 +1,11 @@
 import { memo } from 'react';
-import { FormGrid } from 'src/components/QueryWizard/Components';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { QueryLanguage, QueryLanguageKey, QueryLanguageLabels } from 'src/components/Query';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { useLogger } from 'src/providers';
-import { useRenderCount } from 'src/utility';
+import type { QueryLanguageSelectorProps } from '@/types';
+import { useRenderCount } from '@/utility';
+import { useLogger } from '@/providers';
+import { FormGrid } from '@/components/QueryWizard/Components';
+import { QUERY_LANGUAGES } from '@/components';
 
-export type QueryLanguageSelectorProps = {
-  language: QueryLanguageKey;
-  onLanguageChange: (event: SelectChangeEvent) => void;
-};
 /**
  * This is a render function for the actual Dropdown field.
  */
@@ -33,9 +29,9 @@ export const QueryLanguageSelector = memo(({ language, onLanguageChange }: Query
           onChange={onLanguageChange}
           required
         >
-          {Object.values(QueryLanguage).map((lang) => (
-            <MenuItem key={QueryLanguage[lang]} value={QueryLanguage[lang]}>
-              {QueryLanguageLabels[lang]}
+          {Object.entries(QUERY_LANGUAGES).map(([lang, label]) => (
+            <MenuItem key={lang} value={lang}>
+              {label}
             </MenuItem>
           ))}
         </Select>
