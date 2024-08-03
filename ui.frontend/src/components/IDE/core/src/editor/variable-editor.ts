@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Caller, CodeMirrorType, UseVariableEditorArgs } from '@/types';
-import { useExecutionContext } from '../execution';
+import { useExecutionContext } from '../ide-providers';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
 import {

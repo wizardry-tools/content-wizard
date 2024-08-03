@@ -6,11 +6,9 @@ import setValue from 'set-value';
 import type { ExecutionContextProviderProps, ExecutionContextType, IncrementalResult } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useFetcher, useLogger, useQuery } from '@/providers';
-import { useAutoCompleteLeafs, useEditorContext } from './editor';
-import { useHistoryContext } from './history';
-import { createContextHook, createNullableContext } from './utility/context';
-
-export const ExecutionContext = createNullableContext<ExecutionContextType>('ExecutionContext');
+import { useAutoCompleteLeafs, useEditorContext } from '../../editor';
+import { useHistoryContext } from '../../history';
+import { ExecutionContext } from './ExecutionContext';
 
 export function ExecutionContextProvider({
   getDefaultFieldNames,
@@ -25,8 +23,10 @@ export function ExecutionContextProvider({
     throw new TypeError('The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.');
   }
 
-  const { headerEditor, queryEditor, responseEditor, variableEditor, updateActiveTabValues } =
-    useEditorContext({ nonNull: true, caller: ExecutionContextProvider });
+  const { headerEditor, queryEditor, responseEditor, variableEditor, updateActiveTabValues } = useEditorContext({
+    nonNull: true,
+    caller: ExecutionContextProvider,
+  });
   const history = useHistoryContext();
   const autoCompleteLeafs = useAutoCompleteLeafs({
     getDefaultFieldNames,
@@ -217,8 +217,6 @@ export function ExecutionContextProvider({
 
   return <ExecutionContext.Provider value={value}>{children}</ExecutionContext.Provider>;
 }
-
-export const useExecutionContext = createContextHook(ExecutionContext);
 
 function tryParseJsonObject({
   json,

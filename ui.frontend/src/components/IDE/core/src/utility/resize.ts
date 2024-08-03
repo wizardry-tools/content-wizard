@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ResizableElement, UseDragResizeArgs } from '@/types';
-import { useStorageContext } from '../storage';
+import { useStorageContext } from '../ide-providers';
 import debounce from './debounce';
 
 export function useDragResize({

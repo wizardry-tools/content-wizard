@@ -15,7 +15,14 @@ const headerCssProps = {
   },
 };
 
-export function GlobalNav({ pageTitle }: { pageTitle: string }) {
+/**
+ * This component represents the bar that's at the very top of the App. It contains a link
+ * to the AEM start page and the toggle {@link IconButton} that toggles between light and dark {@link Theme}.
+ * It's also the container for the {@link WizardAlert}
+ * @param pageTitle {string}
+ * @constructor
+ */
+export const GlobalNav = ({ pageTitle }: { pageTitle: string }) => {
   const theme = useTheme();
   const themeDispatch = useThemeDispatch();
 
@@ -57,4 +64,4 @@ export function GlobalNav({ pageTitle }: { pageTitle: string }) {
       <WizardAlert />
     </Box>
   );
-}
+};

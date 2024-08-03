@@ -15,12 +15,15 @@ import {
 } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useIsGraphQL, useLogger, useQuery, useQueryDispatcher } from '@/providers';
-import { useExecutionContext } from '../execution';
+import {
+  useExecutionContext,
+  useSchemaContext,
+  useStorageContext,
+  DOC_EXPLORER_PLUGIN,
+  usePluginContext,
+} from '../ide-providers';
 import { useExplorerContext } from '../explorer';
 import { markdown } from '../markdown';
-import { DOC_EXPLORER_PLUGIN, usePluginContext } from '../plugin';
-import { useSchemaContext } from '../schema';
-import { useStorageContext } from '../storage';
 import debounce from '../utility/debounce';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';

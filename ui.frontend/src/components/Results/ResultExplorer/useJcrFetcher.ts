@@ -8,7 +8,7 @@ import { useAlertDispatcher } from '@/providers';
  * Uses a fetcher reference to track if fetching is occurring, to prevent multiple requests.
  * @param fetching
  */
-export const useFetcher = ({ fetching }: FetcherProps) => {
+export const useJcrFetcher = ({ fetching }: FetcherProps) => {
   const alertDispatcher = useAlertDispatcher();
 
   const loadData: LoadDataCallback = useCallback(

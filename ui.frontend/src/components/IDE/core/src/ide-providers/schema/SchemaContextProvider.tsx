@@ -4,13 +4,11 @@ import { buildClientSchema, getIntrospectionQuery, validateSchema } from 'graphq
 import type { IntrospectionQuery } from 'graphql';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import type { IntrospectionArgs, MaybeGraphQLSchema, SchemaContextProviderProps, SchemaContextType } from '@/types';
+import type { IntrospectionArgs, MaybeGraphQLSchema, SchemaContextProviderProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useAlertDispatcher, useFetcher, useLogger, useQuery } from '@/providers';
-import { createContextHook, createNullableContext } from './utility/context';
-import { useEditorContext } from './editor';
-
-export const SchemaContext = createNullableContext<SchemaContextType>('SchemaContext');
+import { useEditorContext } from '../../editor';
+import { SchemaContext } from './SchemaContext';
 
 export function SchemaContextProvider(props: SchemaContextProviderProps) {
   const renderCount = useRenderCount();
@@ -235,8 +233,6 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
 
   return <SchemaContext.Provider value={value}>{children}</SchemaContext.Provider>;
 }
-
-export const useSchemaContext = createContextHook(SchemaContext);
 
 function useIntrospectionQuery({
   inputValueDeprecation,

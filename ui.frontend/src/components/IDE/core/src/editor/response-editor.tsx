@@ -5,7 +5,7 @@ import type { JSX } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Caller, CodeMirrorEditor, ResponseTooltipType, UseResponseEditorArgs } from '@/types';
-import { useSchemaContext } from '../schema';
+import { useSchemaContext } from '../ide-providers';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { ImagePreview } from './components';
 import { useEditorContext } from './context';

@@ -19,7 +19,7 @@ import { useIsGraphQL, useLogger } from '@/providers';
 import { useExplorerContext } from '../explorer';
 import { usePluginContext } from '../plugin';
 import { useSchemaContext } from '../schema';
-import { useStorageContext } from '../storage';
+import { useStorageContext } from '../ide-providers';
 import debounce from '../utility/debounce';
 import { onHasCompletion } from './completion';
 import { useEditorContext } from './context';

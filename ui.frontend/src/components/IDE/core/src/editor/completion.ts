@@ -4,7 +4,7 @@ import { isListType, isNonNullType } from 'graphql';
 import type { GraphQLNamedType, GraphQLSchema, GraphQLType } from 'graphql';
 import type { ExplorerContextType, PluginContextType } from '@/types';
 import { markdown } from '../markdown';
-import { DOC_EXPLORER_PLUGIN } from '../plugin';
+import { DOC_EXPLORER_PLUGIN } from '../ide-providers';
 import { importCodeMirror } from './common';
 
 /**

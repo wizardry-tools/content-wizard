@@ -2,12 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress, Paper, Stack } from '@mui/material';
 import type { ResultData, ResultExplorerProps } from '@/types';
 import { Tooltip, ResultExplorerEditor } from '@/components/IDE/core/src';
-import { useFetcher } from './fetcher';
+import { useJcrFetcher } from './useJcrFetcher';
+
+import './ResultExplorer.scss';
 
 export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   const [data, setData] = useState<ResultData>('');
   const fetching = useRef(false);
-  const fetcher = useFetcher({ fetching });
+  const fetcher = useJcrFetcher({ fetching });
 
   useEffect(() => {
     if (data || !fetcher || fetching.current) {

@@ -13,14 +13,20 @@ const tabCssProps = {
   },
 };
 
-export const Bar = ({ tabValue, onTabSelect }: ContentWizardBarProps) => {
+/**
+ * This is the App/Nav Bar that lets the user select between Query Wizard, Query IDE, and the Results.
+ * @param selectedView {number} the currently selected tab.
+ * @param onViewSelect {ViewSelectCallback} a callback that is called when a new tab is selected.
+ * @constructor
+ */
+export const Bar = ({ selectedView, onViewSelect }: ContentWizardBarProps) => {
   const { results } = useResults();
 
   return (
     <AppBar className="content-wizard-bar">
       <Tabs
-        value={tabValue}
-        onChange={onTabSelect}
+        value={selectedView}
+        onChange={onViewSelect}
         indicatorColor="secondary"
         textColor="secondary"
         variant="fullWidth"

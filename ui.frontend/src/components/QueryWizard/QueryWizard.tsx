@@ -14,7 +14,7 @@ const buttonStackStyles = () => {
   };
 };
 
-export function QueryWizard({ onTabPanelSelect }: QueryWizardProps) {
+export function QueryWizard({ onViewPanelSelect }: QueryWizardProps) {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `QueryWizard[${renderCount}] render()` });
@@ -37,7 +37,7 @@ export function QueryWizard({ onTabPanelSelect }: QueryWizardProps) {
           <Accordion />
         </Stack>
         <Stack className="query-button-stack" sx={buttonStackStyles} justifyContent="flex-start">
-          <QueryHandler onResults={onTabPanelSelect} />
+          <QueryHandler onResults={onViewPanelSelect} />
         </Stack>
       </Stack>
     </Paper>

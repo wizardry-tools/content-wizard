@@ -1,7 +1,7 @@
 import type { SyntheticEvent } from 'react';
 import type { ViewsProps } from './ContentWizard';
 import type { FieldConfig, FieldsConfig } from './Fields';
-export type QueryWizardProps = Pick<ViewsProps, 'onTabPanelSelect'>;
+export type QueryWizardProps = Pick<ViewsProps, 'onViewPanelSelect'>;
 export type QueryButtonProps = {
   isRunning: boolean;
   disabled: boolean;

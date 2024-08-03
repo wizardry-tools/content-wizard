@@ -10,7 +10,7 @@ import type {
 import { useRenderCount } from '@/utility';
 import { useLogger, useQuery, useQueryDispatcher } from '@/providers';
 import { defaultAdvancedQueries } from '@/components/Query';
-import { useStorageContext } from '../storage';
+import { useStorageContext } from '../ide-providers';
 import { createContextHook, createNullableContext } from '../utility/context';
 import { STORAGE_KEY as STORAGE_KEY_HEADERS } from './header-editor';
 import { useSynchronizeValue } from './hooks';

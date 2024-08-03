@@ -1,22 +1,10 @@
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { API, APIContextProviderProps, APIContextType, GraphQLEndpointConfig } from '@/types';
-import { buildGraphQLURL, endpoints } from '@/components';
+import type { API, APIContextProviderProps, GraphQLEndpointConfig } from '@/types';
+import { endpoints } from '@/components';
 import { useCreateFetcher, useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
-import { createContextHook, createNullableContext } from './utility/context';
-
-export const mapAPIs = (response: GraphQLEndpointConfig[]): API[] => {
-  return response.map((endpointConfig) => {
-    return {
-      endpoint: endpointConfig.configurationName,
-      persistedQueries: endpointConfig.queries,
-      url: buildGraphQLURL(endpointConfig.configurationName),
-    };
-  });
-};
-
-export const APIContext = createNullableContext<APIContextType>('APIContext');
+import { APIContext } from './APIContext';
 
 export function APIContextProvider(props: APIContextProviderProps) {
   const renderCount = useRenderCount();
@@ -107,5 +95,3 @@ export function APIContextProvider(props: APIContextProviderProps) {
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
 }
-
-export const useAPIContext = createContextHook(APIContext);

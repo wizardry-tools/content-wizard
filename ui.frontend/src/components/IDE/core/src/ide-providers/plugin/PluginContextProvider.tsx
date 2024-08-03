@@ -1,34 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GraphiQLPlugin, PluginContextProviderProps, PluginContextType } from '@/types';
-import { DocsFilledIcon, DocsIcon, HistoryIcon, ProgrammingCode } from '@/icons';
 import { useIsGraphQL } from '@/providers';
-import { DocExplorer, useExplorerContext } from './explorer';
-import { History, useHistoryContext } from './history';
-import { useStorageContext } from './storage';
-import { createContextHook, createNullableContext } from './utility/context';
-import { LanguageSelector } from './language-selector';
-
-export const DOC_EXPLORER_PLUGIN: GraphiQLPlugin = {
-  title: 'Documentation Explorer',
-  icon: function Icon() {
-    const pluginContext = usePluginContext();
-    return pluginContext?.visiblePlugin === DOC_EXPLORER_PLUGIN ? <DocsFilledIcon /> : <DocsIcon />;
-  },
-  content: DocExplorer,
-};
-export const HISTORY_PLUGIN: GraphiQLPlugin = {
-  title: 'History',
-  icon: HistoryIcon,
-  content: History,
-};
-
-export const LANGUAGE_SELECTOR_PLUGIN: GraphiQLPlugin = {
-  title: 'Language Selector',
-  icon: ProgrammingCode,
-  content: LanguageSelector,
-};
-
-export const PluginContext = createNullableContext<PluginContextType>('PluginContext');
+import { useExplorerContext } from '../../explorer';
+import { useHistoryContext } from '../../history';
+import { useStorageContext } from '../../ide-providers';
+import { PluginContext } from './PluginContext';
+import { DOC_EXPLORER_PLUGIN } from './DocExplorerPlugin';
+import { LANGUAGE_SELECTOR_PLUGIN } from './LanguageSelectorPlugin';
+import { HISTORY_PLUGIN } from './HistoryPlugin';
 
 export function PluginContextProvider(props: PluginContextProviderProps) {
   const storage = useStorageContext();
@@ -122,7 +101,5 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
 
   return <PluginContext.Provider value={value}>{children}</PluginContext.Provider>;
 }
-
-export const usePluginContext = createContextHook(PluginContext);
 
 const STORAGE_KEY = 'visiblePlugin';

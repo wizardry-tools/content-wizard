@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import type { IDETheme, WizardStorageAPI } from '@/types';
-import { useStorageContext } from './storage';
+import { useStorageContext } from './ide-providers';
 
 function getStoredTheme(storageContext: WizardStorageAPI | null): IDETheme {
   if (!storageContext) {

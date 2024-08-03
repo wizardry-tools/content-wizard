@@ -1,13 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import type { HistoryContextType, HistoryContextProviderProps, WizardStorageAPI, WizardStoreItem } from '@/types';
-import { useRenderCount } from '@/utility';
+import { HistoryContextProviderProps, HistoryContextType, WizardStorageAPI, WizardStoreItem } from '@/types';
 import { useLogger } from '@/providers';
-import { createContextHook, createNullableContext } from '../utility/context';
+import { useRenderCount } from '@/utility';
+import { HistoryContext } from './HistoryContext';
 import { useWizardHistoryStore } from '../storage-api';
-import { useStorageContext } from '../storage';
+import { useStorageContext } from '../ide-providers';
 
-export const HistoryContext = createNullableContext<HistoryContextType>('HistoryContext');
-
+const DEFAULT_HISTORY_LENGTH = 20;
 /**
  * The functions send the entire operation so users can customize their own application with
  * <HistoryContext.Provider value={customizedFunctions} /> and get access to the operation plus
@@ -80,7 +79,3 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
 
   return <HistoryContext.Provider value={value}>{props.children}</HistoryContext.Provider>;
 }
-
-export const useHistoryContext = createContextHook<HistoryContextType>(HistoryContext);
-
-const DEFAULT_HISTORY_LENGTH = 20;

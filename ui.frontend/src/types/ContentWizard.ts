@@ -1,19 +1,21 @@
 import type { Direction } from '@mui/system';
 import type { PropsWithChildren, SyntheticEvent } from 'react';
 
+export type ViewSelectCallback = (_event: SyntheticEvent, value: number) => void;
 export type ContentWizardBarProps = {
-  tabValue: number;
-  onTabSelect: (_event: SyntheticEvent, value: number) => void;
+  selectedView: number;
+  onViewSelect: ViewSelectCallback;
 };
 
-export type TabPanelProps = PropsWithChildren & {
+export type ViewPanelProps = PropsWithChildren & {
   index: number;
   value: number;
   dir: Direction;
   padding?: number;
 };
 
+export type ViewPanelSelectCallback = (index: number) => void;
 export type ViewsProps = {
-  tabValue: number;
-  onTabPanelSelect: (index: number) => void;
+  selectedView: number;
+  onViewPanelSelect: ViewPanelSelectCallback;
 };

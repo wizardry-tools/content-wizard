@@ -72,7 +72,7 @@ IDE.Logo = IDELogo;
 IDE.Toolbar = IDEToolbar;
 IDE.Footer = IDEFooter;
 
-export function IDEInterface() {
+function IDEInterface() {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `IDEInterface[${renderCount}] render()` });

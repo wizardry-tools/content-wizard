@@ -18,27 +18,27 @@ const EmptyContext: ResultsContextProps = {
 };
 describe('Testing Bar component', () => {
   it('renders Bar', () => {
-    const mockOnTabSelect = vi.fn();
+    const mockOnViewSelect = vi.fn();
     vi.spyOn(ResultsProvider, 'useResults').mockReturnValue(EmptyContext);
-    const { getByText } = render(<Bar tabValue={0} onTabSelect={mockOnTabSelect} />);
+    const { getByText } = render(<Bar selectedView={0} onViewSelect={mockOnViewSelect} />);
     getByText('Query Wizard');
     getByText('Query IDE');
     getByText('Results');
   });
 
-  it('triggers onTabSelect when a tab is clicked', () => {
-    const mockOnTabSelect = vi.fn();
+  it('triggers onViewSelect when a tab is clicked', () => {
+    const mockOnViewSelect = vi.fn();
     vi.spyOn(ResultsProvider, 'useResults').mockReturnValue(EmptyContext);
-    const { getByText } = render(<Bar tabValue={0} onTabSelect={mockOnTabSelect} />);
+    const { getByText } = render(<Bar selectedView={0} onViewSelect={mockOnViewSelect} />);
     fireEvent.click(getByText('Query IDE'));
-    expect(mockOnTabSelect).toHaveBeenCalled();
+    expect(mockOnViewSelect).toHaveBeenCalled();
   });
 
-  it('does not trigger onTabSelect when the Results tab is clicked and results length is less than 1', () => {
-    const mockOnTabSelect = vi.fn();
+  it('does not trigger onViewSelect when the Results tab is clicked and results length is less than 1', () => {
+    const mockOnViewSelect = vi.fn();
     vi.spyOn(ResultsProvider, 'useResults').mockReturnValue(EmptyContext);
-    const { getByText } = render(<Bar tabValue={0} onTabSelect={mockOnTabSelect} />);
+    const { getByText } = render(<Bar selectedView={0} onViewSelect={mockOnViewSelect} />);
     fireEvent.click(getByText('Results'));
-    expect(mockOnTabSelect).not.toHaveBeenCalled();
+    expect(mockOnViewSelect).not.toHaveBeenCalled();
   });
 });
