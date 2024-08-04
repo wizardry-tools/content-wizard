@@ -4,7 +4,7 @@ import { Stack, IconButton, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider, DateTimePicker, PickersDay } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import type { DateRange, DayTime, SimpleInputProps } from '@/types';
+import type { DateRange, DayTime, WizardInputProps } from '@/types';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { FormGrid } from './FormGrid';
@@ -21,10 +21,10 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
   },
 }));
 
-export const SimpleDatePicker = ({ field }: SimpleInputProps) => {
+export const WizardDatePicker = ({ field }: WizardInputProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
-  logger.debug({ message: `SimpleDatePicker[${renderCount}] render()` });
+  logger.debug({ message: `WizardDatePicker[${renderCount}] render()` });
   const fieldDispatcher = useFieldDispatcher();
   const { name, label } = { ...field };
   const value = field.value as DateRange;

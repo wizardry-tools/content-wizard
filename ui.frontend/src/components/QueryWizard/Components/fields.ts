@@ -1,19 +1,11 @@
-import type { FieldCategories, FieldConfig, FieldsConfig } from '@/types';
+import type { FieldConfig, FieldsConfig } from '@/types';
 import type { ElementType } from 'react';
 import { targetTypes, contentTypes } from '@/constants';
-import { SimpleInput } from '@/components/QueryWizard/Components/SimpleInput';
-import { SimpleSelect } from '@/components/QueryWizard/Components/SimpleSelect';
-import { SimpleCheckbox } from '@/components/QueryWizard/Components/SimpleCheckbox';
-import { SimpleDatePicker } from '@/components/QueryWizard/Components/SimpleDatePicker';
-import { SimpleSlider } from '@/components/QueryWizard/Components/SimpleSlider';
-
-export const fieldCategories: FieldCategories = {
-  targeting: 'What are you looking for?',
-  authoring: 'Filter by Authoring activity',
-  replication: 'Filter by Replication activity',
-  msm: 'Filter for MSM content',
-  translation: 'Filter for Translated content',
-};
+import { WizardInput } from './WizardInput';
+import { WizardSelect } from './WizardSelect';
+import { WizardCheckbox } from './WizardCheckbox';
+import { WizardDatePicker } from './WizardDatePicker';
+import { WizardSlider } from './WizardSlider';
 
 export const Field = (field: FieldConfig) => {
   const render = field.render ?? true;
@@ -24,11 +16,11 @@ export const Field = (field: FieldConfig) => {
 };
 
 export const FieldTypes: Record<string, ElementType> = {
-  SimpleInput,
-  SimpleSelect,
-  SimpleCheckbox,
-  SimpleDatePicker,
-  SimpleSlider,
+  WizardInput: WizardInput,
+  WizardSelect: WizardSelect,
+  WizardCheckbox: WizardCheckbox,
+  WizardDatePicker: WizardDatePicker,
+  WizardSlider: WizardSlider,
 };
 
 /**
@@ -39,7 +31,7 @@ export const defaultFields: FieldsConfig = {
   path: Field({
     name: 'path',
     label: 'Content Path',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '/content/we-retail',
     required: true,
     category: 'targeting',
@@ -47,7 +39,7 @@ export const defaultFields: FieldsConfig = {
   type: Field({
     name: 'type',
     label: 'Content Type',
-    fieldType: FieldTypes.SimpleSelect,
+    fieldType: FieldTypes.WizardSelect,
     value: 'child',
     required: true,
     options: contentTypes,
@@ -56,7 +48,7 @@ export const defaultFields: FieldsConfig = {
   targetType: Field({
     name: 'targetType',
     label: 'Target Type',
-    fieldType: FieldTypes.SimpleSelect,
+    fieldType: FieldTypes.WizardSelect,
     value: 'text',
     options: targetTypes,
     category: 'targeting',
@@ -64,7 +56,7 @@ export const defaultFields: FieldsConfig = {
   targetResourceType: Field({
     name: 'targetResourceType',
     label: 'Target Resource Type',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => {
       const type = fields.targetType.value;
@@ -75,7 +67,7 @@ export const defaultFields: FieldsConfig = {
   fulltext: Field({
     name: 'fulltext',
     label: 'Text Search',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: 'winter',
     isDisabled: (fields: FieldsConfig) => {
       return fields.targetType.value !== 'text';
@@ -85,21 +77,21 @@ export const defaultFields: FieldsConfig = {
   createdBy: Field({
     name: 'createdBy',
     label: 'Created By',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     category: 'authoring',
   }),
   lastModifiedBy: Field({
     name: 'lastModifiedBy',
     label: 'Last Modified By',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     category: 'authoring',
   }),
   lastReplicatedBy: Field({
     name: 'lastReplicatedBy',
     label: 'Last Replicated By',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isUnpublished.value,
     category: 'replication',
@@ -107,7 +99,7 @@ export const defaultFields: FieldsConfig = {
   lastRolledoutBy: Field({
     name: 'lastRolledoutBy',
     label: 'Last Rolledout By',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
     category: 'msm',
@@ -115,28 +107,28 @@ export const defaultFields: FieldsConfig = {
   language: Field({
     name: 'language',
     label: 'Target Language',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     category: 'translation',
   }),
   created: Field({
     name: 'created',
     label: 'Creation',
-    fieldType: FieldTypes.SimpleDatePicker,
+    fieldType: FieldTypes.WizardDatePicker,
     value: null,
     category: 'authoring',
   }),
   lastModified: Field({
     name: 'lastModified',
     label: 'Last Modified',
-    fieldType: FieldTypes.SimpleDatePicker,
+    fieldType: FieldTypes.WizardDatePicker,
     value: null,
     category: 'authoring',
   }),
   lastReplicated: Field({
     name: 'lastReplicated',
     label: 'Last Replicated',
-    fieldType: FieldTypes.SimpleDatePicker,
+    fieldType: FieldTypes.WizardDatePicker,
     value: null,
     isDisabled: (fields: FieldsConfig) => !!fields.isUnpublished.value,
     category: 'replication',
@@ -144,7 +136,7 @@ export const defaultFields: FieldsConfig = {
   lastRolledout: Field({
     name: 'lastRolledout',
     label: 'Last Rolledout',
-    fieldType: FieldTypes.SimpleDatePicker,
+    fieldType: FieldTypes.WizardDatePicker,
     value: null,
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
     category: 'msm',
@@ -152,7 +144,7 @@ export const defaultFields: FieldsConfig = {
   isPublished: Field({
     name: 'isPublished',
     label: 'Is Published?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'Activate',
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isUnpublished.value || !!fields.isDeactivated.value,
@@ -161,7 +153,7 @@ export const defaultFields: FieldsConfig = {
   isUnpublished: Field({
     name: 'isUnpublished',
     label: 'Is Unpublished?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isPublished.value || !!fields.isDeactivated.value,
     category: 'replication',
@@ -169,7 +161,7 @@ export const defaultFields: FieldsConfig = {
   isDeactivated: Field({
     name: 'isDeactivated',
     label: 'Is Deactivated?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'Deactivate',
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isPublished.value || !!fields.isUnpublished.value,
@@ -178,7 +170,7 @@ export const defaultFields: FieldsConfig = {
   isBlueprint: Field({
     name: 'isBlueprint',
     label: 'Is Blueprint?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'cq:LiveSync',
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isLiveCopy.value,
@@ -187,7 +179,7 @@ export const defaultFields: FieldsConfig = {
   isLiveCopy: Field({
     name: 'isLiveCopy',
     label: 'Is LiveCopy?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     value: '',
     isDisabled: (fields: FieldsConfig) => !!fields.isBlueprint.value,
     category: 'msm',
@@ -195,7 +187,7 @@ export const defaultFields: FieldsConfig = {
   isSuspended: Field({
     name: 'isSuspended',
     label: 'Is Suspended?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'cq:LiveSyncCancelled',
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
@@ -204,7 +196,7 @@ export const defaultFields: FieldsConfig = {
   hasCancelledPropertyInheritance: Field({
     name: 'hasCancelledPropertyInheritance',
     label: 'Has Cancelled Property Inheritance?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'cq:PropertyLiveSyncCancelled',
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
@@ -213,7 +205,7 @@ export const defaultFields: FieldsConfig = {
   inheritanceCancelledProperty: Field({
     name: 'inheritanceCancelledProperty',
     label: 'Inheritance Cancelled for Property',
-    fieldType: FieldTypes.SimpleInput,
+    fieldType: FieldTypes.WizardInput,
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
     category: 'msm',
@@ -221,7 +213,7 @@ export const defaultFields: FieldsConfig = {
   hasLocalContent: Field({
     name: 'hasLocalContent',
     label: 'Has Local Content?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     value: '',
     //isDisabled: (config: any)=>!config.isLiveCopy,
     render: false, // need logic to support child node traversal, do not render until that is implemented
@@ -230,7 +222,7 @@ export const defaultFields: FieldsConfig = {
   hasMsmGhosts: Field({
     name: 'hasMsmGhosts',
     label: 'is MSM Ghost Components?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'wcm/msm/components/ghost',
     value: '',
     isDisabled: (fields: FieldsConfig) => !fields.isSuspended.value || fields.type.value !== 'child',
@@ -239,7 +231,7 @@ export const defaultFields: FieldsConfig = {
   isLanguageCopy: Field({
     name: 'isLanguageCopy',
     label: 'Is Language Copy?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     value: '',
     isDisabled: () => false, // TODO: is there ever a case where we can't search for language copies???,
     category: 'translation',
@@ -247,7 +239,7 @@ export const defaultFields: FieldsConfig = {
   hasBeenTranslated: Field({
     name: 'hasBeenTranslated',
     label: 'Has Been Translated?',
-    fieldType: FieldTypes.SimpleCheckbox,
+    fieldType: FieldTypes.WizardCheckbox,
     checkboxValue: 'APPROVED',
     value: '',
     // checkboxValue: ['READY_FOR_REVIEW', 'APPROVED'] // TODO when multi-value is being processed
@@ -257,7 +249,7 @@ export const defaultFields: FieldsConfig = {
   limit: Field({
     name: 'limit',
     label: 'Limit Results',
-    fieldType: FieldTypes.SimpleSlider,
+    fieldType: FieldTypes.WizardSlider,
     value: 100,
     category: 'targeting',
   }),

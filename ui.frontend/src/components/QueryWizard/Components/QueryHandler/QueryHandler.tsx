@@ -1,7 +1,7 @@
-import { QueryButton } from '@/components/QueryWizard/Components';
+import { useCallback } from 'react';
 import type { QueryHandlerProps, DoQueryProps, QueryRunnerResponse, Result } from '@/types';
 import { useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatcher } from '@/providers';
-import { useCallback } from 'react';
+import { QueryButton } from '../QueryButton';
 
 export function QueryHandler({ onResults }: QueryHandlerProps) {
   const query = useQuery();

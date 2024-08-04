@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Slider, InputLabel, Tooltip } from '@mui/material';
-import type { NumberValue, SimpleSliderProps } from '@/types';
+import type { NumberValue, WizardSliderProps } from '@/types';
 import { useDebounce, useRenderCount } from '@/utility';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { FormGrid } from './FormGrid';
 
-export const SimpleSlider = ({ min = -1, max = 1000, step = 10, defaultValue, field }: SimpleSliderProps) => {
+export const WizardSlider = ({ min = -1, max = 1000, step = 10, defaultValue, field }: WizardSliderProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
-  logger.debug({ message: `SimpleSlider[${renderCount}] render()` });
+  logger.debug({ message: `WizardSlider[${renderCount}] render()` });
   const fieldDispatcher = useFieldDispatcher();
   const initialValue = useRef(defaultValue);
   const [value, setValue] = useState(initialValue.current);

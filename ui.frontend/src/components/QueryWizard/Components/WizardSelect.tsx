@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import { InputLabel, Select, MenuItem, FormControl, Paper } from '@mui/material';
-import type { InputValue, SimpleInputProps } from '@/types';
+import type { InputValue, WizardInputProps } from '@/types';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import { FormGrid } from './FormGrid';
 
-export const SimpleSelect = ({ field, disabled }: SimpleInputProps) => {
+export const WizardSelect = ({ field, disabled }: WizardInputProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
-  logger.debug({ message: `SimpleSelect[${renderCount}] render()` });
+  logger.debug({ message: `WizardSelect[${renderCount}] render()` });
   const { name, label, required, options } = field;
   const [value, setValue] = useState(field.value);
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.

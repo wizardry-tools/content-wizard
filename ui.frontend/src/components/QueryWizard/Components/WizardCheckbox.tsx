@@ -1,15 +1,15 @@
 import { useCallback, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import type { SimpleInputProps } from '@/types';
+import type { WizardInputProps } from '@/types';
 import { useRenderCount } from '@/utility';
 import { useFieldDispatcher, useLogger } from '@/providers';
 import { FormGrid } from './FormGrid';
 
-export const SimpleCheckbox = ({ field, disabled }: SimpleInputProps) => {
+export const WizardCheckbox = ({ field, disabled }: WizardInputProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
-  logger.debug({ message: `SimpleCheckbox[${renderCount}] render()` });
+  logger.debug({ message: `WizardCheckbox[${renderCount}] render()` });
   const { name, label, checkboxValue = true, required } = { ...field };
   const [value, setValue] = useState('');
   const fieldDispatcher = useFieldDispatcher();
