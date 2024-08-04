@@ -13,7 +13,7 @@ const buttonStackStyles = () => {
   };
 };
 
-export function QueryWizard({ onViewPanelSelect }: QueryWizardProps) {
+export const QueryWizard = ({ onViewPanelSelect }: QueryWizardProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `QueryWizard[${renderCount}] render()` });
@@ -41,4 +41,4 @@ export function QueryWizard({ onViewPanelSelect }: QueryWizardProps) {
       </Stack>
     </Paper>
   );
-}
+};

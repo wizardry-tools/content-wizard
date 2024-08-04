@@ -6,13 +6,13 @@ import { predicates } from '@/components/QueryWizard/Components';
 export const FieldsConfigContext = createContext<FieldsConfig>(null!);
 export const FieldConfigDispatchContext = createContext<Dispatch<FieldConfigAction>>(null!);
 
-export function useFields() {
+export const useFields = () => {
   return useContext(FieldsConfigContext);
-}
+};
 
-export function useFieldDispatcher() {
+export const useFieldDispatcher = () => {
   return useContext(FieldConfigDispatchContext);
-}
+};
 
 /**
  * QueryFilter Actions???
@@ -20,7 +20,7 @@ export function useFieldDispatcher() {
  * @param fields
  * @param action
  */
-export function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigAction): FieldsConfig {
+export const fieldConfigReducer = (fields: FieldsConfig, action: FieldConfigAction): FieldsConfig => {
   switch (action.type) {
     case 'UPDATE_VALUE': {
       const key = action.name;
@@ -38,7 +38,7 @@ export function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigActi
       throw Error(`Unknown Query Filter Action ${action.type as string}`);
     }
   }
-}
+};
 
 /**
  * This method takes an InputValue, a PredicateConfig, the entire FieldsConfig,
@@ -48,7 +48,12 @@ export function fieldConfigReducer(fields: FieldsConfig, action: FieldConfigActi
  * @param fields
  * @param index
  */
-function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, fields: FieldsConfig, index?: number) {
+const buildPredicateStatement = (
+  value: InputValue,
+  predicate: PredicateConfig,
+  fields: FieldsConfig,
+  index?: number,
+) => {
   const dateRange = value as DateRange;
   const { rawInject, property, configInject, operation } = { ...predicate };
 
@@ -96,7 +101,7 @@ function buildPredicateStatement(value: InputValue, predicate: PredicateConfig, 
     predicateString += `${prefix}upperBound=${dateRange.upperBound.format()}\n`;
   }
   return predicateString;
-}
+};
 
 /**
  * This method takes a FieldsConfig and loops through it, checking the

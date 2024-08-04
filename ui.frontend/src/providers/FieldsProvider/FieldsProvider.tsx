@@ -13,7 +13,7 @@ import { FieldConfigDispatchContext, fieldConfigReducer, FieldsConfigContext, ge
  * @param children
  * @constructor
  */
-export function FieldsProvider({ children }: FieldsProviderProps) {
+export const FieldsProvider = ({ children }: FieldsProviderProps) => {
   // use a Ref instead of a hook, so that the main effect isn't running more than it should.
   const renderCount = useRef(0);
   const logger = useLogger();
@@ -51,4 +51,4 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
       <FieldConfigDispatchContext.Provider value={configDispatcher}>{children}</FieldConfigDispatchContext.Provider>
     </FieldsConfigContext.Provider>
   );
-}
+};

@@ -7,7 +7,7 @@ import { ExplorerContext } from '../../ExplorerContext';
 import { ExplorerContextProvider } from '../../ExplorerContextProvider';
 import { DocExplorer } from '../doc-explorer';
 
-function makeSchema(fieldName = 'field') {
+const makeSchema = (fieldName = 'field') => {
   return new GraphQLSchema({
     description: 'GraphQL Schema for testing',
     query: new GraphQLObjectType({
@@ -24,7 +24,7 @@ function makeSchema(fieldName = 'field') {
       },
     }),
   });
-}
+};
 
 const isFetchingNotRef = { current: false };
 const isFetchingRef = { current: true };
@@ -44,13 +44,13 @@ const withErrorSchemaContext: SchemaContextType = {
   validationErrors: [],
 };
 
-function DocExplorerWithContext() {
+const DocExplorerWithContext = () => {
   return (
     <ExplorerContextProvider>
       <DocExplorer />
     </ExplorerContextProvider>
   );
-}
+};
 
 describe('DocExplorer', () => {
   it('renders spinner when the schema is loading', () => {

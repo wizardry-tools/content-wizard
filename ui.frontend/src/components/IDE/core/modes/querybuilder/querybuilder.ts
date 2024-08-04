@@ -4,7 +4,7 @@ import CodeMirror from 'codemirror';
 import type { QueryBuilderPropertiesState } from '@/types';
 
 (() => {
-  CodeMirror.defineMode('querybuilder', function () {
+  CodeMirror.defineMode('querybuilder', () => {
     return {
       token: (stream: CodeMirror.StringStream, state: QueryBuilderPropertiesState) => {
         const sol = stream.sol() || state.afterSection;

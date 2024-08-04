@@ -12,7 +12,7 @@ import { ViewPanel } from '../ViewPanel';
  * @param onViewPanelSelect {ViewPanelSelectCallback} a callback that accepts a number from the {@link SwipeableViews} when a new {@linik ViewPanel} is selected.
  * @constructor
  */
-export function Views({ selectedView, onViewPanelSelect }: ViewsProps) {
+export const Views = ({ selectedView, onViewPanelSelect }: ViewsProps) => {
   const logger = useLogger();
   logger.debug({ message: 'ContentWizard/Views render()' });
   const theme = useTheme();
@@ -38,4 +38,4 @@ export function Views({ selectedView, onViewPanelSelect }: ViewsProps) {
       </SwipeableViews>
     </Box>
   );
-}
+};

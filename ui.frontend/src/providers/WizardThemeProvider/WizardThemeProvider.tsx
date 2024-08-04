@@ -18,7 +18,7 @@ import {
   ThemeDispatcherContext,
 } from './context';
 
-export function WizardThemeProvider(props: PropsWithChildren) {
+export const WizardThemeProvider = (props: PropsWithChildren) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `WizardThemeProvider[${renderCount}] render()` });
@@ -128,4 +128,4 @@ export function WizardThemeProvider(props: PropsWithChildren) {
       </IDEThemeContext.Provider>
     </>
   );
-}
+};

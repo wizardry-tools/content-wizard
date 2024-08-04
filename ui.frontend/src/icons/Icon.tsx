@@ -1,15 +1,15 @@
 import type { ComponentProps, FC } from 'react';
 
-export function Icon(RawComponent: string, titleProp?: string): FC<ComponentProps<'svg'>> {
+export const Icon = (RawComponent: string, titleProp?: string): FC<ComponentProps<'svg'>> => {
   const title = titleProp ?? extractName(RawComponent) ?? 'untitled svg';
-  function IconComponent(props: ComponentProps<'svg'>) {
+  const IconComponent = (props: ComponentProps<'svg'>) => {
     return <RawComponent {...props} />;
-  }
+  };
   IconComponent.displayName = title;
   return IconComponent;
-}
+};
 
-function extractName(RawComponent: unknown) {
+const extractName = (RawComponent: unknown) => {
   if (
     RawComponent &&
     typeof RawComponent === 'object' &&
@@ -27,4 +27,4 @@ function extractName(RawComponent: unknown) {
   } else {
     return undefined;
   }
-}
+};

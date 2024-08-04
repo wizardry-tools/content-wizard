@@ -76,7 +76,7 @@ import type { ModeOptions, SqlState } from '@/types';
       ) {
         // escape constant: E'str', e'str'
         // ref: https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS-ESCAPE
-        state.tokenize = function (stream, state) {
+        state.tokenize = (stream, state) => {
           return (state.tokenize = tokenLiteral(stream.next(), true))(stream, state);
         };
         return 'keyword';
@@ -162,7 +162,7 @@ import type { ModeOptions, SqlState } from '@/types';
       };
     };
     const tokenComment = (depth: number) => {
-      return function (stream: CodeMirror.StringStream, state: SqlState) {
+      return (stream: CodeMirror.StringStream, state: SqlState) => {
         const m = stream.match(/^.*?(\/\*|\*\/)/);
         if (!m) stream.skipToEnd();
         else if (m[1] === '/*') state.tokenize = tokenComment(depth + 1);

@@ -5,7 +5,7 @@ import { usePluginContext } from './PluginContext';
 
 export const DOC_EXPLORER_PLUGIN: GraphiQLPlugin = {
   title: 'Documentation Explorer',
-  icon: function Icon() {
+  icon: () => {
     const pluginContext = usePluginContext();
     return pluginContext?.visiblePlugin === DOC_EXPLORER_PLUGIN ? <DocsFilledIcon /> : <DocsIcon />;
   },

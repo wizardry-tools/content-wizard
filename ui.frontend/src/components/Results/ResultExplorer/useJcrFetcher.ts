@@ -18,7 +18,7 @@ export const useJcrFetcher = ({ fetching }: FetcherProps) => {
         // refuse to fetch if it's already fetching.
         return;
       }
-      async function fetchData(): Promise<ResultData> {
+      const fetchData = async (): Promise<ResultData> => {
         if (path) {
           const url = `${path}.${depth}.json`;
           try {
@@ -41,7 +41,7 @@ export const useJcrFetcher = ({ fetching }: FetcherProps) => {
           }
         }
         return defaultResult;
-      }
+      };
 
       fetchData()
         .then((responseData) => {

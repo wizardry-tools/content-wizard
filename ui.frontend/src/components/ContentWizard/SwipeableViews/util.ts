@@ -27,7 +27,7 @@ export type ComputeIndexProps = PropsWithChildren & {
   viewLength: number;
   resistance?: boolean;
 };
-export function computeIndex(params: ComputeIndexProps) {
+export const computeIndex = (params: ComputeIndexProps) => {
   const { children, startIndex, startX, pageX, viewLength, resistance } = params;
 
   const indexMax = Children.count(children) - 1;
@@ -53,31 +53,31 @@ export function computeIndex(params: ComputeIndexProps) {
     computedIndex,
     computedX: newStartX,
   };
-}
+};
 
-export function adaptMouse<T>(event: MouseEvent<T>) {
+export const adaptMouse = <T>(event: MouseEvent<T>) => {
   const { ...eventProps } = event;
   const touches = [{ pageX: event.pageX, pageY: event.pageY }];
   return {
     ...eventProps,
     touches,
   };
-}
+};
 
-export function createTransition(property: string, options: SpringConfig): string {
+export const createTransition = (property: string, options: SpringConfig): string => {
   const { duration, easeFunction, delay } = options;
 
   return `${property} ${duration} ${easeFunction} ${delay}`;
-}
+};
 
-export function applyRotationMatrix(touch: SwipeableTouch, axis: Axis) {
+export const applyRotationMatrix = (touch: SwipeableTouch, axis: Axis) => {
   const rotationMatrix: Position = axisProperties.rotationMatrix[axis];
 
   return {
     pageX: rotationMatrix.x[0] * touch.pageX + rotationMatrix.x[1] * touch.pageY,
     pageY: rotationMatrix.y[0] * touch.pageX + rotationMatrix.y[1] * touch.pageY,
   };
-}
+};
 
 export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlideProps) => {
   let displaySameSlide = false;
@@ -101,7 +101,7 @@ export const getDisplaySameSlide = ({ previousProps, props }: DisplaySameSlidePr
   return displaySameSlide;
 };
 
-export function getDomTreeShapes(element: HTMLDivElement | undefined, rootNode: HTMLDivElement): DomTreeShape[] {
+export const getDomTreeShapes = (element: HTMLDivElement | undefined, rootNode: HTMLDivElement): DomTreeShape[] => {
   let domTreeShapes: DomTreeShape[] = [];
 
   while (element && element !== rootNode && element !== document.body) {
@@ -140,9 +140,9 @@ export function getDomTreeShapes(element: HTMLDivElement | undefined, rootNode: 
   }
 
   return domTreeShapes;
-}
+};
 
-export function findNativeHandler(params: NativeHandlerParams) {
+export const findNativeHandler = (params: NativeHandlerParams) => {
   const { domTreeShapes, pageX, startX, axis, nodeReference } = params;
 
   return domTreeShapes.some((shape: DomTreeShape) => {
@@ -168,7 +168,7 @@ export function findNativeHandler(params: NativeHandlerParams) {
 
     return false;
   });
-}
+};
 
 export const checkIndexBounds = (props: IndexBoundsCheck) => {
   const { index, children } = props;

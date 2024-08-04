@@ -151,14 +151,14 @@ export const useDragResize = ({
     const adjacentRectProperty = direction === 'horizontal' ? 'right' : 'bottom';
     const sizeProperty = direction === 'horizontal' ? 'clientWidth' : 'clientHeight';
 
-    function handleMouseDown(downEvent: MouseEvent) {
+    const handleMouseDown = (downEvent: MouseEvent) => {
       downEvent.preventDefault();
 
       // Distance between the start of the drag bar and the exact point where
       // the user clicked on the drag bar.
       const offset = downEvent[eventProperty] - dragBarContainer.getBoundingClientRect()[rectProperty];
 
-      function handleMouseMove(moveEvent: MouseEvent) {
+      const handleMouseMove = (moveEvent: MouseEvent) => {
         if (moveEvent.buttons === 0) {
           handleMouseUp();
           return;
@@ -187,26 +187,26 @@ export const useDragResize = ({
           firstContainer.style.flex = newFlex;
           store(newFlex);
         }
-      }
+      };
 
-      function handleMouseUp() {
+      const handleMouseUp = () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
-      }
+      };
 
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-    }
+    };
 
     dragBarContainer.addEventListener('mousedown', handleMouseDown);
 
-    function reset() {
+    const reset = () => {
       if (firstRef.current) {
         firstRef.current.style.flex = defaultFlexRef.current;
       }
       store(defaultFlexRef.current);
       setHiddenElementWithCallback(null);
-    }
+    };
 
     dragBarContainer.addEventListener('dblclick', reset);
 

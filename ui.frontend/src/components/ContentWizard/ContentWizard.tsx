@@ -13,7 +13,7 @@ import './ContentWizard.scss';
  * of the {@link ContentWizardProvider}.
  * @constructor
  */
-export function ContentWizard() {
+export const ContentWizard = () => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `ContentWizard[${renderCount}] render()` });
@@ -22,14 +22,14 @@ export function ContentWizard() {
       <ContentWizardInterface />
     </ContentWizardProvider>
   );
-}
+};
 
 /**
  * This is the nested child of ContentWizard. It contains the logic controllers for the {@link ViewPanel} selection
  * and the initialization of the {@link IDEProvider}.
  * @constructor
  */
-function ContentWizardInterface() {
+const ContentWizardInterface = () => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `ContentWizardInterface[${renderCount}] render()` });
@@ -57,4 +57,4 @@ function ContentWizardInterface() {
       </Box>
     </IDEProvider>
   );
-}
+};

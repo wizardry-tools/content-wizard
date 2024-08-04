@@ -3,7 +3,7 @@ import type { QueryHandlerProps, DoQueryProps, QueryRunnerResponse, Result } fro
 import { useQuery, useQueryDispatcher, useQueryRunner, useResultsDispatcher } from '@/providers';
 import { QueryButton } from '../QueryButton';
 
-export function QueryHandler({ onResults }: QueryHandlerProps) {
+export const QueryHandler = ({ onResults }: QueryHandlerProps) => {
   const query = useQuery();
   const queryDispatcher = useQueryDispatcher();
   const resultsDispatcher = useResultsDispatcher();
@@ -22,7 +22,7 @@ export function QueryHandler({ onResults }: QueryHandlerProps) {
   };
 
   return <QueryButton disabled={isDisabled()} isRunning={isRunning()} onClick={handleClick} />;
-}
+};
 
 /**
  * This callback is responsible for making the calls between

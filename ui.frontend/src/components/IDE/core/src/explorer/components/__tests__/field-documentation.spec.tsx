@@ -54,7 +54,7 @@ const exampleObject = new GraphQLObjectType({
   },
 });
 
-function FieldDocumentationWithContext(props: { field: ExplorerFieldDef }) {
+const FieldDocumentationWithContext = (props: { field: ExplorerFieldDef }) => {
   return (
     <ExplorerContext.Provider
       value={mockExplorerContextValue({
@@ -65,7 +65,7 @@ function FieldDocumentationWithContext(props: { field: ExplorerFieldDef }) {
       <FieldDocumentation field={props.field} />
     </ExplorerContext.Provider>
   );
-}
+};
 
 describe('FieldDocumentation', () => {
   it('should render a simple string field', () => {

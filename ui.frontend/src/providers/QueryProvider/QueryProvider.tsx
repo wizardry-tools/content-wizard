@@ -13,7 +13,7 @@ import {
   QueryRunnerContext,
 } from './context';
 
-export function QueryProvider({ children }: PropsWithChildren) {
+export const QueryProvider = ({ children }: PropsWithChildren) => {
   useStorageContext();
   const logger = useLogger();
   const renderCount = useRenderCount();
@@ -93,4 +93,4 @@ export function QueryProvider({ children }: PropsWithChildren) {
       </IsGraphQLContext.Provider>
     </QueryContext.Provider>
   );
-}
+};

@@ -20,7 +20,7 @@ const variableMatch = /^\w+:?\w+[,*=\s\])}]?/;
 const atoms = set('or and like order by');
 
 (() => {
-  CodeMirror.defineMode('xpath', function () {
+  CodeMirror.defineMode('xpath', () => {
     return {
       token: (stream: CodeMirror.StringStream, state: XpathPropertiesState) => {
         const sol = stream.sol() ?? state.afterSection;

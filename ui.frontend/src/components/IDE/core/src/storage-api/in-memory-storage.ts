@@ -1,6 +1,6 @@
 import type { WizardStorage } from '@/types';
 
-export function createInMemoryStorage(): WizardStorage {
+export const createInMemoryStorage = (): WizardStorage => {
   const store: Record<string, string> = {};
 
   return {
@@ -22,4 +22,4 @@ export function createInMemoryStorage(): WizardStorage {
       }
     },
   };
-}
+};

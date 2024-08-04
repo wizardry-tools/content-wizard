@@ -32,11 +32,11 @@ export const Search = () => {
   }, [debouncedGetSearchResults, searchValue]);
 
   useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey && event.key === 'k') {
         inputRef.current?.focus();
       }
-    }
+    };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {

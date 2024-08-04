@@ -7,7 +7,7 @@ import { useQuery } from '../QueryProvider';
 import { useLogger } from '../LoggingProvider';
 import { FetcherContext } from './context';
 
-export function FetcherProvider({ children }: FetcherProviderProps) {
+export const FetcherProvider = ({ children }: FetcherProviderProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `FetcherProvider[${renderCount}] render()` });
@@ -73,4 +73,4 @@ export function FetcherProvider({ children }: FetcherProviderProps) {
   const value: Fetcher = useMemo(() => createQueryFetcher(query, onResults), [createQueryFetcher, query, onResults]);
 
   return <FetcherContext.Provider value={value}>{children}</FetcherContext.Provider>;
-}
+};

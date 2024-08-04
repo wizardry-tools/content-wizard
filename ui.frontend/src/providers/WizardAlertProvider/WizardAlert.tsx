@@ -32,13 +32,13 @@ export const WizardAlert = () => {
     if (message) {
       setShow(true);
 
-      function onTimeout() {
+      const onTimeout = () => {
         if (hover) {
           return;
         }
         setShow(false);
         alertDispatcher({ message: '' });
-      }
+      };
 
       const timeoutId = setTimeout(onTimeout, alertTimeout);
 

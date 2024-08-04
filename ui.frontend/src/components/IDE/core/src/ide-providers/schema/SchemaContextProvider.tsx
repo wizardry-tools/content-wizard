@@ -194,11 +194,11 @@ export const SchemaContextProvider = (props: SchemaContextProviderProps) => {
    */
   useEffect(() => {
     if (language !== 'GraphQL') {
-      function triggerIntrospection(event: KeyboardEvent) {
+      const triggerIntrospection = (event: KeyboardEvent) => {
         if (event.ctrlKey && event.key === 'R') {
           introspect();
         }
-      }
+      };
 
       window.addEventListener('keydown', triggerIntrospection);
       return () => {
