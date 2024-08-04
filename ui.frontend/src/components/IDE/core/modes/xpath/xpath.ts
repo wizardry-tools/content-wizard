@@ -4,14 +4,14 @@ import CodeMirror from 'codemirror';
 import type { XpathPropertiesState } from '@/types';
 
 // turn a space-separated list into an array
-function set(str: string) {
+const set = (str: string) => {
   const obj: Record<string, boolean> = {},
     words = str.split(' ');
   words.forEach((word) => {
     obj[word] = true;
   });
   return obj;
-}
+};
 
 const pathMatch = /^[\w\-/:]*\/\//;
 const functionMatch = /^[\w:]+\(/;
@@ -20,9 +20,9 @@ const variableMatch = /^\w+:?\w+[,*=\s\])}]?/;
 const atoms = set('or and like order by');
 
 (() => {
-  CodeMirror.defineMode('xpath', function () {
+  CodeMirror.defineMode('xpath', () => {
     return {
-      token: function (stream: CodeMirror.StringStream, state: XpathPropertiesState) {
+      token: (stream: CodeMirror.StringStream, state: XpathPropertiesState) => {
         const sol = stream.sol() ?? state.afterSection;
 
         state.afterSection = false;
@@ -77,7 +77,7 @@ const atoms = set('or and like order by');
         }
       },
 
-      startState: function () {
+      startState: () => {
         return {
           position: 'path', // Current position, "def", "quote" or "comment"
           nextMultiline: false, // Is the next line multiline value

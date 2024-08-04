@@ -3,9 +3,9 @@ import type { ElementType } from 'react';
 import { Accordion as MuiAccordion, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AccordionTabProps } from '@/types';
+import { fieldCategories } from '@/constants';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
-import { fieldCategories } from '@/components/QueryWizard/Components/fields';
 import { FormGrid } from './FormGrid';
 
 export const AccordionTab = (props: AccordionTabProps) => {

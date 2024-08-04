@@ -4,11 +4,6 @@ import { clsx } from 'clsx';
 import type { ButtonProps } from '@/types';
 import './button.scss';
 
-export const UnStyledButton = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button']>((props, ref) => (
-  <button {...props} ref={ref} className={clsx('wizard-un-styled', props.className)} />
-));
-UnStyledButton.displayName = 'UnStyledButton';
-
 export const Button = forwardRef<HTMLButtonElement, ButtonProps & JSX.IntrinsicElements['button']>((props, ref) => (
   <button
     {...props}

@@ -1,7 +1,7 @@
 import type { WizardAlertProps, WizardStorage, WizardStorageAPI, WizardStorageAPIProps } from '@/types';
 import { createInMemoryStorage } from './in-memory-storage';
 
-function isQuotaError(storage: WizardStorage, e: unknown) {
+const isQuotaError = (storage: WizardStorage, e: unknown) => {
   return (
     e instanceof DOMException &&
     // everything except Firefox
@@ -16,9 +16,9 @@ function isQuotaError(storage: WizardStorage, e: unknown) {
     // acknowledge QuotaExceededError only if there's something already stored
     storage.length !== 0
   );
-}
+};
 
-export function buildStorage(storage: WizardStorage | null | undefined) {
+export const buildStorage = (storage: WizardStorage | null | undefined) => {
   if (storage) {
     return storage;
   } else if (typeof window !== 'undefined') {
@@ -49,7 +49,7 @@ export function buildStorage(storage: WizardStorage | null | undefined) {
   } else {
     return createInMemoryStorage();
   }
-}
+};
 
 export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorageAPI => {
   const alertDispatcher =
@@ -59,7 +59,7 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorage
     });
   const storage: WizardStorage = buildStorage(props.storage);
 
-  function get(name: string): string | null {
+  const get = (name: string): string | null => {
     if (!storage) {
       return null;
     }
@@ -72,9 +72,9 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorage
       return null;
     }
     return value ?? null;
-  }
+  };
 
-  function set(name: string, value: string): { isQuotaError: boolean; error: Error | null } {
+  const set = (name: string, value: string): { isQuotaError: boolean; error: Error | null } => {
     let quotaError = false;
     let error: Error | null = null;
 
@@ -99,13 +99,13 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorage
     }
 
     return { isQuotaError: quotaError, error };
-  }
+  };
 
-  function clear() {
+  const clear = () => {
     if (storage) {
       storage.clear();
     }
-  }
+  };
 
   return {
     storage,

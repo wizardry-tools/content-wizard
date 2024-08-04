@@ -11,7 +11,7 @@ import {
 } from '@/components/IDE/core/src';
 import { useLogger } from '../LoggingProvider';
 
-export function IDEProvider({ children }: IDEProviderProps) {
+export const IDEProvider = ({ children }: IDEProviderProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `IDEProvider[${renderCount}] render()` });
@@ -31,4 +31,4 @@ export function IDEProvider({ children }: IDEProviderProps) {
       </EditorContextProvider>
     </HistoryContextProvider>
   );
-}
+};

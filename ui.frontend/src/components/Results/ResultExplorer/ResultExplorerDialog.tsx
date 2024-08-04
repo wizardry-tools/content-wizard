@@ -14,24 +14,32 @@ import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import type { ResultData, ResultExplorerDialogProps } from '@/types';
+import {
+  ASSET_EDITOR,
+  CF_PROP,
+  CONTENT_EDITOR,
+  CONTENT_NODE,
+  CRX_DE_PATH,
+  DAM_PATH,
+  PAGE_PROPERTIES_EDITOR,
+  XF_PATH,
+} from '@/constants';
 import { escapeColon, escapeUrl } from '@/utility';
 import { ResultExplorer } from './ResultExplorer';
-import { useFetcher } from './fetcher';
+import { useJcrFetcher } from './useJcrFetcher';
 
-export const DAM_PATH = '/dam';
-export const XF_PATH = '/experience-fragments';
-export const CRX_DE_PATH = '/crx/de/index.jsp#';
-export const CONTENT_NODE = '/jcr:content';
-export const CF_PROP = 'contentFragment';
-export const ASSET_EDITOR = '/mnt/overlay/dam/gui/content/assets/metadataeditor.external.html?_charset_=utf-8&item=';
-// used by Pages, XFs, and CFs
-export const CONTENT_EDITOR = '/editor.html';
-// used by Pages and XFs
-export const PAGE_PROPERTIES_EDITOR = '/mnt/overlay/wcm/core/content/sites/properties.html?item=';
-
+/**
+ * This Component represents the {@link Dialog} that appears when Exploring Results.
+ * This Component will contain the UI Elements scoped to the {@link Dialog},
+ * such as background, container, and close buttons.
+ * It also contains convenient shortcuts to AEM UIs for content analysis or authoring.
+ * It also contains the {@link ResultExplorer}, which has further UI elements.
+ * @param props
+ * @constructor
+ */
 export const ResultExplorerDialog = ({ open, closeHandler, path }: ResultExplorerDialogProps) => {
   const fetching = useRef(false);
-  const fetcher = useFetcher({ fetching });
+  const fetcher = useJcrFetcher({ fetching });
 
   const isContent = useMemo(() => path.includes(CONTENT_NODE), [path]);
   // Pages and XFs have the same conditions and authoring options

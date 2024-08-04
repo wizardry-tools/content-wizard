@@ -10,7 +10,8 @@ import { ResultTableFooter } from './ResultTableFooter';
 import { ResultTableHead } from './ResultTableHead';
 
 /**
- * This is the root of the Data Table that displays the Results Data
+ * This is the root of the Data {@link Table} that displays the {@link Result}s Data.
+ * Features: Sorting, Filtering, Pagination, Exporting, Exploring, and Packaging.
  * @constructor
  */
 export const ResultTable = () => {

@@ -10,7 +10,9 @@ import { FormGrid } from '@/components/QueryWizard/Components';
 import { useRenderCount } from '@/utility';
 
 /**
- * This component controls all Packaging logic.
+ * This component controls all Packaging UI Elements.
+ *
+ * See the {@link PackagingProvider} for more implementation details.
  *
  * Sequence:
  *    1. Create Package

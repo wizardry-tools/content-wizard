@@ -2,9 +2,9 @@ import { isType } from 'graphql';
 import type { ReactNode } from 'react';
 
 import { ChevronLeftIcon } from '@/icons';
-import { useSchemaContext } from '../../schema';
+import { useSchemaContext } from '../../ide-providers';
 import { Spinner } from '../../ui';
-import { useExplorerContext } from '../context';
+import { useExplorerContext } from '../ExplorerContext';
 import { FieldDocumentation } from './field-documentation';
 import { SchemaDocumentation } from './schema-documentation';
 import { Search } from './search';
@@ -13,7 +13,7 @@ import { TypeDocumentation } from './type-documentation';
 import './doc-explorer.scss';
 import { Link } from '@mui/material';
 
-export function DocExplorer() {
+export const DocExplorer = () => {
   const { fetchError, isFetching, schema, validationErrors } = useSchemaContext({ nonNull: true, caller: DocExplorer });
   const { explorerNavStack, pop } = useExplorerContext({
     nonNull: true,
@@ -71,4 +71,4 @@ export function DocExplorer() {
       <div className="wizard-doc-explorer-content">{content}</div>
     </section>
   );
-}
+};

@@ -1,8 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { WizardAlertProvider, useAlertContext, useAlertDispatcher } from '@/providers';
 
-vi.mock('./LoggingProvider');
-
 const TestComponent = () => {
   const { message, severity } = useAlertContext();
   const dispatchAlert = useAlertDispatcher();
@@ -26,6 +24,8 @@ const TestComponent = () => {
 };
 
 describe('WizardAlertProvider', () => {
+  vi.mock('./LoggingProvider');
+
   it('provides default context values', () => {
     render(
       <WizardAlertProvider>

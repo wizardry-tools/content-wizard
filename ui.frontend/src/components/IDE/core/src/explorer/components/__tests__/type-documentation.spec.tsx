@@ -10,12 +10,12 @@ import {
   GraphQLUnionType,
 } from 'graphql';
 
-import { SchemaContext } from '../../../schema';
-import { ExplorerContext } from '../../context';
+import { SchemaContext } from '../../../ide-providers';
+import { ExplorerContext } from '../../ExplorerContext';
 import { TypeDocumentation } from '../type-documentation';
 import { mockExplorerContextValue, unwrapType } from './test-utils';
 
-function TypeDocumentationWithContext(props: { type: GraphQLNamedType }) {
+const TypeDocumentationWithContext = (props: { type: GraphQLNamedType }) => {
   return (
     <SchemaContext.Provider
       value={{
@@ -36,7 +36,7 @@ function TypeDocumentationWithContext(props: { type: GraphQLNamedType }) {
       </ExplorerContext.Provider>
     </SchemaContext.Provider>
   );
-}
+};
 
 describe('TypeDocumentation', () => {
   it('renders a top-level query object type', () => {

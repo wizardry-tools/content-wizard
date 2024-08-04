@@ -1,5 +1,5 @@
-import { useCreateFetcher } from '../useCreateFetcher';
 import { renderHook } from '@testing-library/react';
+import { useCreateFetcher } from '../useCreateFetcher';
 
 // Describe block encapsulates all the test cases related to useCreateFetcher function
 describe('useCreateFetcher', () => {

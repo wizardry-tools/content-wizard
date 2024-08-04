@@ -3,7 +3,7 @@ import type { SyntheticEvent } from 'react';
 import { Paper } from '@mui/material';
 import { useFields, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
-import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './index';
+import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './fields';
 import { AccordionTab } from './AccordionTab';
 
 export const Accordion = () => {

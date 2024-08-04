@@ -3,9 +3,9 @@
  * but excludes 'txt' and 'css' as those are just JSON exports
  * with different file extensions.
  */
-import type { AllowedExportType, Order, Result, ResultProp, ResultsContextProps, ResultsDispatchProps } from '@/types';
 import { createContext, useContext } from 'react';
 import type { Dispatch } from 'react';
+import type { AllowedExportType, Order, Result, ResultProp, ResultsContextProps, ResultsDispatchProps } from '@/types';
 
 export const allowedExportTypes: { [T in AllowedExportType]: T } = {
   html: 'html',
@@ -37,7 +37,7 @@ export const ResultsDispatchContext = createContext<Dispatch<ResultsDispatchProp
  * @param filter string
  * @return Result[]
  */
-export function filterResults(results: Result[], filter: string): Result[] {
+export const filterResults = (results: Result[], filter: string): Result[] => {
   if (!filter) {
     return results;
   }
@@ -46,7 +46,7 @@ export function filterResults(results: Result[], filter: string): Result[] {
   return results.filter((result) => {
     return Object.values(result).some((value) => value.toString().toLocaleLowerCase().includes(lowerCaseFilter));
   });
-}
+};
 
 /**
  * This method is a basic object Comparator
@@ -55,7 +55,7 @@ export function filterResults(results: Result[], filter: string): Result[] {
  * @param orderBy keyof T
  * @return number
  */
-export function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
+export const descendingComparator = <T>(a: T, b: T, orderBy: keyof T): number => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -63,7 +63,7 @@ export function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
     return 1;
   }
   return 0;
-}
+};
 
 /**
  * This method builds and returns a callback containing a descending Comparator based on the Order
@@ -71,14 +71,14 @@ export function descendingComparator<T>(a: T, b: T, orderBy: keyof T): number {
  * @param orderBy
  * @return (a: T, b: T) => number
  */
-export function getComparator<Key extends keyof Result>(
+export const getComparator = <Key extends keyof Result>(
   order: Order,
   orderBy: Key,
-): (a: { [key in Key]: ResultProp }, b: { [key in Key]: ResultProp }) => number {
+): ((a: { [key in Key]: ResultProp }, b: { [key in Key]: ResultProp }) => number) => {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
-}
+};
 
 /**
  * This method is responsible for reading through an Array of Objects and sorting the Objects
@@ -92,7 +92,7 @@ export function getComparator<Key extends keyof Result>(
  * @param comparator (a: T, b: T) => number
  *
  */
-export function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T[] {
+export const stableSort = <T>(array: T[], comparator: (a: T, b: T) => number): T[] => {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -102,12 +102,12 @@ export function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-}
+};
 
-export function useResults() {
+export const useResults = () => {
   return useContext(ResultsContext);
-}
+};
 
-export function useResultsDispatcher() {
+export const useResultsDispatcher = () => {
   return useContext(ResultsDispatchContext);
-}
+};

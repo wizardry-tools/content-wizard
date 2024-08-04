@@ -2,11 +2,12 @@ import { render } from '@testing-library/react';
 import { GraphQLInt, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { useContext, useEffect } from 'react';
 import type { SchemaContextType } from '@/types';
-import { SchemaContext } from '../../../schema';
-import { ExplorerContext, ExplorerContextProvider } from '../../context';
+import { SchemaContext } from '../../../ide-providers';
+import { ExplorerContext } from '../../ExplorerContext';
+import { ExplorerContextProvider } from '../../ExplorerContextProvider';
 import { DocExplorer } from '../doc-explorer';
 
-function makeSchema(fieldName = 'field') {
+const makeSchema = (fieldName = 'field') => {
   return new GraphQLSchema({
     description: 'GraphQL Schema for testing',
     query: new GraphQLObjectType({
@@ -23,7 +24,7 @@ function makeSchema(fieldName = 'field') {
       },
     }),
   });
-}
+};
 
 const isFetchingNotRef = { current: false };
 const isFetchingRef = { current: true };
@@ -43,13 +44,13 @@ const withErrorSchemaContext: SchemaContextType = {
   validationErrors: [],
 };
 
-function DocExplorerWithContext() {
+const DocExplorerWithContext = () => {
   return (
     <ExplorerContextProvider>
       <DocExplorer />
     </ExplorerContextProvider>
   );
-}
+};
 
 describe('DocExplorer', () => {
   it('renders spinner when the schema is loading', () => {

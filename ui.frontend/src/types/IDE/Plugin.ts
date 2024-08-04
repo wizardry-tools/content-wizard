@@ -30,7 +30,7 @@ export type PluginContextType = {
    * prop) or the plugin title as string. If `null` is passed, no plugin will
    * be visible.
    */
-  setVisiblePlugin(plugin: GraphiQLPlugin | string | null): void;
+  setVisiblePlugin: (plugin: GraphiQLPlugin | string | null) => void;
   /**
    * The plugin which is currently visible.
    */
@@ -44,7 +44,7 @@ export type PluginContextProviderProps = {
    * @param visiblePlugin The plugin object that is now visible. If no plugin
    * is visible, the function will be invoked with `null`.
    */
-  onTogglePluginVisibility?(visiblePlugin: GraphiQLPlugin | null): void;
+  onTogglePluginVisibility?: (visiblePlugin: GraphiQLPlugin | null) => void;
   /**
    * This props accepts a list of plugins that will be shown in addition to the
    * built-in ones (the doc explorer and the history).

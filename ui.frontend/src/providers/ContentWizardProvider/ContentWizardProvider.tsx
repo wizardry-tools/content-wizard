@@ -7,7 +7,7 @@ import { FetcherProvider } from '../FetcherProvider';
 import { FieldsProvider } from '../FieldsProvider';
 import { useLogger } from '../LoggingProvider';
 
-export function ContentWizardProvider({ children }: PropsWithChildren) {
+export const ContentWizardProvider = ({ children }: PropsWithChildren) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `ContentWizardProvider[${renderCount}] render()` });
@@ -22,4 +22,4 @@ export function ContentWizardProvider({ children }: PropsWithChildren) {
       </ResultsProvider>
     </WizardThemeProvider>
   );
-}
+};

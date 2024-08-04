@@ -3,7 +3,7 @@ import type { ComponentProps, ReactElement } from 'react';
 import { clsx } from 'clsx';
 import { Trigger, Portal, Content as RadixContent, Item as RadixItem, Root } from '@radix-ui/react-dropdown-menu';
 import type { DropdownMenuContentProps, DropdownMenuItemProps } from '@radix-ui/react-dropdown-menu';
-import { createComponentGroup } from '../utility/component-group';
+import { createComponentGroup } from '@/utility';
 
 import './dropdown.scss';
 
@@ -14,13 +14,13 @@ const Button = forwardRef<HTMLButtonElement, ComponentProps<'button'>>((props, r
 ));
 Button.displayName = 'DropdownMenuButton';
 
-function Content({
+const Content = ({
   children,
   align = 'start',
   sideOffset = 5,
   className,
   ...props
-}: DropdownMenuContentProps): ReactElement {
+}: DropdownMenuContentProps): ReactElement => {
   return (
     <Portal>
       <RadixContent
@@ -33,7 +33,7 @@ function Content({
       </RadixContent>
     </Portal>
   );
-}
+};
 
 const Item = ({ className, children, ...props }: DropdownMenuItemProps) => (
   <RadixItem className={clsx('wizard-dropdown-item', className)} {...props}>

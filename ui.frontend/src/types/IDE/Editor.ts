@@ -71,24 +71,24 @@ export type EditorContextType = TabsState & {
   /**
    * Add a new tab.
    */
-  addTab(): void;
+  addTab: () => void;
   /**
    * Switch to a different tab.
    * @param index The index of the tab that should be switched to.
    */
-  changeTab(index: number): void;
+  changeTab: (index: number) => void;
   /**
    * Move a tab to a new spot.
    * @param newOrder The new order for the tabs.
    */
-  moveTab(newOrder: TabState[]): void;
+  moveTab: (newOrder: TabState[]) => void;
   /**
    * Close a tab. If the currently active tab is closed, the tab before it will
    * become active. If there is no tab before the closed one, the tab after it
    * will become active.
    * @param index The index of the tab that should be closed.
    */
-  closeTab(index: number): void;
+  closeTab: (index: number) => void;
   /**
    * Update the state for the tab that is currently active. This will be
    * reflected in the `tabs` object and the state will be persisted in storage
@@ -96,7 +96,7 @@ export type EditorContextType = TabsState & {
    * @param partialTab A partial tab state object that will override the
    * current values. The properties `id`, `hash` and `title` cannot be changed.
    */
-  updateActiveTabValues(partialTab: Partial<Omit<TabState, 'id' | 'hash' | 'title'>>): void;
+  updateActiveTabValues: (partialTab: Partial<Omit<TabState, 'id' | 'hash' | 'title'>>) => void;
 
   /**
    * The CodeMirror editor instance for the headers editor.
@@ -127,32 +127,32 @@ export type EditorContextType = TabsState & {
   /**
    * Set the CodeMirror editor instance for the headers editor.
    */
-  setHeaderEditor(newEditor: CodeMirrorEditor): void;
+  setHeaderEditor: (newEditor: CodeMirrorEditor) => void;
   /**
    * Set the CodeMirror editor instance for the query editor.
    */
-  setQueryEditor(newEditor: CodeMirrorEditorWithOperationFacts): void;
+  setQueryEditor: (newEditor: CodeMirrorEditorWithOperationFacts) => void;
   /**
    * Set the CodeMirror editor instance for the response editor.
    */
-  setResponseEditor(newEditor: CodeMirrorEditor): void;
+  setResponseEditor: (newEditor: CodeMirrorEditor) => void;
   /**
    * Set the CodeMirror editor instance for the wizard statement editor.
    */
-  setWizardStatementEditor(newEditor: CodeMirrorEditor): void;
+  setWizardStatementEditor: (newEditor: CodeMirrorEditor) => void;
   /**
    * Set the CodeMirror editor instance for the result explorer editor.
    */
-  setResultExplorerEditor(newEditor: CodeMirrorEditor): void;
+  setResultExplorerEditor: (newEditor: CodeMirrorEditor) => void;
   /**
    * Set the CodeMirror editor instance for the variables editor.
    */
-  setVariableEditor(newEditor: CodeMirrorEditor): void;
+  setVariableEditor: (newEditor: CodeMirrorEditor) => void;
 
   /**
    * Changes the operation name and invokes the `onEditOperationName` callback.
    */
-  setOperationName(operationName: string): void;
+  setOperationName: (operationName: string) => void;
 
   /**
    * The contents of the headers editor when initially rendering the provider
@@ -193,7 +193,7 @@ export type EditorContextType = TabsState & {
   /**
    * Changes if headers should be persisted.
    */
-  setShouldPersistHeaders(persist: boolean): void;
+  setShouldPersistHeaders: (persist: boolean) => void;
 };
 
 export type ResponseTooltipType = ComponentType<{
@@ -212,7 +212,7 @@ export type UseHeaderEditorArgs = WriteableEditorProps & {
    * Invoked when the contents of the headers editor change.
    * @param value The new contents of the editor.
    */
-  onEdit?(value: string): void;
+  onEdit?: (value: string) => void;
 };
 
 export type UseQueryEditorArgs = WriteableEditorProps &
@@ -222,13 +222,13 @@ export type UseQueryEditorArgs = WriteableEditorProps &
      * as part of the editor or one of its tooltips.
      * @param reference The reference that has been clicked.
      */
-    onClickReference?(reference: SchemaReference): void;
+    onClickReference?: (reference: SchemaReference) => void;
     /**
      * Invoked when the contents of the query editor change.
      * @param value The new contents of the editor.
      * @param documentAST The editor contents parsed into a GraphQL document.
      */
-    onEdit?(value: string, documentAST?: DocumentNode): void;
+    onEdit?: (value: string, documentAST?: DocumentNode) => void;
   };
 
 export type UseResponseEditorArgs = CommonEditorProps & {
@@ -245,12 +245,12 @@ export type UseVariableEditorArgs = WriteableEditorProps & {
    * as part of the editor or one of its tooltips.
    * @param reference The reference that has been clicked.
    */
-  onClickReference?(reference: SchemaReference): void;
+  onClickReference?: (reference: SchemaReference) => void;
   /**
    * Invoked when the contents of the variables editor change.
    * @param value The new contents of the editor.
    */
-  onEdit?(value: string): void;
+  onEdit?: (value: string) => void;
 };
 
 export type UseWizardStatementEditorArgs = CommonEditorProps & {

@@ -4,8 +4,8 @@ import type { ReactElement, JSX } from 'react';
 import * as D from '@radix-ui/react-dialog';
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { CloseIcon } from '@/icons';
-import { createComponentGroup } from '../utility/component-group';
-import { UnStyledButton } from './button';
+import { createComponentGroup } from '@/utility';
+import { UnStyledButton } from './unstyled-button';
 
 import './dialog.scss';
 
@@ -19,7 +19,7 @@ const DialogClose = forwardRef<HTMLButtonElement, JSX.IntrinsicElements['button'
 ));
 DialogClose.displayName = 'Dialog.Close';
 
-export function DialogRoot({ children, ...props }: D.DialogProps): ReactElement {
+const DialogRoot = ({ children, ...props }: D.DialogProps): ReactElement => {
   return (
     <D.Root {...props}>
       <D.Portal>
@@ -28,7 +28,7 @@ export function DialogRoot({ children, ...props }: D.DialogProps): ReactElement 
       </D.Portal>
     </D.Root>
   );
-}
+};
 
 export const Dialog = createComponentGroup(DialogRoot, {
   Close: DialogClose,

@@ -1,8 +1,8 @@
 import { useEffect, useReducer, useRef } from 'react';
 import type { FieldsProviderProps } from '@/types';
+import { queryBuilderPath } from '@/constants';
 import { useDebounce } from '@/utility';
 import { defaultFields } from '@/components/QueryWizard/Components';
-import { endpoints } from '@/components/Query';
 import { useQueryDispatcher } from '../QueryProvider';
 import { useLogger } from '../LoggingProvider';
 import { FieldConfigDispatchContext, fieldConfigReducer, FieldsConfigContext, generateQuery } from './context';
@@ -13,7 +13,7 @@ import { FieldConfigDispatchContext, fieldConfigReducer, FieldsConfigContext, ge
  * @param children
  * @constructor
  */
-export function FieldsProvider({ children }: FieldsProviderProps) {
+export const FieldsProvider = ({ children }: FieldsProviderProps) => {
   // use a Ref instead of a hook, so that the main effect isn't running more than it should.
   const renderCount = useRef(0);
   const logger = useLogger();
@@ -39,7 +39,7 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
     queryDispatcher({
       statement,
       language: 'QueryBuilder',
-      url: endpoints.queryBuilderPath,
+      url: queryBuilderPath,
       status: '',
       isAdvanced: false,
       type: 'replaceQuery',
@@ -51,4 +51,4 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
       <FieldConfigDispatchContext.Provider value={configDispatcher}>{children}</FieldConfigDispatchContext.Provider>
     </FieldsConfigContext.Provider>
   );
-}
+};

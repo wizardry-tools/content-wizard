@@ -16,13 +16,13 @@ import { LoggingContext } from './LoggingContext';
  * @param showError
  * @constructor
  */
-export function LoggingProvider({
+export const LoggingProvider = ({
   children,
   showLog = false,
   showDebug = false,
   showWarn = false,
   showError = false,
-}: LoggingProviderProps) {
+}: LoggingProviderProps) => {
   const log = useCallback(
     ({ message, ...args }: LoggingProps) => {
       if (showLog) {
@@ -86,4 +86,4 @@ export function LoggingProvider({
   );
 
   return <LoggingContext.Provider value={value}>{children}</LoggingContext.Provider>;
-}
+};

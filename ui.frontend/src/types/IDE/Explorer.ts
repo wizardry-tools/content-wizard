@@ -36,16 +36,16 @@ export type ExplorerContextType = {
    * Push an item to the navigation stack.
    * @param item The item that should be pushed to the stack.
    */
-  push(item: ExplorerNavStackItem): void;
+  push: (item: ExplorerNavStackItem) => void;
   /**
    * Pop the last item from the navigation stack.
    */
-  pop(): void;
+  pop: () => void;
   /**
    * Reset the navigation stack to its initial state, this will remove all but
    * the initial stack item.
    */
-  reset(): void;
+  reset: () => void;
 };
 export type ExplorerContextProviderProps = {
   children: ReactNode;

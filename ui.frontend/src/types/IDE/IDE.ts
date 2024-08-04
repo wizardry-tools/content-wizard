@@ -116,7 +116,7 @@ export type UseDragResizeArgs = {
    * @param hiddenElement The element that is now hidden after the change
    * (`null` if both are visible).
    */
-  onHiddenElementChange?(hiddenElement: ResizableElement | null): void;
+  onHiddenElementChange?: (hiddenElement: ResizableElement | null) => void;
   /**
    * The minimum width in pixels for the first half. If it is resized to a
    * width smaller than this threshold, the half will be hidden.

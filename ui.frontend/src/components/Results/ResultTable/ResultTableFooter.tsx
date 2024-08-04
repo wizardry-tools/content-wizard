@@ -5,6 +5,11 @@ import { useLogger, useResults } from '@/providers';
 import { usePaperTheme } from '@/utility';
 import { TablePaginationActions } from './TablePaginationActions';
 
+/**
+ * This component is the Table Footer for the {@link ResultTable}. It contains the {@link TablePagination}.
+ * @param props
+ * @constructor
+ */
 export const ResultTableFooter = memo((props: ResultTableFooterProps) => {
   const logger = useLogger();
   logger.debug({ message: 'ResultsTableFooter render()' });

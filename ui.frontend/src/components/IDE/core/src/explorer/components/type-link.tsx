@@ -1,10 +1,10 @@
 import { Link } from '@mui/material';
 import type { TypeLinkProps } from '@/types';
-import { useExplorerContext } from '../context';
+import { useExplorerContext } from '../ExplorerContext';
 import { renderType } from './utils';
 import './type-link.scss';
 
-export function TypeLink(props: TypeLinkProps) {
+export const TypeLink = (props: TypeLinkProps) => {
   const { push } = useExplorerContext({ nonNull: true, caller: TypeLink });
 
   if (!props.type) {
@@ -22,4 +22,4 @@ export function TypeLink(props: TypeLinkProps) {
       {namedType.name}
     </Link>
   ));
-}
+};

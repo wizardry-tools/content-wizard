@@ -26,7 +26,7 @@ export const commonKeys = {
  * Dynamically import codemirror and dependencies
  * This works for codemirror 5, not sure if the same imports work for 6
  */
-export async function importCodeMirror(addons: CodeMirrorImport[], options?: { useCommonAddons?: boolean }) {
+export const importCodeMirror = async (addons: CodeMirrorImport[], options?: { useCommonAddons?: boolean }) => {
   const CodeMirror = await import('codemirror').then((c) =>
     // Depending on bundler and settings the dynamic import either returns a
     // function (e.g. parcel) or an object containing a `default` property
@@ -51,4 +51,4 @@ export async function importCodeMirror(addons: CodeMirrorImport[], options?: { u
         ],
   );
   return CodeMirror;
-}
+};

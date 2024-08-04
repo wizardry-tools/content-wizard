@@ -26,9 +26,9 @@ export const QueryButton = ({ isRunning = false, disabled = false, onClick = () 
       setOpen(true);
       return;
     }
-    function onTimeout() {
+    const onTimeout = () => {
       setOpen(false);
-    }
+    };
     const timeoutId = setTimeout(onTimeout, 500);
 
     return () => {

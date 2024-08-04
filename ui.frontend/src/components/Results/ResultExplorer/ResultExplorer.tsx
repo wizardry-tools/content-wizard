@@ -2,12 +2,20 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, CircularProgress, Paper, Stack } from '@mui/material';
 import type { ResultData, ResultExplorerProps } from '@/types';
 import { Tooltip, ResultExplorerEditor } from '@/components/IDE/core/src';
-import { useFetcher } from './fetcher';
+import { useJcrFetcher } from './useJcrFetcher';
 
+import './ResultExplorer.scss';
+
+/**
+ * This component will fetch and display deep JCR Content for a given {@link Result}.
+ * The deep JSON tree returned by JCR, will be displayed in an IDE {@link ResultExplorerEditor}.
+ * @param path
+ * @constructor
+ */
 export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   const [data, setData] = useState<ResultData>('');
   const fetching = useRef(false);
-  const fetcher = useFetcher({ fetching });
+  const fetcher = useJcrFetcher({ fetching });
 
   useEffect(() => {
     if (data || !fetcher || fetching.current) {

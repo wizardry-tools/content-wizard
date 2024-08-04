@@ -12,17 +12,17 @@ export const LIGHT: PaletteMode = 'light';
 export const ThemeDispatcherContext = createContext<Dispatch<NullablePaletteMode>>(null!);
 export const IDEThemeContext = createContext<Theme>(null);
 
-export function getThemeMediaQuery(mode: PaletteMode = DARK): MediaQueryList {
+export const getThemeMediaQuery = (mode: PaletteMode = DARK): MediaQueryList => {
   return window.matchMedia(`(prefers-color-scheme: ${mode})`);
-}
-export function isMediaQueryMatch(mq: MediaQueryList, mode: PaletteMode): Theme {
+};
+export const isMediaQueryMatch = (mq: MediaQueryList, mode: PaletteMode): Theme => {
   return mq.matches ? mode : null;
-}
-export function getSystemTheme(mode: PaletteMode = DARK): Theme {
+};
+export const getSystemTheme = (mode: PaletteMode = DARK): Theme => {
   return isMediaQueryMatch(getThemeMediaQuery(mode), mode);
-}
+};
 
-export function buildMuiTheme(theme: Theme): MuiTheme {
+export const buildMuiTheme = (theme: Theme): MuiTheme => {
   // main theme setup
   const muiTheme = createTheme({
     palette: {
@@ -84,10 +84,10 @@ export function buildMuiTheme(theme: Theme): MuiTheme {
       }),
     },
   });
-}
+};
 
 export const STORAGE_KEY = 'theme';
-export function getStoredTheme(storageContext: WizardStorageAPI | null): Theme {
+export const getStoredTheme = (storageContext: WizardStorageAPI | null): Theme => {
   if (!storageContext) {
     return null;
   }
@@ -104,11 +104,11 @@ export function getStoredTheme(storageContext: WizardStorageAPI | null): Theme {
       }
       return null;
   }
-}
+};
 
-export function useThemeDispatch() {
+export const useThemeDispatch = () => {
   return useContext(ThemeDispatcherContext);
-}
-export function useIDETheme() {
+};
+export const useIDETheme = () => {
   return useContext(IDEThemeContext);
-}
+};

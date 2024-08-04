@@ -6,6 +6,11 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import type { WizardPaginationActionsProps } from '@/types';
 
+/**
+ * This component holds the Pagination buttons for the {@link ResultTable}.
+ * @param props
+ * @constructor
+ */
 export const TablePaginationActions = (props: WizardPaginationActionsProps) => {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;

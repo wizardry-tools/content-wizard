@@ -60,19 +60,14 @@ if (majorVersion < 18) {
  * @see https://github.com/graphql/graphiql#usage
  */
 
-export function IDE() {
+export const IDE = () => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `IDE[${renderCount}] render()` });
   return <IDEInterface />;
-}
+};
 
-// Export main windows/panes to be used separately if desired.
-IDE.Logo = IDELogo;
-IDE.Toolbar = IDEToolbar;
-IDE.Footer = IDEFooter;
-
-export function IDEInterface() {
+const IDEInterface = () => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `IDEInterface[${renderCount}] render()` });
@@ -98,7 +93,7 @@ export function IDEInterface() {
     defaultSizeRelation: 1 / 3,
     direction: 'horizontal',
     initiallyHidden: pluginContext?.visiblePlugin ? undefined : 'first',
-    onHiddenElementChange(resizableElement) {
+    onHiddenElementChange: (resizableElement) => {
       if (resizableElement === 'first') {
         pluginContext?.setVisiblePlugin(null);
       }
@@ -553,7 +548,7 @@ export function IDEInterface() {
       </div>
     </Tooltip.Provider>
   );
-}
+};
 
 const modifier =
   typeof window !== 'undefined' && window.navigator.platform.toLowerCase().startsWith('mac') ? 'Cmd' : 'Ctrl';
@@ -568,7 +563,7 @@ const SHORT_KEYS = Object.entries({
   'Re-fetch schema using introspection': ['Ctrl', 'Shift', 'R'],
 });
 
-function ShortKeys({ keyMap }: { keyMap: string }): ReactElement {
+const ShortKeys = ({ keyMap }: { keyMap: string }): ReactElement => {
   return (
     <div>
       <table className="wizard-table">
@@ -603,10 +598,10 @@ function ShortKeys({ keyMap }: { keyMap: string }): ReactElement {
       </p>
     </div>
   );
-}
+};
 
 // Configure the UI by providing this Component as a child of IDE.
-function IDELogo<TProps>(props: PropsWithChildren<TProps>) {
+const IDELogo = (props: PropsWithChildren) => {
   return (
     <div className="wizard-logo">
       {props.children ?? (
@@ -618,24 +613,29 @@ function IDELogo<TProps>(props: PropsWithChildren<TProps>) {
       )}
     </div>
   );
-}
+};
 
 IDELogo.displayName = 'IDELogo';
 
 // Configure the UI by providing this Component as a child of IDE.
-function IDEToolbar<TProps>(props: PropsWithChildren<TProps>) {
+const IDEToolbar = (props: PropsWithChildren) => {
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{props.children}</>;
-}
+};
 
 IDEToolbar.displayName = 'IDEToolbar';
 
 // Configure the UI by providing this Component as a child of IDE.
-function IDEFooter<TProps>(props: PropsWithChildren<TProps>) {
+const IDEFooter = (props: PropsWithChildren) => {
   if (props.children) {
     return <div className="wizard-footer">{props.children}</div>;
   }
   return null;
-}
+};
 
 IDEFooter.displayName = 'IDEFooter';
+
+// Export main windows/panes to be used separately if desired.
+IDE.Logo = IDELogo;
+IDE.Toolbar = IDEToolbar;
+IDE.Footer = IDEFooter;

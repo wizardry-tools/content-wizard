@@ -5,10 +5,10 @@ import type { ResultsExporterDialogProps } from '@/types';
 import { ResultsExporter } from './ResultsExporter';
 
 /**
- * This Component represents the Dialog that appears when Exporting Results.
- * This Component will contain the UI Elements scoped to the Dialog,
+ * This Component represents the {@link Dialog} that appears when Exporting Results.
+ * This Component will contain the UI Elements scoped to the {@link Dialog},
  * such as background, container, and close buttons.
- * It will contain the ResultsExporter, which has further UI elements.
+ * It will contain the {@link ResultsExporter}, which has further UI elements.
  * @param props
  * @constructor
  */

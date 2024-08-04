@@ -4,7 +4,7 @@ import { DefaultValue } from './default-value';
 import { TypeLink } from './type-link';
 import './argument.scss';
 
-export function Argument({ arg, showDefaultValue, inline }: ArgumentProps) {
+export const Argument = ({ arg, showDefaultValue, inline }: ArgumentProps) => {
   const definition = (
     <span>
       <span className="wizard-doc-explorer-argument-name">{arg.name}</span>
@@ -28,4 +28,4 @@ export function Argument({ arg, showDefaultValue, inline }: ArgumentProps) {
       ) : null}
     </div>
   );
-}
+};

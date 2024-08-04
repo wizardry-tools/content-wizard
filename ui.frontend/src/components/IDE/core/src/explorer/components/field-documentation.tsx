@@ -8,7 +8,7 @@ import { Directive } from './directive';
 import { ExplorerSection } from './section';
 import { TypeLink } from './type-link';
 
-export function FieldDocumentation(props: FieldDocumentationProps) {
+export const FieldDocumentation = (props: FieldDocumentationProps) => {
   return (
     <>
       {props.field.description ? <MarkdownContent type="description">{props.field.description}</MarkdownContent> : null}
@@ -20,9 +20,9 @@ export function FieldDocumentation(props: FieldDocumentationProps) {
       <Directives field={props.field} />
     </>
   );
-}
+};
 
-function Arguments({ field }: { field: ExplorerFieldDef }) {
+const Arguments = ({ field }: { field: ExplorerFieldDef }) => {
   const [showDeprecated, setShowDeprecated] = useState(false);
   const handleShowDeprecated = useCallback(() => {
     setShowDeprecated(true);
@@ -66,9 +66,9 @@ function Arguments({ field }: { field: ExplorerFieldDef }) {
       ) : null}
     </>
   );
-}
+};
 
-function Directives({ field }: { field: ExplorerFieldDef }) {
+const Directives = ({ field }: { field: ExplorerFieldDef }) => {
   const directives = field.astNode?.directives ?? [];
   if (!directives || directives.length === 0) {
     return null;
@@ -82,4 +82,4 @@ function Directives({ field }: { field: ExplorerFieldDef }) {
       ))}
     </ExplorerSection>
   );
-}
+};

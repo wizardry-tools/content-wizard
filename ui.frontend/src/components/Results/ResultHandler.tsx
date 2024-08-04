@@ -2,7 +2,7 @@ import { ResultTable } from './ResultTable/ResultTable';
 import { Paper } from '@mui/material';
 import { useQuery } from '@/providers';
 
-export function ResultHandler() {
+export const ResultHandler = () => {
   const query = useQuery();
 
   return (
@@ -17,4 +17,4 @@ export function ResultHandler() {
       {query.language !== 'GraphQL' && <ResultTable />}
     </Paper>
   );
-}
+};

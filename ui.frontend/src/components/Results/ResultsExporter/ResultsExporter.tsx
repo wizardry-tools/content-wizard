@@ -19,7 +19,7 @@ import { allowedExportTypes, useResults } from '@/providers';
 import { FormGrid } from '@/components/QueryWizard/Components';
 
 /**
- * This component contains the export configuration and button for exporting the Results.
+ * This component contains the export configuration and button for exporting the {@link Result}s.
  * @constructor
  */
 export const ResultsExporter = () => {

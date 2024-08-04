@@ -51,6 +51,6 @@ export default tseslint.config(
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
-    ignores: ['dist', '.prettierrc.cjs'],
+    ignores: ['dist', 'coverage', 'node', 'node_modules', 'target', '.prettierrc.cjs', 'util'],
   },
 );

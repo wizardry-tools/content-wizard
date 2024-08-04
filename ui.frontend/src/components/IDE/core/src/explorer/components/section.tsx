@@ -14,7 +14,7 @@ import {
 } from '@/icons';
 import './section.scss';
 
-export function ExplorerSection(props: ExplorerSectionProps) {
+export const ExplorerSection = (props: ExplorerSectionProps) => {
   const Icon = TYPE_TO_ICON[props.title];
   return (
     <div>
@@ -25,7 +25,7 @@ export function ExplorerSection(props: ExplorerSectionProps) {
       <div className="wizard-doc-explorer-section-content">{props.children}</div>
     </div>
   );
-}
+};
 
 const TYPE_TO_ICON: Record<ExplorerSectionProps['title'], ComponentType> = {
   Arguments: ArgumentIcon,

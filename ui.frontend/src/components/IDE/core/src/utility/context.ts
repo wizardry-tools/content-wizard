@@ -2,19 +2,19 @@ import { createContext, useContext } from 'react';
 import type { Context } from 'react';
 import type { Caller } from '@/types';
 
-export function createNullableContext<T>(name: string): Context<T | null> {
+export const createNullableContext = <T>(name: string): Context<T | null> => {
   const context = createContext<T | null>(null);
   context.displayName = name;
   return context;
-}
+};
 
-export function createNonNullableContext<T>(name: string): Context<T> {
+export const createNonNullableContext = <T>(name: string): Context<T> => {
   const context = createContext<T>(null!);
   context.displayName = name;
   return context;
-}
+};
 
-export function createContextHook<T>(context: Context<T | null>) {
+export const createContextHook = <T>(context: Context<T | null>) => {
   function useGivenContext(options: { nonNull: true; caller?: Caller }): T;
   function useGivenContext(options: { nonNull?: boolean; caller?: Caller }): T | null;
   function useGivenContext(): T | null;
@@ -35,9 +35,9 @@ export function createContextHook<T>(context: Context<T | null>) {
     value: `use${context.displayName}`,
   });
   return useGivenContext;
-}
+};
 
-export function createNonNullableContextHook<T>(context: Context<T>) {
+export const createNonNullableContextHook = <T>(context: Context<T>) => {
   function useGivenContext(options: { nonNull: true; caller?: Caller }): T;
   function useGivenContext(options: { nonNull?: boolean; caller?: Caller }): T;
   function useGivenContext(): T;
@@ -58,4 +58,4 @@ export function createNonNullableContextHook<T>(context: Context<T>) {
     value: `use${context.displayName}`,
   });
   return useGivenContext;
-}
+};

@@ -1,66 +1,14 @@
 import { fireEvent, render } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import type { ComponentProps } from 'react';
-import { formatQuery, HistoryItem } from '../components';
-import { HistoryContextProvider } from '../context';
+import { useQueryDispatcher } from '@/providers';
+import { formatQuery } from '../HistoryContext';
+import { HistoryItem } from '../HistoryItem';
+import { HistoryContextProvider } from '../HistoryContextProvider';
 import { useEditorContext } from '../../editor';
 import { Tooltip } from '../../ui';
-import { useQueryDispatcher } from '@/providers';
-
-vi.mock('../../storage', () => {
-  const mockStorage = {
-    set: vi.fn(() => ({ isQuotaError: false, error: null })),
-    get: vi.fn(() => null),
-    clear: vi.fn(),
-    storage: {
-      getItem: vi.fn(() => null),
-      setItem: vi.fn(() => ({})),
-      removeItem: vi.fn(() => ({})),
-      clear: vi.fn(),
-      length: 0,
-    },
-  };
-
-  return {
-    useStorageContext() {
-      return mockStorage;
-    },
-  };
-});
-vi.mock('../../editor', () => {
-  const mockedSetQueryEditor = vi.fn();
-  const mockedSetVariableEditor = vi.fn();
-  const mockedSetHeaderEditor = vi.fn();
-  return {
-    useEditorContext() {
-      return {
-        queryEditor: { setValue: mockedSetQueryEditor },
-        variableEditor: { setValue: mockedSetVariableEditor },
-        headerEditor: { setValue: mockedSetHeaderEditor },
-      };
-    },
-  };
-});
-vi.mock('@/providers', () => {
-  const mockQueryDispatcher = vi.fn(() => ({}));
-  const mockAlertDispatcher = vi.fn(() => ({}));
-  return {
-    useQueryDispatcher() {
-      return mockQueryDispatcher;
-    },
-    useAlertDispatcher() {
-      return mockAlertDispatcher;
-    },
-    useLogger() {
-      return {
-        debug: () => ({}),
-        log: () => ({}),
-        error: () => ({}),
-        warn: () => ({}),
-      };
-    },
-  };
-});
+import { emptyMockFunction } from '@/mocks/util';
+import { mockLogger } from '@/mocks/providers/LoggingProvider';
 
 const mockQuery = /* GraphQL */ `
   query Test($string: String) {
@@ -78,7 +26,7 @@ const mockOperationName = 'Test';
 
 type QueryHistoryItemProps = ComponentProps<typeof HistoryItem>;
 
-function QueryHistoryItemWithContext(props: QueryHistoryItemProps) {
+const QueryHistoryItemWithContext = (props: QueryHistoryItemProps) => {
   return (
     <Tooltip.Provider>
       <HistoryContextProvider>
@@ -86,7 +34,7 @@ function QueryHistoryItemWithContext(props: QueryHistoryItemProps) {
       </HistoryContextProvider>
     </Tooltip.Provider>
   );
-}
+};
 
 const baseMockProps: QueryHistoryItemProps = {
   item: {
@@ -98,15 +46,63 @@ const baseMockProps: QueryHistoryItemProps = {
   },
 };
 
-function getMockProps(customProps?: Partial<QueryHistoryItemProps>): QueryHistoryItemProps {
+const getMockProps = (customProps?: Partial<QueryHistoryItemProps>): QueryHistoryItemProps => {
   return {
     ...baseMockProps,
     ...customProps,
     item: { ...baseMockProps.item, ...customProps?.item },
   };
-}
+};
 
 describe('HistoryItem', () => {
+  vi.mock('../../ide-providers/storage', () => {
+    const mockStorage = {
+      set: vi.fn(() => ({ isQuotaError: false, error: null })),
+      get: vi.fn(() => null),
+      clear: vi.fn(),
+      storage: {
+        getItem: vi.fn(() => null),
+        setItem: vi.fn(() => ({})),
+        removeItem: vi.fn(() => ({})),
+        clear: vi.fn(),
+        length: 0,
+      },
+    };
+
+    return {
+      useStorageContext: () => {
+        return mockStorage;
+      },
+    };
+  });
+  vi.mock('../../editor', () => {
+    const mockedSetQueryEditor = vi.fn();
+    const mockedSetVariableEditor = vi.fn();
+    const mockedSetHeaderEditor = vi.fn();
+    return {
+      useEditorContext: () => {
+        return {
+          queryEditor: { setValue: mockedSetQueryEditor },
+          variableEditor: { setValue: mockedSetVariableEditor },
+          headerEditor: { setValue: mockedSetHeaderEditor },
+        };
+      },
+    };
+  });
+  vi.mock('@/providers', () => {
+    return {
+      useQueryDispatcher: () => {
+        return emptyMockFunction;
+      },
+      useAlertDispatcher: () => {
+        return emptyMockFunction;
+      },
+      useLogger: () => {
+        return mockLogger;
+      },
+    };
+  });
+
   const mockedSetQueryEditor = useEditorContext()?.queryEditor?.setValue as Mock;
   const mockedSetVariableEditor = useEditorContext()?.variableEditor?.setValue as Mock;
   const mockedSetHeaderEditor = useEditorContext()?.headerEditor?.setValue as Mock;

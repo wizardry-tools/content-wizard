@@ -10,6 +10,10 @@ import { ResultsExporterDialog } from '../ResultsExporter';
 import { PackageBuilderDialog } from '../PackageBuilder';
 import { TableHeadCell } from './TableHeadCell';
 
+/**
+ * This is the TableToolBar that contains UI functionality for the {@link ResultTable}.
+ * @constructor
+ */
 export const TableToolBar = () => {
   const logger = useLogger();
   const renderCount = useRenderCount();

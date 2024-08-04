@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Caller, UseHeaderEditorArgs } from '@/types';
-import { useExecutionContext } from '../execution';
+import { useExecutionContext } from '../ide-providers';
 import { commonKeys, DEFAULT_EDITOR_THEME, DEFAULT_KEY_MAP, importCodeMirror } from './common';
 import { useEditorContext } from './context';
 import { useChangeHandler, useKeyMap, useMergeQuery, usePrettifyEditors, useSynchronizeOption } from './hooks';
@@ -47,16 +47,16 @@ export const useHeaderEditor = (
       });
 
       newEditor.addKeyMap({
-        'Cmd-Space'() {
+        'Cmd-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Ctrl-Space'() {
+        'Ctrl-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Alt-Space'() {
+        'Alt-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Shift-Space'() {
+        'Shift-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
       });

@@ -4,21 +4,21 @@ import { isListType, isNonNullType } from 'graphql';
 import type { GraphQLNamedType, GraphQLSchema, GraphQLType } from 'graphql';
 import type { ExplorerContextType, PluginContextType } from '@/types';
 import { markdown } from '../markdown';
-import { DOC_EXPLORER_PLUGIN } from '../plugin';
+import { DOC_EXPLORER_PLUGIN } from '../ide-providers';
 import { importCodeMirror } from './common';
 
 /**
  * Render a custom UI for CodeMirror's hint which includes additional info
  * about the type and description for the selected context.
  */
-export function onHasCompletion(
+export const onHasCompletion = (
   _cm: Editor,
   data: EditorChange | undefined,
   schema: GraphQLSchema | null | undefined,
   explorer: ExplorerContextType | null,
   plugin: PluginContextType | null,
   callback?: (type: GraphQLNamedType) => void,
-): void {
+): void => {
   void importCodeMirror([], { useCommonAddons: false }).then((CodeMirror) => {
     let information: HTMLDivElement | null;
     let fieldName: HTMLSpanElement | null;
@@ -220,7 +220,7 @@ export function onHasCompletion(
     );
   });
 
-  function onClickHintInformation(event: Event) {
+  const onClickHintInformation = (event: Event) => {
     if (!schema || !explorer || !plugin || !(event.currentTarget instanceof HTMLElement)) {
       return;
     }
@@ -232,5 +232,5 @@ export function onHasCompletion(
       explorer.push({ name: type.name, def: type });
       callback?.(type);
     }
-  }
-}
+  };
+};

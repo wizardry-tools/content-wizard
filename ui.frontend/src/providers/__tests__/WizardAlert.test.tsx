@@ -1,8 +1,6 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { WizardAlertProvider, WizardAlert, useAlertDispatcher } from '@/providers';
 
-vi.mock('./LoggingProvider');
-
 const TestComponent = () => {
   const dispatchAlert = useAlertDispatcher();
 
@@ -21,6 +19,7 @@ const TestComponent = () => {
 };
 
 describe('WizardAlert', () => {
+  vi.mock('./LoggingProvider');
   vi.useFakeTimers();
 
   it('displays alert message when triggered', () => {

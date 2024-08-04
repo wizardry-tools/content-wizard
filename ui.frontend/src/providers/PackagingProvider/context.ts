@@ -75,9 +75,9 @@ export const PackagingContext = createContext<PackagingContextProps>(null!);
  *
  * @return {object} The packaging context object.
  */
-export function usePackagingContext(): PackagingContextProps {
+export const usePackagingContext = (): PackagingContextProps => {
   return useContext(PackagingContext);
-}
+};
 
 /**
  * This async function is responsible for building and fetching the request

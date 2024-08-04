@@ -20,7 +20,7 @@ const StyledToolbarButton = styled(ToolbarButton)(({ theme }) => ({
   },
 }));
 
-export function ResultExplorerEditor(props: UseResultExplorerEditorArgs) {
+export const ResultExplorerEditor = (props: UseResultExplorerEditorArgs) => {
   const { className = '' } = { ...props };
   const theme = useTheme();
   const copy = useCopyResult({ caller: ResultExplorerEditor });
@@ -46,4 +46,4 @@ export function ResultExplorerEditor(props: UseResultExplorerEditorArgs) {
       </Paper>
     </section>
   );
-}
+};

@@ -7,7 +7,8 @@ export {
   ResultExplorerEditor,
   VariableEditor,
 } from './components';
-export { EditorContext, EditorContextProvider, useEditorContext } from './context';
+export { EditorContext, useEditorContext } from './context';
+export { EditorContextProvider } from './context-provider';
 export { useHeaderEditor } from './header-editor';
 export {
   useAutoCompleteLeafs,

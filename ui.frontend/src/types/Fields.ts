@@ -69,13 +69,13 @@ export type FieldsConfig = Record<FieldConfigName, FieldConfig>;
 
 export type FieldsProviderProps = PropsWithChildren & Partial<Query>;
 
-export type SimpleInputProps = {
+export type WizardInputProps = {
   defaultValue: InputValue;
   field: FieldConfig;
   disabled: boolean;
 };
 
-export type SimpleSliderProps = SimpleInputProps & {
+export type WizardSliderProps = WizardInputProps & {
   min: number;
   max: number;
   step: number;

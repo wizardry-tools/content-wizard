@@ -1,13 +1,11 @@
 import { useCallback } from 'react';
 import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import type { API, QueryLanguage, Statement } from '@/types';
+import { defaultAdvancedQueries } from '@/constants';
 import { useRenderCount } from '@/utility';
 import { useLogger, useQuery, useQueryDispatcher } from '@/providers';
-import { defaultAdvancedQueries } from '@/components/Query';
-import { useAPIContext } from '../api';
-import { GraphQLSelector } from './components/GraphQLSelector';
-import { QueryLanguageSelector } from './components/QueryLanguageSelector';
-import { LanguageSelectorHeader } from './components/LanguageSelectorHeader';
+import { useAPIContext } from '../ide-providers';
+import { GraphQLSelector, LanguageSelectorHeader, QueryLanguageSelector } from './components';
 import './language-selector.scss';
 
 /**

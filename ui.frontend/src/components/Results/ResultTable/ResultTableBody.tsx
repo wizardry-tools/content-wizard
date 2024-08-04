@@ -4,6 +4,9 @@ import { Link, TableBody, TableCell, TableRow } from '@mui/material';
 import type { ResultTableBodyProps } from '@/types';
 import { useResults } from '@/providers';
 
+/**
+ * This component is the body of the {@link ResultTable}. Contains all {@link Result}s from a {@link Query} execution.
+ */
 export const ResultTableBody = memo((props: ResultTableBodyProps) => {
   const { tableResults, keys } = useResults();
   const { rowsPerPage, page, onClick } = props;

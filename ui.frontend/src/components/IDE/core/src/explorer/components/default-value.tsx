@@ -10,7 +10,7 @@ const printDefault = (ast?: ValueNode | null): string => {
   return print(ast);
 };
 
-export function DefaultValue({ field }: DefaultValueProps) {
+export const DefaultValue = ({ field }: DefaultValueProps) => {
   if (!('defaultValue' in field) || field.defaultValue === undefined) {
     return null;
   }
@@ -24,4 +24,4 @@ export function DefaultValue({ field }: DefaultValueProps) {
       <span className="wizard-doc-explorer-default-value">{printDefault(ast)}</span>
     </>
   );
-}
+};

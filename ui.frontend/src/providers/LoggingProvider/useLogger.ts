@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { LoggingContext } from './LoggingContext';
 
-export function useLogger() {
+export const useLogger = () => {
   return useContext(LoggingContext);
-}
+};

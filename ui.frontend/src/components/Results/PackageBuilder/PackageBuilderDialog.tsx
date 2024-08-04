@@ -4,6 +4,14 @@ import { useTheme } from '@mui/material/styles';
 import type { PackageBuilderDialogProps } from '@/types';
 import { PackageBuilder } from './PackageBuilder';
 
+/**
+ * This Component represents the {@link Dialog} that appears when Packaging Results.
+ * This Component will contain the UI Elements scoped to the {@link Dialog},
+ * such as background, container, and close buttons.
+ * It will contain the {@link PackageBuilder}, which has further UI elements.
+ * @param props
+ * @constructor
+ */
 export const PackageBuilderDialog = (props: PackageBuilderDialogProps) => {
   const { closeHandler, open } = props;
   const theme = useTheme();

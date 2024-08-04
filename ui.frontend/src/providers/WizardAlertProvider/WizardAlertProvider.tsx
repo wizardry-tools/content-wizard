@@ -12,7 +12,7 @@ import { WizardAlertContext, WizardAlertDispatcher } from './context';
 
  * @constructor
  */
-export function WizardAlertProvider({ children }: WizardAlertProviderProps) {
+export const WizardAlertProvider = ({ children }: WizardAlertProviderProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `WizardAlertProvider[${renderCount}] render()` });
@@ -38,4 +38,4 @@ export function WizardAlertProvider({ children }: WizardAlertProviderProps) {
       <WizardAlertDispatcher.Provider value={handleAlertDispatch}>{children}</WizardAlertDispatcher.Provider>
     </WizardAlertContext.Provider>
   );
-}
+};

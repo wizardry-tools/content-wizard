@@ -1,18 +1,17 @@
 import { useAlertDispatcher } from '@/providers';
 import { useWizardStorageAPI } from '../storage-api';
+import { emptyMockFunction } from '@/mocks/util';
 
 const ERROR_MESSAGE = 'Terrible Error (but completely expected, this is a test)';
 
-vi.mock('@/providers', () => {
-  const mockAlertDispatcher = vi.fn(() => ({}));
-  return {
-    useAlertDispatcher() {
-      return mockAlertDispatcher;
-    },
-  };
-});
-
 describe('WizardStorageAPI', () => {
+  vi.mock('@/providers', () => {
+    return {
+      useAlertDispatcher() {
+        return emptyMockFunction;
+      },
+    };
+  });
   const mockedAlertDispatcher = useAlertDispatcher();
   let storage = useWizardStorageAPI({ alertDispatcher: mockedAlertDispatcher });
 

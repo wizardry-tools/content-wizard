@@ -22,11 +22,11 @@ export type ExecutionContextType = {
   /**
    * Start a GraphQL requests based of the current editor contents.
    */
-  run(): void;
+  run: () => void;
   /**
    * Stop the GraphQL request that is currently in-flight.
    */
-  stop(): void;
+  stop: () => void;
 };
 
 export type ExecutionContextProviderProps = Pick<UseAutoCompleteLeafsArgs, 'getDefaultFieldNames'> & {

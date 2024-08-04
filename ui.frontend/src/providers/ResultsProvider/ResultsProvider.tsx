@@ -25,7 +25,7 @@ import {
  * @param children
  * @constructor
  */
-export function ResultsProvider({ children }: PropsWithChildren) {
+export const ResultsProvider = ({ children }: PropsWithChildren) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `ResultsProvider[${renderCount}] render()` });
@@ -117,4 +117,4 @@ export function ResultsProvider({ children }: PropsWithChildren) {
       </ResultsDispatchContext.Provider>
     </ResultsContext.Provider>
   );
-}
+};

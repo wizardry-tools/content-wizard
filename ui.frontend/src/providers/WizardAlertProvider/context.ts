@@ -11,10 +11,10 @@ const emptyContext: WizardAlertProps = {
 export const WizardAlertContext = createContext<WizardAlertProps>(emptyContext);
 export const WizardAlertDispatcher = createContext<Dispatch<WizardAlertProps>>(() => ({}));
 
-export function useAlertContext() {
+export const useAlertContext = () => {
   return useContext(WizardAlertContext);
-}
+};
 
-export function useAlertDispatcher() {
+export const useAlertDispatcher = () => {
   return useContext(WizardAlertDispatcher);
-}
+};

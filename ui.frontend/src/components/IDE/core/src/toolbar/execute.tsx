@@ -1,11 +1,11 @@
 import { PlayIcon, StopIcon } from '@/icons';
 import { useEditorContext } from '../editor';
-import { useExecutionContext } from '../execution';
+import { useExecutionContext } from '../ide-providers';
 import { DropdownMenu, Tooltip } from '../ui';
 
 import './execute.scss';
 
-export function ExecuteButton() {
+export const ExecuteButton = () => {
   const { queryEditor, setOperationName } = useEditorContext({
     nonNull: true,
     caller: ExecuteButton,
@@ -15,7 +15,7 @@ export function ExecuteButton() {
     caller: ExecuteButton,
   });
 
-  const operations = queryEditor?.operations || [];
+  const operations = queryEditor?.operations ?? [];
   const hasOptions = operations.length > 1 && typeof operationName !== 'string';
   const isRunning = isFetching || isSubscribed;
 
@@ -67,4 +67,4 @@ export function ExecuteButton() {
       />
     </Tooltip>
   );
-}
+};

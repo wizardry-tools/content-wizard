@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react';
 import type { Dispatch } from 'react';
 import type { Query, QueryAction, QueryRunnerProps, QueryRunnerResponse } from '@/types';
+import { queryBuilderPath } from '@/constants';
+import { buildGraphQLURL } from '@/utility';
 import { defaultFields } from '@/components/QueryWizard/Components';
-import { buildGraphQLURL, endpoints } from '@/components';
 import { generateQuery } from '../FieldsProvider/context';
 
 export const QueryContext = createContext<Query>(null!);
@@ -13,7 +14,7 @@ export const IsGraphQLContext = createContext<boolean>(false);
 export const defaultSimpleQuery: Query = {
   statement: generateQuery(defaultFields), // build inside provider init
   language: 'QueryBuilder',
-  url: endpoints.queryBuilderPath,
+  url: queryBuilderPath,
   status: '',
   isAdvanced: false,
 };
@@ -27,7 +28,7 @@ export const defaultSimpleQuery: Query = {
  * @param query
  * @param action
  */
-export function queryReducer(query: Query, action: QueryAction): Query {
+export const queryReducer = (query: Query, action: QueryAction): Query => {
   switch (action.type) {
     case 'statementChange': {
       // 1
@@ -62,20 +63,20 @@ export function queryReducer(query: Query, action: QueryAction): Query {
       throw Error(`Unknown Query Action ${action.type}`);
     }
   }
-}
+};
 
-export function useQuery() {
+export const useQuery = () => {
   return useContext(QueryContext);
-}
+};
 
-export function useQueryDispatcher() {
+export const useQueryDispatcher = () => {
   return useContext(QueryDispatchContext);
-}
+};
 
-export function useQueryRunner() {
+export const useQueryRunner = () => {
   return useContext(QueryRunnerContext);
-}
+};
 
-export function useIsGraphQL() {
+export const useIsGraphQL = () => {
   return useContext(IsGraphQLContext);
-}
+};
