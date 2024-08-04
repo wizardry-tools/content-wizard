@@ -2,7 +2,8 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import type { ViewsProps } from '@/types';
 import { useLogger } from '@/providers';
-import { IDE, QueryWizard, ResultHandler, SwipeableViews } from '@/components';
+import { IDE, QueryWizard, ResultHandler } from '@/components';
+import { SwipeableViews } from '../SwipeableViews';
 import { ViewPanel } from '../ViewPanel';
 
 /**
