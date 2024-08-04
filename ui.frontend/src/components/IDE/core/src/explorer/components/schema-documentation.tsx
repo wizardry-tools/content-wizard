@@ -5,7 +5,7 @@ import { ExplorerSection } from './section';
 import { TypeLink } from './type-link';
 import './schema-documentation.scss';
 
-export function SchemaDocumentation(props: SchemaDocumentationProps) {
+export const SchemaDocumentation = (props: SchemaDocumentationProps) => {
   const queryType = props.schema.getQueryType();
   const mutationType = props.schema.getMutationType();
   const subscriptionType = props.schema.getSubscriptionType();
@@ -59,4 +59,4 @@ export function SchemaDocumentation(props: SchemaDocumentationProps) {
       </ExplorerSection>
     </>
   );
-}
+};

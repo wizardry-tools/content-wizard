@@ -9,7 +9,7 @@ import { DOC_EXPLORER_PLUGIN } from './DocExplorerPlugin';
 import { LANGUAGE_SELECTOR_PLUGIN } from './LanguageSelectorPlugin';
 import { HISTORY_PLUGIN } from './HistoryPlugin';
 
-export function PluginContextProvider(props: PluginContextProviderProps) {
+export const PluginContextProvider = (props: PluginContextProviderProps) => {
   const storage = useStorageContext();
   const explorerContext = useExplorerContext();
   const historyContext = useHistoryContext();
@@ -100,6 +100,6 @@ export function PluginContextProvider(props: PluginContextProviderProps) {
   );
 
   return <PluginContext.Provider value={value}>{children}</PluginContext.Provider>;
-}
+};
 
 const STORAGE_KEY = 'visiblePlugin';

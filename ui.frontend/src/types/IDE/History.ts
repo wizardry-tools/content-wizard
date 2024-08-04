@@ -11,13 +11,13 @@ export type HistoryContextType = {
    * @param operation The operation that was executed, consisting of the query,
    * variables, headers, and operation name.
    */
-  addToHistory(operation: {
+  addToHistory: (operation: {
     query?: Statement;
     language?: QueryLanguage;
     variables?: string;
     headers?: string;
     operationName?: string;
-  }): void;
+  }) => void;
   /**
    * Change the custom label of an item from the history.
    * @param args An object containing the label (`undefined` if it should be
@@ -27,7 +27,7 @@ export type HistoryContextType = {
    * @param index Index to edit. Without it, will look for the first index matching the
    * operation, which may lead to misleading results if multiple items have the same label
    */
-  editLabel(
+  editLabel: (
     args: {
       query?: Statement;
       language?: QueryLanguage;
@@ -38,7 +38,7 @@ export type HistoryContextType = {
       favorite?: boolean;
     },
     index?: number,
-  ): void;
+  ) => void;
   /**
    * The list of history items.
    */
@@ -50,7 +50,7 @@ export type HistoryContextType = {
    * label should be applied to. (This can result in the label being applied
    * to multiple history items.)
    */
-  toggleFavorite(args: {
+  toggleFavorite: (args: {
     query?: Statement;
     language?: QueryLanguage;
     variables?: string;
@@ -58,19 +58,19 @@ export type HistoryContextType = {
     operationName?: string;
     label?: string;
     favorite?: boolean;
-  }): void;
+  }) => void;
   /**
    * Delete an operation from the history.
    * @param args The operation that was executed, consisting of the query,
    * variables, headers, and operation name.
    * @param clearFavorites This is only if you press the 'clear' button
    */
-  deleteFromHistory(args: WizardStoreItem, clearFavorites?: boolean): void;
+  deleteFromHistory: (args: WizardStoreItem, clearFavorites?: boolean) => void;
   /**
    * If you need to know when an item in history is set as active to customize
    * your application.
    */
-  setActive(args: WizardStoreItem): void;
+  setActive: (args: WizardStoreItem) => void;
 };
 
 export type HistoryContextProviderProps = {

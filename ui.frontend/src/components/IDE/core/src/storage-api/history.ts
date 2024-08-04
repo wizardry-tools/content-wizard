@@ -18,13 +18,13 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryS
   const favorite: WizardStore = useWizardStore({ key: 'favorites', storage, maxSize: null });
   const [queries, setQueries] = useState([...history.fetchAll(), ...favorite.fetchAll()]);
 
-  function shouldSaveQuery(
+  const shouldSaveQuery = (
     query?: Statement,
     language?: QueryLanguage,
     variables?: string,
     headers?: string,
     lastQuerySaved?: WizardStoreItem,
-  ) {
+  ) => {
     if (!query) {
       return false;
     }
@@ -64,7 +64,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryS
       }
     }
     return true;
-  }
+  };
 
   const updateHistory = ({ query, language, variables, headers, operationName }: WizardStoreItem) => {
     if (!shouldSaveQuery(query, language, variables, headers, history.fetchRecent())) {
@@ -82,7 +82,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryS
     setQueries(historyQueries.concat(favoriteQueries));
   };
 
-  function toggleFavorite({ query, language, variables, headers, operationName, label, ...other }: WizardStoreItem) {
+  const toggleFavorite = ({ query, language, variables, headers, operationName, label, ...other }: WizardStoreItem) => {
     const item: WizardStoreItem = {
       query,
       language,
@@ -101,12 +101,12 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryS
       history.remove(item);
     }
     setQueries([...history.getItems(), ...favorite.getItems()]);
-  }
+  };
 
-  function editLabel(
+  const editLabel = (
     { query, language, variables, headers, operationName, label, ...other }: WizardStoreItem,
     index?: number,
-  ) {
+  ) => {
     const item = {
       query,
       language,
@@ -121,14 +121,14 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryS
       history.edit(item, index);
     }
     setQueries([...history.getItems(), ...favorite.getItems()]);
-  }
+  };
 
   const deleteHistory = (
     { query, language, variables, headers, operationName, ...other }: WizardStoreItem,
     clearFavorites = false,
   ) => {
     // TODO: Remove this method, not sure why this was added this if the regular store already performs the same checks....
-    function deleteFromStore(store: WizardStore) {
+    const deleteFromStore = (store: WizardStore) => {
       const found = store
         .getItems()
         .find(
@@ -142,7 +142,7 @@ export const useWizardHistoryStore = (props: WHistoryStoreProps): WizardHistoryS
       if (found) {
         store.remove(found);
       }
-    }
+    };
 
     if (other.favorite ?? clearFavorites) {
       deleteFromStore(favorite);

@@ -12,7 +12,7 @@ import { ExplorerSection } from './section';
 import { TypeLink } from './type-link';
 import './type-documentation.scss';
 
-export function TypeDocumentation(props: TypeDocumentationProps) {
+export const TypeDocumentation = (props: TypeDocumentationProps) => {
   return isNamedType(props.type) ? (
     <>
       {props.type.description ? <MarkdownContent type="description">{props.type.description}</MarkdownContent> : null}
@@ -22,9 +22,9 @@ export function TypeDocumentation(props: TypeDocumentationProps) {
       <PossibleTypes type={props.type} />
     </>
   ) : null;
-}
+};
 
-function ImplementsInterfaces({ type }: { type: GraphQLNamedType }) {
+const ImplementsInterfaces = ({ type }: { type: GraphQLNamedType }) => {
   if (!isObjectType(type)) {
     return null;
   }
@@ -38,9 +38,9 @@ function ImplementsInterfaces({ type }: { type: GraphQLNamedType }) {
       ))}
     </ExplorerSection>
   ) : null;
-}
+};
 
-function Fields({ type }: { type: GraphQLNamedType }) {
+const Fields = ({ type }: { type: GraphQLNamedType }) => {
   const [showDeprecated, setShowDeprecated] = useState(false);
   const handleShowDeprecated = useCallback(() => {
     setShowDeprecated(true);
@@ -87,9 +87,9 @@ function Fields({ type }: { type: GraphQLNamedType }) {
       ) : null}
     </>
   );
-}
+};
 
-function Field({ field }: { field: ExplorerFieldDef }) {
+const Field = ({ field }: { field: ExplorerFieldDef }) => {
   const args = 'args' in field ? field.args.filter((arg) => !arg.deprecationReason) : [];
   return (
     <div className="wizard-doc-explorer-item">
@@ -124,9 +124,9 @@ function Field({ field }: { field: ExplorerFieldDef }) {
       <DeprecationReason>{field.deprecationReason}</DeprecationReason>
     </div>
   );
-}
+};
 
-function EnumValues({ type }: { type: GraphQLNamedType }) {
+const EnumValues = ({ type }: { type: GraphQLNamedType }) => {
   const [showDeprecated, setShowDeprecated] = useState(false);
   const handleShowDeprecated = useCallback(() => {
     setShowDeprecated(true);
@@ -170,9 +170,9 @@ function EnumValues({ type }: { type: GraphQLNamedType }) {
       ) : null}
     </>
   );
-}
+};
 
-function EnumValue({ value }: { value: GraphQLEnumValue }) {
+const EnumValue = ({ value }: { value: GraphQLEnumValue }) => {
   return (
     <div className="wizard-doc-explorer-item">
       <div className="wizard-doc-explorer-enum-value">{value.name}</div>
@@ -180,9 +180,9 @@ function EnumValue({ value }: { value: GraphQLEnumValue }) {
       {value.deprecationReason ? <MarkdownContent type="deprecation">{value.deprecationReason}</MarkdownContent> : null}
     </div>
   );
-}
+};
 
-function PossibleTypes({ type }: { type: GraphQLNamedType }) {
+const PossibleTypes = ({ type }: { type: GraphQLNamedType }) => {
   const { schema } = useSchemaContext({ nonNull: true });
   if (!schema || !isAbstractType(type)) {
     return null;
@@ -196,4 +196,4 @@ function PossibleTypes({ type }: { type: GraphQLNamedType }) {
       ))}
     </ExplorerSection>
   );
-}
+};

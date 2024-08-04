@@ -3,7 +3,7 @@ import type { ResizableElement, UseDragResizeArgs } from '@/types';
 import { useStorageContext } from '../ide-providers';
 import debounce from './debounce';
 
-export function useDragResize({
+export const useDragResize = ({
   defaultSizeRelation = DEFAULT_FLEX,
   direction,
   initiallyHidden,
@@ -11,7 +11,7 @@ export function useDragResize({
   sizeThresholdFirst = 100,
   sizeThresholdSecond = 100,
   storageKey,
-}: UseDragResizeArgs) {
+}: UseDragResizeArgs) => {
   const storage = useStorageContext();
 
   const store = useMemo(
@@ -226,7 +226,7 @@ export function useDragResize({
     }),
     [hiddenElement, setHiddenElement],
   );
-}
+};
 
 const DEFAULT_FLEX = 1;
 const HIDE_FIRST = 'hide-first';

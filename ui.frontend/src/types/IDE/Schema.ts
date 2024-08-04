@@ -38,7 +38,7 @@ export type SchemaContextType = {
    * it will be validated, unless this is explicitly skipped using the
    * `dangerouslyAssumeSchemaIsValid` prop.
    */
-  introspect(): void;
+  introspect: () => void;
   /**
    * If there currently is an introspection request in-flight.
    */
@@ -74,5 +74,5 @@ export type SchemaContextProviderProps = {
    * prop.
    * @param schema The GraphQL schema that is now used for GraphiQL.
    */
-  onSchemaChange?(schema: GraphQLSchema): void;
+  onSchemaChange?: (schema: GraphQLSchema) => void;
 } & IntrospectionArgs;

@@ -1,5 +1,5 @@
 import type { SchemaContextType } from '@/types';
-import { createContextHook, createNullableContext } from '@/components/IDE/core/src/utility/context';
+import { createContextHook, createNullableContext } from '../../utility';
 
 export const SchemaContext = createNullableContext<SchemaContextType>('SchemaContext');
 

@@ -22,24 +22,24 @@ export type WizardStorage = {
    * @returns {?string} The stored value for the given key if it exists, `null`
    * otherwise.
    */
-  getItem(key: string): string | null;
+  getItem: (key: string) => string | null;
   /**
    * Add a value to the store for a given key. If there already exists a value
    * for the given key, this method will override the value.
    * @param key The key to store the value for.
    * @param value The value to store.
    */
-  setItem(key: string, value: string): void;
+  setItem: (key: string, value: string) => void;
   /**
    * Remove the value for a given key from the store. If there is no value for
    * the given key this method does nothing.
    * @param key The key to remove the value from the store.
    */
-  removeItem(key: string): void;
+  removeItem: (key: string) => void;
   /**
    * Remove all items from the store.
    */
-  clear(): void;
+  clear: () => void;
   /**
    * The number of items that are currently stored.
    */

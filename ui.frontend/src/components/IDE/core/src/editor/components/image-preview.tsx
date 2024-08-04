@@ -2,7 +2,7 @@ import type { Token } from 'codemirror';
 import { useEffect, useRef, useState } from 'react';
 import type { Dimensions, ImagePreviewProps } from '@/types';
 
-export function ImagePreview(props: ImagePreviewProps) {
+export const ImagePreview = (props: ImagePreviewProps) => {
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: null,
     height: null,
@@ -59,14 +59,14 @@ export function ImagePreview(props: ImagePreviewProps) {
       {dims}
     </div>
   );
-}
+};
 
-ImagePreview.shouldRender = function shouldRender(token: Token) {
+ImagePreview.shouldRender = (token: Token) => {
   const url = tokenToURL(token);
   return url ? isImageURL(url) : false;
 };
 
-function tokenToURL(token: Token) {
+const tokenToURL = (token: Token) => {
   if (token.type !== 'string') {
     return;
   }
@@ -79,8 +79,8 @@ function tokenToURL(token: Token) {
   } catch {
     return;
   }
-}
+};
 
-function isImageURL(url: URL) {
+const isImageURL = (url: URL) => {
   return /(bmp|gif|jpeg|jpg|png|svg)$/.test(url.pathname);
-}
+};

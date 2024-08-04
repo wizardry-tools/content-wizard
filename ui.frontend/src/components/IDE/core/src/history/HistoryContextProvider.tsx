@@ -13,7 +13,7 @@ const DEFAULT_HISTORY_LENGTH = 20;
  * any additional props they added for their needs (i.e., build their own functions that may save
  * to a backend instead of localStorage and might need an id property added to the QueryStoreItem)
  */
-export function HistoryContextProvider(props: HistoryContextProviderProps) {
+export const HistoryContextProvider = (props: HistoryContextProviderProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `HistoryContextProvider[${renderCount}] render()` });
@@ -78,4 +78,4 @@ export function HistoryContextProvider(props: HistoryContextProviderProps) {
   );
 
   return <HistoryContext.Provider value={value}>{props.children}</HistoryContext.Provider>;
-}
+};

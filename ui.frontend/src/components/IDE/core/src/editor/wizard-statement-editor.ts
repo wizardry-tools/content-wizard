@@ -19,10 +19,10 @@ const getStatement = (language: QueryLanguage, statement: Statement) => {
  * @param keyMap
  * @param caller
  */
-export function useWizardStatementEditor(
+export const useWizardStatementEditor = (
   { keyMap = DEFAULT_KEY_MAP }: UseWizardStatementEditorArgs = {},
   caller?: Caller,
-) {
+) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useWizardStatementEditor[${renderCount}] render()` });
@@ -96,4 +96,4 @@ export function useWizardStatementEditor(
   //useSynchronizeValue(wizardStatementEditor, getStatement(language, statement));
 
   return ref;
-}
+};

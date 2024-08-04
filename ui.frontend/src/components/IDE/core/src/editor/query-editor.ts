@@ -37,7 +37,7 @@ import {
 } from './hooks';
 import { normalizeWhitespace } from './whitespace';
 
-export function useQueryEditor(
+export const useQueryEditor = (
   {
     editorTheme = DEFAULT_EDITOR_THEME,
     keyMap = DEFAULT_KEY_MAP,
@@ -45,7 +45,7 @@ export function useQueryEditor(
     readOnly = false,
   }: UseQueryEditorArgs = {},
   caller?: Caller,
-) {
+) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useQueryEditor[${renderCount}] render()` });
@@ -199,7 +199,7 @@ export function useQueryEditor(
               info: {
                 schema: undefined,
                 renderDescription: (text: string) => markdown.render(text),
-                onClick(reference: SchemaReference) {
+                onClick: (reference: SchemaReference) => {
                   onClickReferenceRef.current(reference);
                 },
               },
@@ -212,36 +212,36 @@ export function useQueryEditor(
         // @ts-expect-error CodeMirror Configs are severely outdated, need to migrate to CodeMirror6
         jump: {
           schema: undefined,
-          onClick(reference: SchemaReference) {
+          onClick: (reference: SchemaReference) => {
             onClickReferenceRef.current(reference);
           },
         },
         gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
         extraKeys: {
           ...commonKeys,
-          'Cmd-S'() {
+          'Cmd-S': () => {
             // empty
           },
-          'Ctrl-S'() {
+          'Ctrl-S': () => {
             // empty
           },
         },
       }) as CodeMirrorEditorWithOperationFacts;
 
       newEditor.addKeyMap({
-        'Cmd-Space'() {
+        'Cmd-Space': () => {
           newEditor.showHint({ completeSingle: true, container });
         },
-        'Ctrl-Space'() {
+        'Ctrl-Space': () => {
           newEditor.showHint({ completeSingle: true, container });
         },
-        'Alt-Space'() {
+        'Alt-Space': () => {
           newEditor.showHint({ completeSingle: true, container });
         },
-        'Shift-Space'() {
+        'Shift-Space': () => {
           newEditor.showHint({ completeSingle: true, container });
         },
-        'Shift-Alt-Space'() {
+        'Shift-Alt-Space': () => {
           newEditor.showHint({ completeSingle: true, container });
         },
       });
@@ -302,7 +302,7 @@ export function useQueryEditor(
     if (!queryEditor) {
       return;
     }
-    function getAndUpdateOperationFacts(editorInstance: CodeMirrorEditorWithOperationFacts) {
+    const getAndUpdateOperationFacts = (editorInstance: CodeMirrorEditorWithOperationFacts) => {
       const operationFacts = getOperationFacts(schema, editorInstance.getValue());
 
       // Update operation name should any query names change.
@@ -325,7 +325,7 @@ export function useQueryEditor(
         codeMirrorRef.current?.signal(variableEditor, 'change', variableEditor);
       }
       return operationFacts ? { ...operationFacts, operationName } : null;
-    }
+    };
 
     const handleChange = debounce(100, (editorInstance: CodeMirrorEditorWithOperationFacts) => {
       const query = {
@@ -379,7 +379,7 @@ export function useQueryEditor(
 
   const run = executionContext?.run;
   const runAtCursor = useCallback(() => {
-    if (!run || !queryEditor || !queryEditor.operations || !queryEditor.hasFocus()) {
+    if (!run || !queryEditor?.operations || !queryEditor.hasFocus()) {
       run?.();
       return;
     }
@@ -415,13 +415,13 @@ export function useQueryEditor(
   useKeyMap(queryEditor, ['Shift-Ctrl-M'], merge);
 
   return ref;
-}
+};
 
-function useSynchronizeSchema(
+const useSynchronizeSchema = (
   editor: CodeMirrorEditor | null,
   schema: GraphQLSchema | null,
   codeMirrorRef: MutableRefObject<CodeMirrorType | undefined>,
-) {
+) => {
   useEffect(() => {
     if (!editor) {
       return;
@@ -438,13 +438,13 @@ function useSynchronizeSchema(
       codeMirrorRef.current.signal(editor, 'change', editor);
     }
   }, [editor, schema, codeMirrorRef]);
-}
+};
 
-function useSynchronizeValidationRules(
+const useSynchronizeValidationRules = (
   editor: CodeMirrorEditor | null,
   validationRules: ValidationRule[] | null,
   codeMirrorRef: MutableRefObject<CodeMirrorType | undefined>,
-) {
+) => {
   useEffect(() => {
     if (!editor) {
       return;
@@ -459,7 +459,7 @@ function useSynchronizeValidationRules(
       codeMirrorRef.current.signal(editor, 'change', editor);
     }
   }, [editor, validationRules, codeMirrorRef]);
-}
+};
 
 const AUTO_COMPLETE_AFTER_KEY = /^[a-zA-Z0-9_@(]$/;
 

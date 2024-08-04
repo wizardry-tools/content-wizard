@@ -19,10 +19,10 @@ import { useCopyResult, useKeyMap, useSynchronizeOption, useSynchronizeValue } f
  * @param data
  * @param caller
  */
-export function useResultExplorerEditor(
+export const useResultExplorerEditor = (
   { keyMap = DEFAULT_KEY_MAP, data = '' }: UseResultExplorerEditorArgs = {},
   caller?: Caller,
-) {
+) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `useResultExplorerEditor[${renderCount}] render()` });
@@ -98,4 +98,4 @@ export function useResultExplorerEditor(
   useSynchronizeValue(editor, data);
 
   return ref;
-}
+};

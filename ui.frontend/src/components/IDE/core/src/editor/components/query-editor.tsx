@@ -9,7 +9,7 @@ import '../style/jump.scss';
 import '../style/auto-insertion.scss';
 import '../style/editor.scss';
 
-export function QueryEditor(props: UseQueryEditorArgs) {
+export const QueryEditor = (props: UseQueryEditorArgs) => {
   const ref = useQueryEditor(props, QueryEditor);
   return <div className="wizard-editor" ref={ref} />;
-}
+};

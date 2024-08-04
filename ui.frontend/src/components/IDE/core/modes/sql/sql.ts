@@ -20,7 +20,7 @@ import type { ModeOptions, SqlState } from '@/types';
       punctuation = /^[;.,:]/,
     } = parserConfig;
 
-    function tokenBase(stream: CodeMirror.StringStream, state: SqlState) {
+    const tokenBase = (stream: CodeMirror.StringStream, state: SqlState) => {
       const ch: string | null = stream.next();
       if (!ch) {
         return null;
@@ -137,11 +137,11 @@ import type { ModeOptions, SqlState } from '@/types';
         if (word in client) return 'builtin';
         return null;
       }
-    }
+    };
 
     // 'string', with char specified in quote escaped by '\'
-    function tokenLiteral(quote: string | null, backslashEscapes = false, endToken: string | null = '') {
-      return function (stream: CodeMirror.StringStream, state: SqlState) {
+    const tokenLiteral = (quote: string | null, backslashEscapes = false, endToken: string | null = '') => {
+      return (stream: CodeMirror.StringStream, state: SqlState) => {
         let escaped = false,
           ch;
         let variable = false;
@@ -160,8 +160,8 @@ import type { ModeOptions, SqlState } from '@/types';
         }
         return variable ? 'variable-2' : 'string';
       };
-    }
-    function tokenComment(depth: number) {
+    };
+    const tokenComment = (depth: number) => {
       return function (stream: CodeMirror.StringStream, state: SqlState) {
         const m = stream.match(/^.*?(\/\*|\*\/)/);
         if (!m) stream.skipToEnd();
@@ -170,30 +170,29 @@ import type { ModeOptions, SqlState } from '@/types';
         else state.tokenize = tokenBase;
         return 'comment';
       };
-    }
+    };
 
-    function pushContext(stream: CodeMirror.StringStream, state: SqlState, type: string) {
+    const pushContext = (stream: CodeMirror.StringStream, state: SqlState, type: string) => {
       state.context = {
         prev: state.context,
         indent: stream.indentation(),
         col: stream.column(),
         type: type,
       };
-    }
+    };
 
-    function popContext(state: SqlState) {
+    const popContext = (state: SqlState) => {
       if (state.context) {
         state.indent = state.context.indent;
         state.context = state.context.prev;
       }
-    }
+    };
 
     return {
-      startState: function () {
+      startState: () => {
         return { tokenize: tokenBase, context: null };
       },
-
-      token: function (stream: CodeMirror.StringStream, state: SqlState) {
+      token: (stream: CodeMirror.StringStream, state: SqlState) => {
         if (stream.sol()) {
           if (state.context && state.context.align == null) state.context.align = false;
         }
@@ -210,15 +209,13 @@ import type { ModeOptions, SqlState } from '@/types';
         else if (state.context && state.context.type === tok) popContext(state);
         return style;
       },
-
-      indent: function (state: SqlState, textAfter) {
+      indent: (state: SqlState, textAfter) => {
         const cx = state.context;
         if (!cx) return CodeMirror.Pass;
         const closing = textAfter.startsWith(cx.type);
         if (cx.align) return cx.col + (closing ? 0 : 1);
         else return cx.indent + (closing ? 0 : (config.indentUnit ?? 0));
       },
-
       blockCommentStart: '/*',
       blockCommentEnd: '*/',
       lineComment: support.commentSlashSlash ? '//' : support.commentHash ? '#' : '--',
@@ -228,7 +225,7 @@ import type { ModeOptions, SqlState } from '@/types';
   }) as ModeFactory<unknown>); // end definition
 
   // `identifier`
-  function hookIdentifier(stream: CodeMirror.StringStream) {
+  const hookIdentifier = (stream: CodeMirror.StringStream) => {
     // MySQL/MariaDB identifiers
     // ref: https://dev.mysql.com/doc/refman/8.0/en/identifier-qualifiers.html
     let ch;
@@ -237,10 +234,10 @@ import type { ModeOptions, SqlState } from '@/types';
     }
     stream.backUp(stream.current().length - 1);
     return stream.eatWhile(/\w/) ? 'variable-2' : null;
-  }
+  };
 
   // "identifier"
-  function hookIdentifierDoublequote(stream: CodeMirror.StringStream) {
+  const hookIdentifierDoublequote = (stream: CodeMirror.StringStream) => {
     // Standard SQL /SQLite identifiers
     // ref: http://web.archive.org/web/20160813185132/http://savage.net.au/SQL/sql-99.bnf.html#delimited%20identifier
     // ref: http://sqlite.org/lang_keywords.html
@@ -250,10 +247,10 @@ import type { ModeOptions, SqlState } from '@/types';
     }
     stream.backUp(stream.current().length - 1);
     return stream.eatWhile(/\w/) ? 'variable-2' : null;
-  }
+  };
 
   // variable token
-  function hookVar(stream: CodeMirror.StringStream) {
+  const hookVar = (stream: CodeMirror.StringStream) => {
     // variables
     // @@prefix.varName @varName
     // varName can be quoted with ` or ' or "
@@ -277,10 +274,10 @@ import type { ModeOptions, SqlState } from '@/types';
       return 'variable-2';
     }
     return null;
-  }
+  };
 
   // short client keyword token
-  function hookClient(stream: CodeMirror.StringStream) {
+  const hookClient = (stream: CodeMirror.StringStream) => {
     // \N means NULL
     // ref: https://dev.mysql.com/doc/refman/8.0/en/null-values.html
     if (stream.eat('N')) {
@@ -289,21 +286,21 @@ import type { ModeOptions, SqlState } from '@/types';
     // \g, etc
     // ref: https://dev.mysql.com/doc/refman/8.0/en/mysql-commands.html
     return stream.match(/^[a-zA-Z.#!?]/) ? 'variable-2' : null;
-  }
+  };
 
   // these keywords are used by all SQL dialects (however, a mode can still overwrite it)
   const sqlKeywords =
     'alter and as asc between by count create delete desc distinct drop from group having in insert into is join like not on or order select set table union update values where limit ';
 
   // turn a space-separated list into an array
-  function set(str: string) {
+  const set = (str: string) => {
     const obj: Record<string, boolean> = {},
       words = str.split(' ');
     words.forEach((word) => {
       obj[word] = true;
     });
     return obj;
-  }
+  };
 
   const defaultBuiltin =
     'bool boolean bit blob enum long longblob longtext medium mediumblob mediumint mediumtext time timestamp tinyblob tinyint tinytext text bigint int int1 int2 int3 int4 int8 integer float float4 float8 double char varbinary varchar varcharacter precision real date datetime year unsigned signed decimal numeric';

@@ -9,7 +9,7 @@ import '../style/lint.scss';
 import '../style/hint.scss';
 import '../style/editor.scss';
 
-export function VariableEditor({ isHidden, ...hookArgs }: VariableEditorProps) {
+export const VariableEditor = ({ isHidden, ...hookArgs }: VariableEditorProps) => {
   const { variableEditor } = useEditorContext({
     nonNull: true,
     caller: VariableEditor,
@@ -23,4 +23,4 @@ export function VariableEditor({ isHidden, ...hookArgs }: VariableEditorProps) {
   }, [variableEditor, isHidden]);
 
   return <div className={clsx('wizard-editor', isHidden && 'hidden')} ref={ref} />;
-}
+};

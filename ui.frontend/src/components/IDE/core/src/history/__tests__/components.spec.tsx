@@ -26,7 +26,7 @@ const mockOperationName = 'Test';
 
 type QueryHistoryItemProps = ComponentProps<typeof HistoryItem>;
 
-function QueryHistoryItemWithContext(props: QueryHistoryItemProps) {
+const QueryHistoryItemWithContext = (props: QueryHistoryItemProps) => {
   return (
     <Tooltip.Provider>
       <HistoryContextProvider>
@@ -34,7 +34,7 @@ function QueryHistoryItemWithContext(props: QueryHistoryItemProps) {
       </HistoryContextProvider>
     </Tooltip.Provider>
   );
-}
+};
 
 const baseMockProps: QueryHistoryItemProps = {
   item: {
@@ -46,13 +46,13 @@ const baseMockProps: QueryHistoryItemProps = {
   },
 };
 
-function getMockProps(customProps?: Partial<QueryHistoryItemProps>): QueryHistoryItemProps {
+const getMockProps = (customProps?: Partial<QueryHistoryItemProps>): QueryHistoryItemProps => {
   return {
     ...baseMockProps,
     ...customProps,
     item: { ...baseMockProps.item, ...customProps?.item },
   };
-}
+};
 
 describe('HistoryItem', () => {
   vi.mock('../../ide-providers/storage', () => {
@@ -70,7 +70,7 @@ describe('HistoryItem', () => {
     };
 
     return {
-      useStorageContext() {
+      useStorageContext: () => {
         return mockStorage;
       },
     };
@@ -80,7 +80,7 @@ describe('HistoryItem', () => {
     const mockedSetVariableEditor = vi.fn();
     const mockedSetHeaderEditor = vi.fn();
     return {
-      useEditorContext() {
+      useEditorContext: () => {
         return {
           queryEditor: { setValue: mockedSetQueryEditor },
           variableEditor: { setValue: mockedSetVariableEditor },
@@ -91,13 +91,13 @@ describe('HistoryItem', () => {
   });
   vi.mock('@/providers', () => {
     return {
-      useQueryDispatcher() {
+      useQueryDispatcher: () => {
         return emptyMockFunction;
       },
-      useAlertDispatcher() {
+      useAlertDispatcher: () => {
         return emptyMockFunction;
       },
-      useLogger() {
+      useLogger: () => {
         return mockLogger;
       },
     };

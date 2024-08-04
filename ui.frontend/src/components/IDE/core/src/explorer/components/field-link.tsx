@@ -3,7 +3,7 @@ import type { FieldLinkProps } from '@/types';
 import { useExplorerContext } from '../ExplorerContext';
 import './field-link.scss';
 
-export function FieldLink(props: FieldLinkProps) {
+export const FieldLink = (props: FieldLinkProps) => {
   const { push } = useExplorerContext({ nonNull: true });
 
   return (
@@ -17,4 +17,4 @@ export function FieldLink(props: FieldLinkProps) {
       {props.field.name}
     </Link>
   );
-}
+};

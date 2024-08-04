@@ -2,7 +2,7 @@ import type { DeprecationReasonProps } from '@/types';
 import { MarkdownContent } from '../../ui';
 import './deprecation-reason.scss';
 
-export function DeprecationReason(props: DeprecationReasonProps) {
+export const DeprecationReason = (props: DeprecationReasonProps) => {
   return props.children ? (
     <div className="wizard-doc-explorer-deprecation">
       <div className="wizard-doc-explorer-deprecation-label">Deprecated</div>
@@ -11,4 +11,4 @@ export function DeprecationReason(props: DeprecationReasonProps) {
       </MarkdownContent>
     </div>
   ) : null;
-}
+};

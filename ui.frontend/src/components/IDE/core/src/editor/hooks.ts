@@ -28,7 +28,7 @@ import { useEditorContext } from './context';
  * @param editor
  * @param value
  */
-export function useSynchronizeValue(editor: CodeMirrorEditor | null, value: Query | string | undefined | null) {
+export const useSynchronizeValue = (editor: CodeMirrorEditor | null, value: Query | string | undefined | null) => {
   useEffect(() => {
     if (editor && value) {
       if (typeof value === 'string' && value !== editor.getValue()) {
@@ -38,13 +38,13 @@ export function useSynchronizeValue(editor: CodeMirrorEditor | null, value: Quer
       }
     }
   }, [editor, value]);
-}
+};
 
-export function useSynchronizeOption<K extends keyof EditorConfiguration>(
+export const useSynchronizeOption = <K extends keyof EditorConfiguration>(
   editor: CodeMirrorEditor | null,
   option: K,
   value: EditorConfiguration[K],
-) {
+) => {
   const logger = useLogger();
   useEffect(() => {
     if (editor) {
@@ -52,15 +52,15 @@ export function useSynchronizeOption<K extends keyof EditorConfiguration>(
       editor.setOption(option, value);
     }
   }, [editor, logger, option, value]);
-}
+};
 
-export function useChangeHandler(
+export const useChangeHandler = (
   editor: CodeMirrorEditor | null,
   callback: ((value: string) => void) | undefined,
   storageKey: string | null,
   tabProperty: 'variables' | 'headers',
   caller: Caller,
-) {
+) => {
   const logger = useLogger();
   const { updateActiveTabValues } = useEditorContext({ nonNull: true, caller });
   const storage = useStorageContext();
@@ -98,13 +98,13 @@ export function useChangeHandler(
       editor.off('change', handleChange);
     };
   }, [callback, editor, logger, storage, storageKey, tabProperty, updateActiveTabValues]);
-}
+};
 
-export function useCompletion(
+export const useCompletion = (
   editor: CodeMirrorEditor | null,
   callback: ((reference: SchemaReference) => void) | null,
   caller: Caller,
-) {
+) => {
   const { schema } = useSchemaContext({ nonNull: true, caller });
   const explorer = useExplorerContext();
   const plugin = usePluginContext();
@@ -125,9 +125,9 @@ export function useCompletion(
       editor.off('hasCompletion', handleCompletion);
     };
   }, [callback, editor, explorer, plugin, schema]);
-}
+};
 
-export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callback: EmptyCallback | undefined) {
+export const useKeyMap = (editor: CodeMirrorEditor | null, keys: string[], callback: EmptyCallback | undefined) => {
   useEffect(() => {
     if (!editor) {
       return;
@@ -146,9 +146,9 @@ export function useKeyMap(editor: CodeMirrorEditor | null, keys: string[], callb
       editor.addKeyMap(keyMap);
     }
   }, [editor, keys, callback]);
-}
+};
 
-export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}): EmptyCallback {
+export const useCopyQuery = ({ caller, onCopyQuery }: UseCopyQueryArgs = {}): EmptyCallback => {
   const { queryEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useCopyQuery,
@@ -163,9 +163,9 @@ export function useCopyQuery({ caller, onCopyQuery }: UseCopyQueryArgs = {}): Em
 
     onCopyQuery?.(query);
   }, [queryEditor, onCopyQuery]);
-}
+};
 
-export function useCopyResult({ caller }: UseCopyResultArgs = {}): EmptyCallback {
+export const useCopyResult = ({ caller }: UseCopyResultArgs = {}): EmptyCallback => {
   const { resultExplorerEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useCopyResult,
@@ -177,9 +177,9 @@ export function useCopyResult({ caller }: UseCopyResultArgs = {}): EmptyCallback
     const result = resultExplorerEditor.getValue();
     copyToClipboard(result);
   }, [resultExplorerEditor]);
-}
+};
 
-export function useMergeQuery({ caller }: UseMergeQueryArgs = {}): EmptyCallback {
+export const useMergeQuery = ({ caller }: UseMergeQueryArgs = {}): EmptyCallback => {
   const { queryEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useMergeQuery,
@@ -194,9 +194,9 @@ export function useMergeQuery({ caller }: UseMergeQueryArgs = {}): EmptyCallback
 
     queryEditor.setValue(print(mergeAst(documentAST, schema)));
   }, [queryEditor, schema]);
-}
+};
 
-export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}): EmptyCallback {
+export const usePrettifyEditors = ({ caller }: UsePrettifyEditorsArgs = {}): EmptyCallback => {
   const { queryEditor, headerEditor, variableEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? usePrettifyEditors,
@@ -237,11 +237,11 @@ export function usePrettifyEditors({ caller }: UsePrettifyEditorsArgs = {}): Emp
       }
     }
   }, [isGraphQL, queryEditor, variableEditor, headerEditor]);
-}
+};
 
-export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}): () =>
+export const useAutoCompleteLeafs = ({ getDefaultFieldNames, caller }: UseAutoCompleteLeafsArgs = {}): (() =>
   | string
-  | undefined {
+  | undefined) => {
   const { schema } = useSchemaContext({
     nonNull: true,
     caller: caller ?? useAutoCompleteLeafs,
@@ -291,7 +291,7 @@ export function useAutoCompleteLeafs({ getDefaultFieldNames, caller }: UseAutoCo
 
     return result;
   }, [getDefaultFieldNames, queryEditor, schema]);
-}
+};
 
 // https://react.dev/learn/you-might-not-need-an-effect
 
@@ -352,9 +352,9 @@ export const useHeadersEditorState = (): [headers: string, setHeaders: (content:
  *   useOptimisticState(useOperationsEditorState());
  * ```
  */
-export function useOptimisticState([upstreamState, upstreamSetState]: ReturnType<typeof useEditorState>): ReturnType<
+export const useOptimisticState = ([upstreamState, upstreamSetState]: ReturnType<typeof useEditorState>): ReturnType<
   typeof useEditorState
-> {
+> => {
   const lastStateRef = useRef({
     /** The last thing that we sent upstream; we're expecting this back */
     pending: null as string | null,
@@ -402,4 +402,4 @@ export function useOptimisticState([upstreamState, upstreamSetState]: ReturnType
   );
 
   return useMemo(() => [state, setState], [state, setState]);
-}
+};

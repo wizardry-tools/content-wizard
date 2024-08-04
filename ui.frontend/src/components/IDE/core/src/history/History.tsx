@@ -6,7 +6,7 @@ import { useHistoryContext } from './HistoryContext';
 import { HistoryItem } from './HistoryItem';
 import './style.scss';
 
-export function History() {
+export const History = () => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `History[${renderCount}] render()` });
@@ -80,4 +80,4 @@ export function History() {
       )}
     </section>
   );
-}
+};

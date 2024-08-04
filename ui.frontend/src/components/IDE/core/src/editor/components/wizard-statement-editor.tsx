@@ -11,7 +11,7 @@ import '../style/info.scss';
 import '../style/editor.scss';
 import './wizard-statement-editor.scss';
 
-export function WizardStatementEditor(props: UseWizardStatementEditorArgs) {
+export const WizardStatementEditor = (props: UseWizardStatementEditorArgs) => {
   const { className = '' } = { ...props };
   const copy = useCopyQuery();
   const ref = useWizardStatementEditor(props, WizardStatementEditor);
@@ -36,4 +36,4 @@ export function WizardStatementEditor(props: UseWizardStatementEditorArgs) {
       </Paper>
     </section>
   );
-}
+};

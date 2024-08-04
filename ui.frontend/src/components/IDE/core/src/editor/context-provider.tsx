@@ -11,7 +11,6 @@ import { useRenderCount } from '@/utility';
 import { useLogger, useQuery, useQueryDispatcher } from '@/providers';
 import { defaultAdvancedQueries } from '@/constants';
 import { useStorageContext } from '../ide-providers';
-import { createContextHook, createNullableContext } from '../utility/context';
 import { STORAGE_KEY as STORAGE_KEY_HEADERS } from './header-editor';
 import { useSynchronizeValue } from './hooks';
 import { STORAGE_KEY_QUERY } from './query-editor';
@@ -27,10 +26,9 @@ import {
   STORAGE_KEY as STORAGE_KEY_TABS,
 } from './tabs';
 import { STORAGE_KEY as STORAGE_KEY_VARIABLES } from './variable-editor';
+import { EditorContext } from './context';
 
-export const EditorContext = createNullableContext<EditorContextType>('EditorContext');
-
-export function EditorContextProvider(props: EditorContextProviderProps) {
+export const EditorContextProvider = (props: EditorContextProviderProps) => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `EditorContextProvider[${renderCount}] render()` });
@@ -268,8 +266,6 @@ export function EditorContextProvider(props: EditorContextProviderProps) {
   );
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
-}
-
-export const useEditorContext = createContextHook(EditorContext);
+};
 
 const PERSIST_HEADERS_STORAGE_KEY = 'shouldPersistHeaders';

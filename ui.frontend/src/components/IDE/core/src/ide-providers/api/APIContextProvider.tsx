@@ -6,7 +6,7 @@ import { useCreateFetcher, useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 import { APIContext } from './APIContext';
 
-export function APIContextProvider(props: APIContextProviderProps) {
+export const APIContextProvider = (props: APIContextProviderProps) => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `APIContextProvider[${renderCount}] render()` });
@@ -26,7 +26,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
       // avoid parallel request
       return;
     }
-    async function fetchAPIs(): Promise<GraphQLEndpointConfig[]> {
+    const fetchAPIs = async (): Promise<GraphQLEndpointConfig[]> => {
       const fetch = fetcherReturnToPromise(apiFetcher({}));
       if (!isPromise(fetch)) {
         setFetchError('Fetcher did not return a Promise for API request');
@@ -52,7 +52,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
       const responseString = formatResult(result);
       setFetchError(responseString);
       return [];
-    }
+    };
 
     fetchAPIs()
       .then((data: GraphQLEndpointConfig[]) => {
@@ -94,4 +94,4 @@ export function APIContextProvider(props: APIContextProviderProps) {
   );
 
   return <APIContext.Provider value={value}>{children}</APIContext.Provider>;
-}
+};

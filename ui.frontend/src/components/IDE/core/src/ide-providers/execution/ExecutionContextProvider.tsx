@@ -10,11 +10,11 @@ import { useAutoCompleteLeafs, useEditorContext } from '../../editor';
 import { useHistoryContext } from '../../history';
 import { ExecutionContext } from './ExecutionContext';
 
-export function ExecutionContextProvider({
+export const ExecutionContextProvider = ({
   getDefaultFieldNames,
   children,
   operationName,
-}: ExecutionContextProviderProps) {
+}: ExecutionContextProviderProps) => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `ExecutionContextProvider[${renderCount}] render()` });
@@ -216,9 +216,9 @@ export function ExecutionContextProvider({
   );
 
   return <ExecutionContext.Provider value={value}>{children}</ExecutionContext.Provider>;
-}
+};
 
-function tryParseJsonObject({
+const tryParseJsonObject = ({
   json,
   errorMessageParse,
   errorMessageType,
@@ -226,7 +226,7 @@ function tryParseJsonObject({
   json: string | undefined;
   errorMessageParse: string;
   errorMessageType: string;
-}) {
+}) => {
   let parsed: Record<string, unknown> | undefined;
   try {
     parsed = json && json.trim() !== '' ? JSON.parse(json) : undefined;
@@ -238,7 +238,7 @@ function tryParseJsonObject({
     throw new Error(errorMessageType);
   }
   return parsed;
-}
+};
 
 /**
  * @param executionResult The complete execution result object which will be
@@ -246,7 +246,7 @@ function tryParseJsonObject({
  * @param incrementalResult The incremental result that will be merged into the
  * complete execution result.
  */
-function mergeIncrementalResult(executionResult: ExecutionResult, incrementalResult: IncrementalResult): void {
+const mergeIncrementalResult = (executionResult: ExecutionResult, incrementalResult: IncrementalResult): void => {
   const path = ['data', ...(incrementalResult.path ?? [])];
 
   if (incrementalResult.items) {
@@ -280,4 +280,4 @@ function mergeIncrementalResult(executionResult: ExecutionResult, incrementalRes
       mergeIncrementalResult(executionResult, incrementalSubResult);
     }
   }
-}
+};

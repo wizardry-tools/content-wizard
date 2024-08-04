@@ -59,7 +59,7 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorage
     });
   const storage: WizardStorage = buildStorage(props.storage);
 
-  function get(name: string): string | null {
+  const get = (name: string): string | null => {
     if (!storage) {
       return null;
     }
@@ -72,9 +72,9 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorage
       return null;
     }
     return value ?? null;
-  }
+  };
 
-  function set(name: string, value: string): { isQuotaError: boolean; error: Error | null } {
+  const set = (name: string, value: string): { isQuotaError: boolean; error: Error | null } => {
     let quotaError = false;
     let error: Error | null = null;
 
@@ -99,13 +99,13 @@ export const useWizardStorageAPI = (props: WizardStorageAPIProps): WizardStorage
     }
 
     return { isQuotaError: quotaError, error };
-  }
+  };
 
-  function clear() {
+  const clear = () => {
     if (storage) {
       storage.clear();
     }
-  }
+  };
 
   return {
     storage,

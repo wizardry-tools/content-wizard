@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import type { ToolbarMenuProps } from '@/types';
+import { createComponentGroup } from '@/utility';
 import { DropdownMenu, Tooltip } from '../ui';
-import { createComponentGroup } from '../utility/component-group';
 import './menu.scss';
 
 const ToolbarMenuRoot = ({

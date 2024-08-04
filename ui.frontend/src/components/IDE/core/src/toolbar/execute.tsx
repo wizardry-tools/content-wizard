@@ -5,7 +5,7 @@ import { DropdownMenu, Tooltip } from '../ui';
 
 import './execute.scss';
 
-export function ExecuteButton() {
+export const ExecuteButton = () => {
   const { queryEditor, setOperationName } = useEditorContext({
     nonNull: true,
     caller: ExecuteButton,
@@ -67,4 +67,4 @@ export function ExecuteButton() {
       />
     </Tooltip>
   );
-}
+};

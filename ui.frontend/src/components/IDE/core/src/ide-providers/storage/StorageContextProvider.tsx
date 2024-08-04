@@ -4,7 +4,7 @@ import { useAlertDispatcher, useLogger } from '@/providers';
 import { useWizardStorageAPI } from '../../storage-api';
 import { StorageContext } from './StorageContext';
 
-export function StorageContextProvider(props: StorageContextProviderProps) {
+export const StorageContextProvider = (props: StorageContextProviderProps) => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `StorageContextProvider[${renderCount}] render()` });
@@ -12,4 +12,4 @@ export function StorageContextProvider(props: StorageContextProviderProps) {
   const storage: WizardStorageAPI = useWizardStorageAPI({ ...props, alertDispatcher });
 
   return <StorageContext.Provider value={storage}>{props.children}</StorageContext.Provider>;
-}
+};

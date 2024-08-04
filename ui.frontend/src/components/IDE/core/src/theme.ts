@@ -2,7 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import type { IDETheme, WizardStorageAPI } from '@/types';
 import { useStorageContext } from './ide-providers';
 
-function getStoredTheme(storageContext: WizardStorageAPI | null): IDETheme {
+const getStoredTheme = (storageContext: WizardStorageAPI | null): IDETheme => {
   if (!storageContext) {
     return null;
   }
@@ -19,13 +19,13 @@ function getStoredTheme(storageContext: WizardStorageAPI | null): IDETheme {
       }
       return null;
   }
-}
+};
 
 /**
  * This is the Theme Provider for the IDE, but it is also being used to
  * drive the Theme for the rest of the APP.
  */
-export function useTheme() {
+export const useTheme = () => {
   const storageContext = useStorageContext();
 
   const storedTheme = useMemo(() => getStoredTheme(storageContext), [storageContext]);
@@ -52,6 +52,6 @@ export function useTheme() {
   );
 
   return useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
-}
+};
 
 const STORAGE_KEY = 'theme';

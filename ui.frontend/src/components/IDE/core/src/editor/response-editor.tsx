@@ -11,10 +11,10 @@ import { ImagePreview } from './components';
 import { useEditorContext } from './context';
 import { useSynchronizeOption } from './hooks';
 
-export function useResponseEditor(
+export const useResponseEditor = (
   { responseTooltip, editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP }: UseResponseEditorArgs = {},
   caller?: Caller,
-) {
+) => {
   const { fetchError, validationErrors } = useSchemaContext({
     nonNull: true,
     caller: caller ?? useResponseEditor,
@@ -116,4 +116,4 @@ export function useResponseEditor(
   }, [responseEditor, fetchError, validationErrors]);
 
   return ref;
-}
+};

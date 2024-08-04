@@ -10,7 +10,7 @@ import { useAlertDispatcher, useFetcher, useLogger, useQuery } from '@/providers
 import { useEditorContext } from '../../editor';
 import { SchemaContext } from './SchemaContext';
 
-export function SchemaContextProvider(props: SchemaContextProviderProps) {
+export const SchemaContextProvider = (props: SchemaContextProviderProps) => {
   const renderCount = useRenderCount();
   const logger = useLogger();
   logger.debug({ message: `SchemaContextProvider[${renderCount}] render()` });
@@ -74,7 +74,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
     }
     logger.debug({ message: `SchemaContextProvider introspect()` });
 
-    async function fetchIntrospectionData() {
+    const fetchIntrospectionData = async () => {
       const parsedHeaders = parseHeaderString(headersRef.current);
       if (!parsedHeaders.isValidJSON) {
         setFetchError('Introspection failed as headers are invalid.');
@@ -140,7 +140,7 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
       // handle as if it were an error if the fetcher response is not a string or response.data is not present
       const responseString = typeof result === 'string' ? result : formatResult(result);
       setFetchError(responseString);
-    }
+    };
 
     fetchIntrospectionData()
       .then((introspectionData) => {
@@ -232,13 +232,13 @@ export function SchemaContextProvider(props: SchemaContextProviderProps) {
   );
 
   return <SchemaContext.Provider value={value}>{children}</SchemaContext.Provider>;
-}
+};
 
-function useIntrospectionQuery({
+const useIntrospectionQuery = ({
   inputValueDeprecation,
   introspectionQueryName,
   schemaDescription,
-}: IntrospectionArgs) {
+}: IntrospectionArgs) => {
   return useMemo(() => {
     const queryName = introspectionQueryName ?? 'IntrospectionQuery';
 
@@ -258,9 +258,9 @@ function useIntrospectionQuery({
       introspectionQuerySansSubscriptions: querySansSubscriptions,
     };
   }, [inputValueDeprecation, introspectionQueryName, schemaDescription]);
-}
+};
 
-function parseHeaderString(headersString: string | undefined) {
+const parseHeaderString = (headersString: string | undefined) => {
   let headers: Record<string, unknown> | null = null;
   let isValidJSON = true;
 
@@ -272,4 +272,4 @@ function parseHeaderString(headersString: string | undefined) {
     isValidJSON = false;
   }
   return { headers, isValidJSON };
-}
+};

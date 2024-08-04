@@ -12,10 +12,10 @@ import {
   useSynchronizeOption,
 } from './hooks';
 
-export function useVariableEditor(
+export const useVariableEditor = (
   { editorTheme = DEFAULT_EDITOR_THEME, keyMap = DEFAULT_KEY_MAP, readOnly = false }: UseVariableEditorArgs = {},
   caller?: Caller,
-) {
+) => {
   const { initialVariables, variableEditor, setVariableEditor } = useEditorContext({
     nonNull: true,
     caller: caller ?? useVariableEditor,
@@ -115,6 +115,6 @@ export function useVariableEditor(
   useKeyMap(variableEditor, ['Shift-Ctrl-M'], merge);
 
   return ref;
-}
+};
 
 export const STORAGE_KEY = 'variables';

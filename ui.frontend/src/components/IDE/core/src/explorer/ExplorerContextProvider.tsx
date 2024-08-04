@@ -20,7 +20,7 @@ import { ExplorerContext } from './ExplorerContext';
 
 const initialNavStackItem: ExplorerNavStackItem = { name: 'Docs' };
 
-export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
+export const ExplorerContextProvider = (props: ExplorerContextProviderProps) => {
   const { schema, validationErrors } = useSchemaContext({
     nonNull: true,
     caller: ExplorerContextProvider,
@@ -135,4 +135,4 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
   );
 
   return <ExplorerContext.Provider value={value}>{props.children}</ExplorerContext.Provider>;
-}
+};

@@ -8,7 +8,7 @@ import { Tooltip, UnStyledButton } from '../ui';
 import { useEditorContext } from '../editor';
 import { formatQuery, useHistoryContext } from './HistoryContext';
 
-export function HistoryItem(props: QueryHistoryItemProps) {
+export const HistoryItem = (props: QueryHistoryItemProps) => {
   const queryDispatcher = useQueryDispatcher();
   const { editLabel, toggleFavorite, deleteFromHistory, setActive } = useHistoryContext({
     nonNull: true,
@@ -151,4 +151,4 @@ export function HistoryItem(props: QueryHistoryItemProps) {
       )}
     </li>
   );
-}
+};

@@ -47,16 +47,16 @@ export const useHeaderEditor = (
       });
 
       newEditor.addKeyMap({
-        'Cmd-Space'() {
+        'Cmd-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Ctrl-Space'() {
+        'Ctrl-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Alt-Space'() {
+        'Alt-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
-        'Shift-Space'() {
+        'Shift-Space': () => {
           newEditor.showHint({ completeSingle: false, container });
         },
       });

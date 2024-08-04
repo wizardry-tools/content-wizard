@@ -5,7 +5,7 @@ export const HistoryContext = createNullableContext<HistoryContextType>('History
 
 export const useHistoryContext = createContextHook<HistoryContextType>(HistoryContext);
 
-export function formatQuery(query?: string) {
+export const formatQuery = (query?: string) => {
   return query
     ?.split('\n')
     .map((line) => line.replace(/#(.*)/, ''))
@@ -13,4 +13,4 @@ export function formatQuery(query?: string) {
     .replaceAll('{', ' { ')
     .replaceAll('}', ' } ')
     .replaceAll(/[\s]{2,}/g, ' ');
-}
+};

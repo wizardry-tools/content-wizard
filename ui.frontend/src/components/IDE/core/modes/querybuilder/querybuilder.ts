@@ -6,7 +6,7 @@ import type { QueryBuilderPropertiesState } from '@/types';
 (() => {
   CodeMirror.defineMode('querybuilder', function () {
     return {
-      token: function (stream: CodeMirror.StringStream, state: QueryBuilderPropertiesState) {
+      token: (stream: CodeMirror.StringStream, state: QueryBuilderPropertiesState) => {
         const sol = stream.sol() || state.afterSection;
         const eol = stream.eol();
 
@@ -64,8 +64,7 @@ import type { QueryBuilderPropertiesState } from '@/types';
 
         return state.position;
       },
-
-      startState: function () {
+      startState: () => {
         return {
           position: 'predicate', // Current position, "def", "quote" or "comment"
           nextMultiline: false, // Is the next line multiline value

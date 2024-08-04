@@ -1,15 +1,13 @@
-import type { ReactElement, ReactNode } from 'react';
 import * as T from '@radix-ui/react-tooltip';
-import { createComponentGroup } from '../utility/component-group';
-import './tooltip.scss';
+import type { ReactElement, ReactNode } from 'react';
 
-export function TooltipRoot({
+export const TooltipRoot = ({
   children,
   align = 'start',
   side = 'bottom',
   sideOffset = 5,
   label,
-}: T.TooltipContentProps & { label: ReactNode }): ReactElement {
+}: T.TooltipContentProps & { label: ReactNode }): ReactElement => {
   return (
     <T.Root>
       <T.Trigger asChild>{children}</T.Trigger>
@@ -20,8 +18,4 @@ export function TooltipRoot({
       </T.Portal>
     </T.Root>
   );
-}
-
-export const Tooltip = createComponentGroup(TooltipRoot, {
-  Provider: T.Provider,
-});
+};
