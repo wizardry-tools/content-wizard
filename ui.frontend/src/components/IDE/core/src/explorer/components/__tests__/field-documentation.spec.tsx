@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { GraphQLString, GraphQLObjectType, Kind } from 'graphql';
 
 import type { ExplorerFieldDef } from '@/types';
-import { ExplorerContext } from '../../context';
+import { ExplorerContext } from '../../ExplorerContext';
 import { FieldDocumentation } from '../field-documentation';
 import { mockExplorerContextValue } from './test-utils';
 

@@ -10,8 +10,8 @@ import {
   GraphQLUnionType,
 } from 'graphql';
 
-import { SchemaContext } from '../../../schema';
-import { ExplorerContext } from '../../context';
+import { SchemaContext } from '../../../ide-providers';
+import { ExplorerContext } from '../../ExplorerContext';
 import { TypeDocumentation } from '../type-documentation';
 import { mockExplorerContextValue, unwrapType } from './test-utils';
 

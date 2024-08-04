@@ -1,11 +1,11 @@
 import type { FieldCategories, FieldConfig, FieldsConfig } from '@/types';
 import type { ElementType } from 'react';
+import { targetTypes, contentTypes } from '@/constants';
 import { SimpleInput } from '@/components/QueryWizard/Components/SimpleInput';
 import { SimpleSelect } from '@/components/QueryWizard/Components/SimpleSelect';
 import { SimpleCheckbox } from '@/components/QueryWizard/Components/SimpleCheckbox';
 import { SimpleDatePicker } from '@/components/QueryWizard/Components/SimpleDatePicker';
 import { SimpleSlider } from '@/components/QueryWizard/Components/SimpleSlider';
-import { contentTypeMap, targetTypes } from '@/components';
 
 export const fieldCategories: FieldCategories = {
   targeting: 'What are you looking for?',
@@ -50,7 +50,7 @@ export const defaultFields: FieldsConfig = {
     fieldType: FieldTypes.SimpleSelect,
     value: 'child',
     required: true,
-    options: contentTypeMap,
+    options: contentTypes,
     category: 'targeting',
   }),
   targetType: Field({

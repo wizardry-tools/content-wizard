@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import type { ComponentProps } from 'react';
 
-import { ExplorerContext } from '../../context';
+import { ExplorerContext } from '../../ExplorerContext';
 import { TypeLink } from '../type-link';
 import { mockExplorerContextValue, unwrapType } from './test-utils';
 

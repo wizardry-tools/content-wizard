@@ -4,10 +4,10 @@ import type { Mock } from 'vitest';
 import { useAuthHeaders } from '../useAuthHeaders';
 import { useCsrfToken } from '../useCsrfToken';
 
-// Mocking hooks used inside useAuthHeaders
-vi.mock('../useRenderCount');
-vi.mock('../useCsrfToken');
 describe('Test useAuthHeaders', () => {
+  // Mocking hooks used inside useAuthHeaders
+  vi.mock('../useRenderCount');
+  vi.mock('../useCsrfToken');
   it('Using useAuthHeaders', async () => {
     // Creating a mock CSRF token and setting up mock for useCsrfToken hook
     const mockCsrfToken = 'mockCsrfToken';

@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useReducer } from 'react';
 import type { PropsWithChildren } from 'react';
 import type { QueryRunnerResponse, QueryRunnerProps, FetcherResult, Result, QueryLanguage } from '@/types';
-import { DYNAMIC_HEADERS, getParams, useRenderCount } from '@/utility';
-import { buildQueryString } from '@/components/Query';
+import { buildQueryString, DYNAMIC_HEADERS, getParams, useRenderCount } from '@/utility';
 import { useStorageContext } from '@/components/IDE/core/src';
 import { useLogger } from '../LoggingProvider';
 import {

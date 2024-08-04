@@ -1,8 +1,8 @@
 import { useEffect, useReducer, useRef } from 'react';
 import type { FieldsProviderProps } from '@/types';
+import { queryBuilderPath } from '@/constants';
 import { useDebounce } from '@/utility';
 import { defaultFields } from '@/components/QueryWizard/Components';
-import { endpoints } from '@/components/Query';
 import { useQueryDispatcher } from '../QueryProvider';
 import { useLogger } from '../LoggingProvider';
 import { FieldConfigDispatchContext, fieldConfigReducer, FieldsConfigContext, generateQuery } from './context';
@@ -39,7 +39,7 @@ export function FieldsProvider({ children }: FieldsProviderProps) {
     queryDispatcher({
       statement,
       language: 'QueryBuilder',
-      url: endpoints.queryBuilderPath,
+      url: queryBuilderPath,
       status: '',
       isAdvanced: false,
       type: 'replaceQuery',

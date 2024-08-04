@@ -10,9 +10,9 @@ import type {
   TabState,
   WizardStorageAPI,
 } from '@/types';
-import { useRenderCount } from '@/utility';
+import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/constants';
+import { isQueryValid, useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
-import { defaultAdvancedQueries, isQueryValid, QUERY_LANGUAGES } from '@/components/Query';
 import debounce from '../utility/debounce';
 
 export function getDefaultTabState({

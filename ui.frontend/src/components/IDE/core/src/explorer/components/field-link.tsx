@@ -1,6 +1,6 @@
 import { Link } from '@mui/material';
 import type { FieldLinkProps } from '@/types';
-import { useExplorerContext } from '../context';
+import { useExplorerContext } from '../ExplorerContext';
 import './field-link.scss';
 
 export function FieldLink(props: FieldLinkProps) {

@@ -6,6 +6,12 @@ import { useJcrFetcher } from './useJcrFetcher';
 
 import './ResultExplorer.scss';
 
+/**
+ * This component will fetch and display deep JCR Content for a given {@link Result}.
+ * The deep JSON tree returned by JCR, will be displayed in an IDE {@link ResultExplorerEditor}.
+ * @param path
+ * @constructor
+ */
 export const ResultExplorer = ({ path }: ResultExplorerProps) => {
   const [data, setData] = useState<ResultData>('');
   const fetching = useRef(false);

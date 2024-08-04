@@ -1,5 +1,5 @@
 import type { API, APIContextType, GraphQLEndpointConfig } from '@/types';
-import { buildGraphQLURL } from '@/components';
+import { buildGraphQLURL } from '@/utility';
 import { createContextHook, createNullableContext } from '../../utility/context';
 
 export const mapAPIs = (response: GraphQLEndpointConfig[]): API[] => {

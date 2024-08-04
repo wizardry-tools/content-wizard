@@ -2,9 +2,9 @@ import { isType } from 'graphql';
 import type { ReactNode } from 'react';
 
 import { ChevronLeftIcon } from '@/icons';
-import { useSchemaContext } from '../../schema';
+import { useSchemaContext } from '../../ide-providers';
 import { Spinner } from '../../ui';
-import { useExplorerContext } from '../context';
+import { useExplorerContext } from '../ExplorerContext';
 import { FieldDocumentation } from './field-documentation';
 import { SchemaDocumentation } from './schema-documentation';
 import { Search } from './search';

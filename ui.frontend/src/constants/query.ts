@@ -1,22 +1,13 @@
-import { getParams } from '@/utility';
-import type { Query, QueryLanguageMap, QueryMap } from '@/types';
-
-export const endpoints: Record<string, string> = {
-  queryBuilderPath: '/bin/querybuilder.json',
-  crxQueryPath: '/crx/de/query.jsp',
-  graphQlListPath: '/graphql/list.json',
-  nodeTypesPath: '/crx/de/nodetypes.jsp',
-  fileSearchPath: '/crx/de/filesearch.jsp',
-  predicatesPath: '/bin/acs-tools/qe/predicates.json',
-};
-
-export const AEM_GRAPHQL_ACTIONS = {
-  persist: 'graphql/persist.json',
-  execute: 'graphql/execute.json',
-  list: 'graphql/list.json',
-  endpoint: 'content/cq:graphql/global/endpoint.json',
-  serviceURL: '/',
-};
+import type {
+  ContentType,
+  ContentTypeProperty,
+  QueryLanguageMap,
+  QueryMap,
+  TargetType,
+  TargetTypeLabel,
+} from '@/types';
+import { crxQueryPath, queryBuilderPath } from './endpoints';
+import { graphQLEndpoint } from './graphql';
 
 export const QUERY_LANGUAGES: QueryLanguageMap = {
   SQL: 'SQL',
@@ -26,31 +17,26 @@ export const QUERY_LANGUAGES: QueryLanguageMap = {
   GraphQL: 'GraphQL',
 };
 
-export function buildGraphQLURL(endpoint: string): string {
-  return AEM_GRAPHQL_ACTIONS.serviceURL + AEM_GRAPHQL_ACTIONS.endpoint.replace('global', endpoint);
-}
+export const targetTypes: Record<TargetType, TargetTypeLabel> = {
+  none: 'None',
+  resource: 'Resource Type',
+  template: 'Template Type',
+  text: 'Full Text Search',
+};
 
-export function buildQueryString(query: Query): string {
-  const { api, language, url } = query;
-  if (language === 'GraphQL') {
-    if (url) {
-      return url;
-    }
-    // never called for IDE based requests
-    if (api?.endpoint) {
-      buildGraphQLURL(api.endpoint);
-    }
-    return AEM_GRAPHQL_ACTIONS.endpoint;
-  }
-
-  const params: Record<string, string> = getParams(query);
-  return '?' + new URLSearchParams(params).toString();
-}
+// pull the correct jcr:contentType from this map when you want to use it based on the user's selected Content Type
+export const contentTypes: Record<ContentType, ContentTypeProperty> = {
+  page: 'cq:Page',
+  xf: 'cq:Page',
+  asset: 'dam:Asset',
+  cf: 'dam:Asset',
+  child: 'nt:unstructured',
+};
 
 export const defaultAdvancedQueries: QueryMap = {
   GraphQL: {
     language: 'GraphQL',
-    url: buildGraphQLURL('we-retail'),
+    url: graphQLEndpoint.replace('global', 'we-retail'),
     statement: `{
   weRetailStoreInfoList {
     items {
@@ -74,7 +60,7 @@ export const defaultAdvancedQueries: QueryMap = {
     language: 'SQL',
     statement: `select * from nt:unstructured as node
 where node.[sling:resourceType] like 'weretail/components/content/teaser'`,
-    url: endpoints.crxQueryPath,
+    url: crxQueryPath,
     isAdvanced: true,
   },
   JCR_SQL2: {
@@ -82,7 +68,7 @@ where node.[sling:resourceType] like 'weretail/components/content/teaser'`,
     statement: `SELECT * FROM [nt:unstructured] AS node
 WHERE ISDESCENDANTNODE(node, "/content/we-retail")
 AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/content/teaser"`,
-    url: endpoints.crxQueryPath,
+    url: crxQueryPath,
     isAdvanced: true,
   },
   XPATH: {
@@ -91,7 +77,7 @@ AND PROPERTY(node.[sling:resourceType], "String") LIKE "weretail/components/cont
 [
   (jcr:like(@sling:resourceType, 'weretail/components/content/teaser'))
 ]`,
-    url: endpoints.crxQueryPath,
+    url: crxQueryPath,
     isAdvanced: true,
   },
   QueryBuilder: {
@@ -103,7 +89,7 @@ type=nt:unstructured
 1_property.operation=like
 p.limit=100
 orderby=path`,
-    url: '/bin/querybuilder.json',
+    url: queryBuilderPath,
     isAdvanced: true,
   },
 };

@@ -1,15 +1,7 @@
 import { useAlertDispatcher } from '@/providers';
 import { useWizardStorageAPI } from '../storage-api';
 import { useWizardStore } from '../store';
-
-vi.mock('@/providers', () => {
-  const mockAlertDispatcher = vi.fn(() => ({}));
-  return {
-    useAlertDispatcher() {
-      return mockAlertDispatcher;
-    },
-  };
-});
+import { emptyMockFunction } from '@/mocks/util';
 
 class StorageMock {
   shouldThrow: () => boolean;
@@ -47,6 +39,13 @@ class StorageMock {
 }
 // TODO: Add tests with language prop
 describe('QueryStore', () => {
+  vi.mock('@/providers', () => {
+    return {
+      useAlertDispatcher() {
+        return emptyMockFunction;
+      },
+    };
+  });
   describe('with no max items', () => {
     it('can push multiple items', () => {
       const mockAlertDispatcher = useAlertDispatcher();

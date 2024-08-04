@@ -1,12 +1,12 @@
 import { clsx } from 'clsx';
 import { type MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 import type { QueryHistoryItemProps } from '@/types';
+import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/constants';
 import { CloseIcon, PenIcon, StarFilledIcon, StarIcon, TrashIcon } from '@/icons';
 import { useQueryDispatcher } from '@/providers';
-import { defaultAdvancedQueries, QUERY_LANGUAGES } from '@/components';
 import { Tooltip, UnStyledButton } from '../ui';
 import { useEditorContext } from '../editor';
-import { useHistoryContext } from './HistoryContext';
+import { formatQuery, useHistoryContext } from './HistoryContext';
 
 export function HistoryItem(props: QueryHistoryItemProps) {
   const queryDispatcher = useQueryDispatcher();
@@ -151,14 +151,4 @@ export function HistoryItem(props: QueryHistoryItemProps) {
       )}
     </li>
   );
-}
-
-function formatQuery(query?: string) {
-  return query
-    ?.split('\n')
-    .map((line) => line.replace(/#(.*)/, ''))
-    .join(' ')
-    .replaceAll('{', ' { ')
-    .replaceAll('}', ' } ')
-    .replaceAll(/[\s]{2,}/g, ' ');
 }

@@ -2,7 +2,7 @@ import { isAbstractType, isEnumType, isInputObjectType, isInterfaceType, isNamed
 import { GraphQLEnumValue, GraphQLNamedType } from 'graphql';
 import { useCallback, useState } from 'react';
 import type { ExplorerFieldDef, TypeDocumentationProps } from '@/types';
-import { useSchemaContext } from '../../schema';
+import { useSchemaContext } from '../../ide-providers';
 import { Button, MarkdownContent } from '../../ui';
 import { Argument } from './argument';
 import { DefaultValue } from './default-value';

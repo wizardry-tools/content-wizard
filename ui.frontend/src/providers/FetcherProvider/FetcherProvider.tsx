@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import type { Fetcher, SyncExecutionResult } from '@graphiql/toolkit/src/create-fetcher/types';
 import type { CustomCreateFetcherOptions, FetcherProviderProps, FetcherResult, OnFetcherResults, Query } from '@/types';
-import { useRenderCount, useCreateFetcher } from '@/utility';
-import { buildQueryString } from '@/components/Query';
+import { buildQueryString, useRenderCount, useCreateFetcher } from '@/utility';
 import { useResultsDispatcher } from '../ResultsProvider';
 import { useQuery } from '../QueryProvider';
 import { useLogger } from '../LoggingProvider';

@@ -15,12 +15,10 @@ import type {
   ExplorerNavStack,
   ExplorerNavStackItem,
 } from '@/types';
-import { useSchemaContext } from '../schema';
-import { createContextHook, createNullableContext } from '../utility/context';
+import { useSchemaContext } from '../ide-providers';
+import { ExplorerContext } from './ExplorerContext';
 
 const initialNavStackItem: ExplorerNavStackItem = { name: 'Docs' };
-
-export const ExplorerContext = createNullableContext<ExplorerContextType>('ExplorerContext');
 
 export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
   const { schema, validationErrors } = useSchemaContext({
@@ -138,5 +136,3 @@ export function ExplorerContextProvider(props: ExplorerContextProviderProps) {
 
   return <ExplorerContext.Provider value={value}>{props.children}</ExplorerContext.Provider>;
 }
-
-export const useExplorerContext = createContextHook(ExplorerContext);

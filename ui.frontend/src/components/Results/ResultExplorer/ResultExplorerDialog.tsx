@@ -14,9 +14,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import type { ResultData, ResultExplorerDialogProps } from '@/types';
-import { escapeColon, escapeUrl } from '@/utility';
-import { ResultExplorer } from './ResultExplorer';
-import { useJcrFetcher } from './useJcrFetcher';
 import {
   ASSET_EDITOR,
   CF_PROP,
@@ -26,8 +23,20 @@ import {
   DAM_PATH,
   PAGE_PROPERTIES_EDITOR,
   XF_PATH,
-} from '@/components/Results/ResultExplorer/constants';
+} from '@/constants';
+import { escapeColon, escapeUrl } from '@/utility';
+import { ResultExplorer } from './ResultExplorer';
+import { useJcrFetcher } from './useJcrFetcher';
 
+/**
+ * This Component represents the {@link Dialog} that appears when Exploring Results.
+ * This Component will contain the UI Elements scoped to the {@link Dialog},
+ * such as background, container, and close buttons.
+ * It also contains convenient shortcuts to AEM UIs for content analysis or authoring.
+ * It also contains the {@link ResultExplorer}, which has further UI elements.
+ * @param props
+ * @constructor
+ */
 export const ResultExplorerDialog = ({ open, closeHandler, path }: ResultExplorerDialogProps) => {
   const fetching = useRef(false);
   const fetcher = useJcrFetcher({ fetching });

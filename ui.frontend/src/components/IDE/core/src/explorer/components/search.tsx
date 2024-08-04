@@ -5,9 +5,9 @@ import type { FocusEventHandler } from 'react';
 import { Combobox } from '@headlessui/react';
 import type { Caller, FieldMatch, FieldProps, SearchMatch, SearchMatchCallback, TypeMatch, TypeProps } from '@/types';
 import { MagnifyingGlassIcon } from '@/icons';
-import { useSchemaContext } from '../../schema';
+import { useSchemaContext } from '../../ide-providers';
 import debounce from '../../utility/debounce';
-import { useExplorerContext } from '../context';
+import { useExplorerContext } from '../ExplorerContext';
 import { renderType } from './utils';
 import './search.scss';
 

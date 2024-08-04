@@ -2,8 +2,7 @@ import { Stack, Paper } from '@mui/material';
 import type { QueryWizardProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
-import { QueryHandler } from '@/components/Query';
-import { Accordion, StatementWindow } from './Components';
+import { Accordion, QueryHandler, StatementWindow } from './Components';
 import './QueryWizard.scss';
 
 const buttonStackStyles = () => {

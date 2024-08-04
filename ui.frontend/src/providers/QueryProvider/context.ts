@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react';
 import type { Dispatch } from 'react';
 import type { Query, QueryAction, QueryRunnerProps, QueryRunnerResponse } from '@/types';
+import { queryBuilderPath } from '@/constants';
+import { buildGraphQLURL } from '@/utility';
 import { defaultFields } from '@/components/QueryWizard/Components';
-import { buildGraphQLURL, endpoints } from '@/components';
 import { generateQuery } from '../FieldsProvider/context';
 
 export const QueryContext = createContext<Query>(null!);
@@ -13,7 +14,7 @@ export const IsGraphQLContext = createContext<boolean>(false);
 export const defaultSimpleQuery: Query = {
   statement: generateQuery(defaultFields), // build inside provider init
   language: 'QueryBuilder',
-  url: endpoints.queryBuilderPath,
+  url: queryBuilderPath,
   status: '',
   isAdvanced: false,
 };

@@ -7,6 +7,11 @@ import { useLogger, useResults } from '@/providers';
 import { TableHeadCell } from './TableHeadCell';
 import { TableToolBar } from './TableToolBar';
 
+/**
+ * This component is the Table Head for the {@link ResultTable}. It contains sorting logic on header cells.
+ * @param props
+ * @constructor
+ */
 export const ResultTableHead = (props: ResultTableHeadProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();

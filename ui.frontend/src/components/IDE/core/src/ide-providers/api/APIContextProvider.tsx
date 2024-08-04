@@ -1,7 +1,7 @@
 import { fetcherReturnToPromise, formatError, formatResult, isPromise } from '@graphiql/toolkit';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { API, APIContextProviderProps, GraphQLEndpointConfig } from '@/types';
-import { endpoints } from '@/components';
+import { graphQlListPath } from '@/constants';
 import { useCreateFetcher, useRenderCount } from '@/utility';
 import { useLogger } from '@/providers';
 import { APIContext } from './APIContext';
@@ -14,7 +14,7 @@ export function APIContextProvider(props: APIContextProviderProps) {
   const fetcher = useCreateFetcher();
   const apiFetcher = useMemo(() => {
     return fetcher.createAPIFetcher({
-      url: endpoints?.graphQlListPath ?? '',
+      url: graphQlListPath,
     });
   }, [fetcher]);
   const [APIs, setAPIs] = useState([] as API[]);

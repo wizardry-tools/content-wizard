@@ -3,7 +3,7 @@ import { escapeColon, escapeUrl, getParams, queryToParams } from '../http';
 
 // existing tests for escapeUrl function
 describe('escapeUrl function', () => {
-  it('should replace special characters in a URL with their encoded versions', async () => {
+  it('should replace special characters in a URL with their encoded versions', () => {
     expect(escapeUrl('http://example.com/foo bar')).toEqual('http%3A%2F%2Fexample.com%2Ffoo%20bar');
   });
 });
