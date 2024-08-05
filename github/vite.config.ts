@@ -18,4 +18,8 @@ export default defineConfig({
       exclude: [],
     },
   },
+  server: {
+    port: 3000,
+    open: true,
+  },
 });

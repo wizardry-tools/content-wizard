@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="https://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://www.wizardry-tools.com/</loc>
+        <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://www.wizardry-tools.com/"
+        />
+        <lastmod>2024-08-05</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+</urlset>

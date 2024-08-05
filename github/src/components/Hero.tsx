@@ -93,7 +93,6 @@ export function Hero() {
               Content&nbsp;
               <Typography
                 component="span"
-                variant="h1"
                 sx={(theme) => ({
                   fontSize: 'inherit',
                   color: 'primary.main',
