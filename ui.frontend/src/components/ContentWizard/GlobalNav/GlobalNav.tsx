@@ -1,7 +1,7 @@
 import { Box, Link, IconButton } from '@mui/material';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { DARK, LIGHT, useThemeDispatch, WizardAlert } from '@/providers';
 
@@ -26,12 +26,8 @@ export const GlobalNav = ({ pageTitle }: { pageTitle: string }) => {
   const theme = useTheme();
   const themeDispatch = useThemeDispatch();
 
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        themeDispatch(!theme || theme.palette.mode === LIGHT ? DARK : LIGHT);
-      },
-    }),
+  const toggleColorMode = useCallback(
+    () => themeDispatch(!theme || theme.palette.mode === LIGHT ? DARK : LIGHT),
     [theme, themeDispatch],
   );
 
@@ -57,7 +53,7 @@ export const GlobalNav = ({ pageTitle }: { pageTitle: string }) => {
         <span style={{ lineHeight: '2.375rem' }}> / Wizardry Tools / {pageTitle || 'Page Title'}</span>
       </div>
       <div className="globalnav-theme-toggle">
-        <IconButton onClick={colorMode.toggleColorMode} color="inherit">
+        <IconButton onClick={toggleColorMode} color="inherit">
           {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
       </div>

@@ -155,11 +155,11 @@ export const findNativeHandler = (params: NativeHandlerParams) => {
     // scrollTop is not always be an integer.
     // https://github.com/jquery/api.jquery.com/issues/608
     const scrollPosition = Math.round(shape[axisProperties.scrollPosition[axis] as keyof DomTreeShape] as number);
+    const clientLength = shape[axisProperties.clientLength[axis] as keyof DomTreeShape] as number;
+    const scrollLength = shape[axisProperties.scrollLength[axis] as keyof DomTreeShape] as number;
 
     const areNotAtStart = scrollPosition > 0;
-    const areNotAtEnd =
-      scrollPosition + (shape[axisProperties.clientLength[axis] as keyof DomTreeShape] as number) <
-      (shape[axisProperties.scrollLength[axis] as keyof DomTreeShape] as number);
+    const areNotAtEnd = scrollPosition + clientLength < scrollLength;
 
     if ((goingForward && areNotAtEnd) || (!goingForward && areNotAtStart)) {
       nodeReference.current = shape.element;
@@ -170,7 +170,7 @@ export const findNativeHandler = (params: NativeHandlerParams) => {
   });
 };
 
-export const checkIndexBounds = (props: IndexBoundsCheck) => {
+export const checkIndexBounds = (props: IndexBoundsCheck): void => {
   const { index, children } = props;
 
   const childrenCount = Children.count(children);

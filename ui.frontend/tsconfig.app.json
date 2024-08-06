@@ -46,6 +46,7 @@
       "vite/client",
       "vitest/globals",
       "fs-extra",
+      "jsdom",
     ]
   },
   "include": ["vite-env.d.ts", "**/*.d.ts","**/*.ts", "**/*.tsx"],
