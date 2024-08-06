@@ -2,8 +2,8 @@ import type { Query } from '@/types';
 import { graphQLEndpoint } from '@/constants';
 import { getParams } from './http';
 
-export const isQueryValid = (query: Query) => {
-  return !!query && !!query.language && !!query.statement && !!query.url;
+export const isQueryValid = (query: unknown) => {
+  return !!query && typeof query === 'object' && 'language' in query && 'statement' in query && 'url' in query;
 };
 
 export function buildGraphQLURL(endpoint: string): string {
