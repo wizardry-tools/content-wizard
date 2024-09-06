@@ -51,6 +51,7 @@ export const WizardInput = ({ field, defaultValue, disabled }: WizardInputProps)
           onChange={handleChange}
           disabled={disabled}
           required={required}
+          placeholder={'/content'}
         />
       </Paper>
     </FormGrid>
