@@ -1,5 +1,6 @@
-import type {
+import {
   ContentType,
+  ContentTypeLabel,
   ContentTypeProperty,
   QueryLanguageMap,
   QueryMap,
@@ -25,7 +26,15 @@ export const targetTypes: Record<TargetType, TargetTypeLabel> = {
 };
 
 // pull the correct jcr:contentType from this map when you want to use it based on the user's selected Content Type
-export const contentTypes: Record<ContentType, ContentTypeProperty> = {
+export const contentTypes: Record<ContentType, ContentTypeLabel> = {
+  page: 'Page',
+  xf: 'XF (Experience Fragment)',
+  asset: 'DAM Asset',
+  cf: 'CF (Content Fragment)',
+  child: 'Child (Component)',
+};
+
+export const contentTypeMap: Record<ContentType, ContentTypeProperty> = {
   page: 'cq:Page',
   xf: 'cq:Page',
   asset: 'dam:Asset',

@@ -1,4 +1,5 @@
 import type { ContentType, DateRange, FieldsConfig, InputValue, PredicateConfig, PredicatesConfig } from '@/types';
+import { contentTypeMap } from '@/constants';
 
 export const Predicate = ({
   rawInject = () => '',
@@ -33,7 +34,13 @@ export const predicates: PredicatesConfig = {
     type: 'type',
     rawInject: (value: InputValue) => {
       const contentType = value as ContentType;
-      return `type=${contentType}\n`;
+      if (contentType) {
+        if (contentType === 'cf') {
+          return `type=${contentTypeMap[contentType]}\ncontentfragment=true\n`;
+        }
+        return `type=${contentTypeMap[contentType]}\n`;
+      }
+      return '';
     },
   }),
   targetType: Predicate({
