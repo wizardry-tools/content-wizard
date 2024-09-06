@@ -4,7 +4,7 @@ import { DYNAMIC_HEADERS } from '@/utility';
 import { useAlertDispatcher } from '@/providers';
 
 /**
- * This is a simple fetcher that is being used to pull JSON straight from the JCR.
+ * This is a simple fetcher hook that can pull JSON straight from the JCR.
  * Uses a fetcher reference to track if fetching is occurring, to prevent multiple requests.
  * @param fetching
  */

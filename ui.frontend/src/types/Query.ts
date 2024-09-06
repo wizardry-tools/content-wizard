@@ -12,7 +12,7 @@ export type Statement = string;
 export type Query = {
   language: QueryLanguage;
   statement: Statement;
-  url: string;
+  url?: string;
   api?: API;
   status?: string;
   isAdvanced: boolean; // this is mainly for QueryBuilder language, as it's used in two different UIs and this differentiates the UIs.

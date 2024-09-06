@@ -44,13 +44,13 @@ export const WizardDatePicker = ({ field }: WizardInputProps) => {
       fieldDispatcher({
         name,
         value: {
-          ...value,
+          upperBound,
           lowerBound: dateTime,
         },
         type: 'UPDATE_VALUE',
       });
     },
-    [fieldDispatcher, name, value],
+    [fieldDispatcher, name, upperBound],
   );
 
   const handleUpperDateChange = useCallback(
@@ -62,13 +62,13 @@ export const WizardDatePicker = ({ field }: WizardInputProps) => {
       fieldDispatcher({
         name,
         value: {
-          ...value,
+          lowerBound,
           upperBound: dateTime,
         },
         type: 'UPDATE_VALUE',
       });
     },
-    [fieldDispatcher, name, value],
+    [fieldDispatcher, name, lowerBound],
   );
 
   const onStartFocus = useCallback(() => {

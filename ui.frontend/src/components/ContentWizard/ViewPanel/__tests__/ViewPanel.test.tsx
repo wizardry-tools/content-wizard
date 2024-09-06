@@ -1,7 +1,7 @@
 // Importing required dependencies and mock data
 import { render, screen } from '@testing-library/react';
-import { ViewPanel } from './';
 import type { ViewPanelProps } from '@/types';
+import { ViewPanel } from '../ViewPanel';
 
 describe('ViewPanel', () => {
   it('renders children if value is equal to index', () => {
