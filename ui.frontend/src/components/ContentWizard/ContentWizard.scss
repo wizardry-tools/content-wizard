@@ -1,0 +1,54 @@
+@use "../../vars" as *;
+
+/* WRAPS EVERYTHING */
+.content-wizard-content-wrapper {
+  height: $wrapper-height;
+  display: flex;
+  flex-direction: column;
+
+  /* CONTENT BODY */
+  .content-wizard-content {
+    height: $content-height;
+    overflow: auto;
+    display: inline-flex;
+    flex-shrink: 1;
+    flex-grow: 1;
+    .react-swipeable-view-container {
+      height: $content-height;
+      .react-swipeable-view-slide {
+        height: $content-height;
+      }
+    }
+
+    .smooth-transition {
+      transition: height 2s linear 0.5s;
+      > div {
+        transition: all 1s ease-out;
+      }
+    }
+
+    .content-wizard-content-panel {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+
+@keyframes hithere {
+  30% {
+    transform: scale(1.2);
+  }
+  40%, 60% {
+    transform: rotate(-20deg) scale(1.2);
+  }
+  50% {
+    transform: rotate(20deg) scale(1.2);
+  }
+  70% {
+    transform: rotate(0deg) scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
