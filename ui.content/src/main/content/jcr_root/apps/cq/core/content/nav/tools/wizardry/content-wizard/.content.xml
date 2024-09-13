@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
-          jcr:primaryType="nt:unstructured"
-          jcr:title="Content Wizard"
-          jcr:description="Search for batches of content based on specific search criteria"
-          target="_blank"
-          href="/etc/wizardry/tools/content-wizard.html"
-          id="wizardry-content-wizard"/>
