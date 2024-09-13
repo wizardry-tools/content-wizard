@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build && node util/copy-dist.cjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "preview": "vite preview",
+    "preview": "tsc -b && vite build --mode preview && vite preview --mode preview",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

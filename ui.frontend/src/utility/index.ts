@@ -7,5 +7,6 @@ export * from './component-group';
 export * from './hooks';
 export * from './http';
 export * from './libs';
+export * from './preview';
 export * from './query';
 export * from './ui';
