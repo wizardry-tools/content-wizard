@@ -13,8 +13,8 @@ concurrency:
   cancel-in-progress: false
 defaults:
   run:
-    #working-directory: github
-    working-directory: ui.frontend
+    working-directory: github
+    #working-directory: ui.frontend
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,11 +46,11 @@ jobs:
           cache-dependency-path: ./github
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Install Content Wizard dependencies
+        working-directory: ui.frontend
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build Content Wizard project
+        working-directory: ui.frontend
         run: ${{ steps.detect-package-manager.outputs.runner }} npm run demo-build
-      - name: Change dir for website
-        run: cd ../github
       - name: Install Website dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build Website project
