@@ -12,12 +12,14 @@ function replacePreviewURL(url: string, options: RequestInit): string {
     const body = options.body;
     if (body) {
       const bodyObject = JSON.parse(body as string);
+      console.log('bodyObject: ', bodyObject);
       if ('operationName' in bodyObject) {
         const { operationName } = bodyObject;
         if (operationName === 'IntrospectionQuery') {
           return `${PREVIEW_PATH}/graphql-introspection.json`;
         }
-      } else if ('query' in bodyObject) {
+      }
+      if ('query' in bodyObject) {
         return `${PREVIEW_PATH}/graphql-query.json`;
       }
     }
@@ -57,6 +59,9 @@ export async function previewFetch(url: RequestInfo | URL, options: RequestInit 
   console.log(`Fetching resource from: ${url as string}`);
   url = replacePreviewURL(url as string, options);
   try {
+    // convert POST to GET, since we cannot POST on GitHub with the demo content.
+    options.method = 'GET';
+    options.body = undefined;
     const response = await originalFetch(url, options);
     return response;
   } catch (error) {
