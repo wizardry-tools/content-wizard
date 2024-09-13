@@ -10,7 +10,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "preview": "vite preview",
+    "preview": "tsc -b && vite build && vite preview",
     "format": "prettier --ignore-path .gitignore --write \"src/**/*.+(js|ts|tsx|json)\"",
     "test": "vitest",
     "test:coverage": "vitest run --coverage --watch=false"

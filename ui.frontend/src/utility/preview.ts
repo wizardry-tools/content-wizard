@@ -1,5 +1,5 @@
 // the public path for preview content.
-const PREVIEW_PATH = '/content-wizard/resources/demo-content';
+const PREVIEW_PATH = '/demo/content-wizard/resources/demo-content';
 
 /**
  * This is a simple URL replacement function that checks existing request URLs
