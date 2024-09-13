@@ -80,6 +80,28 @@ export function Footer() {
           <FooterLink id={'features'}>Features</FooterLink>
           <FooterLink id={'faq'}>FAQ</FooterLink>
           <FooterLink id={'installation'}>Installation</FooterLink>
+          <Link
+            id={`live-demo-footer-link`}
+            variant="body2"
+            target="_blank"
+            href="/demo/content-wizard/"
+            sx={{
+              cursor: 'pointer',
+            }}
+          >
+            Live Demo
+          </Link>
+          <Link
+            id={`github-footer-link`}
+            variant="body2"
+            target="_blank"
+            href="https://github.com/wizardry-tools/content-wizard"
+            sx={{
+              cursor: 'pointer',
+            }}
+          >
+            GitHub
+          </Link>
         </Box>
         <Box
           sx={{

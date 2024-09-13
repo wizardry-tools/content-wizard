@@ -1,0 +1,60 @@
+@use "../../vars" as *;
+
+/* RESULT HANDLER */
+.result-handler {
+  background-color: $builder-bg-color !important;
+  height: $content-panel-height;
+
+  .result-table {
+    position: relative;
+
+    .result-table-toolbar {
+      height: $results-table-toolbar-height;
+    }
+
+    tbody {
+      display: block;
+      height: $results-table-body-height;
+      overflow: auto;
+    }
+
+    thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    thead {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+
+
+      tr:last-of-type {
+        background-color: $builder-bg-color;
+      }
+    }
+
+    tfoot {
+      border-radius: 0 0 8px 8px;
+      tr {
+        border-radius: 0 0 8px 8px;
+        background-color: $builder-bg-color;
+        td {
+          border-radius: 0 0 8px 8px;
+        }
+      }
+    }
+
+    td {
+      border-left: 1px solid rgba(81, 81, 81, 1) !important;
+    }
+
+    tr td:first-child {
+      border-left: none !important;
+    }
+
+
+
+  }
+}
+

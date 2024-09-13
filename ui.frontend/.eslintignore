@@ -1,0 +1,10 @@
+.prettierrc.cjs
+*.config.cjs
+*.config.js
+build/
+node/
+node_modules/
+target/
+public/
+utils/
+dist/

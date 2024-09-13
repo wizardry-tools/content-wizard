@@ -1,10 +1,22 @@
 import { useState } from 'react';
-import { AppBar, Box, Container, Divider, Drawer, IconButton, PaletteMode, SvgIcon, Toolbar } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Container,
+  Divider,
+  Drawer,
+  IconButton,
+  MenuItem,
+  PaletteMode,
+  SvgIcon,
+  Toolbar,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { LogoIcon } from '@/icons';
 import ToggleColorMode from './ToggleColorMode';
 import { ScrollButton, ScrollMenuItem } from './nav-scrollers';
+import Button from '@mui/material/Button';
 
 type AppAppBarProps = {
   mode: PaletteMode;
@@ -78,6 +90,18 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
               <ScrollButton variant="text" color="info" size="small" scrollId="installation">
                 Installation
               </ScrollButton>
+              <Button variant="text" color="info" size="small" target="_blank" href="/demo/content-wizard/">
+                Live-Demo
+              </Button>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                target="_blank"
+                href="https://github.com/wizardry-tools/content-wizard"
+              >
+                GitHub
+              </Button>
             </Box>
           </Box>
           <Box
@@ -112,6 +136,12 @@ export function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                 <ScrollMenuItem scrollId="features">Features</ScrollMenuItem>
                 <ScrollMenuItem scrollId="faq">FAQ</ScrollMenuItem>
                 <ScrollMenuItem scrollId="installation">Installation</ScrollMenuItem>
+                <MenuItem component="a" target="_blank" href="/demo/content-wizard/">
+                  Live Demo
+                </MenuItem>
+                <MenuItem component="a" target="_blank" href="https://github.com/wizardry-tools/content-wizard">
+                  GitHub
+                </MenuItem>
               </Box>
             </Drawer>
           </Box>
