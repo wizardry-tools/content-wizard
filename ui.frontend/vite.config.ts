@@ -6,13 +6,36 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { viteForAem } from '@aem-vite/vite-aem-plugin';
 
-const LIB_ROOT = '/etc.clientlibs/content-wizard/clientlibs';
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
   console.log('Build Mode: ', mode);
+  const env = loadEnv(mode, process.cwd(), '');
   const aemHost = env?.VITE_PRIVATE_HOST_URI ?? env?.VITE_HOST_URI ?? 'http://localhost:4502';
   console.log('Proxy Host: ', aemHost);
+  const LIB_ROOT = mode === 'production' ? '/etc.clientlibs/content-wizard/clientlibs' : '';
+  const devConfig =
+    mode === 'development'
+      ? {
+          port: 3000,
+          strictPort: true,
+          open: true,
+          proxy: {
+            '^/(bin|conf|content|crx|etc|graphql|libs)': {
+              target: aemHost,
+              changeOrigin: true,
+              rewrite: (path: string) => path.replace(/^\//, ''),
+            },
+          },
+        }
+      : {};
+  const previewConfig =
+    mode === 'preview'
+      ? {
+          port: 8080,
+          strictPort: true,
+          open: true,
+        }
+      : {};
 
   const plugins = [
     tsconfigPaths(),
@@ -110,18 +133,9 @@ export default defineConfig(({ command, mode }) => {
         ],
       },
     },
-    /* SERVER */
-    server: {
-      port: 3000,
-      strictPort: true,
-      open: true,
-      proxy: {
-        '^/(bin|conf|content|crx|etc|graphql|libs)': {
-          target: aemHost,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\//, ''),
-        },
-      },
-    },
+    /* DEV SERVER */
+    server: devConfig,
+    /* PREVIEW SERVER */
+    preview: previewConfig,
   };
 });
