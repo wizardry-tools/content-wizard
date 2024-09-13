@@ -6,8 +6,8 @@
 /ui.apps.structure
 /ui.config
 /ui.content
-/ui.frontend
-/target
+# /ui.frontend # this is not ignored, so that we can include a demo of Content Wizard on the promo website
+target/
 
 
 
@@ -44,16 +44,14 @@ local.properties
 *.log
 
 # dependencies
-/github/node_modules
-/github/.pnp
+node_modules/
+coverage/
+dist/
+node/
+build/
+.pnp/
 .pnp.js
-
-# testing
-/coverage
-
-# production
-/github/build
-/github/dist
+stats.html
 
 # misc
 .DS_Store
