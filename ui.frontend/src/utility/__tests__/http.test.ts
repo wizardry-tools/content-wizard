@@ -14,6 +14,10 @@ describe('escapeColon function', () => {
     expect(escapeColon('http://')).toEqual('http%3A//');
   });
 
+  it('should replace ALL colon character in a given string with their encoded version', () => {
+    expect(escapeColon('http://://://://')).toEqual('http%3A//%3A//%3A//%3A//');
+  });
+
   it('should return the same string if no colon is present', () => {
     expect(escapeColon('http//')).toEqual('http//');
   });

@@ -80,7 +80,7 @@ export const queryToParams = (statement: string) => {
 };
 
 export const escapeColon = (path: string) => {
-  return path.replace(':', '%3A');
+  return path.replace(/:/g, '%3A');
 };
 
 export const escapeUrl = (path: string) => {
