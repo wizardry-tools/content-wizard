@@ -63,6 +63,7 @@ export const WizardSelect = ({ field, disabled }: WizardInputProps) => {
             }}
             required={required}
             disabled={disabled}
+            style={{ display: disabled ? 'none' : '' }}
           >
             {menuItems}
           </Select>

@@ -42,6 +42,7 @@ export const WizardCheckbox = ({ field, disabled }: WizardInputProps) => {
               onChange={handleCheckboxChange}
               required={required}
               disabled={disabled}
+              style={{ display: disabled ? 'none' : '' }}
             />
           }
         />

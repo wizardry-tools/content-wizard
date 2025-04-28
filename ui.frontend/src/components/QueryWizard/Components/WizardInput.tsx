@@ -52,6 +52,7 @@ export const WizardInput = ({ field, defaultValue, disabled }: WizardInputProps)
           disabled={disabled}
           required={required}
           placeholder={'/content'}
+          style={{ display: disabled ? 'none' : '' }}
         />
       </Paper>
     </FormGrid>
