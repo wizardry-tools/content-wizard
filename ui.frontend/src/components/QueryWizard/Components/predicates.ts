@@ -56,10 +56,13 @@ export const predicates: PredicatesConfig = {
     type: 'property',
     configInject: (fields: FieldsConfig): string => {
       // TODO: This should inject the TargetResourceType into a property PredicateType with these properties being targeted
+      const prefix = ['page', 'xf', 'cf'].includes(fields.type.value as string) ? 'jcr:content/' : '';
       if (fields.targetType.value === 'resource') {
-        return 'sling:resourceType';
+        return prefix + 'sling:resourceType';
+      } else if (fields.targetType.value === 'cfmodel') {
+        return prefix + 'data/cq:model';
       } else {
-        return 'cq:template';
+        return prefix + 'cq:template';
       }
     },
     useConfig: true,
@@ -74,15 +77,35 @@ export const predicates: PredicatesConfig = {
   }),
   lastModifiedBy: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastModifiedBy',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset'].includes(fields.type.value as string)) {
+        return 'jcr:content/jcr:lastModifiedBy';
+      } else if (['page', 'xf'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastModifiedBy';
+      }
+      return 'cq:lastModifiedBy';
+    },
+    useConfig: true,
   }),
   lastReplicatedBy: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastReplicatedBy',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastReplicatedBy';
+      }
+      return 'cq:lastReplicatedBy';
+    },
+    useConfig: true,
   }),
   lastRolledoutBy: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastReplicated',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastRolledoutBy';
+      }
+      return 'cq:lastRolledoutBy';
+    },
+    useConfig: true,
   }),
   language: Predicate({
     type: 'property',
@@ -94,32 +117,76 @@ export const predicates: PredicatesConfig = {
   }),
   lastModified: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastModified',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset'].includes(fields.type.value as string)) {
+        return 'jcr:content/jcr:lastModified';
+      } else if (['page', 'xf'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastModified';
+      }
+      return 'cq:lastModified';
+    },
+    useConfig: true,
   }),
   lastReplicated: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastReplicated',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastReplicated';
+      }
+      return 'cq:lastReplicated';
+    },
+    useConfig: true,
   }),
   lastRolledout: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastRolledout',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastRolledout';
+      }
+      return 'cq:lastRolledout';
+    },
+    useConfig: true,
   }),
   isPublished: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastReplicationAction',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastReplicationAction';
+      }
+      return 'cq:lastReplicationAction';
+    },
+    useConfig: true,
   }),
   isUnpublished: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastReplicationAction',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastReplicationAction';
+      }
+      return 'cq:lastReplicationAction';
+    },
+    useConfig: true,
     operation: 'not',
   }),
   isDeactivated: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:lastReplicationAction',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:lastReplicationAction';
+      }
+      return 'cq:lastReplicationAction';
+    },
+    useConfig: true,
   }),
   isBlueprint: Predicate({
     type: 'property',
-    property: 'jcr:content/jcr:mixinTypes',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/jcr:mixinTypes';
+      }
+      return 'jcr:mixinTypes';
+    },
+    useConfig: true,
     operation: 'unequals',
   }),
   isLiveCopy: Predicate({
@@ -128,15 +195,33 @@ export const predicates: PredicatesConfig = {
   }),
   isSuspended: Predicate({
     type: 'property',
-    property: 'jcr:content/jcr:mixinTypes',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/jcr:mixinTypes';
+      }
+      return 'jcr:mixinTypes';
+    },
+    useConfig: true,
   }),
   hasCancelledPropertyInheritance: Predicate({
     type: 'property',
-    property: 'jcr:content/jcr:mixinTypes',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/jcr:mixinTypes';
+      }
+      return 'jcr:mixinTypes';
+    },
+    useConfig: true,
   }),
   inheritanceCancelledProperty: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:propertyInheritanceCancelled',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:propertyInheritanceCancelled';
+      }
+      return 'cq:propertyInheritanceCancelled';
+    },
+    useConfig: true,
   }),
   hasLocalContent: Predicate({
     // not in use
@@ -148,12 +233,24 @@ export const predicates: PredicatesConfig = {
   }),
   isLanguageCopy: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:translationSourcePath',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:translationSourcePath';
+      }
+      return 'cq:translationSourcePath';
+    },
+    useConfig: true,
     operation: 'exists',
   }),
   hasBeenTranslated: Predicate({
     type: 'property',
-    property: 'jcr:content/cq:translationStatus',
+    configInject: (fields: FieldsConfig): string => {
+      if (['cf', 'asset', 'xf', 'page'].includes(fields.type.value as string)) {
+        return 'jcr:content/cq:translationStatus';
+      }
+      return 'cq:translationStatus';
+    },
+    useConfig: true,
   }),
   limit: Predicate({
     type: 'limit',

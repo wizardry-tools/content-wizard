@@ -22,6 +22,7 @@ export const targetTypes: Record<TargetType, TargetTypeLabel> = {
   none: 'None',
   resource: 'Resource Type',
   template: 'Template Type',
+  cfmodel: 'CF Model Type',
   text: 'Full Text Search',
 };
 
