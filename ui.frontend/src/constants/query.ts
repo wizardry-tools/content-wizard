@@ -32,6 +32,8 @@ export const contentTypes: Record<ContentType, ContentTypeLabel> = {
   asset: 'DAM Asset',
   cf: 'CF (Content Fragment)',
   child: 'Child (Component)',
+  custom: 'Custom Node Type',
+  all: 'All Node Types',
 };
 
 export const contentTypeMap: Record<ContentType, ContentTypeProperty> = {
@@ -40,6 +42,8 @@ export const contentTypeMap: Record<ContentType, ContentTypeProperty> = {
   asset: 'dam:Asset',
   cf: 'dam:Asset',
   child: 'nt:unstructured',
+  custom: 'custom',
+  all: 'nt:base',
 };
 
 export const defaultAdvancedQueries: QueryMap = {

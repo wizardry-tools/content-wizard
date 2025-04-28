@@ -45,6 +45,17 @@ export const defaultFields: FieldsConfig = {
     options: contentTypes,
     category: 'targeting',
   }),
+  customContentType: Field({
+    name: 'customContentType',
+    label: 'Custom Node Type',
+    fieldType: FieldTypes.WizardInput,
+    value: 'nt:unstructured',
+    required: true,
+    isDisabled: (fields: FieldsConfig) => {
+      return fields.type.value !== 'custom';
+    },
+    category: 'targeting',
+  }),
   targetType: Field({
     name: 'targetType',
     label: 'Target Type',

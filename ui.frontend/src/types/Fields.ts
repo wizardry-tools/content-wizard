@@ -5,6 +5,7 @@ import type { Query } from './Query';
 export type FieldConfigName =
   | 'path'
   | 'type'
+  | 'customContentType'
   | 'targetType'
   | 'targetResourceType'
   | 'fulltext'

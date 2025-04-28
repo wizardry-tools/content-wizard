@@ -37,11 +37,16 @@ export const predicates: PredicatesConfig = {
       if (contentType) {
         if (contentType === 'cf') {
           return `type=${contentTypeMap[contentType]}\ncontentfragment=true\n`;
+        } else if (contentType !== 'custom') {
+          return `type=${contentTypeMap[contentType]}\n`;
         }
-        return `type=${contentTypeMap[contentType]}\n`;
       }
       return '';
     },
+  }),
+  customContentType: Predicate({
+    type: 'type',
+    rawInject: (value: InputValue) => `type=${value as string}\n`,
   }),
   targetType: Predicate({
     type: null,
