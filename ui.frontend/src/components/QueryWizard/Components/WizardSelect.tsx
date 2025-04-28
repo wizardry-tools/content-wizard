@@ -40,7 +40,7 @@ export const WizardSelect = ({ field, disabled }: WizardInputProps) => {
   }, [options]);
 
   return (
-    <FormGrid item key={name}>
+    <FormGrid item key={name} style={{ display: disabled ? 'none' : '' }}>
       <FormControl>
         <Paper elevation={focused ? 4 : 1}>
           <InputLabel id={name + '-label'} color="secondary" required={required}>
@@ -63,7 +63,6 @@ export const WizardSelect = ({ field, disabled }: WizardInputProps) => {
             }}
             required={required}
             disabled={disabled}
-            style={{ display: disabled ? 'none' : '' }}
           >
             {menuItems}
           </Select>
