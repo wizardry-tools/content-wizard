@@ -3,7 +3,14 @@ import type { SyntheticEvent } from 'react';
 import { Paper } from '@mui/material';
 import { useFields, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
-import { authoringFields, msmFields, replicationFields, targetingFields, translationFields } from './fields';
+import {
+  authoringFields,
+  msmFields,
+  replicationFields,
+  targetingFields,
+  translationFields,
+  customFields,
+} from './fields';
 import { AccordionTab } from './AccordionTab';
 
 export const Accordion = () => {
@@ -49,6 +56,12 @@ export const Accordion = () => {
       />
       <AccordionTab
         fields={translationFields()}
+        fullConfig={fieldsConfig}
+        expanded={expanded}
+        onChange={handleAccordionChange}
+      />
+      <AccordionTab
+        fields={customFields()}
         fullConfig={fieldsConfig}
         expanded={expanded}
         onChange={handleAccordionChange}

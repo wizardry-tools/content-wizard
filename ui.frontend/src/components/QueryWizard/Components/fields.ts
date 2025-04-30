@@ -6,6 +6,7 @@ import { WizardSelect } from './WizardSelect';
 import { WizardCheckbox } from './WizardCheckbox';
 import { WizardDatePicker } from './WizardDatePicker';
 import { WizardSlider } from './WizardSlider';
+import { WizardPredicateList } from './WizardPredicateList';
 
 export const Field = (field: FieldConfig) => {
   const render = field.render ?? true;
@@ -21,6 +22,7 @@ export const FieldTypes: Record<string, ElementType> = {
   WizardCheckbox: WizardCheckbox,
   WizardDatePicker: WizardDatePicker,
   WizardSlider: WizardSlider,
+  WizardPredicateList: WizardPredicateList,
 };
 
 /**
@@ -264,6 +266,13 @@ export const defaultFields: FieldsConfig = {
     value: 100,
     category: 'targeting',
   }),
+  customPredicates: Field({
+    name: 'customPredicates',
+    label: 'Custom Predicates',
+    fieldType: FieldTypes.WizardPredicateList,
+    value: [],
+    category: 'custom',
+  }),
 };
 
 export const targetingFields = () => {
@@ -280,4 +289,7 @@ export const msmFields = () => {
 };
 export const translationFields = () => {
   return Object.values(defaultFields).filter((field) => field.category === 'translation');
+};
+export const customFields = () => {
+  return Object.values(defaultFields).filter((field) => field.category === 'custom');
 };

@@ -261,4 +261,7 @@ export const predicates: PredicatesConfig = {
       return '';
     },
   }),
+  customPredicates: Predicate({
+    type: 'predicateList',
+  }),
 };

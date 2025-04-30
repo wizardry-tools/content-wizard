@@ -30,9 +30,10 @@ export type FieldConfigName =
   | 'hasMsmGhosts'
   | 'isLanguageCopy'
   | 'hasBeenTranslated'
-  | 'limit';
+  | 'limit'
+  | 'customPredicates';
 
-export type FieldConfigCategory = 'targeting' | 'authoring' | 'replication' | 'msm' | 'translation';
+export type FieldConfigCategory = 'targeting' | 'authoring' | 'replication' | 'msm' | 'translation' | 'custom';
 export type FieldCategoryLabel = string;
 export type FieldCategories = Record<FieldConfigCategory, FieldCategoryLabel>;
 

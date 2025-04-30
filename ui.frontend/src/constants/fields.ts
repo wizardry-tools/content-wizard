@@ -6,4 +6,5 @@ export const fieldCategories: FieldCategories = {
   replication: 'Filter by Replication activity',
   msm: 'Filter for MSM content',
   translation: 'Filter for Translated content',
+  custom: 'Filter with Custom Predicates',
 };
