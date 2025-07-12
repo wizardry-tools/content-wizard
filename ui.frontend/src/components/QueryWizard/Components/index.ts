@@ -8,6 +8,7 @@ export * from './QueryHandler';
 export * from './WizardInput';
 export * from './WizardDatePicker';
 export * from './WizardCheckbox';
+export * from './WizardPredicateList';
 export * from './WizardSelect';
 export * from './WizardSlider';
 export * from './StatementWindow';

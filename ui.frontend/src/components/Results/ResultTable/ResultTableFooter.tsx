@@ -1,9 +1,10 @@
 import { memo, useMemo } from 'react';
-import { TableFooter, TablePagination, TableRow } from '@mui/material';
+import { InputBase, TableFooter, TablePagination, TableRow } from '@mui/material';
 import type { ResultTableFooterProps } from '@/types';
 import { useLogger, useResults } from '@/providers';
 import { usePaperTheme } from '@/utility';
 import { TablePaginationActions } from './TablePaginationActions';
+import { styled } from '@mui/system';
 
 /**
  * This component is the Table Footer for the {@link ResultTable}. It contains the {@link TablePagination}.
@@ -24,6 +25,30 @@ export const ResultTableFooter = memo((props: ResultTableFooterProps) => {
       zIndex: 2,
     },
   });
+  const selectMenuTheme = usePaperTheme({
+    styles: {
+      boxShadow: 'none',
+    },
+  });
+
+  const BootstrapInput = styled(InputBase)(({ theme }) => {
+    return {
+      'label + &': {
+        marginTop: theme.spacing(3),
+      },
+      '& .MuiInputBase-input': {
+        borderRadius: 4,
+        '&:focus': {
+          borderRadius: 4,
+          borderColor: '#80bdff',
+          boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        },
+        '.MuiTablePagination-menuItem': {
+          ...selectMenuTheme,
+        },
+      },
+    };
+  });
 
   return (
     <TableFooter sx={footerTheme}>
@@ -43,6 +68,7 @@ export const ResultTableFooter = memo((props: ResultTableFooterProps) => {
                 'aria-label': 'rows per page',
               },
               native: true,
+              input: <BootstrapInput />,
             },
           }}
           onPageChange={onPageChange}
