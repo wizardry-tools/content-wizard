@@ -12,14 +12,12 @@ function replacePreviewURL(url: string, options: RequestInit): string {
     const body = options.body;
     if (body) {
       const bodyObject = JSON.parse(body as string);
-      console.log('bodyObject: ', bodyObject);
       if ('operationName' in bodyObject) {
         const { operationName } = bodyObject;
         if (operationName === 'IntrospectionQuery') {
           return `${PREVIEW_PATH}/graphql-introspection.json`;
         }
-      }
-      if ('query' in bodyObject) {
+      } else if ('query' in bodyObject) {
         return `${PREVIEW_PATH}/graphql-query.json`;
       }
     }

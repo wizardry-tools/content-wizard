@@ -29,7 +29,7 @@ export const WizardCheckbox = ({ field, disabled }: WizardInputProps) => {
 
   if (name) {
     return (
-      <FormGrid item>
+      <FormGrid item style={{ display: disabled ? 'none' : '' }}>
         <FormControlLabel
           label={label}
           control={

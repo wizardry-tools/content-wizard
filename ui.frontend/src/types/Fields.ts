@@ -5,6 +5,7 @@ import type { Query } from './Query';
 export type FieldConfigName =
   | 'path'
   | 'type'
+  | 'customContentType'
   | 'targetType'
   | 'targetResourceType'
   | 'fulltext'
@@ -29,9 +30,10 @@ export type FieldConfigName =
   | 'hasMsmGhosts'
   | 'isLanguageCopy'
   | 'hasBeenTranslated'
-  | 'limit';
+  | 'limit'
+  | 'customPredicates';
 
-export type FieldConfigCategory = 'targeting' | 'authoring' | 'replication' | 'msm' | 'translation';
+export type FieldConfigCategory = 'targeting' | 'authoring' | 'replication' | 'msm' | 'translation' | 'custom';
 export type FieldCategoryLabel = string;
 export type FieldCategories = Record<FieldConfigCategory, FieldCategoryLabel>;
 
@@ -52,6 +54,7 @@ export type FieldConfig = {
   readonly fieldType: ElementType;
   value: InputValue;
   readonly checkboxValue?: InputValue;
+  readonly placeholder?: string;
   required?: boolean;
   isDisabled?: DisabledCallback;
   onChange?: onChangeCallback;

@@ -10,6 +10,8 @@
       height: 100%;
 
       .result-explorer-editor-toolbar {
+        position: sticky;
+        top: 0;
         display: inline-flex;
         padding: 2px;
         flex-grow: 0;
@@ -19,6 +21,7 @@
       }
 
       .result-explorer-editor-codemirror {
+        width: 95%;
         display: inline-flex;
         flex-grow: 2;
         flex-shrink: 1;
