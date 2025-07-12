@@ -9,7 +9,6 @@ import {
   replicationFields,
   targetingFields,
   translationFields,
-  customFields,
 } from './fields';
 import { AccordionTab } from './AccordionTab';
 
@@ -60,12 +59,12 @@ export const Accordion = () => {
         expanded={expanded}
         onChange={handleAccordionChange}
       />
-      <AccordionTab
-        fields={customFields()}
-        fullConfig={fieldsConfig}
-        expanded={expanded}
-        onChange={handleAccordionChange}
-      />
+      {/*<AccordionTab*/}
+      {/*  fields={customFields()}*/}
+      {/*  fullConfig={fieldsConfig}*/}
+      {/*  expanded={expanded}*/}
+      {/*  onChange={handleAccordionChange}*/}
+      {/*/>*/}
     </Paper>
   );
 };
