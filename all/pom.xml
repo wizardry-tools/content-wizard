@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.wizardry-tools</groupId>
         <artifactId>content-wizard</artifactId>
-        <version>1.3.2-SNAPSHOT</version>
+        <version>1.3.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
