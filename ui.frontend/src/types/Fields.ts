@@ -54,6 +54,7 @@ export type FieldConfig = {
   readonly fieldType: ElementType;
   value: InputValue;
   readonly checkboxValue?: InputValue;
+  readonly placeholder?: string;
   required?: boolean;
   isDisabled?: DisabledCallback;
   onChange?: onChangeCallback;

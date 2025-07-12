@@ -18,6 +18,7 @@ describe('WizardInput function', () => {
       category: 'targeting',
       fieldType: FieldTypes.WizardInput,
       value: undefined,
+      placeholder: '/content',
       name: 'path',
       label: 'mockLabel',
       required: true,
@@ -32,6 +33,7 @@ describe('WizardInput function', () => {
     // Checking if the component and initial props are correctly rendered
     expect(textField).toHaveProperty('value', mockDefaultValue);
     expect(textField).toHaveAttribute('name', mockField.name);
+    expect(textField).toHaveAttribute('placeholder', mockField.placeholder);
     expect(textField).toHaveAttribute('required');
 
     const newInputValue = 'new mock value';
@@ -48,6 +50,7 @@ describe('WizardInput function', () => {
       category: 'targeting',
       fieldType: FieldTypes.WizardInput,
       value: undefined,
+      placeholder: '/content',
       name: 'path',
       label: 'mockLabel',
       required: true,

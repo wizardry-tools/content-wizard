@@ -13,7 +13,7 @@ export const WizardInput = ({ field, defaultValue, disabled }: WizardInputProps)
   logger.debug({ message: `WizardInput[${renderCount}] render()` });
   const [value, setValue] = useState(defaultValue);
   const debouncedValue = useDebounce(value, 250);
-  const { name, label, required } = Field(field);
+  const { name, label, required, placeholder } = Field(field);
   const fieldDispatcher = useFieldDispatcher();
   // this state adds an elevation effect to the fields when focused. More noticeable on light-mode.
   const [focused, setFocused] = useState(false);
@@ -51,7 +51,7 @@ export const WizardInput = ({ field, defaultValue, disabled }: WizardInputProps)
           onChange={handleChange}
           disabled={disabled}
           required={required}
-          placeholder={'/content'}
+          placeholder={placeholder}
         />
       </Paper>
     </FormGrid>

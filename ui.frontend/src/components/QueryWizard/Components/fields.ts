@@ -35,6 +35,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Content Path',
     fieldType: FieldTypes.WizardInput,
     value: '/content/we-retail',
+    placeholder: 'Enter Search Path (eg; /content/we-retail)',
     required: true,
     category: 'targeting',
   }),
@@ -52,6 +53,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Custom Node Type',
     fieldType: FieldTypes.WizardInput,
     value: 'nt:unstructured',
+    placeholder: 'Enter JCR Node Type (eg; nt:unstructured)',
     required: true,
     isDisabled: (fields: FieldsConfig) => {
       return fields.type.value !== 'custom';
@@ -71,6 +73,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Target Resource Type',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter Resource Type (eg; we-retail/components/text)',
     isDisabled: (fields: FieldsConfig) => {
       const type = fields.targetType.value;
       return !type || type === 'none' || type === 'text';
@@ -82,6 +85,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Text Search',
     fieldType: FieldTypes.WizardInput,
     value: 'winter',
+    placeholder: 'Enter Search Term (eg; surfing)',
     isDisabled: (fields: FieldsConfig) => {
       return fields.targetType.value !== 'text';
     },
@@ -92,6 +96,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Created By',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter User Name (eg; admin)',
     category: 'authoring',
   }),
   lastModifiedBy: Field({
@@ -99,6 +104,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Last Modified By',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter User Name (eg; admin)',
     category: 'authoring',
   }),
   lastReplicatedBy: Field({
@@ -106,6 +112,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Last Replicated By',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter User Name (eg; admin)',
     isDisabled: (fields: FieldsConfig) => !!fields.isUnpublished.value,
     category: 'replication',
   }),
@@ -114,6 +121,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Last Rolledout By',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter User Name (eg; admin)',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
     category: 'msm',
   }),
@@ -122,6 +130,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Target Language',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter Language Code (eg; en)',
     category: 'translation',
   }),
   created: Field({
@@ -220,6 +229,7 @@ export const defaultFields: FieldsConfig = {
     label: 'Inheritance Cancelled for Property',
     fieldType: FieldTypes.WizardInput,
     value: '',
+    placeholder: 'Enter Property Name (eg; jcr:title)',
     isDisabled: (fields: FieldsConfig) => !fields.isLiveCopy.value,
     category: 'msm',
   }),
