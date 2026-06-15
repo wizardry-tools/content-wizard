@@ -43,7 +43,12 @@ export type DateRange = {
   upperBound: DayTime | undefined;
 };
 export type NumberValue = number | number[];
-export type InputValue = DateRange | NumberValue | string | boolean | null | undefined;
+export type CustomPredicate = {
+  property: string;
+  value: string;
+  operation?: string;
+};
+export type InputValue = DateRange | NumberValue | string | boolean | CustomPredicate[] | null | undefined;
 
 export type onChangeCallback = (value: InputValue) => void;
 export type DisabledCallback = (fields: FieldsConfig) => boolean;

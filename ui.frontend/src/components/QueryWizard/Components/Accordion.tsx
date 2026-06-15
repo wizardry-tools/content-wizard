@@ -5,6 +5,7 @@ import { useFields, useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';
 import {
   authoringFields,
+  customFields,
   msmFields,
   replicationFields,
   targetingFields,
@@ -59,12 +60,12 @@ export const Accordion = () => {
         expanded={expanded}
         onChange={handleAccordionChange}
       />
-      {/*<AccordionTab*/}
-      {/*  fields={customFields()}*/}
-      {/*  fullConfig={fieldsConfig}*/}
-      {/*  expanded={expanded}*/}
-      {/*  onChange={handleAccordionChange}*/}
-      {/*/>*/}
+      <AccordionTab
+        fields={customFields()}
+        fullConfig={fieldsConfig}
+        expanded={expanded}
+        onChange={handleAccordionChange}
+      />
     </Paper>
   );
 };
