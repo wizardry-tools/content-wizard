@@ -6,6 +6,20 @@ import { usePaperTheme } from '@/utility';
 import { TablePaginationActions } from './TablePaginationActions';
 import { styled } from '@mui/system';
 
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  'label + &': {
+    marginTop: theme.spacing(3),
+  },
+  '& .MuiInputBase-input': {
+    borderRadius: 4,
+    '&:focus': {
+      borderRadius: 4,
+      borderColor: '#80bdff',
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+    },
+  },
+}));
+
 /**
  * This component is the Table Footer for the {@link ResultTable}. It contains the {@link TablePagination}.
  * @param props
@@ -24,30 +38,6 @@ export const ResultTableFooter = memo((props: ResultTableFooterProps) => {
       bottom: 0,
       zIndex: 2,
     },
-  });
-  const selectMenuTheme = usePaperTheme({
-    styles: {
-      boxShadow: 'none',
-    },
-  });
-
-  const BootstrapInput = styled(InputBase)(({ theme }) => {
-    return {
-      'label + &': {
-        marginTop: theme.spacing(3),
-      },
-      '& .MuiInputBase-input': {
-        borderRadius: 4,
-        '&:focus': {
-          borderRadius: 4,
-          borderColor: '#80bdff',
-          boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-        '.MuiTablePagination-menuItem': {
-          ...selectMenuTheme,
-        },
-      },
-    };
   });
 
   return (
