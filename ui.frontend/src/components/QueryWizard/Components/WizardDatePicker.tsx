@@ -21,7 +21,7 @@ const StyledDay = styled(PickersDay)(({ theme }) => ({
   },
 }));
 
-export const WizardDatePicker = ({ field }: WizardInputProps) => {
+export const WizardDatePicker = ({ field, disabled }: WizardInputProps) => {
   const logger = useLogger();
   const renderCount = useRenderCount();
   logger.debug({ message: `WizardDatePicker[${renderCount}] render()` });
@@ -81,7 +81,7 @@ export const WizardDatePicker = ({ field }: WizardInputProps) => {
 
   // Note: both the Paper and the slotted Textfield need to be full width for each DateTimePicker
   return (
-    <FormGrid item key={name}>
+    <FormGrid item key={name} style={{ display: disabled ? 'none' : '' }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack direction={{ lg: 'row', xs: 'column' }} spacing={1} justifyContent="space-between">
           <Paper elevation={startFocused ? 4 : 1} className="query-builder-field">
