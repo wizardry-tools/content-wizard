@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { Dispatch } from 'react';
-import type { DateRange, FieldConfigAction, FieldsConfig, InputValue, PredicateConfig } from '@/types';
+import type { CustomPredicate, DateRange, FieldConfigAction, FieldsConfig, InputValue, PredicateConfig } from '@/types';
 import { predicates } from '@/components/QueryWizard/Components';
 
 export const FieldsConfigContext = createContext<FieldsConfig>(null!);
@@ -121,6 +121,20 @@ export const generateQuery = (fields: FieldsConfig): string => {
         if (predicate.raw) {
           // if raw, nothing to build, return the raw statement
           return predicate.raw + '\n';
+        }
+        if (predicate.type === 'predicateList') {
+          const items = (value as CustomPredicate[]).filter((item) => item.property && item.value);
+          if (!items.length) return '';
+          return items
+            .map((item) => {
+              const idx = `${propCounter}_`;
+              propCounter++;
+              let s = `${idx}property=${item.property}\n`;
+              s += `${idx}property.value=${item.value}\n`;
+              if (item.operation) s += `${idx}property.operation=${item.operation}\n`;
+              return s;
+            })
+            .join('');
         }
         // property strings, configInject functions, and operation strings require predicate statements to have an indexed prefix
         if (predicate.property ?? predicate.configInject ?? predicate.operation) {
