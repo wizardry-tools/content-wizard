@@ -47,7 +47,10 @@ export const Search = () => {
   const navItem = explorerNavStack.at(-1)!;
 
   const onSelect = useCallback(
-    (def: TypeMatch | FieldMatch) => {
+    (def: TypeMatch | FieldMatch | null) => {
+      if (!def) {
+        return;
+      }
       push('field' in def ? { name: def.field.name, def: def.field } : { name: def.type.name, def: def.type });
     },
     [push],
