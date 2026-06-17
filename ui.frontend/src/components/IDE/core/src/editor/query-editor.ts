@@ -76,7 +76,7 @@ export const useQueryEditor = (
   const merge = useMergeQuery({ caller: caller ?? useQueryEditor });
   const prettify = usePrettifyEditors({ caller: caller ?? useQueryEditor });
   const ref = useRef<HTMLDivElement>(null);
-  const codeMirrorRef = useRef<CodeMirrorType>();
+  const codeMirrorRef = useRef<CodeMirrorType | undefined>(undefined);
   const queryDispatcher = useQueryDispatcher();
   const isGraphQL = useIsGraphQL();
 

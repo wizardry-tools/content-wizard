@@ -54,7 +54,7 @@ export const WizardSlider = ({ min = -1, max = 1000, step = 10, defaultValue, fi
   }, [min, step]);
 
   return (
-    <FormGrid item style={{ display: disabled ? 'none' : '' }}>
+    <FormGrid style={{ display: disabled ? 'none' : '' }}>
       {label && (
         <Tooltip title={'-1 enables unlimited results'}>
           <InputLabel id={`${name}-label`}>{label}</InputLabel>

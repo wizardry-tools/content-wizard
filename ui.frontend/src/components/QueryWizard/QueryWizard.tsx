@@ -35,7 +35,7 @@ export const QueryWizard = ({ onViewPanelSelect }: QueryWizardProps) => {
         <Stack className="accordion-stack">
           <Accordion />
         </Stack>
-        <Stack className="query-button-stack" sx={buttonStackStyles} justifyContent="flex-start">
+        <Stack className="query-button-stack" sx={[buttonStackStyles, { justifyContent: 'flex-start' }]}>
           <QueryHandler onResults={onViewPanelSelect} />
         </Stack>
       </Stack>

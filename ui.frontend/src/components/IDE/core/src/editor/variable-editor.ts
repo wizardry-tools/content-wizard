@@ -24,7 +24,7 @@ export const useVariableEditor = (
   const merge = useMergeQuery({ caller: caller ?? useVariableEditor });
   const prettify = usePrettifyEditors({ caller: caller ?? useVariableEditor });
   const ref = useRef<HTMLDivElement>(null);
-  const codeMirrorRef = useRef<CodeMirrorType>();
+  const codeMirrorRef = useRef<CodeMirrorType | undefined>(undefined);
 
   useEffect(() => {
     let isActive = true;

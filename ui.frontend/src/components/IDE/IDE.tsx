@@ -619,7 +619,6 @@ IDELogo.displayName = 'IDELogo';
 
 // Configure the UI by providing this Component as a child of IDE.
 const IDEToolbar = (props: PropsWithChildren) => {
-  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{props.children}</>;
 };
 

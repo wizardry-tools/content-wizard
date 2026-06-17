@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import type { PersistedQuerySelectorProps } from '@/types';
 import { useLogger } from '@/providers';
 import { useRenderCount } from '@/utility';

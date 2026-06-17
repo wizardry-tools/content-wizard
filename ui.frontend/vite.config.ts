@@ -104,7 +104,6 @@ export default defineConfig(({ command, mode }) => {
               // Collect and generate css.txt and js.txt files
               const cssFiles = [];
               const jsFiles = [];
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               for (const [fileName, _fileInfo] of Object.entries(bundle)) {
                 console.log(`fileName[${fileName}]: `, _fileInfo.type);
                 if (fileName.endsWith('.css') && !fileName.includes('chunk')) {

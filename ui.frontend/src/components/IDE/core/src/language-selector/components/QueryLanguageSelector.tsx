@@ -14,7 +14,7 @@ export const QueryLanguageSelector = memo(({ language, onLanguageChange }: Query
   const renderCount = useRenderCount();
   logger.debug({ message: `QueryLanguageSelector[${renderCount}] render()` });
   return (
-    <FormGrid item xs={12} md={12}>
+    <FormGrid size={{ xs: 12, md: 12 }}>
       <FormControl variant="filled" color="secondary" className="wizard-language-selector">
         <InputLabel id="query-language-label" required>
           Query Language
