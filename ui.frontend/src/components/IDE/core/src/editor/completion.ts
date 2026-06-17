@@ -62,7 +62,7 @@ export const onHasCompletion = (
 
           typeName = document.createElement('a');
           typeName.className = 'CodeMirror-hint-information-type-name';
-          typeName.href = 'javascript:void 0'; // eslint-disable-line no-script-url
+          typeName.href = 'javascript:void 0';
           typeName.addEventListener('click', onClickHintInformation);
           typeNamePill.append(typeName);
 
