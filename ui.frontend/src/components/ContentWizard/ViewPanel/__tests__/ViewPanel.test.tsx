@@ -40,7 +40,9 @@ describe('ViewPanel', () => {
     };
 
     render(<ViewPanel {...props} />);
-    const element = screen.getByText('View Content');
-    expect(element).toHaveStyle(`padding: ${props.padding}`);
+    // The padding sx is applied to the tabpanel container, not the child text node.
+    // MUI maps sx={{ p: 5 }} to theme.spacing(5) = 40px with the default 8px spacing unit.
+    const panel = screen.getByRole('tabpanel');
+    expect(panel).toHaveStyle('padding: 40px');
   });
 });

@@ -21,6 +21,9 @@ describe('GlobalNav', () => {
           </a>
         );
       }),
+      Alert: vi.fn(({ children }) => {
+        return <div role="alert">{children}</div>;
+      }),
     };
   });
   vi.mock('@/providers/WizardThemeProvider', () => {
