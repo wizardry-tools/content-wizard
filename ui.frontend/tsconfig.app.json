@@ -31,9 +31,8 @@
     "noFallthroughCasesInSwitch": true,
     "newLine": "lf",
 
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./src/*"],
     },
     "types": [
       "react",
