@@ -2,7 +2,7 @@ import { formatError } from '@graphiql/toolkit';
 import type { Position, Token } from 'codemirror';
 import { useEffect, useRef } from 'react';
 import type { JSX } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { Caller, CodeMirrorEditor, ResponseTooltipType, UseResponseEditorArgs } from '@/types';
 import { useSchemaContext } from '../ide-providers';
@@ -53,6 +53,7 @@ export const useResponseEditor = (
 
       // Handle image tooltips and custom tooltips
       const tooltipDiv = document.createElement('div');
+      const tooltipRoot = createRoot(tooltipDiv);
       CodeMirror.registerHelper(
         'info',
         'graphql-results',
@@ -68,12 +69,13 @@ export const useResponseEditor = (
             infoElements.push(<ImagePreview key="image-preview" token={token} />);
           }
 
-          // We can't refactor to root.unmount() from React 18 because we support React 16/17 too
+          // React 19: render into a persistent root; render(null) clears it when there is
+          // nothing to show (a createRoot root cannot be reused after unmount()).
           if (!infoElements.length) {
-            ReactDOM.unmountComponentAtNode(tooltipDiv);
+            tooltipRoot.render(null);
             return null;
           }
-          ReactDOM.render(infoElements, tooltipDiv);
+          tooltipRoot.render(infoElements);
           return tooltipDiv;
         },
       );

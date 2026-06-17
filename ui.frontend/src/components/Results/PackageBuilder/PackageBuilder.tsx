@@ -59,7 +59,7 @@ export const PackageBuilder = () => {
   return (
     <div className="package-builder">
       <Stack className={`package-builder-stack`} component={Paper} color={'secondary'}>
-        <FormGrid item>
+        <FormGrid>
           <Paper elevation={focusTarget === 'packageName' ? 4 : 1}>
             <TextField
               id={'package-builder-package-name'}
@@ -81,7 +81,7 @@ export const PackageBuilder = () => {
             />
           </Paper>
         </FormGrid>
-        <FormGrid item>
+        <FormGrid>
           <Paper elevation={focusTarget === 'groupName' ? 4 : 1}>
             <Autocomplete
               id={'package-builder-package-group'}
@@ -114,23 +114,23 @@ export const PackageBuilder = () => {
           </Paper>
         </FormGrid>
         {packageState.packagePath && !packageState.isReady && !disableAll && (
-          <FormGrid item>
+          <FormGrid>
             <Typography>Package has been Created. Ready to build.</Typography>
           </FormGrid>
         )}
         {packageState.packagePath && packageState.isReady && !disableAll && (
-          <FormGrid item>
+          <FormGrid>
             <Typography>Package has been Built. Ready to download.</Typography>
           </FormGrid>
         )}
         {disableAll && (
-          <FormGrid item alignItems={'center'}>
+          <FormGrid sx={{ alignItems: 'center' }}>
             <CircularProgress />
           </FormGrid>
         )}
-        <FormGrid item>
+        <FormGrid>
           {!packageState.packagePath && (
-            <FormGrid mt={1}>
+            <FormGrid sx={{ mt: 1 }}>
               <Button
                 onClick={create}
                 color={'secondary'}
@@ -143,7 +143,7 @@ export const PackageBuilder = () => {
             </FormGrid>
           )}
           {packageState.packagePath && !packageState.isReady && (
-            <FormGrid mt={1}>
+            <FormGrid sx={{ mt: 1 }}>
               <Button
                 onClick={build}
                 color={'secondary'}
@@ -156,7 +156,7 @@ export const PackageBuilder = () => {
             </FormGrid>
           )}
           {packageState.packageUrl && (
-            <FormGrid mt={1}>
+            <FormGrid sx={{ mt: 1 }}>
               <Button
                 href={packageState.packageUrl}
                 target="_blank"
@@ -170,7 +170,7 @@ export const PackageBuilder = () => {
             </FormGrid>
           )}
           {packageState.downloadUrl && packageState.isReady && (
-            <FormGrid mt={1}>
+            <FormGrid sx={{ mt: 1 }}>
               <Button
                 href={packageState.downloadUrl}
                 download

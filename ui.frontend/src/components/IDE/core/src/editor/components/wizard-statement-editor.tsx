@@ -25,7 +25,7 @@ export const WizardStatementEditor = (props: UseWizardStatementEditorArgs) => {
       aria-atomic="true"
     >
       <Paper className="wizard-statement-editor-paper">
-        <Stack className="wizard-statement-editor-stack" direction="row" justifyContent={'stretch'}>
+        <Stack className="wizard-statement-editor-stack" direction="row" sx={{ justifyContent: 'stretch' }}>
           <div className="wizard-statement-editor-codemirror" ref={ref} />
           <div className="wizard-statement-editor-toolbar" role="toolbar" aria-label="Editor Commands">
             <ToolbarButton onClick={copy} label="Copy query (Shift-Ctrl-C)">

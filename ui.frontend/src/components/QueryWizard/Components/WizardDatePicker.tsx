@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useCallback, useState } from 'react';
 import { Stack, IconButton, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { LocalizationProvider, DateTimePicker, PickersDay } from '@mui/x-date-pickers';
+import { LocalizationProvider, DateTimePicker, PickerDay } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { DateRange, DayTime, WizardInputProps } from '@/types';
 import { useFieldDispatcher, useLogger } from '@/providers';
@@ -12,7 +12,7 @@ import { FormGrid } from './FormGrid';
 const StyledButton = styled(IconButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }));
-const StyledDay = styled(PickersDay)(({ theme }) => ({
+const StyledDay = styled(PickerDay)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   color: theme.palette.mode === 'light' ? theme.palette.secondary.dark : theme.palette.secondary.light,
   '&.Mui-selected,&.Mui-focused,&:hover': {
@@ -81,9 +81,9 @@ export const WizardDatePicker = ({ field, disabled }: WizardInputProps) => {
 
   // Note: both the Paper and the slotted Textfield need to be full width for each DateTimePicker
   return (
-    <FormGrid item key={name} style={{ display: disabled ? 'none' : '' }}>
+    <FormGrid key={name} style={{ display: disabled ? 'none' : '' }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack direction={{ lg: 'row', xs: 'column' }} spacing={1} justifyContent="space-between">
+        <Stack direction={{ lg: 'row', xs: 'column' }} spacing={1} sx={{ justifyContent: 'space-between' }}>
           <Paper elevation={startFocused ? 4 : 1} className="query-builder-field">
             <DateTimePicker
               name={`${name}.lowerBound`}

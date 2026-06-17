@@ -10,7 +10,7 @@ export const GraphQLSelector = ({ api, APIs, onAPIChange, onStatementChange = ()
   const renderCount = useRenderCount();
   logger.debug({ message: `GraphQLSelector[${renderCount}] render()` });
   return (
-    <FormGrid item xs={12} md={6}>
+    <FormGrid size={{ xs: 12, md: 6 }}>
       <APISelector endpoint={api?.endpoint} APIs={APIs} onAPIChange={onAPIChange} />
       {api?.endpoint && api.persistedQueries.length > 0 && (
         <PersistedQuerySelector api={api} onStatementChange={onStatementChange} />

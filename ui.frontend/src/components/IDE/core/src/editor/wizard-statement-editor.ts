@@ -43,7 +43,7 @@ export const useWizardStatementEditor = (
   const copy = useCopyQuery({ caller: caller ?? useWizardStatementEditor });
   const ref = useRef<HTMLDivElement>(null);
 
-  const codeMirrorRef = useRef<CodeMirrorType>();
+  const codeMirrorRef = useRef<CodeMirrorType | undefined>(undefined);
 
   useEffect(() => {
     let isActive = true;

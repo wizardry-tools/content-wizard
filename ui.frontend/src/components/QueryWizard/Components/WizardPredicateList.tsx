@@ -38,7 +38,7 @@ export const WizardPredicateList = ({ field, defaultValue, disabled }: WizardInp
   }, []);
 
   return (
-    <FormGrid item key={name} style={{ display: disabled ? 'none' : '' }}>
+    <FormGrid key={name} style={{ display: disabled ? 'none' : '' }}>
       <Paper elevation={1} sx={{ width: '100%' }}>
         <List disablePadding>
           {items.map((item, index) => (
@@ -65,7 +65,7 @@ export const WizardPredicateList = ({ field, defaultValue, disabled }: WizardInp
                 color="secondary"
               />
               <Tooltip title="Remove predicate">
-                <Box display="flex" alignItems="center">
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <IconButton size="small" onClick={() => handleRemove(index)} aria-label="remove predicate">
                     <DeleteIcon fontSize="small" />
                   </IconButton>

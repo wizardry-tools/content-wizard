@@ -12,7 +12,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import DownloadIcon from '@mui/icons-material/Download';
 import type { AllowedExportType } from '@/types';
 import { allowedExportTypes, useResults } from '@/providers';
@@ -63,7 +63,7 @@ export const ResultsExporter = () => {
   return (
     <div className="results-exporter">
       <Stack className={`results-exporter-stack`} component={Paper} color={'secondary'}>
-        <FormGrid item>
+        <FormGrid>
           <Paper elevation={inputElevation}>
             <TextField
               id={'results-exporter-file-name'}
@@ -83,7 +83,7 @@ export const ResultsExporter = () => {
             />
           </Paper>
         </FormGrid>
-        <FormGrid item>
+        <FormGrid>
           <FormControl>
             <Paper elevation={selectElevation}>
               <InputLabel id={'results-exporter-type-label'} color="secondary" required>
@@ -110,7 +110,7 @@ export const ResultsExporter = () => {
             </Paper>
           </FormControl>
         </FormGrid>
-        <FormGrid item>
+        <FormGrid>
           <FormControlLabel
             label="Include Timestamp?"
             control={
@@ -125,7 +125,7 @@ export const ResultsExporter = () => {
             }
           />
         </FormGrid>
-        <FormGrid item>
+        <FormGrid>
           <Button
             onClick={handleExport}
             color={'secondary'}

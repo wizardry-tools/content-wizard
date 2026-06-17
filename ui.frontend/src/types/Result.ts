@@ -1,6 +1,6 @@
 import type { ChangeEvent, MouseEvent, MutableRefObject } from 'react';
 import type { ExportType } from 'export-from-json';
-import type { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
+import type { TablePaginationActionsProps } from '@mui/material/TablePaginationActions';
 
 export type ResultProp = string | number | boolean;
 export type Result = Record<string, ResultProp>;

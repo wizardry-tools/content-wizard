@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { Dispatch } from 'react';
 import type { PaletteMode } from '@mui/material';
-import type { Theme as MuiTheme } from '@mui/material/styles/createTheme';
+import type { Theme as MuiTheme } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import type { NullablePaletteMode, Theme, WizardStorageAPI } from '@/types';

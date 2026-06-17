@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import type { API, QueryLanguage, Statement } from '@/types';
 import { defaultAdvancedQueries } from '@/constants';
 import { useRenderCount } from '@/utility';

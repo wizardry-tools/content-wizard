@@ -35,7 +35,7 @@ export const ResultExplorerEditor = (props: UseResultExplorerEditorArgs) => {
       aria-atomic="true"
     >
       <Paper className="result-explorer-editor-paper">
-        <Stack className="result-explorer-editor-stack" direction="row" justifyContent={'stretch'}>
+        <Stack className="result-explorer-editor-stack" direction="row" sx={{ justifyContent: 'stretch' }}>
           <div className="result-explorer-editor-codemirror" ref={ref} />
           <div className="result-explorer-editor-toolbar" role="toolbar" aria-label="Editor Commands">
             <StyledToolbarButton onClick={copy} label="Copy query (Shift-Ctrl-C)" theme={theme}>

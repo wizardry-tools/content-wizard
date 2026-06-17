@@ -37,7 +37,7 @@ export const WizardInput = ({ field, defaultValue, disabled }: WizardInputProps)
   }, [fieldDispatcher, name, debouncedValue]);
 
   return (
-    <FormGrid item key={name} style={{ display: disabled ? 'none' : '' }}>
+    <FormGrid key={name} style={{ display: disabled ? 'none' : '' }}>
       <Paper elevation={focused ? 4 : 1}>
         <TextField
           id={name}

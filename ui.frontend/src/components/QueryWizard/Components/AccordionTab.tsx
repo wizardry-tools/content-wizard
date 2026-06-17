@@ -44,7 +44,7 @@ export const AccordionTab = (props: AccordionTabProps) => {
           {summary}
         </Typography>
       </AccordionSummary>
-      <FormGrid className={`${drawerID}-grid smooth-transition`} container padding={1} spacing={2}>
+      <FormGrid className={`${drawerID}-grid smooth-transition`} container spacing={2} sx={{ padding: 1 }}>
         {drawerContents}
       </FormGrid>
     </MuiAccordion>
